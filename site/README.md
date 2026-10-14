@@ -48,7 +48,7 @@ The site is a static export, so the free plan is enough. Do this once:
 2. Project settings, General:
    - Root Directory: `site`
    - Turn on "Include source files outside of the Root Directory in the Build Step" (the build needs the workspace root).
-   - Framework Preset: Next.js (from `vercel.json`).
+   - Framework Preset: Other (`vercel.json` sets `"framework": null`). The site is a static export in `out/`, and the Next.js preset would look for a `.next` server build there and fail with "routes-manifest.json couldn't be found".
 3. Build settings come from `site/vercel.json`. They are the same as setting these by hand:
    - Install Command: `cd .. && pnpm install --frozen-lockfile`
    - Build Command: `cd .. && pnpm build && pnpm run pack && cd site && pnpm build`
