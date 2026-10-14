@@ -35,7 +35,7 @@ Thumbs.db
 CLAUDE.md
 
 # Dev build output
-/dist-dev/
+/dist-dev*/
 
 # Visual test report
 /test/visual/report/

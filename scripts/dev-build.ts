@@ -1,5 +1,5 @@
 // Minimal dev bundler: bundles the three entries with Lightning CSS and writes unminified
-// output to dist-dev/. The real compiler comes later.
+// output to dist-dev/, or to the folder given with --out. The real compiler comes later.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { bundleAsync, browserslistToTargets } from "lightningcss";
@@ -7,7 +7,9 @@ import browserslist from "browserslist";
 
 const root = new URL("../", import.meta.url);
 const targets = browserslistToTargets(browserslist("defaults"));
-const outDir = fileURLToPath(new URL("dist-dev/", root));
+const outArg = process.argv.indexOf("--out");
+const outName = outArg > -1 ? process.argv[outArg + 1] : "dist-dev";
+const outDir = fileURLToPath(new URL(`${outName}/`, root));
 mkdirSync(outDir, { recursive: true });
 
 for (const entry of ["pico.css", "pico.classless.css", "pico.colors.css"]) {
@@ -17,5 +19,5 @@ for (const entry of ["pico.css", "pico.classless.css", "pico.colors.css"]) {
     targets,
   });
   writeFileSync(outDir + entry, code);
-  console.log(`dist-dev/${entry}: ${code.length} bytes`);
+  console.log(`${outName}/${entry}: ${code.length} bytes`);
 }
