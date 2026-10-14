@@ -25,8 +25,9 @@ src/                     CSS source, plain CSS, loadable in a current browser wi
   utilities/             accessibility, reduce-motion
   colors/                color and background utility classes (generated)
 scripts/
-  build.ts               CLI entry (`pico-reforged build`)
-  lib/                   compiler pieces (bundle, classless filter, scope, purge, themes)
+  cli.ts                 CLI entry (`pico-reforged build`, `matrix`, `themes`, `modules`)
+  dev-build.ts           quick azure build into dist-dev/, used by tests and `npm run dev`
+  lib/compiler/          the compiler: config, bundle, classless, scope, purge, theme, legacy, matrix, report
   data/                  palette.json, themes.ts, scheme.ts (the inputs to generation)
   generate.ts            writes src/tokens/palette.css, scheme.css, src/themes/*.css, src/colors/*.css
 css/                     build output, same file names as v2.1.1 so CDN paths keep working
@@ -148,7 +149,7 @@ The v2.1.1 Sass switches become compiler options:
 | `$parent-selector: ".pico"` | `scope: ".pico"` | prefixes selectors, leaves `:root`, `:host` and `html` rules on the root |
 | `$enable-responsive-typography` | `responsiveTypography` | drops the root font size breakpoints |
 | `$enable-responsive-spacings` | `responsiveSpacings` | adds `layout/responsive-spacings.css` |
-| `$enable-transitions: false` | `transitions: false` | sets `--pico-transition: 0s` |
+| `$enable-transitions: false` | `transitions: false` | sets `--pico-transition: 0s` and removes every `animation-*` and `transition-*` declaration with a hard-coded duration (modal, tooltip, progress, switch thumb, open and close transitions), as the Sass left those out |
 | `$enable-important: false` | `important: false` | strips `!important` from utilities |
 | `$css-var-prefix` | not kept | the prefix is part of the public API |
 
@@ -170,6 +171,22 @@ The default `npm run build` writes the full v2.1.1 file matrix into `css/`: `pic
 ### Purge
 
 `purge: { content: ["site/**/*.html"], safelist: [] }` scans the content files for tag names, class names, `id`, `role`, `type` and every `aria-*` and `data-*` attribute with its value. A rule is kept if at least one of its selectors could match, judged only by its type, class and attribute parts. Pseudo-classes and pseudo-elements are ignored. `:root`, `:host`, `html`, `body`, `*` and `::backdrop` always stay. Custom properties are never purged, since they are cheap and users reference them.
+
+### Compiler notes
+
+How the pieces behave where the plan left room:
+
+- Entry text is edited before bundling. Disabled modules are bundled as an empty file by the resolver, modules the entry does not import (`layout/semantic-container`, `layout/responsive-spacings`) are inserted after their anchor import, and the theme import is replaced with the chosen theme. The themes option takes a name, `{ color }`, `{ hue, chroma }` or a CSS file path (the default theme followed by that file).
+- Nesting is lowered first (`Features.Nesting` is always on), so every selector pass sees flat selectors. Lightning CSS 1.33 cannot hand a style rule back from a visitor (var() fails to deserialize), so selectors go through the per-selector `Selector` hook, which also drops a rule once all its selectors are gone. Nodes that must be returned (layer removal, `!important` stripping) go through `clean()` in `legacy.ts`.
+- Classless: a selector goes if it has a class outside `:not()`; `:is()`, `:where()` and `:has()` lists are filtered branch by branch. Checked by running the filter over the v2.1.1 `pico.css` and diffing with the v2.1.1 `pico.classless.css`. The only rule v2.1.1 kept that the filter drops is `table.striped`, which is the one entry in `CLASSLESS_KEEP`. v2.1.1 also wrote `:not(.outline)` away in two selectors (no effect without classes) and dropped the unused modal keyframes, which `pruneKeyframes` does here.
+- Scope: checked the same way against `pico.conditional.css`. `:root`, `:host`, `html` and a lone `[data-theme]` stay; when one of them or `[dir]` is followed by a descendant, the scope goes after it (`[dir=rtl] .pico select`); `@keyframes`, `@media` and `@supports` are untouched. Kept global, as in v2.1.1: `*`, `::before`, `::after`, `body`, `main`, `.container`, `.container-fluid`, `.grid` and the `.modal-is-*` classes on `<html>` (see `scope-global.ts`). Not reproduced, because they were accidents: v2.1.1 left the element-level token overrides (`a`, `h1`, `[role=group] button` and so on) and `[type=reset].outline` unscoped. Here they are scoped.
+- Fluid: sets `--pico-container-max-width: 100%` in `pico.core` and, when the semantic container is on, puts the side padding back (semantic-container.css zeroes it from 576px up, v2.1.1 fluid kept it). Checked against `pico.fluid.classless.css` with the visual harness: 0 px difference.
+- `important: false` also leaves out `utilities/reduce-motion` and so does `transitions: false`, as v2.1.1 built it only when both were on.
+- `important: false` strips `!important` everywhere. v2.1.1 also left out the `textarea[aria-invalid]` icon block and the Firefox date and time block; here they stay, without `!important`. This is intended: the textarea icon sits at the top right and the Firefox date inputs lose their calendar icon padding, which keeps the same look as the default build.
+- `@scope` is not supported in theme files: the selector passes also rewrite its prelude.
+- Purge: classes are collected from `class` attributes and from every quoted string in the scanned files, so `classList.add("modal-is-open")` counts. Attributes are collected with their values; one set from script by name only matches any value. `data-theme` and `dir` always count as present. A safelisted name keeps every selector that mentions it. Unused `@keyframes` go with the rules. The tag scanner reads quoted values and `{...}` expressions, so `>` inside `x-data="a > b"` or `() => go()` does not end a tag. Attributes bound to an expression (`aria-busy={x}`, `:aria-busy`, `v-bind:`, `x-bind:`, `${x}`) count as present with any value. `open` always counts as present because the browser toggles it. Lowercase words in quoted strings count as tags (`createElement("dialog")`). A content glob that matches no file is reported in `stats.warnings`, printed by the CLI.
+- The matrix writes the same names as v2.1.1, which has no plain `pico.classless.conditional.css` and no plain `pico.fluid.classless.conditional.css`, and no `pico.azure.css` (azure is the plain file).
+- `npm pack` ships `dist/`, JavaScript emitted by `tsconfig.build.json`, because Node does not strip types inside `node_modules`. The compiler reads `src/` at run time, so `src/` is in the package too.
 
 ## Popover and anchor positioning
 

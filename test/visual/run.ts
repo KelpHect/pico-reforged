@@ -51,8 +51,11 @@ const sheets: Record<string, Record<string, string>> = {
   'kitchen-sink': { __CSS__: 'pico.css' },
   modal: { __CSS__: 'pico.css' },
   classless: { __CSS__: 'pico.classless.css' },
+  'fluid-classless': { __CSS__: 'pico.fluid.classless.css' },
+  'kitchen-sink-classless': { __CSS__: 'pico.classless.css' },
   colors: { __CSS__: 'pico.css', __COLORS__: 'pico.colors.css' },
   popover: { __CSS__: 'pico.css' },
+  conditional: { __CSS__: 'pico.conditional.css' },
 };
 
 const modes: Mode[] = [

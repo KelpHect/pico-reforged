@@ -1,77 +1,80 @@
 {
-  "name": "@picocss/pico",
-  "version": "2.1.1",
-  "description": "Minimal CSS Framework for semantic HTML",
-  "author": "Lucas Larroche",
-  "main": "css/pico.min.css",
-  "homepage": "https://picocss.com",
+  "name": "@rusticstack/pico-reforged",
+  "version": "1.0.0-alpha.0",
+  "description": "Pico CSS rewritten in plain modern CSS: minimal styles for semantic HTML, with a small compiler for themes, scoping and purging",
+  "author": "rusticstack",
   "license": "MIT",
-  "type": "module",
+  "homepage": "https://pico.rusticstack.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/picocss/pico.git"
+    "url": "git+https://github.com/rusticstack/pico-reforged.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rusticstack/pico-reforged/issues"
+  },
+  "type": "module",
+  "main": "css/pico.min.css",
+  "style": "css/pico.min.css",
+  "bin": {
+    "pico-reforged": "dist/cli.js"
+  },
+  "files": [
+    "css",
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE.md"
+  ],
+  "exports": {
+    ".": "./css/pico.min.css",
+    "./css/*": "./css/*",
+    "./src/*": "./src/*",
+    "./compiler": {
+      "types": "./dist/lib/compiler/index.d.ts",
+      "default": "./dist/lib/compiler/index.js"
+    },
+    "./package.json": "./package.json"
   },
   "publishConfig": {
+    "access": "public",
     "tag": "next"
+  },
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "build": "npm run generate && node scripts/cli.ts matrix css",
+    "generate": "node scripts/generate.ts",
+    "dev": "node --watch-path=src --watch-path=scripts scripts/dev-build.ts",
+    "typecheck": "tsc -p .",
+    "test": "node scripts/dev-build.ts && node --test \"test/**/*.test.ts\" && node test/api/check.ts dist-dev",
+    "test:visual": "node scripts/dev-build.ts && node test/visual/run.ts",
+    "prepack": "npm run build && tsc -p tsconfig.build.json",
+    "format": "prettier --write \"scripts/**/*.ts\" \"test/**/*.ts\" tsconfig.build.json"
   },
   "keywords": [
     "css",
     "css-framework",
     "dark-mode",
-    "dark-theme",
     "lightweight",
     "minimal",
-    "minimalist",
-    "minimalistic",
     "native-html",
-    "scss-framework",
-    "semantic"
+    "oklch",
+    "semantic",
+    "pico"
   ],
-  "bugs": {
-    "url": "https://github.com/picocss/pico/issues"
-  },
-  "scripts": {
-    "✨": "run-s build",
-    "build": "run-s start lint \"build:*\" done --silent",
-    "dev": "nodemon -q --watch scss/ --ext scss --exec 'run-s build'",
-    "lint": "run-s \"lint:*\" --silent",
-    "lint:prettier": "prettier --write --log-level silent 'scss/**/*.scss'",
-    "lint:sort-scss": "postcss --config scss ./scss/**/*.scss --replace",
-    "build:css": "sass --no-source-map --style expanded --no-error-css scss/:css/",
-    "build:themes": "node scripts/build-themes",
-    "build:autoprefix": "postcss --config css --replace css/*.css !css/*.min.css",
-    "build:minify": "cleancss -O1 --with-rebase --batch --batch-suffix .min css/*.css !css/*.min.css",
-    "prelint": "echo '[@picocss/pico] ✨ Lint'",
-    "prebuild:css": "echo '[@picocss/pico] ✨ Compile'",
-    "prebuild:themes": "echo '[@picocss/pico] ✨ Compile themes'",
-    "prebuild:autoprefix": "echo '[@picocss/pico] ✨ Autoprefix'",
-    "prebuild:minify": "echo '[@picocss/pico] ✨ Minify'",
-    "start": "echo '\\033[96m[@picocss/pico] ✨ Start\\033[0m'",
-    "done": "echo '\\033[32m[@picocss/pico] ✨ Done\\033[0m'"
+  "dependencies": {
+    "browserslist": "^4.29.3",
+    "culori": "^4.0.2",
+    "lightningcss": "^1.33.0"
   },
   "devDependencies": {
     "@types/culori": "^4.0.1",
     "@types/node": "^26.6.5",
-    "autoprefixer": "^10.4.21",
-    "browserslist": "^4.29.3",
-    "caniuse-lite": "1.0.30001704",
-    "clean-css-cli": "^5.6.3",
-    "css-declaration-sorter": "^7.2.0",
-    "culori": "^4.0.2",
-    "lightningcss": "^1.33.0",
-    "nodemon": "^3.1.9",
-    "npm-run-all": "^4.1.5",
     "pixelmatch": "^8.0.0",
     "playwright": "^1.64.1",
     "pngjs": "^7.0.0",
-    "postcss": "^8.5.3",
-    "postcss-cli": "^11.0.1",
-    "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
-    "sass": "^1.85.1",
     "typescript": "^7.0.2"
-  },
-  "browserslist": [
-    "defaults"
-  ]
+  }
 }

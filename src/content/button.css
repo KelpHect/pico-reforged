@@ -57,7 +57,6 @@ button:is(:hover, :active, :focus),
 [type="reset"]:is(:hover, :active, :focus),
 [type="button"]:is([aria-current]:not([aria-current="false"])),
 [type="button"]:is(:hover, :active, :focus),
-[type="file"]::file-selector-button:is([aria-current]:not([aria-current="false"])),
 [type="file"]::file-selector-button:is(:hover, :active, :focus),
 [role="button"]:is([aria-current]:not([aria-current="false"])),
 [role="button"]:is(:hover, :active, :focus) {
@@ -76,7 +75,6 @@ button:is([aria-current]:not([aria-current="false"])):focus,
 [type="button"]:focus,
 [type="button"]:is([aria-current]:not([aria-current="false"])):focus,
 [type="file"]::file-selector-button:focus,
-[type="file"]::file-selector-button:is([aria-current]:not([aria-current="false"])):focus,
 [role="button"]:focus,
 [role="button"]:is([aria-current]:not([aria-current="false"])):focus {
   --pico-box-shadow:
@@ -111,8 +109,7 @@ button:is([aria-current]:not([aria-current="false"])):focus,
 :is(button, [type="submit"], [type="button"], [role="button"]).secondary:is([aria-current]:not([aria-current="false"])):focus,
 [type="reset"]:focus,
 [type="reset"]:is([aria-current]:not([aria-current="false"])):focus,
-[type="file"]::file-selector-button:focus,
-[type="file"]::file-selector-button:is([aria-current]:not([aria-current="false"])):focus {
+[type="file"]::file-selector-button:focus {
   --pico-box-shadow:
     var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
 }

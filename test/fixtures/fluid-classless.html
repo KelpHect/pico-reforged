@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fluid classless</title>
+    <link rel="stylesheet" href="__CSS__" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><strong>Field Notes</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#archive">Archive</a></li>
+          <li><a href="#contact" role="button">Contact</a></li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Notes from the workshop</h1>
+        <p>Short write-ups about building small tools with plain HTML.</p>
+      </hgroup>
+    </header>
+
+    <main>
+      <section id="about">
+        <h2>About</h2>
+        <p>
+          This page has no classes at all. It relies on <strong>semantic elements</strong>, a
+          <a href="#">link</a>, some <em>emphasis</em> and <code>inline code</code>.
+        </p>
+        <blockquote>
+          Make it work, make it right, make it fast.
+          <footer><cite>Kent Beck</cite></footer>
+        </blockquote>
+        <ul>
+          <li>Semantic markup</li>
+          <li>No build step</li>
+          <li>Readable defaults</li>
+        </ul>
+      </section>
+
+      <article>
+        <header>
+          <h3>Latest post</h3>
+        </header>
+        <p>An article with a header and a footer, styled as a card.</p>
+        <details>
+          <summary>Read more</summary>
+          <p>The rest of the post sits inside a details element.</p>
+        </details>
+        <footer>Posted on 12 March 2024</footer>
+      </article>
+
+      <section id="archive">
+        <h2>Archive</h2>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Post</th>
+              <th scope="col">Date</th>
+              <th scope="col">Reads</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Starting small</td>
+              <td>2024-01-10</td>
+              <td>1,204</td>
+            </tr>
+            <tr>
+              <td>Forms without frameworks</td>
+              <td>2024-02-02</td>
+              <td>2,310</td>
+            </tr>
+            <tr>
+              <td>On dark mode</td>
+              <td>2024-02-28</td>
+              <td>988</td>
+            </tr>
+          </tbody>
+        </table>
+        <progress value="60" max="100"></progress>
+      </section>
+
+      <section id="contact">
+        <h2>Contact</h2>
+        <form onsubmit="return false">
+          <label>
+            Name
+            <input type="text" name="name" placeholder="Your name" />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" placeholder="you@example.com" />
+            <small>We will only use it to reply.</small>
+          </label>
+          <label>
+            Topic
+            <select name="topic">
+              <option>Question</option>
+              <option>Feedback</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label>
+            Message
+            <textarea name="message" rows="4" placeholder="Say hello"></textarea>
+          </label>
+          <fieldset>
+            <legend>Updates</legend>
+            <label><input type="checkbox" name="updates" checked /> Send me new posts</label>
+            <label><input type="checkbox" role="switch" name="digest" /> Weekly digest</label>
+            <label><input type="radio" name="freq" checked /> Daily</label>
+            <label><input type="radio" name="freq" /> Weekly</label>
+          </fieldset>
+          <input type="search" placeholder="Search" aria-invalid="false" />
+          <fieldset role="group">
+            <input type="email" placeholder="Newsletter email" />
+            <input type="submit" value="Join" />
+          </fieldset>
+          <button type="submit">Send</button>
+          <button type="reset" class="secondary">Reset</button>
+        </form>
+      </section>
+
+    </main>
+
+    <footer>
+      <small>Built with plain HTML. <a href="#">Source</a></small>
+    </footer>
+  </body>
+</html>

@@ -1,9 +1,12 @@
 import { parse, converter, formatHex, clampChroma, wcagContrast } from "culori";
+import type { Color, Oklch, Rgb } from "culori";
 
 export type Triple = [number, number, number];
 
-const toOklch = converter("oklch");
-const toRgb = converter("rgb");
+const toOklch: (color: Color | string) => Oklch = converter("oklch") as (
+  color: Color | string,
+) => Oklch;
+const toRgb: (color: Color | string) => Rgb = converter("rgb") as (color: Color | string) => Rgb;
 
 export const round = (n: number, d: number): number => {
   const f = 10 ** d;

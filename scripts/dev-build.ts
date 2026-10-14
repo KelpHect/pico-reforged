@@ -1,23 +1,26 @@
-// Minimal dev bundler: bundles the three entries with Lightning CSS and writes unminified
-// output to dist-dev/, or to the folder given with --out. The real compiler comes later.
+// Quick build for development and tests: the azure variants in readable form, written to
+// dist-dev/ (or --out <folder>). The full file set comes from `npm run build`.
 import { mkdirSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { bundleAsync, browserslistToTargets } from "lightningcss";
-import browserslist from "browserslist";
+import { compile } from "./lib/compiler/index.ts";
+import type { CompileOptions } from "./lib/compiler/index.ts";
 
 const root = new URL("../", import.meta.url);
-const targets = browserslistToTargets(browserslist("defaults"));
 const outArg = process.argv.indexOf("--out");
 const outName = outArg > -1 ? process.argv[outArg + 1] : "dist-dev";
 const outDir = fileURLToPath(new URL(`${outName}/`, root));
 mkdirSync(outDir, { recursive: true });
 
-for (const entry of ["pico.css", "pico.classless.css", "pico.colors.css"]) {
-  const { code } = await bundleAsync({
-    filename: fileURLToPath(new URL(`src/${entry}`, root)),
-    minify: false,
-    targets,
-  });
-  writeFileSync(outDir + entry, code);
-  console.log(`${outName}/${entry}: ${code.length} bytes`);
+const files: Record<string, CompileOptions> = {
+  "pico.css": {},
+  "pico.classless.css": { entry: "classless" },
+  "pico.conditional.css": { scope: ".pico" },
+  "pico.fluid.classless.css": { entry: "classless", fluid: true },
+  "pico.colors.css": { entry: "colors" },
+};
+
+for (const [name, options] of Object.entries(files)) {
+  const { css } = await compile(options);
+  writeFileSync(outDir + name, css);
+  console.log(`${outName}/${name}: ${css.length} bytes`);
 }

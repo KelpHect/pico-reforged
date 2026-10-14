@@ -39,3 +39,6 @@ CLAUDE.md
 
 # Visual test report
 /test/visual/report*/
+
+# Compiled CLI and compiler
+/dist/

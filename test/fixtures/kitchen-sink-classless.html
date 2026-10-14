@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kitchen sink</title>
+    <link rel="stylesheet" href="__CSS__" />
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><strong>Brand</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#links">Links</a></li>
+          <li><a href="#forms" class="secondary">Forms</a></li>
+          <li><a href="#components" class="contrast">Components</a></li>
+          <li>
+            <details class="dropdown">
+              <summary role="button" class="secondary">Theme</summary>
+              <ul>
+                <li><a href="#">Auto</a></li>
+                <li><a href="#">Light</a></li>
+                <li><a href="#">Dark</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+      <hgroup>
+        <h1>Kitchen sink</h1>
+        <p>Every element and component the stylesheet touches, on one page.</p>
+      </hgroup>
+    </header>
+
+    <main class="container">
+      <section id="typography">
+        <h2>Typography</h2>
+        <h1>Heading 1</h1>
+        <h2>Heading 2</h2>
+        <h3>Heading 3</h3>
+        <h4>Heading 4</h4>
+        <h5>Heading 5</h5>
+        <h6>Heading 6</h6>
+        <hgroup>
+          <h3>Grouped heading</h3>
+          <p>The paragraph in an hgroup is muted and sits tight under the title.</p>
+        </hgroup>
+        <p>
+          A normal paragraph with <strong>strong text</strong>, <b>bold text</b>, <em>emphasis</em>,
+          <i>italic text</i>, <u>underlined text</u>, <small>small print</small>,
+          <mark>highlighted text</mark>, <ins>inserted text</ins>, <del>deleted text</del>,
+          <s>struck text</s> and <abbr title="HyperText Markup Language">HTML</abbr>. Press
+          <kbd>Ctrl</kbd> + <kbd>S</kbd> to save. Water is H<sub>2</sub>O and E = mc<sup>2</sup>.
+        </p>
+        <p>
+          Here is <a href="#">a plain link</a>, <a href="#" class="secondary">a secondary link</a>,
+          <a href="#" class="contrast">a contrast link</a> and
+          <a href="#" aria-current="page">a link marked as current</a>.
+        </p>
+        <ul>
+          <li>First item</li>
+          <li>
+            Second item with children
+            <ul>
+              <li>Nested one</li>
+              <li>Nested two</li>
+            </ul>
+          </li>
+          <li>Third item</li>
+        </ul>
+        <ol>
+          <li>Open the box</li>
+          <li>
+            Read the manual
+            <ol>
+              <li>Skim the intro</li>
+              <li>Read the warnings</li>
+            </ol>
+          </li>
+          <li>Plug it in</li>
+        </ol>
+        <dl>
+          <dt>Cascade</dt>
+          <dd>The order in which competing rules are resolved.</dd>
+          <dt>Specificity</dt>
+          <dd>How strongly a selector claims an element.</dd>
+        </dl>
+        <blockquote>
+          Simplicity is prerequisite for reliability.
+          <footer><cite>Edsger W. Dijkstra</cite></footer>
+        </blockquote>
+        <hr />
+        <address>
+          Pico Reforged<br />
+          12 Example Street<br />
+          Lisbon, Portugal
+        </address>
+      </section>
+
+      <section id="links">
+        <h2>Buttons</h2>
+        <p>
+          <button>Primary</button>
+          <button class="secondary">Secondary</button>
+          <button class="contrast">Contrast</button>
+          <button disabled>Disabled</button>
+        </p>
+        <p>
+          <button class="outline">Primary outline</button>
+          <button class="outline secondary">Secondary outline</button>
+          <button class="outline contrast">Contrast outline</button>
+          <button class="outline" disabled>Disabled outline</button>
+        </p>
+        <p>
+          <a href="#" role="button">Link button</a>
+          <a href="#" role="button" class="secondary">Secondary link</a>
+          <a href="#" role="button" class="contrast">Contrast link</a>
+          <a href="#" role="button" class="outline">Outline link</a>
+          <a href="#" role="button" aria-disabled="true">Disabled link</a>
+        </p>
+        <p>
+          <input type="submit" value="Submit" />
+          <input type="button" value="Button" />
+          <input type="reset" value="Reset" />
+        </p>
+        <button class="secondary" style="width: auto">Auto width</button>
+        <button>Full width</button>
+      </section>
+
+      <section id="tables">
+        <h2>Tables</h2>
+        <div class="overflow-auto">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Planet</th>
+                <th scope="col">Diameter (km)</th>
+                <th scope="col">Distance from Sun (AU)</th>
+                <th scope="col">Moons</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Mercury</th>
+                <td>4,879</td>
+                <td>0.39</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <th scope="row">Venus</th>
+                <td>12,104</td>
+                <td>0.72</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <th scope="row">Earth</th>
+                <td>12,756</td>
+                <td>1.00</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <th scope="row">Mars</th>
+                <td>6,792</td>
+                <td>1.52</td>
+                <td>2</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <th scope="row">Total moons</th>
+                <td colspan="2"></td>
+                <td>3</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <h3>Striped</h3>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Role</th>
+              <th scope="col">Team</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ana Ribeiro</td>
+              <td>Designer</td>
+              <td>Product</td>
+            </tr>
+            <tr>
+              <td>Bruno Matos</td>
+              <td>Engineer</td>
+              <td>Platform</td>
+            </tr>
+            <tr>
+              <td>Carla Sousa</td>
+              <td>Engineer</td>
+              <td>Web</td>
+            </tr>
+            <tr>
+              <td>Diogo Faria</td>
+              <td>Writer</td>
+              <td>Docs</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="code">
+        <h2>Code</h2>
+        <p>
+          Inline <code>display: grid</code>, a keyboard shortcut <kbd>Alt</kbd> + <kbd>Tab</kbd> and
+          program output <samp>Build finished in 1.2s</samp>.
+        </p>
+        <pre><code>function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+console.log(greet("world"));</code></pre>
+        <pre><kbd>npm run build</kbd>
+<samp>Done.</samp></pre>
+      </section>
+
+      <section id="media">
+        <h2>Media</h2>
+        <figure>
+          <img
+            alt="A flat gradient placeholder"
+            width="960"
+            height="300"
+            src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='960' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%234b6bfb'/%3E%3Cstop offset='1' stop-color='%23f2a65a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='960' height='300' fill='url(%23g)'/%3E%3C/svg%3E"
+          />
+          <figcaption>A gradient standing in for a photo.</figcaption>
+        </figure>
+        <figure>
+          <svg width="200" height="80" viewBox="0 0 200 80" role="img" aria-label="Inline SVG">
+            <rect x="4" y="4" width="192" height="72" rx="8" fill="none" stroke="currentColor" />
+            <circle cx="40" cy="40" r="18" />
+          </svg>
+          <figcaption>An inline SVG without a fill attribute on the root.</figcaption>
+        </figure>
+        <svg width="120" height="60" viewBox="0 0 120 60" fill="#c0392b" role="img" aria-label="Filled SVG">
+          <rect width="120" height="60" rx="6" />
+        </svg>
+        <video
+          controls
+          width="480"
+          height="270"
+          poster="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='270'%3E%3Crect width='480' height='270' fill='%23333'/%3E%3C/svg%3E"
+        ></video>
+        <audio controls></audio>
+        <iframe
+          title="Embedded page"
+          width="100%"
+          height="160"
+          srcdoc="<body style='font-family:sans-serif;margin:1rem'><p>Content inside an iframe.</p></body>"
+        ></iframe>
+        <canvas width="200" height="60"></canvas>
+      </section>
+
+      <section id="forms">
+        <h2>Forms</h2>
+        <form onsubmit="return false">
+          <fieldset>
+            <legend>Text inputs</legend>
+            <label>
+              Text
+              <input type="text" name="text" placeholder="Text" value="" />
+            </label>
+            <label>
+              Email
+              <input type="email" name="email" placeholder="you@example.com" autocomplete="off" />
+              <small>We never share your email.</small>
+            </label>
+            <label>
+              Password
+              <input type="password" name="password" value="secret123" />
+            </label>
+            <label>
+              Number
+              <input type="number" name="number" value="42" />
+            </label>
+            <label>
+              Search
+              <input type="search" name="search" placeholder="Search" />
+            </label>
+            <label>
+              Search with value
+              <input type="search" name="search2" value="pico" />
+            </label>
+            <label>
+              Telephone
+              <input type="tel" name="tel" placeholder="+351 210 000 000" />
+            </label>
+            <label>
+              URL
+              <input type="url" name="url" placeholder="https://example.com" />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Date and time</legend>
+            <label>Date <input type="date" name="date" value="2024-03-15" /></label>
+            <label>
+              Datetime local
+              <input type="datetime-local" name="datetime" value="2024-03-15T09:30" />
+            </label>
+            <label>Month <input type="month" name="month" value="2024-03" /></label>
+            <label>Week <input type="week" name="week" value="2024-W11" /></label>
+            <label>Time <input type="time" name="time" value="09:30" /></label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Other inputs</legend>
+            <label>Color <input type="color" name="color" value="#4b6bfb" /></label>
+            <label>File <input type="file" name="file" /></label>
+            <label>Range <input type="range" name="range" min="0" max="100" value="40" /></label>
+            <label>
+              Select
+              <select name="select" required>
+                <option value="" selected disabled>Select your favorite cuisine</option>
+                <option>Italian</option>
+                <option>Japanese</option>
+                <option>Portuguese</option>
+                <optgroup label="Other">
+                  <option>Mexican</option>
+                  <option>Thai</option>
+                </optgroup>
+              </select>
+            </label>
+            <label>
+              Select multiple
+              <select name="multi" multiple size="4">
+                <option>Apples</option>
+                <option selected>Bananas</option>
+                <option>Cherries</option>
+                <option selected>Dates</option>
+                <option>Elderberries</option>
+              </select>
+            </label>
+            <label>
+              Textarea
+              <textarea name="textarea" rows="4" placeholder="Write a few lines">A short note spanning
+two lines.</textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Choices</legend>
+            <label><input type="checkbox" name="c1" checked /> Checked</label>
+            <label><input type="checkbox" name="c2" /> Unchecked</label>
+            <label><input type="checkbox" name="c3" id="indeterminate" /> Indeterminate</label>
+            <label><input type="checkbox" name="c4" disabled /> Disabled</label>
+            <label><input type="checkbox" name="c5" checked disabled /> Checked and disabled</label>
+            <label><input type="radio" name="r" checked /> Radio one</label>
+            <label><input type="radio" name="r" /> Radio two</label>
+            <label><input type="radio" name="r" disabled /> Radio disabled</label>
+            <label><input type="checkbox" role="switch" name="s1" /> Switch off</label>
+            <label><input type="checkbox" role="switch" name="s2" checked /> Switch on</label>
+            <label><input type="checkbox" role="switch" name="s3" disabled /> Switch disabled</label>
+            <label>
+              <input type="checkbox" role="switch" name="s4" checked disabled /> Switch on, disabled
+            </label>
+            <label><input type="checkbox" name="c6" aria-invalid="true" /> Invalid checkbox</label>
+            <label><input type="radio" name="r2" aria-invalid="false" /> Valid radio</label>
+          </fieldset>
+
+          <fieldset>
+            <legend>States</legend>
+            <input type="text" value="Disabled input" disabled />
+            <input type="text" value="Read only input" readonly />
+            <select disabled>
+              <option>Disabled select</option>
+            </select>
+            <textarea disabled>Disabled textarea</textarea>
+            <input type="text" value="Valid input" aria-invalid="false" aria-describedby="ok" />
+            <small id="ok">Looks good.</small>
+            <input type="text" value="Invalid input" aria-invalid="true" aria-describedby="bad" />
+            <small id="bad">This value is not allowed.</small>
+            <input type="email" value="nobody@" aria-invalid="true" />
+            <select aria-invalid="true">
+              <option>Invalid select</option>
+            </select>
+            <select aria-invalid="false">
+              <option>Valid select</option>
+            </select>
+            <textarea aria-invalid="true">Invalid textarea</textarea>
+            <textarea aria-invalid="false">Valid textarea</textarea>
+            <input type="date" aria-invalid="true" value="2024-03-15" />
+            <input type="search" aria-invalid="true" value="bad query" />
+          </fieldset>
+
+          <fieldset>
+            <legend>Groups</legend>
+            <fieldset role="group">
+              <input type="email" placeholder="Enter your email" autocomplete="off" />
+              <input type="submit" value="Subscribe" />
+            </fieldset>
+            <fieldset role="group">
+              <input type="text" placeholder="Name" />
+              <input type="text" placeholder="Surname" />
+              <button type="button">Go</button>
+            </fieldset>
+            <fieldset role="group">
+              <button type="button" class="secondary">One</button>
+              <button type="button" class="secondary">Two</button>
+              <button type="button" class="secondary">Three</button>
+            </fieldset>
+            <fieldset role="group">
+              <select>
+                <option>Month</option>
+                <option>January</option>
+              </select>
+              <input type="number" placeholder="Year" />
+              <button type="button" class="contrast">Add</button>
+            </fieldset>
+            <form role="search" onsubmit="return false">
+              <input name="q" type="search" placeholder="Search" />
+              <input type="submit" value="Search" />
+            </form>
+            <div role="search">
+              <input type="search" placeholder="Search the docs" />
+              <button type="button">Find</button>
+            </div>
+          </fieldset>
+
+          <label>
+            Wrapped control
+            <input type="text" placeholder="The label wraps the input" />
+          </label>
+          <label for="separate">Separate label</label>
+          <input type="text" id="separate" placeholder="Label linked by for" />
+
+          <button type="submit">Submit</button>
+        </form>
+      </section>
+
+      <section id="components">
+        <h2>Components</h2>
+
+        <h3>Accordion</h3>
+        <details>
+          <summary>Closed accordion item</summary>
+          <p>This content is hidden until the summary is opened.</p>
+        </details>
+        <details open>
+          <summary>Open accordion item</summary>
+          <p>This content is visible because the open attribute is set.</p>
+          <ul>
+            <li>It can hold lists</li>
+            <li>and other flow content</li>
+          </ul>
+        </details>
+        <details>
+          <summary role="button">Summary as a button</summary>
+          <p>A details element with a button-styled summary.</p>
+        </details>
+        <details open>
+          <summary role="button" class="secondary">Secondary button summary</summary>
+          <p>The same pattern with a secondary color.</p>
+        </details>
+        <details>
+          <summary role="button" class="contrast">Contrast button summary</summary>
+          <p>And with the contrast color.</p>
+        </details>
+        <details>
+          <summary role="button" class="outline">Outline button summary</summary>
+          <p>And as an outline.</p>
+        </details>
+
+        <h3>Card</h3>
+        <article>
+          <header>Card header</header>
+          Card body with some text inside it.
+          <footer>Card footer</footer>
+        </article>
+        <article>A card with only a body.</article>
+        <article>
+          <header>Header only</header>
+          Body text.
+        </article>
+
+        <h3>Dropdown</h3>
+        <details class="dropdown">
+          <summary>Dropdown</summary>
+          <ul>
+            <li><a href="#">Solid</a></li>
+            <li><a href="#">Liquid</a></li>
+            <li><a href="#" aria-current="true">Gas</a></li>
+            <li><a href="#">Plasma</a></li>
+          </ul>
+        </details>
+        <details class="dropdown" open>
+          <summary role="button">Open dropdown as a button</summary>
+          <ul>
+            <li><a href="#">Solid</a></li>
+            <li><a href="#">Liquid</a></li>
+            <li><a href="#">Gas</a></li>
+          </ul>
+        </details>
+        <details class="dropdown" open style="margin-top: 12rem">
+          <summary>Select-like dropdown</summary>
+          <ul>
+            <li>
+              <label><input type="radio" name="phase" value="solid" checked /> Solid</label>
+            </li>
+            <li>
+              <label><input type="radio" name="phase" value="liquid" /> Liquid</label>
+            </li>
+            <li>
+              <label><input type="radio" name="phase" value="gas" /> Gas</label>
+            </li>
+          </ul>
+        </details>
+        <details class="dropdown" open style="margin-top: 12rem">
+          <summary>Multiple choice dropdown</summary>
+          <ul>
+            <li>
+              <label><input type="checkbox" name="fruit" checked /> Apple</label>
+            </li>
+            <li>
+              <label><input type="checkbox" name="fruit" /> Banana</label>
+            </li>
+            <li>
+              <label><input type="checkbox" name="fruit" checked /> Cherry</label>
+            </li>
+          </ul>
+        </details>
+        <label style="margin-top: 12rem; display: block">
+          Dropdown inside a label
+          <details class="dropdown">
+            <summary>Choose</summary>
+            <ul>
+              <li><a href="#">One</a></li>
+              <li><a href="#">Two</a></li>
+            </ul>
+          </details>
+        </label>
+        <nav style="margin-top: 4rem">
+          <ul>
+            <li>Navigation with dropdowns</li>
+          </ul>
+          <ul>
+            <li>
+              <details class="dropdown" open>
+                <summary>Account</summary>
+                <ul dir="rtl">
+                  <li><a href="#">Profile</a></li>
+                  <li><a href="#">Settings</a></li>
+                  <li><a href="#">Sign out</a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details class="dropdown">
+                <summary role="button" class="outline secondary">Menu</summary>
+                <ul>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#">About</a></li>
+                </ul>
+              </details>
+            </li>
+          </ul>
+        </nav>
+
+        <h3 style="margin-top: 8rem">Group</h3>
+        <div role="group">
+          <button>Save</button>
+          <button class="secondary">Save as</button>
+          <button class="contrast">Share</button>
+        </div>
+
+        <h3>Loading</h3>
+        <button aria-busy="true">Please wait</button>
+        <button aria-busy="true" aria-label="Please wait" class="secondary"></button>
+        <a href="#" role="button" aria-busy="true" class="outline">Loading link</a>
+        <article aria-busy="true"></article>
+        <section aria-busy="true">Loading section content</section>
+        <p aria-busy="true">Loading paragraph</p>
+
+        <h3>Nav</h3>
+        <nav>
+          <ul>
+            <li><strong>Acme Corp</strong></li>
+          </ul>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#" role="button">Contact</a></li>
+          </ul>
+        </nav>
+        <nav>
+          <ul>
+            <li><a href="#" class="secondary">Left</a></li>
+          </ul>
+          <ul>
+            <li><button class="outline" type="button">Button in nav</button></li>
+            <li><input type="search" placeholder="Search" /></li>
+            <li>
+              <select>
+                <option>English</option>
+              </select>
+            </li>
+          </ul>
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Products</a></li>
+            <li>Widgets</li>
+          </ul>
+        </nav>
+        <nav aria-label="breadcrumb">
+          <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Docs</a></li>
+            <li><a href="#" aria-current="page">Current page</a></li>
+          </ul>
+        </nav>
+        <aside>
+          <nav>
+            <ul>
+              <li><a href="#">Sidebar one</a></li>
+              <li><a href="#">Sidebar two</a></li>
+              <li><a href="#" role="button" class="secondary">Sidebar button</a></li>
+            </ul>
+          </nav>
+        </aside>
+
+        <h3>Progress</h3>
+        <progress value="35" max="100"></progress>
+        <progress value="80" max="100"></progress>
+        <progress></progress>
+
+        <h3>Tooltip</h3>
+        <p>
+          <a href="#" data-tooltip="Default (top)">Top</a>
+          <a href="#" data-tooltip="On the bottom" data-placement="bottom">Bottom</a>
+          <a href="#" data-tooltip="On the left" data-placement="left">Left</a>
+          <a href="#" data-tooltip="On the right" data-placement="right">Right</a>
+          <button data-tooltip="Button tooltip">Button</button>
+          <em data-tooltip="Text tooltip">Plain text</em>
+        </p>
+      </section>
+
+      <section id="layout">
+        <h2>Layout</h2>
+        <div class="container-fluid" style="outline: 1px dashed gray">
+          <p>This is a .container-fluid inside the page.</p>
+        </div>
+        <div class="container" style="outline: 1px dashed gray">
+          <p>This is a .container nested in the page.</p>
+        </div>
+        <div class="grid">
+          <div>One</div>
+          <div>Two</div>
+          <div>Three</div>
+        </div>
+        <div class="grid">
+          <input type="text" placeholder="First name" />
+          <input type="text" placeholder="Last name" />
+          <button type="button">Send</button>
+        </div>
+        <div class="overflow-auto" style="width: 20rem; outline: 1px dashed gray">
+          <div style="width: 40rem">A wide block inside .overflow-auto, wider than its box.</div>
+        </div>
+      </section>
+
+      <section id="theme">
+        <h2>Nested theme</h2>
+        <article data-theme="dark">
+          <header>Dark article in a light page</header>
+          <p>Text, <a href="#">a link</a> and <mark>marked text</mark>.</p>
+          <input type="text" placeholder="Dark input" />
+          <select>
+            <option>Dark select</option>
+          </select>
+          <button>Primary</button>
+          <button class="secondary">Secondary</button>
+          <button class="outline">Outline</button>
+          <table>
+            <tr>
+              <th>Key</th>
+              <td>Value</td>
+            </tr>
+          </table>
+          <footer>Dark footer</footer>
+        </article>
+        <article data-theme="light">
+          <header>Light article</header>
+          <p>Forced light, whatever the page scheme is.</p>
+          <input type="text" placeholder="Light input" />
+          <button>Primary</button>
+        </article>
+      </section>
+
+      <section id="rtl" dir="rtl" lang="ar">
+        <h2>RTL</h2>
+        <p>نص تجريبي قصير لاختبار الاتجاه من اليمين إلى اليسار، مع <a href="#">رابط</a>.</p>
+        <label>
+          اختر
+          <select>
+            <option>الخيار الأول</option>
+            <option>الخيار الثاني</option>
+          </select>
+        </label>
+        <input type="search" placeholder="بحث" />
+        <input type="search" value="كلمة" />
+        <details>
+          <summary>تفاصيل</summary>
+          <p>محتوى مخفي.</p>
+        </details>
+        <details open>
+          <summary role="button">زر تفاصيل</summary>
+          <p>محتوى ظاهر.</p>
+        </details>
+        <details class="dropdown" open>
+          <summary>قائمة</summary>
+          <ul>
+            <li><a href="#">واحد</a></li>
+            <li><a href="#">اثنان</a></li>
+          </ul>
+        </details>
+        <nav aria-label="breadcrumb" style="margin-top: 6rem">
+          <ul>
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">المنتجات</a></li>
+            <li>عنصر</li>
+          </ul>
+        </nav>
+        <progress value="40" max="100"></progress>
+        <fieldset role="group">
+          <input type="text" placeholder="الاسم" />
+          <button type="button">إرسال</button>
+        </fieldset>
+        <label><input type="checkbox" role="switch" checked /> مفتاح</label>
+        <blockquote>
+          اقتباس قصير.
+          <footer><cite>مؤلف</cite></footer>
+        </blockquote>
+      </section>
+    </main>
+
+    <footer class="container">
+      <small>
+        <a href="#">Privacy</a> &bull; <a href="#" class="secondary">Terms</a> &bull;
+        <a href="#" class="contrast">Contact</a>
+      </small>
+    </footer>
+
+    <script>
+      document.getElementById('indeterminate').indeterminate = true;
+    </script>
+  </body>
+</html>
