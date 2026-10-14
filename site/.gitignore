@@ -1,0 +1,8 @@
+.next/
+.source/
+out/
+public/css/
+public/skill/
+next-env.d.ts
+*.tsbuildinfo
+public/examples/

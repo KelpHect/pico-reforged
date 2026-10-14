@@ -1,0 +1,14 @@
+{
+  "pages": [
+    "getting-started",
+    "customization",
+    "layout",
+    "content",
+    "forms",
+    "components",
+    "extras",
+    "integrations",
+    "ai",
+    "migration"
+  ]
+}

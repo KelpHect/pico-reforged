@@ -1,0 +1,103 @@
+---
+title: Cascade layers and overriding
+description: Every Pico Reforged rule sits in a cascade layer, so your own CSS wins without !important or heavier selectors.
+---
+
+Every rule in the stylesheet is inside the `pico` layer. CSS layers settle the cascade before selector weight is looked at, and CSS that is not in any layer always beats CSS that is. That is the whole override story: write your rule, anywhere after the Pico link, and it wins.
+
+## The layer order
+
+The order is declared once, at the top of every build.
+
+```css
+@layer pico.tokens, pico.theme, pico.core, pico.extras, pico.utilities;
+```
+
+A later layer wins over an earlier one, whatever the specificity of the selectors.
+
+| Layer | What is in it |
+| --- | --- |
+| `pico.tokens` | The custom properties: fonts, spacings, radius, container widths and the neutral color scheme. |
+| `pico.theme` | One theme file with the primary color tokens. It comes after the tokens so a theme can override any neutral token. |
+| `pico.core` | Every module: layout, content, forms and components, in one layer and in the v2.1.1 order. |
+| `pico.extras` | The opt-in extras. They restyle things that core already styles (a table becomes a data table, a nav becomes pagination), so they must win over core. |
+| `pico.utilities` | The `.pico-color-*` and `.pico-background-*` classes from `pico.colors.css`, so they beat any component rule. |
+
+The default `pico.css` carries the order statement but no rules for `pico.extras`. Those come with the [extras](/docs/extras/overview) when you add them. Core is one layer on purpose: the rules between modules rely on selector weight, as in Pico CSS v2.1.1, and splitting them into layers would flip some of those cases.
+
+## Write unlayered CSS
+
+Plain CSS beats every Pico layer. No `!important`, no extra class, no repeated selector.
+
+<Example title="An unlayered override">
+```html
+<style>
+  button {
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
+<button>Save</button>
+<button class="secondary outline">Cancel</button>
+```
+</Example>
+
+Many Pico selectors are wrapped in `:where()`, which has no specificity, so even a single type selector like `button` in your code is enough. If a rule of yours still loses, the usual cause is that your CSS sits in a layer that is ranked below `pico`, or comes before the Pico stylesheet in a layer that you declared earlier. See the next section.
+
+## Put your CSS in your own layer
+
+A layer you declare after Pico ranks above it. Rules inside it beat Pico, and later layers of yours beat earlier ones, again without caring about selector weight.
+
+<Example title="A layer after Pico">
+```html
+<style>
+  @layer app {
+    button {
+      border-radius: 2rem;
+    }
+  }
+</style>
+<button>Rounded</button>
+<button class="contrast">Rounded too</button>
+```
+</Example>
+
+Unlayered CSS still beats `@layer app`, so you can keep a few one-off rules outside the layer.
+
+### Layers before and after Pico
+
+To state your order up front, declare it before the Pico stylesheet loads. Put this first in the `<head>`, or at the top of your main CSS file, before the `@import`.
+
+```css
+@layer reset, pico, app;
+```
+
+Now `reset` ranks below Pico and `app` above it. Pico's own layers are nested in `pico`, so the order inside it does not change. This is the way to load a reset, or another framework, that Pico should override.
+
+You can also wrap the whole stylesheet in a layer when you import it.
+
+```css
+@import url("pico.min.css") layer(vendor);
+```
+
+### Add rules to a Pico layer
+
+Your rules can join a Pico layer when you want the usual cascade between modules. Selector weight decides there, as it does in the framework.
+
+```css
+@layer pico.core {
+  article > footer {
+    border-top: var(--pico-border-width) solid var(--pico-muted-border-color);
+  }
+}
+```
+
+The post-build purge only touches rules inside `@layer pico.*` blocks, so keep your own rules outside those layers if you do not want them purged. See [Integrations](/docs/integrations/overview).
+
+## Where !important still matters
+
+A few declarations in Pico use `!important`: the `[hidden]` rule, some padding and icon rules on search, date and select-like fields, the border colors of valid and invalid fields, and the `prefers-reduced-motion` rules. Inside the cascade, `!important` reverses the layer order, so a Pico `!important` inside a layer beats an `!important` that you write outside any layer. To change one, build the CSS with `important: false` (`--no-important`), which strips every `!important`. See [Building a custom bundle](/docs/customization/custom-bundle).
+
+## Check what wins
+
+In the browser dev tools, the Styles panel groups rules by layer and shows the layer name next to the selector. A rule from the framework shows `pico.core`, `pico.extras` or another `pico.*` name. A rule without a layer name is yours, and it is ranked above all of them.

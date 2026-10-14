@@ -1,0 +1,80 @@
+---
+title: Accordion
+description: Collapsible sections from the native details and summary elements, with an animated height where supported.
+---
+
+An accordion is a `<details>` element. No script, no class. The summary gets a chevron that turns when the section opens. Browsers that support `::details-content` and `interpolate-size` also animate the height, and the rest open and close instantly.
+
+<Example title="Accordion" height={260}>
+```html
+<details open>
+  <summary>What is Pico Reforged?</summary>
+  <p>A rewrite of Pico CSS v2.1.1 in plain modern CSS.</p>
+</details>
+<details>
+  <summary>Does it need JavaScript?</summary>
+  <p>No. Details and summary work in the browser on their own.</p>
+</details>
+```
+</Example>
+
+## One at a time
+
+Give several `<details>` the same `name` and the browser keeps only one open. This is a native feature, so there is nothing to add on the CSS side. In a browser that ignores `name`, every section simply opens on its own.
+
+<Example title="Exclusive accordion" height={260}>
+```html
+<details name="faq" open>
+  <summary>First</summary>
+  <p>Opening another one closes this one.</p>
+</details>
+<details name="faq">
+  <summary>Second</summary>
+  <p>Only one is open at a time.</p>
+</details>
+<details name="faq">
+  <summary>Third</summary>
+  <p>The same goes for this one.</p>
+</details>
+```
+</Example>
+
+## Animated open and close
+
+The animation is on by default and needs no markup. It is wrapped in `@supports (interpolate-size: allow-keywords) and selector(::details-content)` and in `prefers-reduced-motion: no-preference`, so it is skipped where the browser cannot do it and for people who ask for less motion. The duration comes from `--pico-transition`. The dropdown (`details.dropdown`) is left out, because its menu is a floating list and not content that pushes the page down.
+
+## Button style summary
+
+Add `role="button"` to the `<summary>` and it looks like a button. Add a class such as `secondary`, `contrast` or `outline` to change the style.
+
+<Example title="Summary as a button" height={220}>
+```html
+<details>
+  <summary role="button" class="secondary">Show more</summary>
+  <p>Hidden until you ask for it.</p>
+</details>
+<details>
+  <summary role="button" class="outline">Outline button</summary>
+  <p>The same, as an outline.</p>
+</details>
+```
+</Example>
+
+## Accessibility
+
+`<details>` and `<summary>` are keyboard accessible by default: Tab to the summary, Enter or Space toggles it. The summary shows a focus ring on `:focus-visible`. The chevron is a background image, so it is not read out. Keep the summary text short and put the detail in the body.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-accordion-border-color", description: "Border color token, kept from Pico CSS v2.1.1." },
+    { name: "--pico-accordion-close-summary-color", value: "var(--pico-color)", description: "Summary text while the section is closed." },
+    { name: "--pico-accordion-open-summary-color", value: "var(--pico-muted-color)", description: "Summary text while the section is open." },
+    { name: "--pico-accordion-active-summary-color", value: "var(--pico-primary-hover)", description: "Summary text while it has focus." },
+    { name: "--pico-icon-chevron", description: "The chevron image, an SVG data URI." },
+    { name: "--pico-transition", value: "0.2s ease-in-out", description: "Duration and easing of the chevron and the height animation." },
+  ]}
+/>
+
+See also the [Dropdown](/docs/components/dropdown), which is a `<details>` with a floating menu.

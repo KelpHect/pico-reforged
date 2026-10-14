@@ -1,0 +1,69 @@
+---
+title: Checkboxes
+description: Checkboxes drawn with CSS, with checked, indeterminate and validation states.
+---
+
+A checkbox is drawn with CSS, so it looks the same on every platform and follows the active theme. Put it inside a `label` and the whole label is clickable.
+
+<Example title="Checkboxes" height={230}>
+```html
+<fieldset>
+  <legend>Languages you speak:</legend>
+  <label>
+    <input type="checkbox" name="english" checked />
+    English
+  </label>
+  <label>
+    <input type="checkbox" name="french" />
+    French
+  </label>
+  <label>
+    <input type="checkbox" name="portuguese" />
+    Portuguese
+  </label>
+</fieldset>
+```
+</Example>
+
+## Indeterminate
+
+`:indeterminate` shows a minus sign. HTML has no attribute for it, so set the property from script.
+
+<Example title="Indeterminate" height={120}>
+```html
+<label>
+  <input type="checkbox" id="all" />
+  Select all
+</label>
+<script>
+  document.getElementById("all").indeterminate = true;
+</script>
+```
+</Example>
+
+## Validation
+
+`aria-invalid` colors the border, and the fill once checked.
+
+<Example title="Valid and invalid" height={150}>
+```html
+<label>
+  <input type="checkbox" name="ok" checked aria-invalid="false" />
+  Accepted
+</label>
+<label>
+  <input type="checkbox" name="bad" checked aria-invalid="true" />
+  Rejected
+</label>
+```
+</Example>
+
+See [Validation states](/docs/forms/validation).
+
+## Accessibility
+
+Wrap the input in a `label` or link them with `for` and `id`. Use a `fieldset` with a `legend` to name a group of checkboxes. For a toggle, see [Switch](/docs/forms/switch).
+
+## Customization
+
+The border is `0.125rem` wide. Checked checkboxes use the primary background and border from the active [theme](/docs/customization/themes). The checkmark is `--pico-icon-checkbox` and the indeterminate icon is `--pico-icon-minus`.

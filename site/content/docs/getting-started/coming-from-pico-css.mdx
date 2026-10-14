@@ -1,0 +1,42 @@
+---
+title: Coming from Pico CSS
+description: What carries over from Pico CSS v2.1.1, what changed, and where the full migration guide is.
+---
+
+Pico Reforged is a fork of Pico CSS v2.1.1 by Lucas Larroche (MIT). It keeps the public surface: the CDN file names, the classes, the attribute hooks and the `--pico-*` variables. For most pages the migration is one URL.
+
+## Change the link
+
+```html
+<!-- before -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+
+<!-- after -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+```
+
+Every one of the 238 files of v2.1.1 exists under the same name, see the [version picker](/docs/getting-started/version-picker). In an npm project, replace `@picocss/pico` with `@rusticstack/pico-reforged`.
+
+## What looks different
+
+Colors are converted to OKLCH and rounded, so a computed color can differ slightly. In the project's screenshot comparison against v2.1.1, the kitchen sink page differs by 0.001% to 0.003% of the pixels, and page heights are identical. With `dir="rtl"` a few spacings and corners now use logical properties, which fixes the mirrored layout.
+
+## What changed under the page
+
+- The source is plain CSS in cascade layers, not Sass. Your own unlayered CSS beats the framework without `!important`.
+- The browser floor is Chrome and Edge 111, Firefox 128 and Safari 16.4. Stay on v2.1.1 if you need older browsers. See [browser support](/docs/getting-started/browser-support).
+- The Sass options are CSS variables or compiler options. For example `$theme-color` is a themed file or `@pico { theme: jade; }`, and `$enable-classes: false` is the class-less build.
+- A `<dialog>` opened with `showModal()` animates on its own. The `.modal-is-open` classes still work.
+
+## What is new
+
+Extras, popover and anchor positioning patterns, custom themes from one color, a CLI, and build integrations that purge unused rules. They are all opt-in. See [Introduction](/docs/getting-started/introduction) for the list.
+
+The complete guide, with the Sass table and every difference, is [Migration from Pico CSS](/docs/migration/from-pico-css).
+
+## Credit
+
+Pico Reforged is a separate project and is not the official Pico CSS. It is not made or endorsed by its author, and it does not use the Pico CSS logo. The license text keeps the original copyright.

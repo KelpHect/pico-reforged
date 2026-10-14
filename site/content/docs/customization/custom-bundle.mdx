@@ -1,0 +1,193 @@
+---
+title: Building a custom bundle
+description: Compile your own Pico Reforged stylesheet with the CLI, a config file or the compile() function.
+---
+
+The ready-made files in `css/` cover the common cases. When you want another theme color, fewer modules, extras, a scope or a smaller file, build your own. The same compiler makes the ready-made files, so a custom bundle has the same layers, tokens and browser floor.
+
+You need Node 22.18 or newer.
+
+```shell
+npm install @rusticstack/pico-reforged@next
+```
+
+## The CLI
+
+The package installs a `pico-reforged` command.
+
+```shell
+npx pico-reforged build --theme jade --minify --out public/pico.css
+```
+
+<PropsTable
+  items={[
+    { name: "build", description: "Compile one stylesheet. Without --out it prints to stdout." },
+    { name: "matrix [outDir]", description: "Write the whole file set that css/ holds. The default outDir is css." },
+    { name: "purge <outDir>", description: "Remove unused Pico rules from a built site. See Integrations." },
+    { name: "themes", description: "List the 20 built-in themes." },
+    { name: "modules", description: "List the modules that --exclude accepts." },
+    { name: "extras", description: "List the opt-in extras." },
+  ]}
+/>
+
+### Build options
+
+Each option has a name in a config file or in `compile()`, and a flag on the CLI.
+
+| Option | Flag | Default | Effect |
+| --- | --- | --- | --- |
+| `entry` | `--entry <name>` | `pico` | `pico`, `classless`, `colors` or `extras`. |
+| `theme` | `--theme <value>` | `azure` | A theme name, a color such as `"#e5484d"`, or the path of a CSS file. See [Themes](/docs/customization/themes). |
+| `extras` | `--extras <list>` | none | Comma separated extras to add, or `all`. |
+| `exclude` | `--exclude <list>` | none | Comma separated modules to leave out. |
+| `modules` | none | all on | An object like `{ "components/modal": false }`. |
+| `classes` | `--no-classes` | `true` | `false` drops every selector that needs a class. |
+| `semanticContainer` | `--semantic-container` | `false` | Styles `body > header`, `main` and `footer` as containers. On for the classless entry. |
+| `fluid` | `--fluid` | `false` | Container max width of `100%` at every width. |
+| `scope` | `--scope <selector>` | none | Prefix every rule, for example `.pico`. |
+| `responsiveSpacings` | `--responsive-spacings` | `false` | Scale the block spacings with the viewport. |
+| `responsiveTypography` | `--no-responsive-typography` | `true` | `false` keeps the root font size fixed. |
+| `transitions` | `--no-transitions` | `true` | `false` removes every transition and animation. |
+| `important` | `--no-important` | `true` | `false` strips `!important`. |
+| `purge` | `--purge <glob>` | off | Remove rules that cannot match these files. Repeatable. |
+| `purge.safelist` | `--safelist <name>` | none | Keep a class, id, tag or attribute when purging. Repeatable. |
+| `targets` | `--targets <query>` | the browser floor | A browserslist query. |
+| `minify` | `--minify` | `false` | Minify the output. |
+| `sourceMap` | `--source-map` | `false` | Write a source map. |
+| `banner` | none | none | Text put at the top of the output. |
+| none | `--config <file>` | `pico.config.*` | Read options from a `.json`, `.ts` or `.mjs` file. |
+| none | `--out <file>` | stdout | Write to a file. |
+
+The default `targets` is `chrome >= 111, edge >= 111, firefox >= 128, safari >= 16.4, ios_saf >= 16.4`. See [Browser support](/docs/getting-started/browser-support).
+
+An unknown option name does not fail the build. The CLI prints a warning with the list of valid names. A module or extra name that does not exist is an error.
+
+### Recipes
+
+A theme from one color, without the modal and the range input, plus two extras.
+
+```shell
+npx pico-reforged build \
+  --theme "#e5484d" \
+  --exclude components/modal,forms/input-range \
+  --extras tabs,badge \
+  --minify \
+  --out public/pico.css
+```
+
+The classless build, as one file.
+
+```shell
+npx pico-reforged build --entry classless --minify --out public/pico.classless.css
+```
+
+The classless build in the fluid form (the `pico.fluid.classless` file).
+
+```shell
+npx pico-reforged build --entry classless --fluid --minify --out public/pico.fluid.classless.css
+```
+
+A build that only styles what is inside `.pico` (the conditional build), so it can live next to another framework.
+
+```shell
+npx pico-reforged build --scope .pico --minify --out public/pico.conditional.css
+```
+
+```html
+<link rel="stylesheet" href="pico.conditional.css" />
+<main class="pico">...</main>
+```
+
+`:root` and `html` rules stay on the root, and `*`, `body`, `main`, `.container`, `.container-fluid`, `.grid` and the `.modal-is-*` classes on `html` stay global, as in Pico CSS v2.1.1.
+
+The opt-in extras on their own, to load after a ready-made `pico.css`.
+
+```shell
+npx pico-reforged build --entry extras --minify --out public/pico.extras.css
+npx pico-reforged build --entry extras --extras tabs --minify --out public/tabs.css
+```
+
+## Modules
+
+Every file under `src/` is a module, and `exclude` takes the path without `.css`. Excluding a module also removes the custom properties that only it used. Run `npx pico-reforged modules` for the current list.
+
+```text
+reset/document
+layout/landmarks, layout/section, layout/responsive-spacings, layout/container,
+layout/semantic-container, layout/grid, layout/overflow-auto
+content/typography, content/link, content/button, content/table, content/embedded,
+content/code, content/figure, content/misc
+forms/basics, forms/checkbox-radio-switch, forms/input-color, forms/input-date,
+forms/input-file, forms/input-range, forms/input-search
+components/accordion, components/card, components/dropdown, components/group,
+components/loading, components/modal, components/nav, components/progress,
+components/tooltip, components/popover
+utilities/accessibility, utilities/reduce-motion
+```
+
+`layout/responsive-spacings` and `layout/semantic-container` are off unless you ask for them with `responsiveSpacings` or `semanticContainer`. Turning off `transitions` or `important` also leaves out `utilities/reduce-motion`.
+
+The extras are `tabs`, `alert`, `toast`, `badge`, `avatar`, `skeleton`, `app-shell`, `data-table`, `pagination`, `stepper` and `empty-state`. They are never part of `pico.css`. See [Extras](/docs/extras/overview).
+
+## A config file
+
+Put the options in `pico.config.json`, or in a `pico.config.ts`, `.mjs` or `.js` file that exports them. The CLI finds a file with that name in the working directory, or you pass `--config`. A flag replaces the same option from the file.
+
+```json
+{
+  "theme": "jade",
+  "extras": ["tabs", "badge"],
+  "exclude": ["components/modal"],
+  "minify": true
+}
+```
+
+```shell
+npx pico-reforged build --out public/pico.css
+```
+
+## The compile function
+
+The compiler is also a function. It is ESM only and returns the CSS and some stats.
+
+```ts
+import { writeFile } from "node:fs/promises";
+import { compile } from "@rusticstack/pico-reforged/compiler";
+
+const { css, stats } = await compile({
+  theme: { color: "#e5484d" },
+  extras: ["tabs", "badge"],
+  exclude: ["components/modal"],
+  minify: true,
+});
+
+await writeFile("public/pico.css", css);
+console.log(stats.bytes, stats.gzipBytes, stats.warnings);
+```
+
+`compile()` also takes `purge: { content: ["site/**/*.html"], safelist: ["modal-is-open"] }`. This plain compiler purge judges tags and attribute values too, so list anything a script adds at run time.
+
+## Build the whole set
+
+`matrix` writes every file that `css/` holds: the plain, classless, conditional, classless conditional, fluid classless and fluid classless conditional builds, each minified and not, in the plain form and in the 20 themes, plus `pico.colors`, `pico.extras` and one file per extra in `extras/`. That is 262 files.
+
+```shell
+npx pico-reforged matrix my-css
+```
+
+## Let the bundler do it
+
+If your project uses Vite, Next.js or another bundler, you do not have to run the CLI. Import the package in your CSS, set the options in an `@pico` block, and the plugin compiles and purges for you. The block takes the same options in kebab-case.
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: #e5484d;
+  extras: tabs badge;
+  exclude: components/modal forms/input-range;
+  purge: safe;
+}
+```
+
+Purging is on by default in production and uses the safe mode. See [Integrations](/docs/integrations/overview) for the setup, the `@source` rules and the aggressive mode.

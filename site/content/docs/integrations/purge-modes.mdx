@@ -1,0 +1,82 @@
+---
+title: Purge modes
+description: Safe purge is the default. Aggressive purge saves more and needs a check. Both with measured numbers.
+---
+
+Pico Reforged ships fixed CSS, so purging removes what your sources cannot match. That is the riskier direction, and the defaults lean toward keeping rules. There are three modes, set with `@pico { purge: ... }` in the stylesheet or `--mode` on the CLI.
+
+<PropsTable
+  items={[
+    { name: "safe", type: "default", description: "Drops a rule only when a class, an id or an attribute name it needs is absent from the sources." },
+    { name: "aggressive", type: "opt-in", description: "Also judges tag names and attribute values. Saves more, can drop rules for markup that only exists at run time." },
+    { name: "off", type: "mode", description: "Never purges this stylesheet." },
+  ]}
+/>
+
+`auto` is the first name of the default and still works as `safe`.
+
+## Safe mode
+
+A rule is kept unless a name it needs is nowhere in your sources.
+
+- A tag name that was not seen never drops a rule. A `dialog` rule stays even when no `<dialog>` is in the files.
+- An attribute value that was not seen never drops a rule. `[type="date"]` stays.
+- The attribute names that frameworks and the browser set at run time always count as present: `role`, `type`, every `aria-*`, `disabled`, `hidden`, `open`, `popover`, `value`, `href` and the like.
+- Pseudo-classes are ignored, so `button:hover` stays when `button` is used.
+
+What goes: unused classes (`.secondary`, `.outline`, `.grid`, `.pico-color-*`), unused `data-*` hooks (extras such as `data-tabs` and `data-tooltip`) and unused keyframes.
+
+So `next/link` and `next/image`, a heading level chosen at run time, `aria-current` from a router, `btn.disabled = true` and server templates that write attribute values cannot lose a rule. A class that only appears in markup you cannot scan still needs [`@source` or a safelist](/docs/integrations/configuration).
+
+## Aggressive mode
+
+```css
+@pico {
+  purge: aggressive;
+}
+```
+
+Aggressive mode also judges tag names and attribute values: `dialog` goes when no `<dialog>` is in the sources, and `[type="date"]` goes when no `type="date"` is. It is only safe when your sources show all the markup the page will have. It can drop rules for:
+
+- tags that a component emits (`next/link` writes `a`, `next/image` writes `img`) or that code picks at run time, such as ``createElement(`h${level}`)``
+- attribute values that a router, a script or a server template writes, such as `aria-current="page"`, `el.disabled = true` or `type="<%= kind %>"`
+- HTML from a CMS, JSON or Markdown that is not in the scanned files
+
+The scanner keeps some of these by heuristics: `a`, `img` and `h1` to `h6` are always kept, and the common content and form tags are kept when it sees a Markdown or HTML-string renderer (`innerHTML`, `v-html`, `dangerouslySetInnerHTML`, `{@html}`, `| safe`) or an htmx, Turbo, Unpoly, Livewire, LiveView or Datastar fragment. A heuristic cannot see everything.
+
+Before you ship it:
+
+1. Add run-time markup with `@source` (files) or `@source inline("dialog type=date")`.
+2. Name anything else in the safelist.
+3. Build with `purge: off` and again with `aggressive`, then diff the rendered pages.
+
+## Measured numbers
+
+Sizes are for `css/pico.min.css`, which is 80,106 bytes (12,075 gzipped), run through `pico-reforged purge` against one page. The numbers depend on the page, because the root variables, the base reset and the color scheme tokens always stay.
+
+| Page                                              | Mode       | Rules removed | Size                     |
+| ------------------------------------------------- | ---------- | ------------- | ------------------------ |
+| Small page (heading, paragraph, code, two buttons) | safe       | 71 of 396     | 66,420 bytes (10,528 gz) |
+| Small page                                        | aggressive | 344 of 396    | 24,253 bytes (4,586 gz)  |
+| Dashboard example                                 | safe       | 77 of 396     | 65,239 bytes (10,398 gz) |
+| Dashboard example                                 | aggressive | 257 of 396    | 36,352 bytes (6,710 gz)  |
+| Kitchen sink test page                            | safe       | 6 of 396      | 79,487 bytes (11,952 gz) |
+| Kitchen sink test page                            | aggressive | 32 of 396     | 75,085 bytes (11,370 gz) |
+
+The small page is `examples/vite/index.html`, the dashboard is `examples/dashboard.html` and the kitchen sink is `test/fixtures/kitchen-sink.html`, all in the repository. The kitchen sink uses nearly every component, so there is little to remove. On the kitchen sink `safe` saves under 1% and `aggressive` about 6%. On the small page `safe` saves about 17% and `aggressive` about 70%.
+
+The difference between the two modes is what safe mode refuses to guess. On the small page it keeps 273 rules that aggressive removes, because they target tags or attribute values that the page does not contain today.
+
+## Choosing a mode
+
+Stay on `safe` when the markup comes from components, a router, a CMS or a server you do not fully control. It is the right default, and it still removes unused classes and extras hooks.
+
+Move to `aggressive` for a static site whose pages you can see in full, and check it once with a diff. For a page you build with the [CLI](/docs/integrations/static-sites), the `--dry-run` flag shows the counts per file before anything is written.
+
+## Rules the purge never touches
+
+- Rules outside the `pico.*` layers, which means your own CSS.
+- Anything when the scan finds no file. The build warns and skips the purge, so a wrong root never turns into an empty stylesheet.
+- The root variables, the base reset and the color scheme tokens.
+
+The plain compiler option (`purge: { content }`, `build --purge`) does not use these modes. It stays explicit: tags and values are judged, and `keepTypes` is opt-in.

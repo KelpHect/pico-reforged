@@ -1,0 +1,167 @@
+---
+title: Badge
+description: Inline labels, counters and status dots from one data-badge attribute.
+---
+
+A badge is an inline label, counter or status tag. One hook, `data-badge`, goes on a `span`, `data`, `a` or `button`, and its value picks the color. The badge scales with the font size of its parent, so it fits in a heading, a paragraph or a `small`.
+
+Load `css/extras/badge.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Variants
+
+The values are `secondary`, `contrast`, `success`, `warning` and `danger`. An empty value (just `data-badge`) is the primary color.
+
+<Example title="Badge variants" css={["pico.extras"]} height={100}>
+```html
+<p>
+  <span data-badge>Default</span>
+  <span data-badge="secondary">Secondary</span>
+  <span data-badge="contrast">Contrast</span>
+  <span data-badge="success">Active</span>
+  <span data-badge="warning">Pending</span>
+  <span data-badge="danger">Failed</span>
+</p>
+```
+</Example>
+
+## Counters
+
+Use `<data>` with a `value` for a number, so the machine readable value travels with the text. Hide a count of zero with the `hidden` attribute.
+
+<Example title="Counters" css={["pico.extras"]} height={100}>
+```html
+<p>
+  <data value="1" data-badge>1</data>
+  <data value="9" data-badge="secondary">9</data>
+  <data value="42" data-badge="danger">42</data>
+  <data value="1280" data-badge="contrast">1280</data>
+  <data value="99" data-badge="success">99+</data>
+</p>
+```
+</Example>
+
+Updating a counter needs a few lines of script. The text node after the hidden context span (see [In buttons and links](#in-buttons-and-links)) is the visible count, so only that node changes. Without a context span, set `el.textContent` instead.
+
+```js
+function setBadge(el, n) {
+  el.value = String(n);
+  el.lastChild.textContent = String(n);
+  el.hidden = n === 0;
+}
+```
+
+Set `data-badge` at render time. Do not switch the color from script for a static state. For a count that screen reader users should hear, put `aria-live="polite"` on the `data` element only, never on the button.
+
+## Dots
+
+A badge with no text is a dot. It is decorative, so hide it from assistive technology with `aria-hidden="true"` and let the text next to it carry the meaning.
+
+<Example title="Status dots" css={["pico.extras"]} height={150}>
+```html
+<ul>
+  <li><span data-badge="success" aria-hidden="true"></span> API operational</li>
+  <li><span data-badge="warning" aria-hidden="true"></span> Webhooks degraded</li>
+  <li><span data-badge="danger" aria-hidden="true"></span> Billing sync offline</li>
+</ul>
+```
+</Example>
+
+## In buttons and links
+
+On a solid button the default, secondary and contrast fills invert so they stay visible. Status colors keep their own fill and gain a ring in the button text color. An outline button has no fill, so its badges apply as they are.
+
+Every direct child `span` of a badge is visually hidden but still read by screen readers. That is how you write context, like "unread messages: " before the count. To put an icon or styled text inside a badge, wrap it in another element such as `<i>` or `<b>`.
+
+<Example title="Badges in buttons" css={["pico.extras"]} height={170}>
+```html
+<p>
+  <button type="button">
+    Inbox
+    <data value="4" data-badge><span>unread messages: </span>4</data>
+  </button>
+  <button type="button" class="secondary">
+    Drafts
+    <data value="2" data-badge="secondary"><span>drafts: </span>2</data>
+  </button>
+  <button type="button" class="contrast">
+    Approvals
+    <data value="7" data-badge="contrast"><span>pending: </span>7</data>
+  </button>
+  <button type="button">
+    Failed jobs
+    <data value="3" data-badge="danger"><span>failed: </span>3</data>
+  </button>
+  <button type="button" class="outline">
+    Notifications
+    <data value="5" data-badge><span>new: </span>5</data>
+  </button>
+</p>
+<p>
+  <a href="#releases" role="button">Releases <span data-badge="success">New</span></a>
+  <a href="#changelog">Changelog <span data-badge>v2.4</span></a>
+</p>
+```
+</Example>
+
+The badge can also be the control: `<button type="button" data-badge>Filter</button>` or `<a href="#tag" data-badge="secondary">Tag</a>`. A link badge does not underline on hover.
+
+## In text and tables
+
+<Example title="Badges in headings and tables" css={["pico.extras"]} height={360}>
+```html
+<h3>Billing webhooks <span data-badge="warning">Beta</span></h3>
+<p>
+  Plan: Team <span data-badge="contrast">Trial, 9 days left</span>. Invoice #2043
+  <span data-badge="danger">Overdue</span>.
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Customer</th>
+      <th scope="col">Plan</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Northwind Traders</th>
+      <td>Business</td>
+      <td><span data-badge="success">Active</span></td>
+    </tr>
+    <tr>
+      <th scope="row">Globex Corporation</th>
+      <td>Team</td>
+      <td><span data-badge="warning">Payment pending</span></td>
+    </tr>
+    <tr>
+      <th scope="row">Initech</th>
+      <td>Starter</td>
+      <td><span data-badge="danger">Suspended</span></td>
+    </tr>
+  </tbody>
+</table>
+```
+</Example>
+
+## Accessibility
+
+- A badge never relies on color alone. Put the state in the text ("Suspended"), or next to a dot.
+- Hide text-less dots with `aria-hidden="true"`.
+- Use a context `span` inside a counter so "4" is read as "unread messages: 4".
+- Under forced colors a badge gets a 1px border, so its shape stays visible.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-badge-background-color", value: "var(--pico-primary-background)", description: "Fill of the default badge. Each variant sets it." },
+    { name: "--pico-badge-color", value: "var(--pico-primary-inverse)", description: "Text color of the default badge." },
+    { name: "--pico-badge-success-background-color", description: "Fill of the success variant." },
+    { name: "--pico-badge-success-color", description: "Text color of the success variant." },
+    { name: "--pico-badge-warning-background-color", value: "oklch(0.7408 0.1521 83.91)", description: "Fill of the warning variant." },
+    { name: "--pico-badge-warning-color", description: "Text color of the warning variant." },
+    { name: "--pico-badge-danger-background-color", description: "Fill of the danger variant." },
+    { name: "--pico-badge-danger-color", description: "Text color of the danger variant." },
+  ]}
+/>

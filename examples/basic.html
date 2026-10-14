@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Basic page</title>
+    <link rel="stylesheet" href="../css/pico.min.css" />
+  </head>
+  <body>
+    <header class="container">
+      <nav>
+        <ul>
+          <li><strong>Acme</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li>
+            <details class="dropdown">
+              <summary>Account</summary>
+              <ul>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#billing">Billing</a></li>
+                <li><a href="#signout">Sign out</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <hgroup>
+        <h1>Semantic HTML, styled</h1>
+        <p>This page is plain markup, a few classes and one stylesheet.</p>
+      </hgroup>
+
+      <p>
+        <button>Primary</button>
+        <button class="secondary">Secondary</button>
+        <button class="contrast">Contrast</button>
+        <button class="outline">Outline</button>
+        <button type="button" data-modal="confirm">Open the modal</button>
+      </p>
+
+      <section id="features" class="grid">
+        <article>
+          <header>Small</header>
+          <p>The minified build is about 12 kB gzipped.</p>
+        </article>
+        <article>
+          <header>Themes</header>
+          <p>Twenty color themes, light and dark from one file.</p>
+        </article>
+        <article>
+          <header>Modern</header>
+          <p>Cascade layers, OKLCH colors and no Sass.</p>
+        </article>
+      </section>
+
+      <section id="faq">
+        <h2>FAQ</h2>
+        <details>
+          <summary>Do I need JavaScript?</summary>
+          <p>No. The modal on this page uses two lines, everything else is plain HTML.</p>
+        </details>
+        <details>
+          <summary>Does it follow the system color scheme?</summary>
+          <p>
+            Yes. Set <code>data-theme="light"</code> or <code>"dark"</code> on <code>html</code> to
+            force one.
+          </p>
+        </details>
+      </section>
+
+      <form>
+        <label>
+          Email
+          <input type="email" name="email" placeholder="you@example.com" />
+        </label>
+        <button type="submit">Subscribe</button>
+      </form>
+    </main>
+
+    <dialog id="confirm">
+      <article>
+        <header>
+          <button type="button" aria-label="Close" rel="prev" data-close></button>
+          <p><strong>Confirm</strong></p>
+        </header>
+        <p>The dialog opens with <code>showModal()</code> and fades in without an extra class.</p>
+        <footer>
+          <button type="button" class="secondary" data-close>Cancel</button>
+          <button type="button" data-close>Confirm</button>
+        </footer>
+      </article>
+    </dialog>
+
+    <script>
+      const dialog = document.getElementById("confirm");
+      document.querySelector("[data-modal]").addEventListener("click", () => dialog.showModal());
+      dialog.querySelectorAll("[data-close]").forEach((b) => b.addEventListener("click", () => dialog.close()));
+    </script>
+  </body>
+</html>

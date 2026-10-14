@@ -1,0 +1,141 @@
+---
+title: Alert
+description: Inline messages from role="status" and role="alert" elements with a data-variant, optionally dismissible.
+---
+
+A message with `role="status"` or `role="alert"` (or an `<output>`) becomes an alert when it has a `data-variant`: `info`, `success`, `warning` or `danger`. No class is needed. Without `data-variant` the element keeps its default look, so ordinary status regions such as "Autosaved at 14:32" are left alone.
+
+Load `css/extras/alert.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Variants
+
+Use `role="status"` for information that can wait for the screen reader to finish what it is saying, and `role="alert"` for something the user must hear now, like a failed payment.
+
+<Example title="Alert variants" css={["pico.extras"]} height={330}>
+```html
+<div role="status" data-variant="info">
+  <strong>Tip.</strong> You can drag files onto the table to upload them.
+</div>
+
+<div role="status" data-variant="success">
+  <strong>Saved.</strong> Your changes are live.
+</div>
+
+<div role="status" data-variant="warning">
+  <strong>Heads up.</strong> Your trial ends in 3 days.
+  <a href="#billing">Choose a plan</a>.
+</div>
+
+<div role="alert" data-variant="danger">
+  <strong>Payment failed.</strong> Your card was declined. Try another payment method.
+</div>
+```
+</Example>
+
+## Dismissible
+
+Add a native `button` with `data-dismiss` as a direct child, and name it with `aria-label`. The CSS draws the close glyph and makes room for it. Any other button inside an alert stays an ordinary button, like "Retry upload" below.
+
+Dismissing needs a few lines of script. Hide the alert with `hidden` and not `remove()`, so it can be shown again with `hidden = false`.
+
+<Example title="Dismissible alerts" css={["pico.extras"]} height={300}>
+```html
+<div role="status" data-variant="warning">
+  <strong>Heads up.</strong> Your export will take a few minutes to finish.
+  <button type="button" data-dismiss aria-label="Dismiss: export notice"></button>
+</div>
+
+<div role="alert" data-variant="danger">
+  <strong>Sync failed.</strong> We could not reach your Stripe account. Check your API key
+  in <a href="#integrations">Integrations</a> and try again.
+  <button type="button" data-dismiss aria-label="Dismiss: sync failure"></button>
+</div>
+
+<div role="alert" data-variant="danger">
+  <strong>Upload failed.</strong> The connection dropped.
+  <button type="button">Retry upload</button>
+</div>
+
+<script>
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-variant] > button[data-dismiss]");
+    if (!button) return;
+    const alert = button.parentElement;
+    const heading = alert.closest("section, article, main")?.querySelector("h1, h2, h3");
+    alert.hidden = true;
+    if (heading) {
+      heading.tabIndex = -1;
+      heading.focus();
+    }
+  });
+</script>
+```
+</Example>
+
+The script moves focus to the nearest heading after a dismiss, so keyboard focus does not fall back to the top of the page. Do not move focus into an alert when it appears, and do not auto-dismiss it.
+
+## Heading and list
+
+A heading inside an alert is set to the body font size. The first and last child lose their outer margins, so lists and paragraphs sit inside the box.
+
+<Example title="Alert with a heading and a list" css={["pico.extras"]} height={270}>
+```html
+<div role="alert" data-variant="danger">
+  <h3>We could not save the invoice</h3>
+  <p>Fix these fields and submit again:</p>
+  <ul>
+    <li><a href="#vat">VAT number</a> is not valid for the selected country.</li>
+    <li><a href="#due">Due date</a> must be after the issue date.</li>
+  </ul>
+</div>
+
+<div role="status" data-variant="info">
+  <h3>Scheduled maintenance</h3>
+  <p>
+    Saturday 02:00 to 03:00 UTC. The dashboard stays read-only during that hour, and API
+    requests keep working.
+  </p>
+</div>
+```
+</Example>
+
+## Output
+
+`<output>` has an implicit `role="status"`, so it reads as a result computed from input. Keep controls out of it.
+
+<Example title="Alert on an output element" css={["pico.extras"]} height={230}>
+```html
+<form oninput="seats.value = Number(plan.value) * 12" onsubmit="return false">
+  <label for="plan">Seats</label>
+  <input id="plan" name="plan" type="number" value="4" min="1" />
+  <output name="seats" for="plan" data-variant="success"
+    ><strong>Total:</strong> 48 seats per year</output
+  >
+</form>
+```
+</Example>
+
+## Announcing a message
+
+A live region is announced only when its content changes. An alert that is already on the page at load is not announced. To announce a message, keep an empty container with its `role` and `data-variant` on the page and fill in the text later. If the message is a pop-up notification instead of part of the page, use a [toast](/docs/extras/toast).
+
+## Accessibility
+
+- Pick `role="alert"` only for urgent messages. It interrupts the screen reader.
+- Color is not the only signal: write the outcome in the text ("Saved.", "Payment failed.").
+- The dismiss button needs an `aria-label`. Say what it dismisses, like "Dismiss: export notice".
+- Links inherit the alert color and are underlined, so they stay readable on the tinted background.
+- Motion (a short fade in) only runs under `prefers-reduced-motion: no-preference`.
+
+## Customization
+
+Each variant sets `--pico-alert-accent`, and the tinted background is 12% of it mixed into the page background. Set the variable on one alert to change its color. The warning accent has its own token, because Pico CSS never had a warning color.
+
+<Tokens
+  items={[
+    { name: "--pico-alert-warning-accent", value: "light-dark(oklch(0.7 0.15 70), oklch(0.8 0.14 80))", description: "Accent bar color of the warning variant." },
+    { name: "--pico-alert-accent", value: "var(--pico-primary-background)", description: "Accent bar color. Set per variant, success and danger reuse the form valid and invalid border colors." },
+    { name: "--pico-alert-background-color", value: "12% accent over the page background", description: "Background of the alert." },
+    { name: "--pico-alert-color", value: "var(--pico-color)", description: "Text color." },
+  ]}
+/>

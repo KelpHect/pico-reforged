@@ -1,0 +1,144 @@
+---
+title: Dropdown
+description: A menu from details.dropdown, or from the native popover attribute with anchor positioning.
+---
+
+There are two ways to build a dropdown. `details.dropdown` is the Pico CSS v2.1.1 pattern: no script, and it works in every browser of the floor. The popover version is newer. It uses a button and a `popover` list, and places itself next to the button with anchor positioning.
+
+## details.dropdown
+
+Give a `<details>` the class `dropdown`, a `<summary>` for the label and a `<ul>` right after it for the items. By default the summary looks like a select.
+
+<Example title="Dropdown" height={260}>
+```html
+<details class="dropdown">
+  <summary>Dropdown</summary>
+  <ul>
+    <li><a href="#">Solid</a></li>
+    <li><a href="#">Liquid</a></li>
+    <li><a href="#" aria-current="true">Gas</a></li>
+    <li><a href="#">Plasma</a></li>
+  </ul>
+</details>
+```
+</Example>
+
+An invisible layer covers the page while the menu is open, so a click outside closes it. The item with `aria-current` gets the hover background.
+
+### Checkboxes and radios
+
+Put a `<label>` with an input in each `<li>` to build a multiple choice menu. The whole row highlights on hover.
+
+<Example title="Dropdown with checkboxes" height={260}>
+```html
+<details class="dropdown">
+  <summary>Select fruits</summary>
+  <ul>
+    <li>
+      <label><input type="checkbox" name="apple" /> Apple</label>
+    </li>
+    <li>
+      <label><input type="checkbox" name="banana" checked /> Banana</label>
+    </li>
+    <li>
+      <label><input type="checkbox" name="cherry" /> Cherry</label>
+    </li>
+  </ul>
+</details>
+```
+</Example>
+
+### Button style
+
+Add `role="button"` to the summary for a button look. The usual `secondary`, `contrast` and `outline` classes work.
+
+<Example title="Dropdown as a button" height={260}>
+```html
+<details class="dropdown">
+  <summary role="button" class="outline secondary">Menu</summary>
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</details>
+```
+</Example>
+
+### Validation state
+
+The select-style summary reads `aria-invalid` like a form field: `false` gives the valid colors and `true` the invalid ones.
+
+<Example title="Dropdown validation" height={260}>
+```html
+<details class="dropdown">
+  <summary aria-invalid="true">Pick one</summary>
+  <ul>
+    <li><a href="#">Option</a></li>
+  </ul>
+</details>
+```
+</Example>
+
+### In a nav
+
+Inside a [nav](/docs/components/nav) the dropdown sits inline with the links and the summary takes the link padding. Put it in an `<li>`. For a menu that opens toward the left edge, set `dir="rtl"` on the `<ul>` itself. An ancestor with `dir` is not enough.
+
+<Example title="Dropdown in a nav" height={260}>
+```html
+<nav>
+  <ul>
+    <li><strong>Acme</strong></li>
+  </ul>
+  <ul>
+    <li><a href="#">Features</a></li>
+    <li>
+      <details class="dropdown">
+        <summary>Account</summary>
+        <ul dir="rtl">
+          <li><a href="#">Profile</a></li>
+          <li><a href="#">Settings</a></li>
+          <li><a href="#">Sign out</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
+```
+</Example>
+
+## Popover menu
+
+A `<button>` with `popovertarget` and a `<ul popover>` (or `<menu popover>`) with a matching `id`. The browser handles open, close, Escape and light dismiss. The list drops below the button and flips to the other side when there is no room. No script and no class.
+
+<Example title="Popover menu" height={260}>
+```html
+<button popovertarget="menu">Actions</button>
+<ul popover id="menu">
+  <li><a href="#edit">Edit</a></li>
+  <li><a href="#duplicate" aria-current="page">Duplicate</a></li>
+  <li><a href="#archive">Archive</a></li>
+</ul>
+```
+</Example>
+
+This version also works in the [class-less build](/docs/getting-started/class-less-version), because it needs no class. The `details.dropdown` rules are not in the class-less files.
+
+Where the browser does not support popover, the list shows as normal content. Where it does not support anchor positioning, the menu opens in the top layer with fixed placement. See [Popover patterns](/docs/components/popover) for placement and fallbacks.
+
+## Accessibility
+
+For `details.dropdown`, the summary is focusable and toggles with Enter or Space, and the links inside are normal tab stops. A list of links is navigation, so no `role="menu"` is needed. The popover version leaves open state and dismissal to the browser. Use `aria-current` on the item that matches the current page.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-dropdown-background-color", description: "Menu surface." },
+    { name: "--pico-dropdown-border-color", description: "Menu border." },
+    { name: "--pico-dropdown-box-shadow", value: "var(--pico-box-shadow)", description: "Menu shadow." },
+    { name: "--pico-dropdown-color", value: "var(--pico-color)", description: "Item text color." },
+    { name: "--pico-dropdown-hover-background-color", description: "Background of the hovered, focused or current item." },
+    { name: "--pico-icon-chevron", description: "The arrow in the summary." },
+  ]}
+/>

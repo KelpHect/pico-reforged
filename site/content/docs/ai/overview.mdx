@@ -1,0 +1,28 @@
+---
+title: Using Pico Reforged with AI agents
+description: What Pico Reforged ships for coding agents, and which piece to use for which job.
+---
+
+Pico Reforged styles semantic HTML, which suits language models: the right element is the right answer, and there are few class names to get wrong. Models still guess. They reach for `class="btn btn-primary"` or a `.card` wrapper out of habit. The pieces below give an agent the facts so it does not have to guess.
+
+## What is available
+
+| Piece                                                  | Use it for                                                |
+| ------------------------------------------------------ | --------------------------------------------------------- |
+| [llms.txt and llms-full.txt](/docs/ai/llms-txt)        | handing an assistant these docs as plain text             |
+| [The agent skill](/docs/ai/skill)                      | teaching an agent to write correct markup in your project |
+| [AGENTS.md](/docs/ai/agents-md)                        | working on the Pico Reforged repository itself            |
+| [components.json and tokens.json](/docs/ai/data-files) | tools that need the components and tokens as data         |
+| [Prompting tips](/docs/ai/prompting)                   | getting semantic HTML out of any model                    |
+
+## Where to start
+
+If you build a site with Pico Reforged and use a coding agent, install the [skill](/docs/ai/skill). It carries the rules, the component cheat sheet and the common mistakes, and the agent loads it when a task involves Pico Reforged.
+
+If you chat with an assistant that has no skill support, paste the link to [`/llms-full.txt`](/llms-full.txt) or copy one page with the **Copy page as Markdown** button.
+
+If you contribute to the repository, read [AGENTS.md](/docs/ai/agents-md) first.
+
+## One naming rule
+
+Pico Reforged is a fork of Pico CSS by Lucas Larroche (MIT), rewritten as plain modern CSS. It is not the official Pico CSS. The skill tells agents to say "Pico Reforged" and not to use the Pico logo, so generated text and code do not pass this project off as the original.

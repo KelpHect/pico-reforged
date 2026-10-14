@@ -1,0 +1,37 @@
+---
+title: Search
+description: A pill shaped search input with a drawn icon, and role="search" for a search form.
+---
+
+`input[type="search"]` has fully rounded ends and a magnifier icon at the inline start.
+
+<Example title="Search" height={120}>
+```html
+<input type="search" name="search" placeholder="Search" aria-label="Search" />
+```
+</Example>
+
+## Search with a button
+
+Use `role="search"` on a form to join the field and its button. The group has pill ends on the first and last child. See [Groups](/docs/forms/groups) for the shared behavior.
+
+<Example title="Search group" height={120}>
+```html
+<form role="search">
+  <input name="search" type="search" placeholder="Search" aria-label="Search" />
+  <input type="submit" value="Search" />
+</form>
+```
+</Example>
+
+## Validation
+
+With `aria-invalid`, the search icon stays and the valid or invalid icon is added on the other side. See [Validation states](/docs/forms/validation).
+
+## Accessibility
+
+`search` is a landmark role, so use it for the main search of a site or section and label the input. Browsers add a clear button inside `type="search"` once text is entered.
+
+## Customization
+
+The pill radius is `5rem`, set through `--pico-border-radius` on the input. The icon is `--pico-icon-search`.

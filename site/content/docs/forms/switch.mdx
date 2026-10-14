@@ -1,0 +1,54 @@
+---
+title: Switch
+description: A checkbox with role="switch" drawn as a toggle.
+---
+
+Add `role="switch"` to a checkbox and it is drawn as a toggle. It is still a checkbox, so it submits and works with the keyboard the same way, and the role tells assistive technology it is a switch.
+
+<Example title="Switch" height={170}>
+```html
+<fieldset>
+  <label>
+    <input name="terms" type="checkbox" role="switch" />
+    I agree to the Terms
+  </label>
+  <label>
+    <input name="opt-in" type="checkbox" role="switch" checked />
+    Receive news and offers
+  </label>
+</fieldset>
+```
+</Example>
+
+## Disabled and invalid
+
+<Example title="Disabled and invalid" height={230}>
+```html
+<fieldset>
+  <label>
+    <input type="checkbox" role="switch" disabled />
+    Disabled
+  </label>
+  <label>
+    <input type="checkbox" role="switch" checked disabled />
+    Disabled, on
+  </label>
+  <label>
+    <input type="checkbox" role="switch" aria-invalid="true" />
+    Invalid
+  </label>
+</fieldset>
+```
+</Example>
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-switch-background-color", description: "Track color when off." },
+    { name: "--pico-switch-checked-background-color", value: "var(--pico-primary-background)", description: "Track color when on." },
+    { name: "--pico-switch-color", value: "oklch(1 0 0)", description: "Thumb color." },
+  ]}
+/>
+
+The track is `2.25em` by `1.25em`, so the switch scales with the font size. See also [Checkboxes](/docs/forms/checkboxes).

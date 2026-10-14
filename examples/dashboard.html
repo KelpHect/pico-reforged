@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/pico.min.css" />
+    <link rel="stylesheet" href="../css/pico.extras.min.css" />
+  </head>
+  <body data-app-shell>
+    <a href="#main">Skip to content</a>
+
+    <header>
+      <button type="button" popovertarget="app-nav">Menu</button>
+      <strong>Acme Cloud</strong>
+      <nav aria-label="Account">
+        <ul>
+          <li><a href="#account">Account</a></li>
+          <li><a href="#signout">Sign out</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <aside id="app-nav" popover aria-label="Sidebar">
+      <nav aria-label="Main">
+        <small>Workspace</small>
+        <ul>
+          <li><a href="#overview" aria-current="page">Overview</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#inbox">Inbox <small>12</small></a></li>
+          <li><a href="#reports">Reports</a></li>
+        </ul>
+        <small>Manage</small>
+        <ul>
+          <li><a href="#team">Team</a></li>
+          <li>
+            <details>
+              <summary>Settings</summary>
+              <ul>
+                <li><a href="#general">General</a></li>
+                <li><a href="#billing">Billing</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <header>
+        <hgroup>
+          <h1>Overview</h1>
+          <p>Usage for the last 7 days across all projects.</p>
+        </hgroup>
+        <button type="button" id="new-project">New project</button>
+      </header>
+
+      <div role="status" data-variant="warning">
+        <strong>Heads up</strong>
+        The billing card on file expires next month.
+      </div>
+
+      <section aria-labelledby="stats">
+        <h2 id="stats">This week</h2>
+        <article>
+          <p><small>Active users</small></p>
+          <strong>2,481</strong>
+        </article>
+        <article>
+          <p><small>Deployments</small></p>
+          <strong>96</strong>
+        </article>
+        <article>
+          <p><small>Error rate</small></p>
+          <strong>0.4%</strong>
+        </article>
+        <article>
+          <p><small>Monthly cost</small></p>
+          <strong>$1,240</strong>
+        </article>
+      </section>
+
+      <section aria-labelledby="deployments">
+        <h2 id="deployments">Deployments</h2>
+        <div role="tablist" aria-label="Environment">
+          <button type="button" role="tab" id="tab-prod" aria-selected="true" aria-controls="panel-prod">Production</button>
+          <button type="button" role="tab" id="tab-stage" aria-selected="false" aria-controls="panel-stage" tabindex="-1">Staging</button>
+        </div>
+        <section role="tabpanel" id="panel-prod" aria-labelledby="tab-prod">
+          <div role="region" aria-labelledby="prod-caption" tabindex="0">
+            <table data-table style="min-inline-size: 36rem">
+              <caption id="prod-caption">Production deployments</caption>
+              <thead>
+                <tr>
+                  <th scope="col" aria-sort="ascending"><button type="button">Project</button></th>
+                  <th scope="col" aria-sort="none"><button type="button">Branch</button></th>
+                  <th scope="col">Status</th>
+                  <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Seconds</button></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">billing-api</th><td>main</td><td><span data-badge="success">Ready</span></td><td data-type="numeric">102</td></tr>
+                <tr><th scope="row">web-app</th><td>feature/onboarding</td><td><span data-badge="warning">Building</span></td><td data-type="numeric">58</td></tr>
+                <tr><th scope="row">docs</th><td>main</td><td><span data-badge="success">Ready</span></td><td data-type="numeric">31</td></tr>
+                <tr><th scope="row">mobile-gateway</th><td>fix/token-refresh</td><td><span data-badge="danger">Failed</span></td><td data-type="numeric">127</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section role="tabpanel" id="panel-stage" aria-labelledby="tab-stage" tabindex="0" hidden>
+          <p>Staging has no deployments in the last 7 days.</p>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      <small>Acme Cloud v2.3.0</small>
+    </footer>
+
+    <section id="toaster" popover="manual" role="status" aria-label="Notifications" aria-atomic="false"></section>
+
+    <script>
+      // Sidebar drawer: focus the first link on open, close on a tap of the scrim
+      const drawer = document.getElementById("app-nav");
+      drawer.addEventListener("toggle", (e) => {
+        if (e.newState === "open") drawer.querySelector("a")?.focus();
+      });
+      drawer.addEventListener("click", (e) => {
+        if (e.target === drawer) drawer.hidePopover();
+      });
+
+      // Tabs
+      document.querySelectorAll('[role="tablist"]').forEach((list) => {
+        const tabs = [...list.querySelectorAll('[role="tab"]')];
+        const select = (tab) => {
+          tabs.forEach((t) => {
+            const on = t === tab;
+            t.setAttribute("aria-selected", String(on));
+            t.tabIndex = on ? 0 : -1;
+            document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+          });
+          tab.focus();
+        };
+        tabs.forEach((tab, i) => {
+          tab.addEventListener("click", () => select(tab));
+          tab.addEventListener("keydown", (e) => {
+            const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+            if (!step) return;
+            e.preventDefault();
+            select(tabs[(i + step + tabs.length) % tabs.length]);
+          });
+        });
+      });
+
+      // Sortable columns: aria-sort holds the state
+      document.querySelectorAll("th[aria-sort] > button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const th = btn.parentElement;
+          const table = th.closest("table");
+          const dir = th.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+          const numeric = th.dataset.type === "numeric";
+          table.querySelectorAll("thead th[aria-sort]").forEach((h) => h.setAttribute("aria-sort", "none"));
+          th.setAttribute("aria-sort", dir);
+          const value = (row) => row.cells[th.cellIndex].textContent.trim();
+          const rows = [...table.tBodies[0].rows].sort((a, b) =>
+            numeric ? value(a) - value(b) : value(a).localeCompare(value(b)),
+          );
+          if (dir === "descending") rows.reverse();
+          table.tBodies[0].append(...rows);
+        });
+      });
+
+      // Toasts
+      const stack = document.getElementById("toaster");
+      stack.showPopover?.();
+      function toast(message) {
+        const el = document.createElement("article");
+        const text = document.createElement("p");
+        text.textContent = message;
+        const close = document.createElement("button");
+        close.type = "button";
+        close.setAttribute("aria-label", "Dismiss notification");
+        close.textContent = "×";
+        close.addEventListener("click", () => el.remove());
+        el.append(text, close);
+        stack.append(el);
+        setTimeout(() => el.remove(), 5000);
+      }
+      document.getElementById("new-project").addEventListener("click", () => toast("Project created."));
+    </script>
+  </body>
+</html>

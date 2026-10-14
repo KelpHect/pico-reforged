@@ -1,0 +1,218 @@
+---
+title: Tabs
+description: Tabs from the WAI-ARIA tabs pattern, styled by role with no class, plus a version that needs no script.
+---
+
+Tabs follow the WAI-ARIA tabs pattern. The tab list, the tabs and the panels are plain elements with ARIA roles, and the CSS styles the roles. A short script moves the selection. If you cannot ship a script, use the [radio version](#without-javascript).
+
+Load `css/extras/tabs.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Basic tabs
+
+The markup starts with one `aria-selected="true"` tab, `tabindex="-1"` on the other tabs, and `hidden` on every panel except the first.
+
+<Example title="Account settings" css={["pico.extras"]} height={340}>
+```html
+<div>
+  <div role="tablist" aria-label="Account settings">
+    <button type="button" role="tab" id="tab-profile" aria-selected="true" aria-controls="panel-profile">Profile</button>
+    <button type="button" role="tab" id="tab-billing" aria-selected="false" aria-controls="panel-billing" tabindex="-1">Billing</button>
+    <button type="button" role="tab" id="tab-team" aria-selected="false" aria-controls="panel-team" tabindex="-1">Team</button>
+  </div>
+
+  <section role="tabpanel" id="panel-profile" aria-labelledby="tab-profile">
+    <form>
+      <label>
+        Full name
+        <input name="name" autocomplete="name" value="Ana Ribeiro" />
+      </label>
+      <button type="submit">Save changes</button>
+    </form>
+  </section>
+  <section role="tabpanel" id="panel-billing" aria-labelledby="tab-billing" tabindex="0" hidden>
+    <p>You are on the <strong>Growth</strong> plan, billed monthly. The next invoice is on 1 November.</p>
+  </section>
+  <section role="tabpanel" id="panel-team" aria-labelledby="tab-team" tabindex="0" hidden>
+    <p>Seven seats used out of ten. Invite people from the members page.</p>
+  </section>
+</div>
+
+<script>
+  document.querySelectorAll('[role="tablist"]').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    const vertical = list.getAttribute("aria-orientation") === "vertical";
+
+    const select = (tab, { focus = true } = {}) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      if (focus) tab.focus();
+      tab.scrollIntoView({ inline: "nearest", block: "nearest" });
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => {
+        if (tab.getAttribute("aria-disabled") !== "true") select(tab, { focus: false });
+      });
+      tab.addEventListener("keydown", (e) => {
+        const rtl = getComputedStyle(list).direction === "rtl";
+        const prev = vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
+        const next = vertical ? "ArrowDown" : rtl ? "ArrowLeft" : "ArrowRight";
+        let target = null;
+        if (e.key === next) target = tabs[(i + 1) % tabs.length];
+        else if (e.key === prev) target = tabs[(i - 1 + tabs.length) % tabs.length];
+        else if (e.key === "Home") target = tabs[0];
+        else if (e.key === "End") target = tabs[tabs.length - 1];
+        if (target) {
+          e.preventDefault();
+          if (target.getAttribute("aria-disabled") === "true") target.focus();
+          else select(target);
+        }
+      });
+    });
+  });
+</script>
+```
+</Example>
+
+The script works for every tab list on the page. Arrow keys follow the layout direction (they swap in right to left), Home and End jump to the first and last tab, and the selection follows focus. For manual activation, where an arrow key only moves focus and Enter or Space selects, call `target.focus()` instead of `select(target)`. Add `tabindex="0"` to a panel only when its first content is not focusable.
+
+## Disabled tab
+
+Use `aria-disabled="true"`, not `disabled`, so the tab stays focusable and screen readers can find it. The script above skips selection on a disabled tab.
+
+```html
+<button type="button" role="tab" id="tab-audit" aria-selected="false"
+  aria-controls="panel-audit" aria-disabled="true" tabindex="-1">Audit log</button>
+```
+
+## Vertical
+
+Add `aria-orientation="vertical"` to the tab list. Up and Down arrows move the selection, and the list sits beside the panel. The wrapper around the list and the panels becomes a two column grid (this uses `:has()`, which is inside the browser floor).
+
+<Example title="Vertical tabs" css={["pico.extras"]} height={260}>
+```html
+<div>
+  <div role="tablist" aria-label="Settings sections" aria-orientation="vertical">
+    <button type="button" role="tab" id="tab-general" aria-selected="true" aria-controls="panel-general">General</button>
+    <button type="button" role="tab" id="tab-security" aria-selected="false" aria-controls="panel-security" tabindex="-1">Security</button>
+    <button type="button" role="tab" id="tab-notify" aria-selected="false" aria-controls="panel-notify" tabindex="-1">Notifications</button>
+  </div>
+  <section role="tabpanel" id="panel-general" aria-labelledby="tab-general" tabindex="0">
+    <h3>General</h3>
+    <p>Workspace name, default language and time zone.</p>
+  </section>
+  <section role="tabpanel" id="panel-security" aria-labelledby="tab-security" tabindex="0" hidden>
+    <h3>Security</h3>
+    <p>Require two-factor sign-in for every member of the workspace.</p>
+  </section>
+  <section role="tabpanel" id="panel-notify" aria-labelledby="tab-notify" tabindex="0" hidden>
+    <h3>Notifications</h3>
+    <p>Choose which events send you an email.</p>
+  </section>
+</div>
+
+<script>
+  document.querySelectorAll('[role="tablist"]').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role="tab"]')];
+    const select = (tab) => {
+      tabs.forEach((t) => {
+        const on = t === tab;
+        t.setAttribute("aria-selected", String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+      tab.focus();
+    };
+    tabs.forEach((tab, i) => {
+      tab.addEventListener("click", () => select(tab));
+      tab.addEventListener("keydown", (e) => {
+        const step = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+        if (!step) return;
+        e.preventDefault();
+        select(tabs[(i + step + tabs.length) % tabs.length]);
+      });
+    });
+  });
+</script>
+```
+</Example>
+
+## Many tabs
+
+When the list does not fit, it scrolls sideways. The script calls `scrollIntoView`, so the tab you move to stays visible.
+
+## Inside a card
+
+A tab list works inside an `article`, between the header and the panels.
+
+```html
+<article>
+  <header>Invoice INV-2041</header>
+  <div role="tablist" aria-label="Invoice sections">
+    <button type="button" role="tab" id="tab-i1" aria-selected="true" aria-controls="panel-i1">Summary</button>
+    <button type="button" role="tab" id="tab-i2" aria-selected="false" aria-controls="panel-i2" tabindex="-1">Line items</button>
+  </div>
+  <section role="tabpanel" id="panel-i1" aria-labelledby="tab-i1" tabindex="0">
+    <p>Total due: EUR 249.00. Paid on 2 October by card.</p>
+  </section>
+  <section role="tabpanel" id="panel-i2" aria-labelledby="tab-i2" tabindex="0" hidden>
+    <p>10 seats, Growth plan, monthly.</p>
+  </section>
+</article>
+```
+
+## Without JavaScript
+
+Put radios and labels in pairs inside an element with `data-tabs`, then one `section` per pair after them. The browser handles selection and arrow keys. This version supports up to ten tabs, and every group needs its own radio `name`. A `disabled` radio disables its tab.
+
+<Example title="Tabs without script" css={["pico.extras"]} height={230}>
+```html
+<div data-tabs>
+  <input type="radio" name="plan-view" id="plan-monthly" checked />
+  <label for="plan-monthly">Monthly</label>
+  <input type="radio" name="plan-view" id="plan-yearly" />
+  <label for="plan-yearly">Yearly</label>
+  <input type="radio" name="plan-view" id="plan-compare" />
+  <label for="plan-compare">Compare plans</label>
+  <input type="radio" name="plan-view" id="plan-legacy" disabled />
+  <label for="plan-legacy">Legacy</label>
+
+  <section>
+    <p>Growth is EUR 24.90 per seat each month. Cancel any time.</p>
+  </section>
+  <section>
+    <p>Growth is EUR 249 per seat each year, two months free.</p>
+  </section>
+  <section>
+    <p>Starter has 3 seats, Growth has 10, Scale has no limit.</p>
+  </section>
+  <section>
+    <p>Legacy plans are not offered to new workspaces.</p>
+  </section>
+</div>
+```
+</Example>
+
+## Accessibility
+
+- The tab list needs a name, from `aria-label` or `aria-labelledby`.
+- Each tab points at its panel with `aria-controls`, and each panel points back with `aria-labelledby`.
+- Only the selected tab is in the tab order. Arrow keys move between tabs.
+- Hide inactive panels with the `hidden` attribute so they leave the accessibility tree.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-tabs-tab-color", value: "var(--pico-muted-color)", description: "Color of an inactive tab." },
+    { name: "--pico-tabs-tab-hover-color", value: "var(--pico-color)", description: "Color of an inactive tab on hover." },
+    { name: "--pico-tabs-active-color", value: "var(--pico-primary)", description: "Color of the selected tab." },
+    { name: "--pico-tabs-indicator-color", value: "var(--pico-primary-background)", description: "Color of the line under the selected tab." },
+    { name: "--pico-tabs-border-color", value: "var(--pico-muted-border-color)", description: "Color of the line along the tab list." },
+    { name: "--pico-tabs-indicator-width", value: "var(--pico-outline-width)", description: "Thickness of the selected tab line." },
+  ]}
+/>

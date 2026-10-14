@@ -1,0 +1,137 @@
+---
+title: Stepper
+description: A progress list for multi-step flows, horizontal, vertical or responsive, with the current step in aria-current.
+---
+
+A stepper is an `ol` with one hook, `data-stepper`. The current step is `aria-current="step"`. Steps before it read as completed, steps after it as upcoming. No class is needed, and no script, unless you want to move the current step.
+
+Load `css/extras/stepper.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Horizontal
+
+The marker is a `span` with `aria-hidden="true"` before the label text. The value of `data-stepper` is `horizontal` (the default), `vertical` or `responsive`. Put the status in the label text for screen readers, like "Build, completed".
+
+<Example title="Checkout progress" css={["pico.extras"]} height={130}>
+```html
+<ol data-stepper="horizontal" aria-label="Checkout progress">
+  <li><span aria-hidden="true">1</span>Cart</li>
+  <li><span aria-hidden="true">2</span>Shipping</li>
+  <li aria-current="step"><span aria-hidden="true">3</span>Payment</li>
+  <li><span aria-hidden="true">4</span>Review</li>
+</ol>
+```
+</Example>
+
+## Navigable steps
+
+When steps are links, wrap the list in a `nav` and put `aria-current` on the link. A step the user cannot reach yet is a link without `href`, or with `aria-disabled="true"`.
+
+<Example title="Onboarding steps" css={["pico.extras"]} height={130}>
+```html
+<nav aria-label="Onboarding">
+  <ol data-stepper>
+    <li>
+      <a href="#account"><span aria-hidden="true">1</span>Account</a>
+    </li>
+    <li>
+      <a href="#workspace"><span aria-hidden="true">2</span>Workspace</a>
+    </li>
+    <li>
+      <a href="#team" aria-current="step"><span aria-hidden="true">3</span>Invite team</a>
+    </li>
+    <li>
+      <a aria-disabled="true"><span aria-hidden="true">4</span>Billing</a>
+    </li>
+  </ol>
+</nav>
+```
+</Example>
+
+## Vertical
+
+<Example title="Order status" css={["pico.extras"]} height={290}>
+```html
+<ol data-stepper="vertical" aria-label="Order status">
+  <li><span aria-hidden="true">1</span>Order placed</li>
+  <li><span aria-hidden="true">2</span>Payment confirmed</li>
+  <li aria-current="step"><span aria-hidden="true">3</span>Packed and ready to ship</li>
+  <li><span aria-hidden="true">4</span>Out for delivery</li>
+  <li><span aria-hidden="true">5</span>Delivered</li>
+</ol>
+```
+</Example>
+
+## Responsive
+
+`data-stepper="responsive"` is horizontal from 576px and vertical below it. Resize the window to see it.
+
+<Example title="Responsive stepper" css={["pico.extras"]} height={290}>
+```html
+<ol data-stepper="responsive" aria-label="Plan setup">
+  <li><span aria-hidden="true">1</span>Choose plan</li>
+  <li><span aria-hidden="true">2</span>Billing details</li>
+  <li aria-current="step"><span aria-hidden="true">3</span>Add seats</li>
+  <li><span aria-hidden="true">4</span>Confirm and pay</li>
+</ol>
+```
+</Example>
+
+## In a card
+
+<Example title="Stepper in a card" css={["pico.extras"]} height={300}>
+```html
+<article>
+  <header>
+    <ol data-stepper aria-label="Setup" style="margin-bottom: 0">
+      <li><span aria-hidden="true">1</span>Connect</li>
+      <li aria-current="step"><span aria-hidden="true">2</span>Configure</li>
+      <li><span aria-hidden="true">3</span>Launch</li>
+    </ol>
+  </header>
+  <p>Choose the region and the retention period for your logs.</p>
+  <footer>
+    <button class="secondary">Back</button>
+    <button>Continue</button>
+  </footer>
+</article>
+```
+</Example>
+
+## Moving the current step
+
+The CSS follows `aria-current`, so advancing a step is one attribute. This helper moves it, on the link when the steps are links.
+
+```js
+function setStep(list, index) {
+  list.querySelectorAll(":scope > li").forEach((li, i) => {
+    const el = li.querySelector("a") ?? li;
+    if (i === index) el.setAttribute("aria-current", "step");
+    else el.removeAttribute("aria-current");
+  });
+}
+```
+
+## Accessibility
+
+- Give the list a name with `aria-label`, or put it in a labelled `nav`.
+- `aria-current="step"` tells assistive technology which step is active. Completed and upcoming states are only visual, so say them in the text when it matters.
+- The number marker is `aria-hidden`, because the list already numbers its items.
+- Links have a visible focus ring, and a disabled link is dimmed and ignores the pointer.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-stepper-marker-size", value: "1.75rem", description: "Diameter of the number circle." },
+    { name: "--pico-stepper-line-width", value: "0.125rem", description: "Thickness of the line between steps." },
+    { name: "--pico-stepper-gap", value: "0.5rem", description: "Space between marker and label." },
+    { name: "--pico-stepper-ring-width", value: "var(--pico-outline-width)", description: "Width of the ring around the current marker." },
+    { name: "--pico-stepper-line-color", value: "var(--pico-form-element-border-color)", description: "Line and outline of upcoming steps." },
+    { name: "--pico-stepper-label-color", description: "Label color of upcoming and completed steps." },
+    { name: "--pico-stepper-current-color", value: "var(--pico-color)", description: "Label color of the current step." },
+    { name: "--pico-stepper-current-ring-color", value: "var(--pico-primary-background)", description: "Ring around the current marker." },
+    { name: "--pico-stepper-complete-background", value: "var(--pico-primary-background)", description: "Marker fill of completed steps and the current step." },
+    { name: "--pico-stepper-complete-color", value: "var(--pico-primary-inverse)", description: "Number color on a filled marker." },
+    { name: "--pico-stepper-complete-line-color", value: "var(--pico-primary-background)", description: "Line after a completed step." },
+  ]}
+/>

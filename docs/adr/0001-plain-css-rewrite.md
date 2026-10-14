@@ -16,7 +16,7 @@ The v2.1.1 codebase is about 6,200 lines of SCSS across 57 partials. Sass is use
 3. Loops for breakpoints and the 20 theme variants.
 4. Small helpers (`mix`, `rgba`, SVG data URI encoding).
 
-The shipped output is 239 files in `css/`: 5 variants (default, classless, conditional, classless conditional, fluid classless) times 20 themes plus a plain version, each minified and unminified, plus `pico.colors.css`.
+The shipped output is 238 files in `css/`: 5 variants (default, classless, conditional, classless conditional, fluid classless) times 20 themes plus a plain version, each minified and unminified, plus `pico.colors.css`.
 
 ## Decision
 

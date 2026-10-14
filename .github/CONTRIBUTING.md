@@ -1,10 +1,10 @@
 # Contributing to Pico Reforged
 
-Thanks for your interest in Pico Reforged, a fork of Pico CSS v2.1.1 rewritten in plain modern CSS. Please read this page before opening a [bug report](https://github.com/rusticstack/pico-reforged/issues) or a [pull request](https://github.com/rusticstack/pico-reforged/pulls).
+Thanks for your interest in Pico Reforged, a fork of Pico CSS v2.1.1 (by Lucas Larroche and contributors, MIT) rewritten in plain modern CSS. It is not the official Pico CSS, so do not use the Pico name or logo for it. Please read this page before opening a [bug report](https://github.com/rusticstack/pico-reforged/issues) or a [pull request](https://github.com/rusticstack/pico-reforged/pulls).
 
 ## Bug reports
 
-The issue tracker is the place for bug reports. Please do not use it for personal support requests or feature ideas.
+The issue tracker is the place for bug reports. Please do not use it for personal support requests or feature ideas, use the [discussions](https://github.com/rusticstack/pico-reforged/discussions) for those.
 
 ## Pull requests
 
@@ -28,14 +28,15 @@ Edit the CSS in `src/`, never the files in `css/`. The `css/` folder is build ou
 | ------------------ | -------------------------------------------------------------------------- |
 | `pnpm dev`         | rebuilds `dist-dev/` when `src/` or `scripts/` change                      |
 | `pnpm build`       | regenerates tokens and themes, then writes every file into `css/`          |
-| `pnpm test`        | runs the Vitest suites in `test/compiler/`                                 |
+| `pnpm test`        | runs the Vitest suites in `test/compiler/` and `test/integrations/`        |
 | `pnpm test:api`    | checks that the build still covers the v2.1.1 public surface               |
 | `pnpm test:visual` | renders the fixtures with v2.1.1 and the new CSS and diffs the screenshots |
+| `pnpm test:extras` | screenshots and axe-core checks for each extra fixture                     |
 | `pnpm lint`        | Oxlint with type-aware rules                                               |
 | `pnpm fmt`         | Oxfmt over TypeScript, JSON, Markdown, YAML and `src/**/*.css`             |
 | `pnpm check`       | format check, lint and type check in one go                                |
 | `pnpm typecheck`   | TypeScript 7 type check                                                    |
-| `pnpm run pack`    | builds `dist/cli.js` and `dist/compiler.js` with declarations              |
+| `pnpm run pack`    | builds `dist/cli.js`, the compiler and the Vite and PostCSS plugins        |
 
 Use `pnpm run pack`, not `pnpm pack`: the second one is pnpm's built-in tarball command.
 
@@ -52,3 +53,7 @@ Before you open a pull request, run `pnpm check`, `pnpm test` and `pnpm test:api
 ## Line endings
 
 `.gitattributes` forces LF and `.editorconfig` sets the same for your editor. If a file shows up as fully changed, check that your editor did not switch it to CRLF.
+
+## Docs and examples
+
+The pages in `examples/` load the built CSS from `../css/`, so run `pnpm build` before you open them. If you change user-facing behavior, update the matching page in `docs/` (`migration.md`, `customization.md`, `integrations.md`).

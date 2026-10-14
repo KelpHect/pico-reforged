@@ -1,0 +1,224 @@
+---
+title: Data table
+description: Tables with sortable headers, selectable rows, numeric columns, compact density and a sticky header in a scroll region.
+---
+
+Opt in with `data-table` on the table. It gets a restyled caption, a row hover color and the hooks below. Sort state lives in `aria-sort` on the `th`. Row selection uses the row checkbox as the accessible control, and `aria-selected` on the `tr` is only the styling hook (assistive technology mostly ignores it on a plain table).
+
+Load `css/extras/data-table.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+Without `data-table` only three hooks apply: the `aria-sort` button, `data-type="numeric"` on a cell and `data-density="compact"` on a table. A plain table keeps its core styling.
+
+## Sortable, selectable table
+
+Wrap the table in a `div` with `role="region"`, a name and `tabindex="0"`, so keyboard users can scroll it. Set `--pico-data-table-scroll-max-block-size` on the wrapper to make it scroll vertically and pin the header. Each row has a checkbox, and the Status column is not sortable, so it has no button and no `aria-sort`.
+
+`aria-sort` only describes the state, so sorting needs a little script. It has no dependencies and does not support `colspan` in a sortable header row. For locale formatted numbers, put the raw value in a `data-value` attribute on the `td` and read that instead.
+
+<Example title="Orders table" css={["pico.extras"]} height={430}>
+```html
+<div role="region" aria-labelledby="orders-caption" tabindex="0"
+  style="--pico-data-table-scroll-max-block-size: 18rem; --pico-data-table-scroll-padding-block-start: 3rem">
+  <table data-table style="min-inline-size: 44rem">
+    <caption id="orders-caption">Orders, last 30 days</caption>
+    <thead>
+      <tr>
+        <th scope="col"><input type="checkbox" aria-label="Select all orders" /></th>
+        <th scope="col" aria-sort="ascending"><button type="button">Order</button></th>
+        <th scope="col" aria-sort="none"><button type="button">Customer</button></th>
+        <th scope="col" aria-sort="none"><button type="button">Plan</button></th>
+        <th scope="col" aria-sort="none"><button type="button">Date</button></th>
+        <th scope="col">Status</th>
+        <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Total</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="checkbox" aria-label="Select order #1048" /></td>
+        <th scope="row">#1048</th>
+        <td>Marta Cunha</td>
+        <td>Pro, annual</td>
+        <td>2026-10-12</td>
+        <td>Paid</td>
+        <td data-type="numeric">2,340.00</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" aria-label="Select order #1047" /></td>
+        <th scope="row">#1047</th>
+        <td>Tiago Neves</td>
+        <td>Team, monthly</td>
+        <td>2026-10-11</td>
+        <td>Pending</td>
+        <td data-type="numeric">189.00</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" aria-label="Select order #1046" /></td>
+        <th scope="row">#1046</th>
+        <td>Helena Duarte</td>
+        <td>Starter</td>
+        <td>2026-10-11</td>
+        <td>Paid</td>
+        <td data-type="numeric">29.00</td>
+      </tr>
+      <tr aria-selected="true">
+        <td><input type="checkbox" aria-label="Select order #1045" checked /></td>
+        <th scope="row">#1045</th>
+        <td>Bruno Lacerda</td>
+        <td>Pro, monthly</td>
+        <td>2026-10-09</td>
+        <td>Failed</td>
+        <td data-type="numeric">79.00</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" aria-label="Select order #1044" /></td>
+        <th scope="row">#1044</th>
+        <td>Sofia Barros</td>
+        <td>Enterprise</td>
+        <td>2026-10-08</td>
+        <td>Paid</td>
+        <td data-type="numeric">12,800.00</td>
+      </tr>
+      <tr>
+        <td><input type="checkbox" aria-label="Select order #1043" /></td>
+        <th scope="row">#1043</th>
+        <td>Diogo Pires</td>
+        <td>Team, annual</td>
+        <td>2026-10-06</td>
+        <td>Refunded</td>
+        <td data-type="numeric">1,890.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.querySelectorAll("th[aria-sort] > button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const th = btn.parentElement;
+      const table = th.closest("table");
+      const next = th.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+      const numeric = th.dataset.type === "numeric";
+      const col = th.cellIndex;
+      table
+        .querySelectorAll(":scope > thead th[aria-sort]")
+        .forEach((h) => h.setAttribute("aria-sort", "none"));
+      th.setAttribute("aria-sort", next);
+      const tbody = table.tBodies[0];
+      const value = (row) => {
+        const text = row.cells[col].textContent.trim();
+        return numeric ? parseFloat(text.replace(/[^\d.-]/g, "")) : text;
+      };
+      const sign = next === "ascending" ? 1 : -1;
+      const rows = [...tbody.rows].sort((a, b) => {
+        const x = value(a);
+        const y = value(b);
+        const c = numeric ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true });
+        return c * sign;
+      });
+      tbody.append(...rows);
+    });
+  });
+</script>
+```
+</Example>
+
+The arrow beside a header label is drawn as text, so it survives forced colors, and it has an empty text alternative because `aria-sort` already says the state. An idle header shows a double arrow, an ascending one an up arrow and a descending one a down arrow.
+
+`aria-sort` is read when focus lands on the header. For a live announcement, update a `role="status"` element with text such as "Sorted by Total, descending" after each sort.
+
+## Selection
+
+Toggle `aria-selected` on the `tr` and the row checkbox together. The attribute is the source of truth, so CSS and assistive technology agree. A cell that holds only a checkbox shrinks to the checkbox.
+
+```js
+function selectRow(row, on) {
+  row.setAttribute("aria-selected", String(on));
+  row.querySelector('input[type="checkbox"]').checked = on;
+}
+```
+
+## Numeric columns
+
+`data-type="numeric"` on a `th` or `td` right aligns it (at the end edge, so it flips in right to left) and uses tabular figures. On a sortable header, the arrow goes before the label so the label stays flush with the numbers below it.
+
+## Compact density
+
+`data-density="compact"` on the table tightens the padding and sets the font size to 0.875em.
+
+<Example title="Compact table" css={["pico.extras"]} height={260}>
+```html
+<div role="region" aria-labelledby="compact-caption" tabindex="0">
+  <table data-table data-density="compact" style="min-inline-size: 36rem">
+    <caption id="compact-caption">Orders, compact</caption>
+    <thead>
+      <tr>
+        <th scope="col" aria-sort="ascending"><button type="button">Order</button></th>
+        <th scope="col" aria-sort="none"><button type="button">Customer</button></th>
+        <th scope="col">Status</th>
+        <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Total</button></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">#1048</th>
+        <td>Marta Cunha</td>
+        <td>Paid</td>
+        <td data-type="numeric">2,340.00</td>
+      </tr>
+      <tr>
+        <th scope="row">#1047</th>
+        <td>Tiago Neves</td>
+        <td>Pending</td>
+        <td data-type="numeric">189.00</td>
+      </tr>
+      <tr aria-selected="true">
+        <th scope="row">#1046</th>
+        <td>Helena Duarte</td>
+        <td>Paid</td>
+        <td data-type="numeric">29.00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+</Example>
+
+## Footer row
+
+A `tfoot` works as in core. Use `colspan` on its row header.
+
+```html
+<tfoot>
+  <tr>
+    <th scope="row" colspan="5">Total</th>
+    <td data-type="numeric">2,186.60</td>
+  </tr>
+</tfoot>
+```
+
+## Empty tables
+
+When there are no rows, put an [empty state](/docs/extras/empty-state) in a cell that spans the table, or replace the table with it.
+
+## Accessibility
+
+- Give every table a `caption`, and the scroll region a name that points at it with `aria-labelledby`.
+- The scroll region needs `tabindex="0"` so keyboard users can reach the hidden columns. It shows a focus ring.
+- Sortable headers hold a native `button`, so Enter and Space work and the header is in the tab order.
+- Give each row checkbox a label that names the row, like "Select order #1048".
+- Under forced colors a selected row gets a line above and below, because a background color would be dropped.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-data-table-head-background-color", value: "var(--pico-card-sectioning-background-color)", description: "Header cells in a scroll region." },
+    { name: "--pico-data-table-row-hover-background-color", value: "var(--pico-dropdown-hover-background-color)", description: "Row under the pointer." },
+    { name: "--pico-data-table-row-selected-background-color", description: "Row with aria-selected=\"true\": 20% of the primary color over the page background." },
+    { name: "--pico-data-table-scroll-max-block-size", value: "none", description: "Set on the wrapper to scroll vertically and pin the header." },
+    { name: "--pico-data-table-scroll-padding-block-start", value: "0", description: "Space for the sticky header when scrolling a row into view." },
+    { name: "--pico-data-table-compact-padding-block", value: "calc(var(--pico-spacing) / 4)", description: "Cell padding of the compact density, block axis." },
+    { name: "--pico-data-table-compact-padding-inline", value: "calc(var(--pico-spacing) / 2)", description: "Cell padding of the compact density, inline axis." },
+    { name: "--pico-data-table-sort-idle-opacity", value: "0.6", description: "Opacity of the arrow on a header that is not sorted." },
+  ]}
+/>

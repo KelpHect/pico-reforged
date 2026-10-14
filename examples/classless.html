@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Classless page</title>
+    <link rel="stylesheet" href="../css/pico.classless.min.css" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><strong>Field notes</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#posts">Posts</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <hgroup>
+        <h1>No classes anywhere</h1>
+        <p>The classless build styles the elements and nothing else.</p>
+      </hgroup>
+
+      <section id="posts">
+        <h2>Latest posts</h2>
+        <article>
+          <header><h3>Writing CSS without a framework</h3></header>
+          <p>
+            Headings, lists, tables, quotes and forms all look right from the first line of markup.
+          </p>
+          <footer><small>12 October 2026</small></footer>
+        </article>
+        <blockquote>
+          Write the HTML you would write anyway.
+          <footer><cite>Anonymous</cite></footer>
+        </blockquote>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Build</th>
+              <th scope="col">Suffix</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Classless</td>
+              <td><code>classless</code></td>
+            </tr>
+            <tr>
+              <td>Classless, fluid</td>
+              <td><code>fluid.classless</code></td>
+            </tr>
+            <tr>
+              <td>Classless, scoped</td>
+              <td><code>classless.conditional</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="contact">
+        <h2>Contact</h2>
+        <form>
+          <label>
+            Name
+            <input name="name" autocomplete="name" />
+          </label>
+          <label>
+            Message
+            <textarea name="message" rows="4"></textarea>
+          </label>
+          <label>
+            <input type="checkbox" role="switch" name="copy" />
+            Send me a copy
+          </label>
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <small>Built with Pico Reforged.</small>
+    </footer>
+  </body>
+</html>

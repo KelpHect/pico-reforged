@@ -1,0 +1,87 @@
+---
+title: Forms overview
+description: Inputs, selects, textareas, checkboxes, radios and switches are styled by element and by type, with validation states driven by aria-invalid.
+---
+
+Form controls are styled by tag name and by `type`, so a plain form needs no classes. Inputs, selects and textareas are full width. A `label` can wrap its control or sit next to it, and `<small>` right after a control becomes helper text.
+
+<Example title="A simple form">
+```html
+<form>
+  <label>
+    First name
+    <input name="first_name" placeholder="First name" autocomplete="given-name" />
+  </label>
+  <label>
+    Email
+    <input type="email" name="email" placeholder="Email" autocomplete="email" />
+    <small>We will never share your email.</small>
+  </label>
+  <label>
+    Country
+    <select name="country">
+      <option>Portugal</option>
+      <option>Spain</option>
+    </select>
+  </label>
+  <fieldset>
+    <label><input type="checkbox" name="terms" /> I agree to the terms</label>
+    <label><input type="checkbox" role="switch" name="news" checked /> Send me news</label>
+  </fieldset>
+  <input type="submit" value="Subscribe" />
+</form>
+```
+</Example>
+
+## What is covered
+
+Each control has its own page: [Input](/docs/forms/input), [Textarea](/docs/forms/textarea), [Select](/docs/forms/select), [Checkboxes](/docs/forms/checkboxes), [Radios](/docs/forms/radios), [Switch](/docs/forms/switch), [Range](/docs/forms/range), [Color](/docs/forms/color), [Date and time](/docs/forms/date-and-time), [File](/docs/forms/file) and [Search](/docs/forms/search). Feedback is covered in [Validation states](/docs/forms/validation), and joining controls with buttons in [Groups](/docs/forms/groups).
+
+## Labels, fieldsets and helper text
+
+A `label` is a block with a small gap below it. Put the control inside the label or after it, and the spacing stays the same. Use `fieldset` and `legend` to group related controls. A fieldset has no border or padding, so it only adds structure and spacing.
+
+`<small>` placed directly after an `input`, `select`, `textarea`, `fieldset` or `.grid` is pulled up under that element and takes the muted color. After a control with `aria-invalid`, it takes the valid or invalid color. See [Validation states](/docs/forms/validation).
+
+## Disabled and read-only
+
+`disabled` on a control, or on a `fieldset`, lowers the opacity and turns off pointer events. A `label` with `aria-disabled="true"` dims the same way. `readonly` keeps the normal look but skips the focus ring and the active background.
+
+<Example title="Disabled and read-only" height={330}>
+```html
+<label>
+  Disabled
+  <input value="Cannot edit" disabled />
+</label>
+<label>
+  Read-only
+  <input value="Can select, cannot edit" readonly />
+</label>
+<fieldset disabled>
+  <label>
+    Inside a disabled fieldset
+    <input value="Also disabled" />
+  </label>
+</fieldset>
+```
+</Example>
+
+## Customization
+
+Form colors and spacing come from custom properties on `:root`. The colors use `light-dark()`, so they follow the color scheme without extra rules.
+
+<Tokens
+  items={[
+    { name: "--pico-form-element-spacing-vertical", value: "0.75rem", description: "Vertical padding of controls." },
+    { name: "--pico-form-element-spacing-horizontal", value: "1rem", description: "Horizontal padding of controls." },
+    { name: "--pico-form-element-background-color", description: "Control background." },
+    { name: "--pico-form-element-active-background-color", description: "Control background while active or focused." },
+    { name: "--pico-form-element-border-color", description: "Control border." },
+    { name: "--pico-form-element-active-border-color", description: "Control border while active or focused." },
+    { name: "--pico-form-element-color", description: "Control text color." },
+    { name: "--pico-form-element-placeholder-color", description: "Placeholder text color." },
+    { name: "--pico-form-element-focus-color", description: "Focus ring color." },
+    { name: "--pico-form-element-disabled-opacity", value: "0.5", description: "Opacity of disabled controls." },
+    { name: "--pico-form-label-font-weight", description: "Font weight of labels and legends." },
+  ]}
+/>

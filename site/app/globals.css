@@ -1,0 +1,13 @@
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: azure;
+  extras: badge alert;
+  purge: safe;
+  source: none;
+}
+
+@source "../app";
+@source "../components";
+@source "../content";
+@source "../lib";

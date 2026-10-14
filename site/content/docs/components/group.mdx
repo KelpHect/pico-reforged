@@ -1,0 +1,76 @@
+---
+title: Group
+description: Join inputs, selects and buttons into one control with role group, or build a search bar with role search.
+---
+
+Set `role="group"` on a `<fieldset>`, a `<div>` or any container and its children are joined into one row. Neighbors share their borders and only the outer corners stay rounded. Focus shows one ring around the whole group instead of one per control.
+
+<Example title="Input with a button" height={120}>
+```html
+<fieldset role="group">
+  <input type="email" placeholder="Enter your email" aria-label="Email" />
+  <input type="submit" value="Subscribe" />
+</fieldset>
+```
+</Example>
+
+## Buttons
+
+A group of buttons works the same way. A `secondary` or `contrast` button changes the focus ring color of the group.
+
+<Example title="Button group" height={120}>
+```html
+<div role="group">
+  <button>Save</button>
+  <button class="secondary">Save as</button>
+  <button class="contrast">Share</button>
+</div>
+```
+</Example>
+
+## Mixed controls
+
+Selects, inputs and buttons can sit in the same group.
+
+<Example title="Select, input and button" height={120}>
+```html
+<fieldset role="group">
+  <select aria-label="Month">
+    <option>Month</option>
+    <option>January</option>
+  </select>
+  <input type="number" placeholder="Year" aria-label="Year" />
+  <button type="button" class="contrast">Add</button>
+</fieldset>
+```
+</Example>
+
+## Search
+
+`role="search"` is a group with pill-shaped ends. Use it on a `<form>` or a `<div>`.
+
+<Example title="Search" height={120}>
+```html
+<form role="search" onsubmit="return false">
+  <input name="q" type="search" placeholder="Search" aria-label="Search" />
+  <input type="submit" value="Search" />
+</form>
+```
+</Example>
+
+## Notes
+
+A group is `display: inline-flex` at full width, and each child gets `flex: 1 1 auto`. Buttons keep their natural width and get more horizontal padding. Checkboxes and radios are left alone. The same markup works in the [class-less build](/docs/getting-started/class-less-version). For whole forms, see the [forms overview](/docs/forms/overview).
+
+Give every control in a group an accessible name. A placeholder is not one, so add `aria-label` or a visible label.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-group-box-shadow", value: "0 0 0 transparent", description: "Shadow around the group. The focus ring replaces it while a control has focus." },
+    { name: "--pico-group-box-shadow-focus-with-button", description: "Ring used when a button has focus." },
+    { name: "--pico-group-box-shadow-focus-with-input", description: "Ring used when an input or select has focus." },
+    { name: "--pico-border-radius", value: "0.25rem", description: "Outer corner radius. Search sets it to 5rem." },
+  ]}
+/>

@@ -1,0 +1,63 @@
+---
+title: Link
+description: Underlined links in the primary color, with secondary and contrast variants and a marker for the current page.
+---
+
+Links are underlined and use the primary color. Hover, focus and active states switch to the hover color, and keyboard focus shows a ring.
+
+<Example title="Links">
+```html
+<p>
+  <a href="#">Primary link</a><br />
+  <a href="#" class="secondary">Secondary link</a><br />
+  <a href="#" class="contrast">Contrast link</a>
+</p>
+```
+</Example>
+
+## Current page
+
+`aria-current` marks the link for the current page. It takes the hover color, so it works in navigation without a class. A value of `false` is ignored.
+
+<Example title="aria-current">
+```html
+<p>
+  <a href="#">Home</a> /
+  <a href="#" aria-current="page">Current page</a>
+</p>
+```
+</Example>
+
+## Links that are not anchors
+
+The same styles apply to any element with `role="link"`. Use it only when an `<a href>` is not possible, and add `tabindex="0"` and keyboard handling yourself.
+
+<Example title="role=link">
+```html
+<span role="link" tabindex="0">Looks like a link</span>
+```
+</Example>
+
+An `<a>` with `role="button"` is not styled as a link. It is a [button](/docs/content/button).
+
+## Accessibility
+
+The underline stays on by default, so links do not depend on color alone. Use a meaningful link text rather than "click here", and give `aria-current="page"` to the link that matches the page.
+
+## Customization
+
+Link styles read the primary, secondary and contrast variables, so [changing the theme](/docs/customization/themes) changes links too.
+
+<Tokens
+  items={[
+    { name: "--pico-primary", description: "Link color." },
+    { name: "--pico-primary-hover", description: "Link color on hover, focus, active and aria-current." },
+    { name: "--pico-primary-underline", description: "Underline color." },
+    { name: "--pico-primary-hover-underline", description: "Underline color on hover." },
+    { name: "--pico-primary-focus", description: "Color of the keyboard focus ring." },
+    { name: "--pico-secondary", description: "Color of .secondary links. Hover, underline and hover underline variants follow the same naming." },
+    { name: "--pico-contrast", description: "Color of .contrast links, with the same variants." },
+  ]}
+/>
+
+In the [classless build](/docs/getting-started/class-less-version) there are no `.secondary` or `.contrast` links.

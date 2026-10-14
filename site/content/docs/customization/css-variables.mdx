@@ -1,0 +1,337 @@
+---
+title: CSS variables
+description: Every color, size and spacing is a --pico-* custom property. Override one in your own CSS, on the page or on a single element.
+---
+
+Pico Reforged keeps its design values in CSS custom properties. They all start with `--pico-`, and the names are the same as in Pico CSS v2.1.1 by Lucas Larroche, so an old override keeps working. Change a variable and every rule that reads it follows.
+
+Most customization needs no build step. Write the override in your own stylesheet, after the Pico link.
+
+## Override a variable
+
+Declare the variable on `:root` to change it for the whole page.
+
+```css
+:root {
+  --pico-border-radius: 0;
+  --pico-font-family: Georgia, serif;
+  --pico-spacing: 0.75rem;
+}
+```
+
+Your CSS is not inside a cascade layer, so it wins over Pico without `!important` or a heavier selector. See [Cascade layers and overriding](/docs/customization/cascade-layers).
+
+### Scope a change to one element
+
+A variable set on an element applies to that element and everything inside it.
+
+<Example title="Variables on one element">
+```html
+<article style="--pico-border-radius: 1.5rem; --pico-primary-background: oklch(0.55 0.2 25); --pico-primary-border: oklch(0.55 0.2 25); --pico-primary-hover-background: oklch(0.48 0.2 25); --pico-primary-hover-border: oklch(0.48 0.2 25);">
+  <h3>A rounder card with a red button</h3>
+  <p>The rest of the page keeps its defaults.</p>
+  <button>Primary</button>
+</article>
+<article>
+  <h3>A regular card</h3>
+  <p>Same page, no overrides.</p>
+  <button>Primary</button>
+</article>
+```
+</Example>
+
+Variables that are built from other variables are resolved where they are declared. `--pico-block-spacing-vertical` is declared on `:root` as `var(--pico-spacing)`, so setting `--pico-spacing` on a single `<article>` does not change it. Set `--pico-block-spacing-vertical` and its horizontal sibling on the element instead.
+
+Some elements set their own values. Headings set `--pico-font-size` and `--pico-line-height` per level (for example `h1 { --pico-font-size: 2rem }`), and buttons set `--pico-background-color` and `--pico-border-color` from the primary, secondary and contrast tokens. To change a heading size, write the rule on the heading, not on `:root`.
+
+```css
+h1 {
+  --pico-font-size: 2.5rem;
+}
+```
+
+## Typography
+
+<Tokens
+  items={[
+    { name: "--pico-font-family", value: "var(--pico-font-family-sans-serif)", description: "Font stack of the page." },
+    { name: "--pico-font-family-sans-serif", value: "system-ui, \"Segoe UI\", Roboto, ...", description: "The system sans-serif stack, with the emoji stack at the end." },
+    { name: "--pico-font-family-monospace", value: "ui-monospace, SFMono-Regular, ...", description: "Stack for code, kbd, samp and pre." },
+    { name: "--pico-font-family-emoji", value: "\"Apple Color Emoji\", \"Segoe UI Emoji\", ...", description: "Emoji fonts, appended to the other stacks." },
+    { name: "--pico-font-size", value: "100%", description: "Root font size. It grows at each breakpoint: 106.25%, 112.5%, 118.75%, 125% and 131.25% from 576px up. Headings override it per level." },
+    { name: "--pico-font-weight", value: "400", description: "Body font weight." },
+    { name: "--pico-line-height", value: "1.5", description: "Body line height." },
+    { name: "--pico-text-underline-offset", value: "0.1rem", description: "Offset of link underlines." },
+    { name: "--pico-typography-spacing-vertical", value: "1rem", description: "Space under paragraphs, lists and headings." },
+    { name: "--pico-form-label-font-weight", value: "var(--pico-font-weight)", description: "Font weight of form labels." },
+  ]}
+/>
+
+To change the font, set `--pico-font-family` and nothing else.
+
+<Example title="A serif page">
+```html
+<style>
+  :root {
+    --pico-font-family: Georgia, "Times New Roman", serif;
+    --pico-line-height: 1.65;
+  }
+</style>
+<h3>Set in Georgia</h3>
+<p>One variable changes the font of every element, forms and buttons included.</p>
+<button>Button</button>
+```
+</Example>
+
+## Borders, transitions and spacing
+
+<Tokens
+  items={[
+    { name: "--pico-border-radius", value: "0.25rem", description: "Corner radius of buttons, inputs, cards and most surfaces." },
+    { name: "--pico-border-width", value: "0.0625rem", description: "Width of borders." },
+    { name: "--pico-outline-width", value: "0.125rem", description: "Width of focus rings." },
+    { name: "--pico-transition", value: "0.2s ease-in-out", description: "Timing of hover and focus transitions. A build with transitions turned off sets it to 0s." },
+    { name: "--pico-spacing", value: "1rem", description: "Base spacing unit." },
+    { name: "--pico-block-spacing-vertical", value: "var(--pico-spacing)", description: "Vertical padding of cards and modals. Larger from 576px up when the responsive spacings option is on." },
+    { name: "--pico-block-spacing-horizontal", value: "var(--pico-spacing)", description: "Horizontal padding of the same blocks." },
+    { name: "--pico-grid-column-gap", value: "var(--pico-spacing)", description: "Column gap of .grid." },
+    { name: "--pico-grid-row-gap", value: "var(--pico-spacing)", description: "Row gap of .grid." },
+    { name: "--pico-form-element-spacing-vertical", value: "0.75rem", description: "Vertical padding of inputs, selects, textareas and buttons." },
+    { name: "--pico-form-element-spacing-horizontal", value: "1rem", description: "Horizontal padding of the same elements." },
+    { name: "--pico-form-element-disabled-opacity", value: "0.5", description: "Opacity of disabled form elements." },
+    { name: "--pico-loading-spinner-opacity", value: "0.5", description: "Opacity of the aria-busy spinner." },
+  ]}
+/>
+
+## Container
+
+<Tokens
+  items={[
+    { name: "--pico-container-max-width", value: "100%", description: "Max width of .container and the semantic container. Set per breakpoint: 510px from 576px, 700px from 768px, 950px from 1024px, 1200px from 1280px and 1450px from 1536px." },
+  ]}
+/>
+
+The fluid builds set it to `100%` at every width. See [Building a custom bundle](/docs/customization/custom-bundle).
+
+## Navigation
+
+<Tokens
+  items={[
+    { name: "--pico-nav-element-spacing-vertical", value: "1rem", description: "Vertical padding of nav items." },
+    { name: "--pico-nav-element-spacing-horizontal", value: "0.5rem", description: "Horizontal padding of nav items." },
+    { name: "--pico-nav-link-spacing-vertical", value: "0.5rem", description: "Vertical padding of nav links." },
+    { name: "--pico-nav-link-spacing-horizontal", value: "0.5rem", description: "Horizontal padding of nav links." },
+    { name: "--pico-nav-breadcrumb-divider", value: "\">\"", description: "Divider between breadcrumb items." },
+  ]}
+/>
+
+## Modal
+
+<Tokens
+  items={[
+    { name: "--pico-modal-overlay-backdrop-filter", value: "blur(0.375rem)", description: "Backdrop filter behind an open dialog." },
+    { name: "--pico-scrollbar-width", value: "0px", description: "Right padding added to html while .modal-is-open is set, so a hidden scrollbar does not shift the page. Set it from a script if you need it." },
+  ]}
+/>
+
+## Shadows
+
+<Tokens
+  items={[
+    { name: "--pico-box-shadow", description: "The soft layered shadow behind cards and dropdowns. Its colors use light-dark()." },
+    { name: "--pico-card-box-shadow", value: "var(--pico-box-shadow)", description: "Shadow of cards." },
+    { name: "--pico-dropdown-box-shadow", value: "var(--pico-box-shadow)", description: "Shadow of dropdown menus." },
+    { name: "--pico-button-box-shadow", value: "0 0 0 oklch(0 0 0 / 0)", description: "Resting shadow of buttons. Empty by default." },
+    { name: "--pico-button-hover-box-shadow", value: "0 0 0 oklch(0 0 0 / 0)", description: "Shadow of buttons on hover. Empty by default." },
+    { name: "--pico-group-box-shadow", value: "0 0 0 oklch(0 0 0 / 0)", description: "Shadow of a role=\"group\" container." },
+    { name: "--pico-switch-thumb-box-shadow", description: "Shadow of the switch thumb. Part of a theme." },
+  ]}
+/>
+
+## Icons
+
+The icons are SVG data URIs, so you can swap one for your own.
+
+<Tokens
+  items={[
+    { name: "--pico-icon-checkbox", description: "Checkmark in checked checkboxes." },
+    { name: "--pico-icon-minus", description: "Dash in indeterminate checkboxes." },
+    { name: "--pico-icon-chevron", description: "Arrow of selects, accordions and dropdown summaries." },
+    { name: "--pico-icon-date", description: "Date input icon." },
+    { name: "--pico-icon-time", description: "Time input icon." },
+    { name: "--pico-icon-search", description: "Search input icon." },
+    { name: "--pico-icon-close", description: "Close button of modals." },
+    { name: "--pico-icon-loading", description: "Spinner shown by aria-busy=\"true\"." },
+    { name: "--pico-icon-valid", description: "Icon of an input with aria-invalid=\"false\". It has a light and a dark version." },
+    { name: "--pico-icon-invalid", description: "Icon of an input with aria-invalid=\"true\". It has a light and a dark version." },
+  ]}
+/>
+
+## Colors
+
+The semantic color tokens are written once with `light-dark()`, so each holds a light and a dark value. In the tables below the first value is the light scheme and the second the dark one. A single value, or a `var()`, means both schemes use it. Hex values are approximations of the OKLCH colors in the source. How the schemes switch is explained in [Color schemes](/docs/customization/color-schemes).
+
+The primary tokens belong to the theme. The values shown are for Azure, the default. Another theme replaces them, see [Themes](/docs/customization/themes).
+
+### Page
+
+<Tokens
+  items={[
+    {"name":"--pico-background-color","value":"#ffffff / #13171f","description":"Page background color."},
+    {"name":"--pico-color","value":"#373c44 / #c2c7d0","description":"Default text color."},
+    {"name":"--pico-muted-color","value":"#646b79 / #7b8495","description":"Muted text color for secondary information."},
+    {"name":"--pico-muted-border-color","value":"#e7eaef / #202632","description":"Border color of separators and quiet surfaces."},
+  ]}
+/>
+
+### Primary
+
+<Tokens
+  items={[
+    {"name":"--pico-primary","value":"#0172ad / #01aaff","description":"Primary text and link color."},
+    {"name":"--pico-primary-background","value":"#0172ad","description":"Primary fill color."},
+    {"name":"--pico-primary-border","value":"var(--pico-primary-background)","description":"Primary border color."},
+    {"name":"--pico-primary-underline","value":"#0172ad (alpha 0.5) / #01aaff (alpha 0.5)","description":"Primary link underline color."},
+    {"name":"--pico-primary-hover","value":"#015887 / #79c0ff","description":"Primary hover color."},
+    {"name":"--pico-primary-hover-background","value":"#02659a / #017fc0","description":"Primary hover fill color."},
+    {"name":"--pico-primary-hover-border","value":"var(--pico-primary-hover-background)","description":"Primary hover border color."},
+    {"name":"--pico-primary-hover-underline","value":"var(--pico-primary-hover)","description":"Primary hover link underline color."},
+    {"name":"--pico-primary-focus","value":"#029ae8 (alpha 0.5) / #01aaff (alpha 0.375)","description":"Primary focus ring color."},
+    {"name":"--pico-primary-inverse","value":"#ffffff","description":"Primary text color on a filled background."},
+    {"name":"--pico-text-selection-color","value":"#029ae8 (alpha 0.25) / #01aaff (alpha 0.1875)","description":"Background of selected text."},
+  ]}
+/>
+
+### Secondary
+
+<Tokens
+  items={[
+    {"name":"--pico-secondary","value":"#5d6b89 / #969eaf","description":"Secondary text and link color."},
+    {"name":"--pico-secondary-background","value":"#525f7a","description":"Secondary fill color."},
+    {"name":"--pico-secondary-border","value":"var(--pico-secondary-background)","description":"Secondary border color."},
+    {"name":"--pico-secondary-underline","value":"#5d6b89 (alpha 0.5) / #969eaf (alpha 0.5)","description":"Secondary link underline color."},
+    {"name":"--pico-secondary-hover","value":"#48536b / #b3b9c5","description":"Secondary hover color."},
+    {"name":"--pico-secondary-hover-background","value":"#48536b / #5d6b89","description":"Secondary hover fill color."},
+    {"name":"--pico-secondary-hover-border","value":"var(--pico-secondary-hover-background)","description":"Secondary hover border color."},
+    {"name":"--pico-secondary-hover-underline","value":"var(--pico-secondary-hover)","description":"Secondary hover link underline color."},
+    {"name":"--pico-secondary-focus","value":"#5d6b89 (alpha 0.25) / #909ebe (alpha 0.25)","description":"Secondary focus ring color."},
+    {"name":"--pico-secondary-inverse","value":"#ffffff","description":"Secondary text color on a filled background."},
+  ]}
+/>
+
+### Contrast
+
+<Tokens
+  items={[
+    {"name":"--pico-contrast","value":"#181c25 / #dfe3eb","description":"Contrast text and link color."},
+    {"name":"--pico-contrast-background","value":"#181c25 / #eff1f4","description":"Contrast fill color."},
+    {"name":"--pico-contrast-border","value":"var(--pico-contrast-background)","description":"Contrast border color."},
+    {"name":"--pico-contrast-underline","value":"#181c25 (alpha 0.5) / #dfe3eb (alpha 0.5)","description":"Contrast link underline color."},
+    {"name":"--pico-contrast-hover","value":"#000000 / #ffffff","description":"Contrast hover color."},
+    {"name":"--pico-contrast-hover-background","value":"#000000 / #ffffff","description":"Contrast hover fill color."},
+    {"name":"--pico-contrast-hover-border","value":"var(--pico-contrast-hover-background)","description":"Contrast hover border color."},
+    {"name":"--pico-contrast-hover-underline","value":"var(--pico-secondary-hover)","description":"Contrast hover link underline color."},
+    {"name":"--pico-contrast-focus","value":"#5d6b89 (alpha 0.25) / #cfd5e2 (alpha 0.25)","description":"Contrast focus ring color."},
+    {"name":"--pico-contrast-inverse","value":"#ffffff / #000000","description":"Contrast text color on a filled background."},
+  ]}
+/>
+
+### Headings and text
+
+<Tokens
+  items={[
+    {"name":"--pico-h1-color","value":"#2d3138 / #f0f1f3","description":"Color of h1."},
+    {"name":"--pico-h2-color","value":"#373c44 / #e0e3e7","description":"Color of h2."},
+    {"name":"--pico-h3-color","value":"#424751 / #c2c7d0","description":"Color of h3."},
+    {"name":"--pico-h4-color","value":"#4d535e / #b3b9c5","description":"Color of h4."},
+    {"name":"--pico-h5-color","value":"#5c6370 / #a4acba","description":"Color of h5."},
+    {"name":"--pico-h6-color","value":"#646b79 / #8891a4","description":"Color of h6."},
+    {"name":"--pico-mark-background-color","value":"#fce6bf / #014063","description":"mark element."},
+    {"name":"--pico-mark-color","value":"#0f1114 / #ffffff","description":"mark element."},
+    {"name":"--pico-ins-color","value":"#1c6954 / #62af9a","description":"ins and del elements."},
+    {"name":"--pico-del-color","value":"#883835 / #ce7e7b","description":"ins and del elements."},
+    {"name":"--pico-blockquote-border-color","value":"var(--pico-muted-border-color)","description":"blockquote element."},
+    {"name":"--pico-blockquote-footer-color","value":"var(--pico-muted-color)","description":"blockquote element."},
+    {"name":"--pico-code-background-color","value":"#f3f4f7 / #1a1e28","description":"Code, kbd and samp."},
+    {"name":"--pico-code-color","value":"#646b79 / #8891a4","description":"Code, kbd and samp."},
+    {"name":"--pico-code-kbd-background-color","value":"var(--pico-color)","description":"Code, kbd and samp."},
+    {"name":"--pico-code-kbd-color","value":"var(--pico-background-color)","description":"Code, kbd and samp."},
+    {"name":"--pico-table-border-color","value":"var(--pico-muted-border-color)","description":"Table."},
+    {"name":"--pico-table-row-stripped-background-color","value":"#6f7887 (alpha 0.0375)","description":"Table."},
+  ]}
+/>
+
+### Form elements
+
+<Tokens
+  items={[
+    {"name":"--pico-form-element-background-color","value":"#fbfbfc / #1c212c","description":"Form element color."},
+    {"name":"--pico-form-element-selected-background-color","value":"#dfe3eb / #2a3140","description":"Form element color."},
+    {"name":"--pico-form-element-border-color","value":"#cfd5e2 / #2a3140","description":"Form element color."},
+    {"name":"--pico-form-element-color","value":"#23262c / #e0e3e7","description":"Form element color."},
+    {"name":"--pico-form-element-placeholder-color","value":"var(--pico-muted-color)","description":"Form element color."},
+    {"name":"--pico-form-element-active-background-color","value":"#ffffff / #1a1e28","description":"Form element color."},
+    {"name":"--pico-form-element-active-border-color","value":"var(--pico-primary-border)","description":"Form element color."},
+    {"name":"--pico-form-element-focus-color","value":"var(--pico-primary-border)","description":"Form element color."},
+    {"name":"--pico-form-element-invalid-border-color","value":"#b86a6b / #964a50","description":"Form element color in the invalid state."},
+    {"name":"--pico-form-element-invalid-active-border-color","value":"#c84f48 / #b73f3b","description":"Form element color in the invalid state."},
+    {"name":"--pico-form-element-invalid-focus-color","value":"var(--pico-form-element-invalid-active-border-color)","description":"Form element color in the invalid state."},
+    {"name":"--pico-form-element-valid-border-color","value":"#4c9a8a / #2a7b6f","description":"Form element color in the valid state."},
+    {"name":"--pico-form-element-valid-active-border-color","value":"#279977 / #16896a","description":"Form element color in the valid state."},
+    {"name":"--pico-form-element-valid-focus-color","value":"var(--pico-form-element-valid-active-border-color)","description":"Form element color in the valid state."},
+    {"name":"--pico-switch-background-color","value":"#bfc7d9 / #333c4e","description":"Switch control."},
+    {"name":"--pico-switch-checked-background-color","value":"var(--pico-primary-background)","description":"Switch control."},
+    {"name":"--pico-switch-color","value":"#ffffff","description":"Switch control."},
+    {"name":"--pico-range-border-color","value":"#dfe3eb / #202632","description":"Range input."},
+    {"name":"--pico-range-active-border-color","value":"#bfc7d9 / #2a3140","description":"Range input."},
+    {"name":"--pico-range-thumb-border-color","value":"var(--pico-background-color)","description":"Range input."},
+    {"name":"--pico-range-thumb-color","value":"var(--pico-secondary-background)","description":"Range input."},
+    {"name":"--pico-range-thumb-active-color","value":"var(--pico-primary-background)","description":"Range input."},
+  ]}
+/>
+
+### Components
+
+<Tokens
+  items={[
+    {"name":"--pico-accordion-border-color","value":"var(--pico-muted-border-color)","description":"Accordion summary."},
+    {"name":"--pico-accordion-active-summary-color","value":"var(--pico-primary-hover)","description":"Accordion summary."},
+    {"name":"--pico-accordion-close-summary-color","value":"var(--pico-color)","description":"Accordion summary."},
+    {"name":"--pico-accordion-open-summary-color","value":"var(--pico-muted-color)","description":"Accordion summary."},
+    {"name":"--pico-card-background-color","value":"var(--pico-background-color)","description":"Card surface."},
+    {"name":"--pico-card-border-color","value":"var(--pico-muted-border-color)","description":"Card surface."},
+    {"name":"--pico-card-sectioning-background-color","value":"#fbfbfc / #1a1e28","description":"Card surface."},
+    {"name":"--pico-dropdown-background-color","value":"#ffffff / #181c25","description":"Dropdown menu surface."},
+    {"name":"--pico-dropdown-border-color","value":"#eff1f4 / #202632","description":"Dropdown menu surface."},
+    {"name":"--pico-dropdown-color","value":"var(--pico-color)","description":"Dropdown menu surface."},
+    {"name":"--pico-dropdown-hover-background-color","value":"#eff1f4 / #202632","description":"Dropdown menu surface."},
+    {"name":"--pico-modal-overlay-background-color","value":"#e8eaed (alpha 0.75) / #07080a (alpha 0.75)","description":"Modal overlay."},
+    {"name":"--pico-progress-background-color","value":"#dfe3eb / #202632","description":"Progress bar."},
+    {"name":"--pico-progress-color","value":"var(--pico-primary-background)","description":"Progress bar."},
+    {"name":"--pico-tooltip-background-color","value":"var(--pico-contrast-background)","description":"Tooltip bubble."},
+    {"name":"--pico-tooltip-color","value":"var(--pico-contrast-inverse)","description":"Tooltip bubble."},
+  ]}
+/>
+
+## Color palette
+
+The full OKLCH palette is not in `pico.css`. It lives in `pico.colors.css`, which defines `--pico-color-<hue>-<step>` for the 20 hues and the steps 50 to 950 in increments of 50, for example `--pico-color-azure-550`. A bare `--pico-color-azure` is the 550 step, and `--pico-color-black` and `--pico-color-white` are there too. The same file adds the `.pico-color-*` and `.pico-background-*` classes. Link it after `pico.css`.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.colors.min.css"
+/>
+```
+
+<Example title="Palette variables and classes" css={["pico.colors"]}>
+```html
+<p class="pico-color-red-550">Text in red 550, from a class.</p>
+<p class="pico-background-jade-600" style="padding: 0.5rem 1rem;">A jade 600 background.</p>
+<p style="color: var(--pico-color-amber-450);">Amber 450, read from the variable.</p>
+```
+</Example>
+
+## Extras
+
+The opt-in extras declare their own tokens, named `--pico-<extra>-*`, for example `--pico-tabs-indicator-color` and `--pico-badge-background-color`. They are listed on the page of each extra, starting from [Extras](/docs/extras/overview).

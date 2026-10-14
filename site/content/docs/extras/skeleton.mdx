@@ -1,0 +1,122 @@
+---
+title: Skeleton
+description: Placeholder lines, avatars and blocks shown while content loads, driven by aria-busy.
+---
+
+A container with `aria-busy="true"` shows its empty `data-skeleton` children as placeholders. The values are `line`, `avatar` and `block`. Set the width of a line with `inline-size`. When the data arrives, set `aria-busy="false"` or swap the content.
+
+Load `css/extras/skeleton.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+A container that holds skeletons does not show the core `aria-busy` spinner. A container with `aria-busy="true"` and no skeletons keeps it (for example `<p aria-busy="true">Saving your changes</p>`).
+
+## Card
+
+<Example title="Loading card" css={["pico.extras"]} height={400}>
+```html
+<article aria-busy="true" aria-label="Loading invoice">
+  <header>
+    <div style="display: flex; align-items: center; gap: var(--pico-spacing)">
+      <div data-skeleton="avatar"></div>
+      <div style="flex: 1">
+        <p data-skeleton="line" style="inline-size: 40%"></p>
+        <p data-skeleton="line" style="inline-size: 25%"></p>
+      </div>
+    </div>
+  </header>
+  <p data-skeleton="line"></p>
+  <p data-skeleton="line" style="inline-size: 85%"></p>
+  <p data-skeleton="line" style="inline-size: 60%"></p>
+  <div data-skeleton="block"></div>
+  <footer>
+    <p data-skeleton="line" style="inline-size: 30%"></p>
+  </footer>
+</article>
+```
+</Example>
+
+The same card once the data is in, with `aria-busy="false"`:
+
+```html
+<article aria-busy="false">
+  <header>
+    <div style="display: flex; align-items: center; gap: var(--pico-spacing)">
+      <strong>Acme Cloud</strong>
+      <small>Invoice 2041, paid</small>
+    </div>
+  </header>
+  <p>Your team plan renewed on 1 October. The next invoice is due on 1 November.</p>
+  <footer><small>Billing contact: billing@acme.example</small></footer>
+</article>
+```
+
+## Text lines
+
+Use a `role="status"` container with an `aria-label` so screen readers announce the loading state and the finished content.
+
+<Example title="Loading text" css={["pico.extras"]} height={150}>
+```html
+<section role="status" aria-busy="true" aria-label="Loading comments">
+  <p data-skeleton="line"></p>
+  <p data-skeleton="line" style="inline-size: 90%"></p>
+  <p data-skeleton="line" style="inline-size: 70%"></p>
+</section>
+```
+</Example>
+
+## Avatar and lines
+
+<Example title="Loading profile" css={["pico.extras"]} height={110}>
+```html
+<div
+  role="status"
+  aria-busy="true"
+  aria-label="Loading profile"
+  style="display: flex; align-items: center; gap: var(--pico-spacing)"
+>
+  <span data-skeleton="avatar"></span>
+  <div style="flex: 1">
+    <p data-skeleton="line" style="inline-size: 50%"></p>
+    <p data-skeleton="line" style="inline-size: 30%"></p>
+  </div>
+</div>
+```
+</Example>
+
+## Results swapped by htmx
+
+A results list swapped by htmx follows the same pattern. The list starts busy with three lines, and htmx replaces the inner HTML when the response arrives. The new content has no skeletons, so set `aria-busy="false"` on the response, or let your code clear the attribute after the swap.
+
+```html
+<section
+  id="results"
+  aria-busy="true"
+  aria-label="Search results"
+  hx-get="/customers"
+  hx-trigger="keyup changed delay:300ms from:input[name=q]"
+  hx-target="this"
+  hx-swap="innerHTML"
+>
+  <p data-skeleton="line"></p>
+  <p data-skeleton="line" style="inline-size: 75%"></p>
+  <p data-skeleton="line" style="inline-size: 55%"></p>
+</section>
+```
+
+## Accessibility
+
+- `aria-busy="true"` tells assistive technology the region is still updating. Name the region with `aria-label` so it is clear what is loading.
+- The placeholders are empty and have no text, so there is nothing for a screen reader to read.
+- The shimmer only runs under `prefers-reduced-motion: no-preference`. Everyone else gets the flat color.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-skeleton-color", value: "var(--pico-muted-border-color)", description: "Base color of a placeholder." },
+    { name: "--pico-skeleton-highlight-color", description: "Color of the moving highlight." },
+    { name: "--pico-skeleton-duration", value: "1.5s", description: "Time for one sweep of the shimmer." },
+    { name: "--pico-skeleton-line-height", value: "1em", description: "Height of a line." },
+    { name: "--pico-skeleton-avatar-size", value: "3rem", description: "Diameter of an avatar placeholder." },
+    { name: "--pico-skeleton-block-size", value: "8rem", description: "Height of a block." },
+  ]}
+/>

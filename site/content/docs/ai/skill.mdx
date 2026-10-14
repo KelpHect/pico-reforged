@@ -1,0 +1,71 @@
+---
+title: The agent skill
+description: A skill that teaches coding agents the Pico Reforged rules, and how to install it in Claude Code or another agent.
+---
+
+The package includes an agent skill in `skills/pico-reforged/`. It is the compact version of these docs, written for a model: the core rules, a cheat sheet of every component, the opt-in extras, setup for the CDN, Vite and PostCSS, and a list of mistakes that models make often.
+
+## What is in it
+
+```text
+skills/pico-reforged/
+  SKILL.md
+  references/
+    setup.md
+    theming.md
+    components.md
+    extras.md
+```
+
+`SKILL.md` has a name and a description in its frontmatter. An agent reads the description to decide when the skill applies, for example when a project links `pico.min.css` or imports `@rusticstack/pico-reforged`, and loads the rest only then. The files in `references/` hold the detail, and `SKILL.md` links to them.
+
+## Install in Claude Code
+
+Claude Code reads skills from `.claude/skills/<name>/` in a project, or from `~/.claude/skills/<name>/` for all projects. Copy the whole `pico-reforged` folder, because `SKILL.md` links to the files in `references/`.
+
+If the package is installed, copy it from `node_modules`:
+
+```shell
+npm install @rusticstack/pico-reforged@next
+mkdir -p .claude/skills
+cp -r node_modules/@rusticstack/pico-reforged/skills/pico-reforged .claude/skills/
+```
+
+Without the package, clone the repository and copy the folder from there:
+
+```shell
+git clone https://github.com/rusticstack/pico-reforged
+cp -r pico-reforged/skills/pico-reforged .claude/skills/
+```
+
+Commit the folder so your team gets the same rules. After an upgrade of the package, copy it again to refresh the skill.
+
+## Install in other agents
+
+The skill is a Markdown file with frontmatter, which is the common skill format, so agents that support skills can use the same folder in their own skills directory.
+
+For agents without skill support, put the rules in the file the tool does read, such as `AGENTS.md`, `CLAUDE.md` or a rules file. Copy the body of `SKILL.md` into it, or link to the file. The site serves `SKILL.md` alone at [`/skill/SKILL.md`](/skill/SKILL.md), which is enough for a single paste into a chat. Its links to `references/` then point to files you do not have, so for the full set use the folder from the package.
+
+## What it asks the agent to do
+
+- Use the semantic element first and a class only when the cheat sheet lists one.
+- Never invent utility classes or component classes such as `.btn`, `.card`, `.row` or `.mt-4`.
+- Show state with attributes (`aria-invalid`, `aria-current`, `aria-busy`, `disabled`, `open`) and not with classes.
+- Change the look with `--pico-*` custom properties, outside any layer, and not with `!important`.
+- Force a color scheme with `data-theme`, and not a `.dark` class.
+- Load extras with their own stylesheet, after the core file.
+- Say "Pico Reforged" and credit Pico CSS by Lucas Larroche as the origin.
+
+## Check that it works
+
+Ask the agent for a small page and look at the markup it returns:
+
+```text
+Make a sign-up form with name, email, a password and a submit button using Pico Reforged.
+```
+
+A correct answer wraps each input in a `label`, uses a plain `button` or `input type="submit"`, and has no `btn`, `form-group` or `col` classes. If it does not, check that the skill folder is in the right place and that the agent lists it.
+
+## Related
+
+The skill points to [`components.json`](/docs/ai/data-files) for exact markup per component. See [Prompting tips](/docs/ai/prompting) for how to ask.

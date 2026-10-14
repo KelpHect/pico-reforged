@@ -1,0 +1,51 @@
+---
+title: Figure
+description: Figures with a muted caption, for images, diagrams and other self-contained content.
+---
+
+`figure` has no margin or padding. `figcaption` sits below the content in the muted color.
+
+<Example title="Figure with image">
+```html
+<figure>
+  <img
+    alt="A gradient from blue to orange"
+    width="960"
+    height="300"
+    src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='960' height='300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%234b6bfb'/%3E%3Cstop offset='1' stop-color='%23f2a65a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='960' height='300' fill='url(%23g)'/%3E%3C/svg%3E"
+  />
+  <figcaption>A gradient standing in for a photo.</figcaption>
+</figure>
+```
+</Example>
+
+## Other content
+
+A figure can hold an inline SVG, a table, a code block or a quote. The caption looks the same.
+
+<Example title="Figure with SVG">
+```html
+<figure>
+  <svg width="200" height="80" viewBox="0 0 200 80" role="img" aria-label="A circle in a frame">
+    <rect x="4" y="4" width="192" height="72" rx="8" fill="none" stroke="currentColor" />
+    <circle cx="40" cy="40" r="18" />
+  </svg>
+  <figcaption>An inline SVG that follows the text color.</figcaption>
+</figure>
+```
+</Example>
+
+## Accessibility
+
+Give every `img` an `alt`. The caption does not replace it: use `alt` to describe the image and `figcaption` for context. Place `figcaption` as the first or last child of the `figure`.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-muted-color", description: "Color of figcaption." },
+    { name: "--pico-spacing", value: "1rem", description: "Caption padding is half of it above and below." },
+  ]}
+/>
+
+Images and other media are covered on [Embedded content](/docs/content/embedded-content).

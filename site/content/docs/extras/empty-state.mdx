@@ -1,0 +1,172 @@
+---
+title: Empty state
+description: A block shown in place of a list, table or result set with no rows, with an icon, a message and actions.
+---
+
+An empty state is a `section[data-empty]` shown in place of a list, table or result set with no rows. It is for "nothing here yet" and "nothing matches". A failed load is an error, not an empty state, so use an [alert](/docs/extras/alert) for that.
+
+Load `css/extras/empty-state.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Default
+
+An optional `figure` with `aria-hidden="true"` holds the icon. After it comes a heading, a `p` and a `footer` with one or two actions. Any of those can be left out.
+
+<Example title="Empty state" css={["pico.extras"]} height={330}>
+```html
+<section data-empty>
+  <figure aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+    </svg>
+  </figure>
+  <h3>No projects yet</h3>
+  <p>Create a project to start tracking your work here.</p>
+  <footer>
+    <a href="/projects/new" role="button">Create project</a>
+  </footer>
+</section>
+```
+</Example>
+
+## Two actions
+
+<Example title="Empty state with two actions" css={["pico.extras"]} height={360}>
+```html
+<section data-empty>
+  <figure aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+      <path d="M4 4h16v16H4z" />
+      <path d="M4 14h4l2 3h4l2-3h4" />
+    </svg>
+  </figure>
+  <h3>Your inbox is empty</h3>
+  <p>
+    Invite teammates to start a conversation, or import your existing threads from another
+    tool.
+  </p>
+  <footer>
+    <button type="button">Invite teammates</button>
+    <button type="button" class="secondary outline">Import threads</button>
+  </footer>
+</section>
+```
+</Example>
+
+## Text only
+
+<Example title="Text only" css={["pico.extras"]} height={190}>
+```html
+<section data-empty>
+  <h3>No activity this week</h3>
+  <p>Events from your workspace will show up here.</p>
+</section>
+```
+</Example>
+
+## Compact
+
+`data-empty="compact"` has less padding and a smaller icon. It suits cards, panels and lists.
+
+<Example title="Compact empty state" css={["pico.extras"]} height={190}>
+```html
+<article>
+  <header><h3>Notifications</h3></header>
+  <section data-empty="compact">
+    <p>No notifications.</p>
+  </section>
+</article>
+```
+</Example>
+
+## No results after filtering
+
+Keep the result count in a `role="status"` element outside the empty state, so the change is announced. Label the empty state with the heading it contains.
+
+<Example title="Nothing matches" css={["pico.extras"]} height={420}>
+```html
+<form role="search" onsubmit="return false">
+  <input type="search" name="q" value="beta" aria-label="Search projects" />
+</form>
+<p role="status" id="results-count">0 projects match "beta"</p>
+<section data-empty="compact" aria-labelledby="no-match-title">
+  <figure aria-hidden="true">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-3.5-3.5" />
+    </svg>
+  </figure>
+  <h3 id="no-match-title">Nothing matches your search</h3>
+  <p>Check the spelling or try another term.</p>
+  <footer>
+    <button type="button" class="secondary">Clear search</button>
+  </footer>
+</section>
+```
+</Example>
+
+## Inside a table
+
+To keep the table header, put a compact empty state in one cell that spans every column. The cell loses its padding and the state loses its own frame, which becomes the table's.
+
+<Example title="Empty table" css={["pico.extras"]} height={220}>
+```html
+<figure>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Invoice</th>
+        <th scope="col">Customer</th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="3">
+          <section data-empty="compact">
+            <p>No invoices yet.</p>
+          </section>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+```
+</Example>
+
+## Toggling with a list
+
+Use the `hidden` attribute to switch between the list and the empty state. Keep the `role="status"` count outside the hidden regions, and do not move focus.
+
+```js
+const list = document.querySelector("#projects");
+const empty = document.querySelector("#projects-empty");
+function syncEmpty() {
+  const count = list.children.length;
+  list.hidden = count === 0;
+  empty.hidden = count > 0;
+}
+syncEmpty(); // call after every change to the list
+```
+
+## Accessibility
+
+- The icon is decorative, so the `figure` has `aria-hidden="true"`.
+- The heading and text say what is missing and what to do next. Do not rely on the icon.
+- Actions are real links and buttons in the `footer`, so they are in the tab order.
+- An empty state with `hidden` is not displayed and not announced.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-empty-state-max-inline-size", value: "28rem", description: "Maximum width of the block." },
+    { name: "--pico-empty-state-padding-block", value: "calc(var(--pico-block-spacing-vertical) * 2)", description: "Vertical padding. The compact value uses var(--pico-spacing)." },
+    { name: "--pico-empty-state-icon-size", value: "1.5rem", description: "Size of the icon. The compact value is 1.25rem." },
+    { name: "--pico-empty-state-icon-color", value: "var(--pico-muted-color)", description: "Icon color." },
+    { name: "--pico-empty-state-icon-background", value: "var(--pico-card-sectioning-background-color)", description: "Circle behind the icon." },
+    { name: "--pico-empty-state-border-color", value: "var(--pico-form-element-border-color)", description: "Color of the dashed frame." },
+  ]}
+/>

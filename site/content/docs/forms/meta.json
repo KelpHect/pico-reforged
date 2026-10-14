@@ -1,0 +1,19 @@
+{
+  "title": "Forms",
+  "pages": [
+    "overview",
+    "input",
+    "textarea",
+    "select",
+    "checkboxes",
+    "radios",
+    "switch",
+    "range",
+    "color",
+    "date-and-time",
+    "file",
+    "search",
+    "validation",
+    "groups"
+  ]
+}

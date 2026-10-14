@@ -1,0 +1,43 @@
+---
+title: Range
+description: A slider with a styled track and thumb in Chromium, WebKit and Firefox.
+---
+
+`input[type="range"]` is full width with a thin track and a round thumb. The thumb grows slightly while it is dragged.
+
+<Example title="Range" height={140}>
+```html
+<label>
+  Volume
+  <input type="range" name="volume" min="0" max="100" value="40" />
+</label>
+```
+</Example>
+
+## Accessibility
+
+Give the slider a label. For a value that matters, show it in an `output` element linked with `for`, so the number is readable without dragging.
+
+<Example title="Range with output" height={180}>
+```html
+<form oninput="level.value = volume.value">
+  <label for="volume">Volume</label>
+  <input type="range" id="volume" name="volume" min="0" max="100" value="40" />
+  <output name="level" for="volume">40</output>
+</form>
+```
+</Example>
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-range-border-color", description: "Track color." },
+    { name: "--pico-range-active-border-color", description: "Track color while active or focused." },
+    { name: "--pico-range-thumb-border-color", value: "var(--pico-background-color)", description: "Thumb border." },
+    { name: "--pico-range-thumb-color", value: "var(--pico-secondary-background)", description: "Thumb color." },
+    { name: "--pico-range-thumb-active-color", value: "var(--pico-primary-background)", description: "Thumb color while active or focused." },
+  ]}
+/>
+
+A range input has no border or padding, so it shows no visible validation style.

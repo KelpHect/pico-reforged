@@ -1,6 +1,6 @@
 /*!
  * Pico Reforged v1.0.0-alpha.0 (https://pico.rusticstack.com)
- * Copyright 2019-2025 Lucas Larroche and the Pico CSS authors
+ * Copyright 2019-2024 Lucas Larroche and the Pico CSS authors
  * Copyright 2026 rusticstack
  * Licensed under MIT
  */
@@ -123,7 +123,7 @@
   :root, :host, [data-theme] {
     --pico-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(20.26% .017 266.4));
     --pico-color: var(--lightningcss-light, oklch(35.46% .0155 259.81)) var(--lightningcss-dark, oklch(82.85% .0137 262.37));
-    --pico-muted-color: var(--lightningcss-light, oklch(52.68% .0236 264.35)) var(--lightningcss-dark, oklch(61.17% .0279 263.25));
+    --pico-muted-color: var(--lightningcss-light, oklch(52.68% .0236 264.35)) var(--lightningcss-dark, oklch(65.57% .0302 265.34));
     --pico-muted-border-color: var(--lightningcss-light, oklch(93.63% .0081 262.77)) var(--lightningcss-dark, oklch(26.82% .0241 264.04));
     --pico-primary-border: var(--pico-primary-background);
     --pico-primary-hover-border: var(--pico-primary-hover-background);

@@ -14,6 +14,7 @@ export default defineConfig({
       "css/**",
       "dist/**",
       "dist-dev*/**",
+      "examples/**",
       "site/**",
       "src/**",
       "test/reference/**",

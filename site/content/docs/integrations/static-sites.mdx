@@ -1,0 +1,92 @@
+---
+title: Static sites and the purge CLI
+description: Use the CDN, build a custom stylesheet with the CLI, or purge the output folder of Hugo, Jekyll, Eleventy and Bun.
+---
+
+No bundler plugin is needed for a site that writes a folder of HTML. You have three options, from simplest to smallest.
+
+## CDN or a copy of the file
+
+Link the CDN file, or copy a file from `css/` into your site.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+```
+
+The file names match Pico CSS v2.1.1: `pico.min.css`, `pico.classless.min.css`, the fluid and conditional variants, and one file per theme such as `pico.jade.min.css`. Opt-in extras are separate files: `pico.extras.min.css` for all of them, or `extras/tabs.min.css` for one.
+
+## Build your own stylesheet
+
+`pico-reforged build` compiles one stylesheet with the options you choose. The package is `@rusticstack/pico-reforged` and only its command is called `pico-reforged`, so the examples below use `npx @rusticstack/pico-reforged`, which works without an install. If you install it (`npm install -D @rusticstack/pico-reforged`), `npx pico-reforged` is enough.
+
+```shell
+npx @rusticstack/pico-reforged build --theme jade --extras tabs --minify --out static/css/pico.css
+```
+
+These commands help you pick options:
+
+```shell
+npx @rusticstack/pico-reforged themes    # list the built-in themes
+npx @rusticstack/pico-reforged extras    # list the opt-in extras
+npx @rusticstack/pico-reforged modules   # list the modules that can be excluded
+npx @rusticstack/pico-reforged matrix    # write the full file set, default folder css
+```
+
+`--theme` takes a theme name, a color such as `"#e5484d"`, or the path of a CSS file. See [Themes](/docs/customization/themes).
+
+## Purge the built site
+
+Build the site, then purge the output folder:
+
+```shell
+# hugo, jekyll build, eleventy, bun build ...
+npx @rusticstack/pico-reforged purge public
+```
+
+`pico-reforged purge <outDir>` reads every text file in the folder (HTML, JS and so on, up to 32 MB each) and rewrites the built CSS files in place. It works on the CDN copy too, because that file keeps its `@layer pico.*` blocks.
+
+<PropsTable
+  items={[
+    { name: "--css", type: "glob", default: "**/*.css", description: "Stylesheets to rewrite, relative to outDir. Repeatable." },
+    { name: "--content", type: "glob", description: "More files to read names from, for templates that are not in outDir, such as a server's views. Relative to the working directory. Repeatable." },
+    { name: "--safelist", type: "name", description: "Keep a class, id, tag or attribute. /regex/ works. Repeatable." },
+    { name: "--mode", type: "safe | aggressive", default: "safe", description: "How strict the purge is. auto is accepted as safe." },
+    { name: "--keep-types", type: "flag", description: "With --mode aggressive, keep rules that only lack tags in the content (CMS or Markdown output)." },
+    { name: "--dry-run", type: "flag", description: "Print what would change and write nothing." },
+  ]}
+/>
+
+Only rules inside `@layer pico.*` blocks change, at the top level or inside a wrapper layer such as `@layer base { @layer pico.core { ... } }`. Everything else in the file, your own CSS above all, is written back exactly as it was. A file without a Pico layer is skipped. If a minifier or bundler removed the layers, the command changes nothing and says so.
+
+Preview first with a dry run:
+
+```shell
+npx @rusticstack/pico-reforged purge public --dry-run
+```
+
+The output reports the rules removed and the size change per file, and warnings go to stderr.
+
+## Bun
+
+With `Bun.build`, install the package as a dev dependency (`bun add -d @rusticstack/pico-reforged`), then run the purge command after the build step in your `package.json` script:
+
+```json
+{
+  "scripts": {
+    "build": "bun run build.ts && pico-reforged purge dist"
+  }
+}
+```
+
+## Templates outside the output folder
+
+If the markup is produced by a server and only the CSS is in the output folder, point `--content` at the templates:
+
+```shell
+npx @rusticstack/pico-reforged purge public --content "views/**/*.html"
+```
+
+Class names that only appear in markup the command cannot read still need `--content` or `--safelist`. For the difference between the two modes see [Purge modes](/docs/integrations/purge-modes).

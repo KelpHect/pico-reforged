@@ -1,3 +1,6 @@
+packages:
+  - site
+
 autoInstallPeers: false
 minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus-core@1.2.0"
@@ -12,3 +15,18 @@ minimumReleaseAgeExclude:
   - playwright-core@1.64.1
   - playwright@1.64.1
   - vite-plus@1.2.0
+  - "@next/env@16.4.1"
+  - "@next/swc-darwin-arm64@16.4.1"
+  - "@next/swc-darwin-x64@16.4.1"
+  - "@next/swc-linux-arm64-gnu@16.4.1"
+  - "@next/swc-linux-arm64-musl@16.4.1"
+  - "@next/swc-linux-x64-gnu@16.4.1"
+  - "@next/swc-linux-x64-musl@16.4.1"
+  - "@next/swc-win32-arm64-msvc@16.4.1"
+  - "@next/swc-win32-x64-msvc@16.4.1"
+  - fumadocs-core@16.17.3
+  - next@16.4.1
+  - react-dom@19.3.1
+  - react@19.3.1
+allowBuilds:
+  esbuild: true

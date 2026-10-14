@@ -1,0 +1,13 @@
+{
+  "title": "Getting started",
+  "pages": [
+    "introduction",
+    "quick-start",
+    "installation",
+    "usage",
+    "class-less-version",
+    "version-picker",
+    "browser-support",
+    "coming-from-pico-css"
+  ]
+}

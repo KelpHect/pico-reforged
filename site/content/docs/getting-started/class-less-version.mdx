@@ -1,0 +1,65 @@
+---
+title: Class-less version
+description: The same styles with every class selector removed, for content pages and Markdown output.
+---
+
+The class-less build drops every selector that needs a class. Elements are styled by tag and by ARIA or attribute hooks only. It also turns `body > header`, `body > main` and `body > footer` into centered containers, so you do not need `.container`.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.classless.min.css"
+/>
+```
+
+It is a good fit for blog posts, documentation, generated HTML and Markdown output, where you do not control the markup.
+
+## Example
+
+<Example title="A page with no class attributes" variant="classless" bare>
+```html
+<header>
+  <hgroup>
+    <h1>Field notes</h1>
+    <p>Short write-ups, no framework.</p>
+  </hgroup>
+</header>
+<main>
+  <article>
+    <h2>Why plain HTML</h2>
+    <p>It loads fast, it reads well, and screen readers understand it.</p>
+    <footer>
+      <button>Subscribe</button>
+    </footer>
+  </article>
+</main>
+```
+</Example>
+
+## Files
+
+| File                                     | What it is                           |
+| ---------------------------------------- | ------------------------------------ |
+| `pico.classless.min.css`                 | class-less, azure theme              |
+| `pico.classless.<theme>.min.css`         | class-less in one of 19 other themes |
+| `pico.classless.conditional.<theme>.min.css` | class-less, scoped to `.pico`    |
+| `pico.fluid.classless.min.css`           | class-less with a full-width container |
+| `pico.fluid.classless.<theme>.min.css`   | fluid class-less in another theme    |
+
+The scoped class-less files exist for the 19 themes other than azure. For azure, build one: `pico-reforged build --entry classless --scope .pico --minify`. All names are in the [version picker](/docs/getting-started/version-picker).
+
+## What is not available
+
+Anything that needs a class in the full build is missing here: `.secondary`, `.contrast` and `.outline` buttons, `.grid`, `.container`, `.container-fluid` and `.overflow-auto`. Use the [class build](/docs/getting-started/usage) when you need them. Hooks that are not classes still work, such as `role="button"`, `role="group"`, `role="switch"`, `aria-busy`, `data-tooltip`, `<details>` and `<dialog>`.
+
+## Layout
+
+The semantic container reads `--pico-container-max-width`, which grows at each breakpoint. To change the width, override that variable:
+
+```css
+:root {
+  --pico-container-max-width: 960px;
+}
+```
+
+For no limit at all, use the fluid file. Page sections are covered in [Semantic container](/docs/layout/semantic-container).

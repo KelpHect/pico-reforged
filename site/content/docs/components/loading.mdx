@@ -1,0 +1,41 @@
+---
+title: Loading
+description: Show a spinner on any element with aria-busy="true".
+---
+
+Add `aria-busy="true"` to an element and a spinner appears before its content. The attribute tells assistive technology that the element is busy, and the spinner is drawn by CSS.
+
+<Example title="Spinner in text" height={160}>
+```html
+<article aria-busy="true"></article>
+<p aria-busy="true">Generating your report</p>
+```
+</Example>
+
+## Buttons and links
+
+On a button, a submit input or a link with `role="button"`, the spinner shows next to the label and the control stops taking pointer events. An empty button needs an `aria-label`, since there is no text left to name it.
+
+<Example title="Busy buttons" height={160}>
+```html
+<button aria-busy="true">Please wait</button>
+<button aria-busy="true" aria-label="Please wait" class="secondary"></button>
+<a href="#" role="button" aria-busy="true" class="outline">Loading link</a>
+```
+</Example>
+
+## Notes
+
+The spinner is added to every element with `aria-busy="true"` except `input`, `select`, `textarea`, `html` and `form`. An element with content gets a gap after the spinner, and an empty one centers it. On filled buttons the spinner is white or black so it stays visible.
+
+Toggle the state from script with `el.setAttribute("aria-busy", "true")` and `el.removeAttribute("aria-busy")`. If you use the purge step of the build integrations, an attribute set only from script is still found, because the scanner reads quoted strings.
+
+The animation is inside the SVG image, so `--pico-icon-loading` is the one place to change it. For placeholder shapes in app UIs, see the [extras](/docs/extras/overview).
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-icon-loading", description: "The spinner image, an SVG data URI." },
+  ]}
+/>

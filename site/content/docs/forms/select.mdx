@@ -1,0 +1,58 @@
+---
+title: Select
+description: Native select with a drawn chevron, plus multiple and size variants.
+---
+
+`select` is styled like an input, with a chevron drawn in the background. The native dropdown is kept, so it works the same way with every keyboard and assistive technology.
+
+<Example title="Select" height={200}>
+```html
+<select name="fruit" aria-label="Favorite fruit" required>
+  <option selected disabled value="">Select your favorite fruit...</option>
+  <option>Banana</option>
+  <option>Watermelon</option>
+  <option>Orange</option>
+  <option>Pineapple</option>
+</select>
+```
+</Example>
+
+A required `select` whose selected option has an empty value matches `:invalid`, and is shown in the placeholder color until the person picks a value. That is why the first option above is `disabled` with `value=""`.
+
+## Multiple and size
+
+With `multiple` or `size`, the chevron is removed and the list is shown. Selected options use `--pico-form-element-selected-background-color`.
+
+<Example title="Multiple select" height={260}>
+```html
+<select name="fruits" aria-label="Favorite fruits" multiple size="4">
+  <option disabled>Select your favorite fruits...</option>
+  <option>Banana</option>
+  <option selected>Watermelon</option>
+  <option selected>Orange</option>
+  <option>Pineapple</option>
+</select>
+```
+</Example>
+
+## Validation
+
+`aria-invalid` changes the border and the focus ring. A single select keeps its chevron and does not draw the valid or invalid icon.
+
+<Example title="Invalid select" height={200}>
+```html
+<select name="country" aria-label="Country" aria-invalid="true">
+  <option>Portugal</option>
+  <option>Spain</option>
+</select>
+<small>Pick the country you live in.</small>
+```
+</Example>
+
+## In a group
+
+A select can sit next to a button in a [group](/docs/forms/groups).
+
+## Customization
+
+The chevron comes from `--pico-icon-chevron`. Other values come from the shared form variables in the [Forms overview](/docs/forms/overview).

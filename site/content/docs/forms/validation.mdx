@@ -1,0 +1,68 @@
+---
+title: Validation states
+description: Style valid and invalid controls with aria-invalid, and pair them with helper text.
+---
+
+Validation styling is driven by the `aria-invalid` attribute, not by `:invalid`. You decide when a field shows feedback, for example after submit, and the same attribute tells assistive technology about the error.
+
+- `aria-invalid="true"`: invalid border, focus ring and icon.
+- `aria-invalid="false"`: valid border, focus ring and icon.
+- No attribute: the normal look.
+
+<Example title="Valid and invalid" height={320}>
+```html
+<input type="text" name="first" placeholder="First name" aria-label="First name" aria-invalid="false" />
+<small>Looks good.</small>
+<input type="email" name="email" placeholder="Email" aria-label="Email" aria-invalid="true" aria-describedby="invalid-helper" />
+<small id="invalid-helper">Please provide a valid email address.</small>
+```
+</Example>
+
+## Helper text
+
+A `<small>` right after the control takes the valid color (`--pico-ins-color`) or the invalid color (`--pico-del-color`). Link it to the control with `aria-describedby` so the message is announced.
+
+## Which controls show what
+
+Text-like inputs and textareas get a border, a focus ring and an icon. A [search](/docs/forms/search) input keeps its magnifier next to the icon. A single [select](/docs/forms/select) changes the border and focus ring but keeps its chevron. [Checkboxes](/docs/forms/checkboxes), [radios](/docs/forms/radios) and [switches](/docs/forms/switch) change the border, and the fill once checked. Date and time inputs change the border and focus ring only. [Range](/docs/forms/range) has no visible change.
+
+<Example title="Other controls" height={260}>
+```html
+<select name="country" aria-label="Country" aria-invalid="true">
+  <option>Portugal</option>
+  <option>Spain</option>
+</select>
+<label>
+  <input type="checkbox" checked aria-invalid="false" />
+  Accepted
+</label>
+<input type="date" aria-label="Date" aria-invalid="true" />
+```
+</Example>
+
+## Setting it from script
+
+Set the attribute after the browser's own check, so the built-in rules and your messages agree.
+
+```js
+const email = document.querySelector("#email");
+
+email.addEventListener("blur", () => {
+  email.setAttribute("aria-invalid", String(!email.checkValidity()));
+});
+```
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-form-element-invalid-border-color", description: "Border of an invalid control." },
+    { name: "--pico-form-element-invalid-active-border-color", description: "Border of an invalid control on focus." },
+    { name: "--pico-form-element-invalid-focus-color", description: "Focus ring of an invalid control." },
+    { name: "--pico-form-element-valid-border-color", description: "Border of a valid control." },
+    { name: "--pico-form-element-valid-active-border-color", description: "Border of a valid control on focus." },
+    { name: "--pico-form-element-valid-focus-color", description: "Focus ring of a valid control." },
+    { name: "--pico-icon-valid", description: "Icon drawn on a valid control." },
+    { name: "--pico-icon-invalid", description: "Icon drawn on an invalid control." },
+  ]}
+/>

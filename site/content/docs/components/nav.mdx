@@ -1,0 +1,123 @@
+---
+title: Nav
+description: Horizontal navigation from nav and lists, with a brand side, buttons, form controls, a breadcrumb and a vertical sidebar.
+---
+
+A `<nav>` lays out its lists in a row. Put the brand in the first `<ul>` and the links in the second, and the two sides are pushed apart. Links lose their underline until hovered. A link with `role="button"` stays a button.
+
+<Example title="Nav" height={140}>
+```html
+<nav>
+  <ul>
+    <li><strong>Acme Corp</strong></li>
+  </ul>
+  <ul>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Services</a></li>
+    <li><a href="#" role="button">Contact</a></li>
+  </ul>
+</nav>
+```
+</Example>
+
+## Page header
+
+Put the nav in a `<header>` inside a `.container` to align it with the page. See [Container](/docs/layout/container).
+
+```html
+<header class="container">
+  <nav>
+    <ul>
+      <li><strong>Acme</strong></li>
+    </ul>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </nav>
+</header>
+```
+
+## Controls in a nav
+
+Buttons, search inputs and selects fit in a list item. They are resized to the height of a link.
+
+<Example title="Controls in a nav" height={140}>
+```html
+<nav>
+  <ul>
+    <li><a href="#" class="secondary">Left</a></li>
+  </ul>
+  <ul>
+    <li><button class="outline" type="button">Button in nav</button></li>
+    <li><input type="search" placeholder="Search" aria-label="Search" /></li>
+    <li>
+      <select aria-label="Language">
+        <option>English</option>
+        <option>Portuguese</option>
+      </select>
+    </li>
+  </ul>
+</nav>
+```
+</Example>
+
+A [dropdown](/docs/components/dropdown) goes in an `<li>` too.
+
+## Breadcrumb
+
+Add `aria-label="breadcrumb"` to the nav. Items are separated by a divider, and a link with `aria-current` is shown as plain text and is not clickable.
+
+<Example title="Breadcrumb" height={140}>
+```html
+<nav aria-label="breadcrumb">
+  <ul>
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Docs</a></li>
+    <li><a href="#" aria-current="page">Current page</a></li>
+  </ul>
+</nav>
+```
+</Example>
+
+The last item can also be plain text with no link. The divider is the `--pico-nav-breadcrumb-divider` token, which is `">"` by default. Set it to any CSS string:
+
+```css
+:root {
+  --pico-nav-breadcrumb-divider: "/";
+}
+```
+
+## Vertical nav in an aside
+
+Inside an `<aside>` the nav and its lists stack instead of sitting in a row. This is the usual sidebar markup.
+
+<Example title="Sidebar nav" height={180}>
+```html
+<aside>
+  <nav>
+    <ul>
+      <li><a href="#">Sidebar one</a></li>
+      <li><a href="#">Sidebar two</a></li>
+      <li><a href="#" role="button" class="secondary">Sidebar button</a></li>
+    </ul>
+  </nav>
+</aside>
+```
+</Example>
+
+## Accessibility
+
+Use a `<nav>` for major blocks of links only, and give each one an `aria-label` if the page has more than one, as the breadcrumb does. Mark the link for the current page with `aria-current="page"`. Each list item carries a zero-width space so VoiceOver keeps the list semantics that `list-style: none` would remove.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-nav-element-spacing-vertical", value: "1rem", description: "Vertical padding of each list item." },
+    { name: "--pico-nav-element-spacing-horizontal", value: "0.5rem", description: "Horizontal padding of each list item." },
+    { name: "--pico-nav-link-spacing-vertical", value: "0.5rem", description: "Vertical padding of a link." },
+    { name: "--pico-nav-link-spacing-horizontal", value: "0.5rem", description: "Horizontal padding of a link." },
+    { name: "--pico-nav-breadcrumb-divider", value: "\">\"", description: "Separator between breadcrumb items." },
+  ]}
+/>

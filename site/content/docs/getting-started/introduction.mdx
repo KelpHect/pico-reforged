@@ -1,0 +1,49 @@
+---
+title: Introduction
+description: What Pico Reforged is, why it exists, and where it comes from.
+---
+
+Pico Reforged is a small CSS framework for semantic HTML. You write `<button>`, `<table>`, `<dialog>` and `<form>`, and they look right without a class on them. A gzipped `pico.min.css` is about 12 kB.
+
+It is a fork of Pico CSS v2.1.1 rewritten in plain modern CSS. The same class names, attribute hooks and `--pico-*` variables work, so a page built for Pico CSS keeps working. See [Coming from Pico CSS](/docs/getting-started/coming-from-pico-css).
+
+<Example title="No classes needed">
+```html
+<article>
+  <header><strong>Semantic HTML</strong></header>
+  <p>Headings, forms, tables and dialogs are styled by their tag.</p>
+  <footer>
+    <button>Save</button>
+  </footer>
+</article>
+```
+</Example>
+
+## Why a fork
+
+Pico CSS v2.1.1 is the last upstream release and the repository is archived. The maintainer said what a successor would need: plain CSS instead of Sass, newer platform features, and a native tool that strips unused CSS. Pico Reforged is that attempt. The reasons are written down in [ADR 0001](https://github.com/rusticstack/pico-reforged/blob/main/docs/adr/0001-plain-css-rewrite.md).
+
+## What is different
+
+- Plain CSS in `src/`, no Sass. Native nesting, custom properties and cascade layers.
+- Colors are OKLCH. Light and dark values are written once with `light-dark()`.
+- Every rule sits in the `pico` layer, so your own unlayered CSS wins without `!important`. The order is `pico.tokens`, `pico.theme`, `pico.core`, `pico.extras`, `pico.utilities`.
+- 20 color themes, plus a custom theme from one color with `pico-reforged build --theme "#e5484d"`.
+- Class, class-less, conditional (scoped to `.pico`) and fluid class-less builds, with the same CDN file names as v2.1.1. See the [version picker](/docs/getting-started/version-picker).
+- Opt-in [extras](/docs/extras/overview) for apps: tabs, alert, toast, badge, avatar, skeleton, app shell, data table, pagination, stepper and empty state.
+- A CLI and [Vite and PostCSS integrations](/docs/integrations/overview) that remove unused rules. The default purge mode is `safe`, and `aggressive` is opt-in.
+- Popover and anchor positioning patterns for menus and tooltips, next to the existing `details.dropdown` and `[data-tooltip]` markup.
+
+## What stays the same
+
+There is no JavaScript to load. The one thing you script yourself is opening a `<dialog>` with `showModal()`. The browser floor is Chrome and Edge 111, Firefox 128 and Safari 16.4, see [browser support](/docs/getting-started/browser-support).
+
+## Credit
+
+Pico CSS was created by Lucas Larroche and is released under the MIT license. Pico Reforged is a separate project by rusticstack, also MIT. It is not the official Pico CSS, it is not made or endorsed by its author, and it does not use the Pico CSS logo. The origin is credited in the banner of every built file and in the license.
+
+## Next steps
+
+- [Quick start](/docs/getting-started/quick-start): a styled page in two minutes.
+- [Installation](/docs/getting-started/installation): CDN, npm, integrations and download.
+- [Usage](/docs/getting-started/usage): which build to pick.

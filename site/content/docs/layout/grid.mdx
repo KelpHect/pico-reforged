@@ -1,0 +1,60 @@
+---
+title: Grid
+description: A minimal auto-layout grid that stacks on small screens.
+---
+
+`.grid` puts its children in equal columns. Below 768px the children stack in one column. From 768px up it uses `repeat(auto-fit, minmax(0%, 1fr))`, so the columns share the row equally, however many children there are.
+
+<Example title="Grid" height={200}>
+```html
+<div class="grid">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+  <div>4</div>
+</div>
+```
+</Example>
+
+The example frame can be narrower than 768px, in which case the columns stack. Open the page in a wider window to see them side by side.
+
+## Mixed content
+
+Any element can be a grid child: inputs, buttons, articles.
+
+<Example title="Grid with form controls" height={220}>
+```html
+<form>
+  <div class="grid">
+    <input type="text" name="firstname" placeholder="First name" aria-label="First name" required />
+    <input type="email" name="email" placeholder="Email" aria-label="Email" required />
+    <button type="submit">Subscribe</button>
+  </div>
+</form>
+```
+</Example>
+
+## Limits
+
+The grid is intentionally small. There are no column spans, offsets or per-breakpoint classes, and all columns are equal. For anything else, write CSS grid or flexbox in your own stylesheet. You can reuse the gap variables:
+
+```css
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--pico-grid-row-gap) var(--pico-grid-column-gap);
+}
+```
+
+Children get `min-width: 0`, so long content shrinks instead of overflowing the column. A wide table or code block inside a cell needs [Overflow auto](/docs/layout/overflow-auto).
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-grid-column-gap", value: "var(--pico-spacing)", description: "Gap between columns." },
+    { name: "--pico-grid-row-gap", value: "var(--pico-spacing)", description: "Gap between rows." },
+  ]}
+/>
+
+`.grid` stays global in the conditional build, so it works inside and outside a `.pico` scope.

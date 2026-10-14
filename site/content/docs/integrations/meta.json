@@ -1,0 +1,13 @@
+{
+  "title": "Integrations",
+  "pages": [
+    "overview",
+    "vite",
+    "nextjs",
+    "static-sites",
+    "configuration",
+    "purge-modes",
+    "htmx-alpine",
+    "troubleshooting"
+  ]
+}

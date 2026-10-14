@@ -1,0 +1,53 @@
+---
+title: Overflow auto
+description: Let wide content such as tables scroll inside its box.
+---
+
+`.overflow-auto` sets `overflow: auto` on an element. Wrap content that can be wider than the page, most often a table, and it scrolls inside the wrapper instead of stretching the layout.
+
+<Example title="Overflow auto" height={200}>
+```html
+<div class="overflow-auto" style="width: 20rem; outline: 1px dashed gray">
+  <div style="width: 40rem">A wide block inside .overflow-auto, wider than its box.</div>
+</div>
+```
+</Example>
+
+## Tables
+
+<Example title="Scrollable table" height={260}>
+```html
+<div class="overflow-auto">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Planet</th>
+        <th scope="col">Diameter (km)</th>
+        <th scope="col">Distance from Sun (AU)</th>
+        <th scope="col">Moons</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Mercury</th>
+        <td>4,880</td>
+        <td>0.39</td>
+        <td>0</td>
+      </tr>
+      <tr>
+        <th scope="row">Earth</th>
+        <td>12,742</td>
+        <td>1.00</td>
+        <td>1</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+</Example>
+
+## Accessibility
+
+A scrollable region can be hard to reach with a keyboard. If the wrapper holds nothing focusable, give it `tabindex="0"`, `role="region"` and an `aria-label` so keyboard users can scroll it and screen readers announce it.
+
+The class has no variables. See also [Table](/docs/content/table).

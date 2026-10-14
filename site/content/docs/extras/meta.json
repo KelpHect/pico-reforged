@@ -1,0 +1,17 @@
+{
+  "title": "Extras",
+  "pages": [
+    "overview",
+    "tabs",
+    "alert",
+    "toast",
+    "badge",
+    "avatar",
+    "skeleton",
+    "app-shell",
+    "data-table",
+    "pagination",
+    "stepper",
+    "empty-state"
+  ]
+}

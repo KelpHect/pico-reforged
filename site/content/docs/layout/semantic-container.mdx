@@ -1,0 +1,45 @@
+---
+title: Semantic container
+description: Center body > header, main and footer without any class.
+---
+
+The classless build treats the three landmarks that are direct children of `body` as containers. There is no wrapper and no class: `body > header`, `body > main` and `body > footer` are centered and capped at `--pico-container-max-width`.
+
+<Example title="Semantic container" variant="classless" height={320}>
+```html
+<header>
+  <h1>Site title</h1>
+</header>
+<main>
+  <h2>Hello, world!</h2>
+  <p>This page has no classes. The landmarks are the containers.</p>
+</main>
+<footer>
+  <small>Footer text</small>
+</footer>
+```
+</Example>
+
+## How it works
+
+The rule sets `width: 100%`, `margin-inline: auto`, `max-width: var(--pico-container-max-width)` and padding from `--pico-block-spacing-vertical` and `--pico-block-spacing-horizontal`. From 576px the side padding is dropped, as for `.container`. The widths are the ones in [Container](/docs/layout/container).
+
+## Where it is on
+
+It is part of every classless build: `pico.classless.css`, `pico.fluid.classless.css` and their conditional and themed variants. The class build does not have it by default. Add it with an option:
+
+```shell
+npx pico-reforged build --semantic-container --minify --out pico.css
+```
+
+In a config file or the Vite and PostCSS integrations the option is `semanticContainer` (`semantic-container` in `@pico`). See [Integrations](/docs/integrations/overview) and the [class-less version](/docs/getting-started/class-less-version).
+
+## Full width
+
+Combine it with the fluid option to remove the maximum width:
+
+```shell
+npx pico-reforged build --entry classless --fluid --minify --out pico.fluid.css
+```
+
+See [Responsive and fluid](/docs/layout/responsive). Once the semantic container is on, you do not need `.container` on `main`.

@@ -1,0 +1,32 @@
+{
+  "name": "pico-reforged-site",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Documentation site for Pico Reforged, deployed to pico.rusticstack.com",
+  "scripts": {
+    "postinstall": "fumadocs-mdx",
+    "prepare:css": "node scripts/copy-css.mjs",
+    "dev": "node scripts/copy-css.mjs && next dev",
+    "build": "node scripts/copy-css.mjs && next build && node scripts/flatten-rsc.mjs",
+    "preview": "node scripts/serve.mjs out",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rusticstack/pico-reforged": "workspace:*",
+    "fumadocs-core": "16.17.3",
+    "fumadocs-mdx": "15.4.7",
+    "next": "16.4.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/mdx": "2.0.14",
+    "@types/node": "^26.6.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "postcss": "^8.5.30",
+    "typescript": "^7.0.2"
+  }
+}

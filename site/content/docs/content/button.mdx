@@ -1,0 +1,104 @@
+---
+title: Button
+description: Buttons from button, input and role="button" elements, with secondary, contrast and outline variants, loading and disabled states.
+---
+
+`<button>`, `<input type="submit">`, `<input type="button">`, `<input type="reset">` and any element with `role="button"` share one style. A link that should look like a button takes `role="button"`.
+
+<Example title="Buttons">
+```html
+<button>Button</button>
+<a href="#" role="button">Link button</a>
+<input type="button" value="Input button" />
+```
+</Example>
+
+Submit buttons and `input` buttons are full width by default, like text fields. Plain `<button>` and `role="button"` elements are as wide as their content. Set `style="width: auto"` on a full width one, or put buttons in a [group](#groups).
+
+## Variants
+
+Add `.secondary` or `.contrast` for the other two palettes. A reset button looks secondary without a class.
+
+<Example title="Secondary and contrast">
+```html
+<button>Primary</button>
+<button class="secondary">Secondary</button>
+<button class="contrast">Contrast</button>
+<input type="reset" value="Reset" />
+```
+</Example>
+
+### Outline
+
+`.outline` removes the fill and keeps the border. It combines with `.secondary` and `.contrast`.
+
+<Example title="Outline buttons">
+```html
+<button class="outline">Primary</button>
+<button class="outline secondary">Secondary</button>
+<button class="outline contrast">Contrast</button>
+```
+</Example>
+
+## Disabled
+
+`disabled` fades the button and turns off pointer events. A `fieldset[disabled]` disables every button inside it.
+
+<Example title="Disabled buttons">
+```html
+<button disabled>Disabled</button>
+<fieldset disabled>
+  <button>Inside a disabled fieldset</button>
+</fieldset>
+```
+</Example>
+
+`disabled` is not valid on `<a>`, so a link with `role="button"` cannot be disabled this way. Render a `<button disabled>` instead.
+
+## Loading
+
+`aria-busy="true"` shows a spinner before the label. Without a label the spinner is centered. Remember to remove the attribute when the work ends.
+
+<Example title="Busy buttons">
+```html
+<button aria-busy="true">Please wait</button>
+<button aria-busy="true" class="secondary" aria-label="Please wait"></button>
+```
+</Example>
+
+## Groups
+
+`role="group"` joins buttons into one control. Inside a group buttons are auto width and overlap by one border.
+
+<Example title="Button group">
+```html
+<div role="group">
+  <button>Save</button>
+  <button class="secondary">Cancel</button>
+  <button class="contrast">Help</button>
+</div>
+```
+</Example>
+
+## Accessibility
+
+Use a `<button>` for actions and an `<a>` for navigation. When you give a link `role="button"`, it does not respond to the space key like a real button, so use it for navigation only. Keyboard focus shows a ring, and `aria-current` on a button applies the hover look.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-primary-background", description: "Fill of the default button." },
+    { name: "--pico-primary-border", description: "Border of the default button." },
+    { name: "--pico-primary-inverse", description: "Text color on the fill." },
+    { name: "--pico-primary-hover-background", description: "Fill on hover, active, focus and aria-current." },
+    { name: "--pico-primary-focus", description: "Focus ring color. Secondary and contrast have their own." },
+    { name: "--pico-button-box-shadow", value: "0 0 0 transparent", description: "Resting shadow. Set it to add depth to every button." },
+    { name: "--pico-button-hover-box-shadow", value: "0 0 0 transparent", description: "Shadow on hover and focus." },
+    { name: "--pico-form-element-spacing-vertical", value: "0.75rem", description: "Vertical padding." },
+    { name: "--pico-form-element-spacing-horizontal", value: "1rem", description: "Horizontal padding." },
+    { name: "--pico-border-radius", value: "0.25rem", description: "Corner radius." },
+  ]}
+/>
+
+The secondary and contrast variants use the matching `--pico-secondary-*` and `--pico-contrast-*` variables. See [Themes](/docs/customization/themes). Form controls that sit next to buttons are on [Forms](/docs/forms/overview).

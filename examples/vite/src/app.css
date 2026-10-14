@@ -1,0 +1,7 @@
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  extras: badge;
+  purge: safe;
+}

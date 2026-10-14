@@ -1,0 +1,75 @@
+---
+title: Misc
+description: Horizontal rules, mark, ins and del, abbr and kbd.
+---
+
+Small elements that do not need a page of their own.
+
+## Horizontal rule
+
+`hr` is a thin line in the muted border color, with the text block spacing above and below.
+
+<Example title="hr">
+```html
+<p>Above the rule.</p>
+<hr />
+<p>Below the rule.</p>
+```
+</Example>
+
+## Mark
+
+`mark` highlights text with a tinted background.
+
+<Example title="mark">
+```html
+<p>Search results can show the <mark>matching words</mark> highlighted.</p>
+```
+</Example>
+
+## Inserted and deleted text
+
+`ins` and `del` color their text. `ins` has no underline, and `del` keeps the browser's strikethrough.
+
+<Example title="ins and del">
+```html
+<p>The price is <del>$20</del> <ins>$15</ins> this week.</p>
+```
+</Example>
+
+## Abbreviation
+
+`abbr` with a `title` gets a dotted underline and a help cursor, and the title shows as a tooltip on hover. Touch screens have no hover, so spell out the full term the first time you use it.
+
+<Example title="abbr">
+```html
+<p>Write semantic <abbr title="HyperText Markup Language">HTML</abbr>.</p>
+```
+</Example>
+
+## Keyboard keys
+
+`kbd` is drawn inverted, like a keycap. It shares its style with the other [code](/docs/content/code) elements.
+
+<Example title="kbd">
+```html
+<p>Press <kbd>Ctrl</kbd> + <kbd>S</kbd> to save.</p>
+```
+</Example>
+
+## Hidden elements
+
+The `hidden` attribute and `<template>` are always `display: none`, even when another rule sets `display`.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-muted-border-color", description: "Color of hr." },
+    { name: "--pico-mark-background-color", description: "Background of mark." },
+    { name: "--pico-mark-color", description: "Text color of mark." },
+    { name: "--pico-ins-color", description: "Color of ins." },
+    { name: "--pico-del-color", description: "Color of del." },
+    { name: "--pico-text-selection-color", description: "Background of selected text (::selection)." },
+  ]}
+/>

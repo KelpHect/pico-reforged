@@ -1,0 +1,109 @@
+---
+title: components.json and tokens.json
+description: The component manifest and the design tokens as data, with their formats.
+---
+
+Two JSON files in `ai/` describe Pico Reforged for tools. They are generated, so they match the CSS: a test fails when they are stale. Both are in the npm package and importable:
+
+```js
+import tokens from "@rusticstack/pico-reforged/tokens.json" with { type: "json" };
+import components from "@rusticstack/pico-reforged/components.json" with { type: "json" };
+```
+
+## components.json
+
+The top level has a `description`, the `package` name and a `components` array. There is one entry for every module of the core build and every opt-in extra: 35 modules and 11 extras.
+
+```js
+const alert = components.components.find((c) => c.name === "alert");
+console.log(alert.markup);
+console.log(alert.optIn.config); // "@pico { extras: alert; }"
+```
+
+Each entry has these fields:
+
+<PropsTable
+  items={[
+    { name: "name", type: "string", description: "Short unique name, such as button, modal or tabs." },
+    { name: "category", type: "string", description: "base, layout, content, forms, components, utilities or extras." },
+    { name: "optIn", type: "object", description: "How it gets into a build. kind is core (always in pico.css), option (off by default, how says how to turn it on) or extra." },
+    { name: "summary", type: "string", description: "The first comment of the module's CSS file." },
+    { name: "use", type: "string", description: "One sentence on when to use it." },
+    { name: "markup", type: "string | null", description: "The canonical example. null when there is no markup to write." },
+    { name: "examples", type: "array", description: "Every example with a label and html. The first one is markup." },
+    { name: "variants", type: "array", description: "Ways to switch the look. trigger is what to write, selector is the CSS it matches." },
+    { name: "states", type: "array", description: "The same for states such as aria-current, aria-invalid and aria-busy." },
+    { name: "aria", type: "string[]", description: "Accessibility notes." },
+    { name: "notes", type: "string[]", description: "Extra remarks, when there are any." },
+    { name: "tokens", type: "object", description: "reads lists the --pico-* tokens the module uses. defines lists the properties it declares itself." },
+    { name: "js", type: "object | null", description: "The smallest script the component needs, with description, language and code. null when it needs none." },
+  ]}
+/>
+
+For an extra, `optIn` gives every way to load it: the source file, the CDN file, the all-extras file, the import path, the `@pico` config line and the CLI command.
+
+```json
+{
+  "kind": "extra",
+  "css": "src/extras/alert.css",
+  "cdn": "css/extras/alert.min.css",
+  "allExtrasCdn": "css/pico.extras.min.css",
+  "import": "@rusticstack/pico-reforged/extras/alert",
+  "config": "@pico { extras: alert; }",
+  "cli": "pico-reforged build --extras alert"
+}
+```
+
+The markup is cut from the pages in `test/fixtures`, so it is markup the tests render. Each `selector` is checked against the module's CSS when the file is generated, so a renamed hook fails the build instead of leaving a wrong entry.
+
+## tokens.json
+
+The tokens are in the W3C Design Tokens format (Format Module 2025.10), and every token has an explicit `$type`. Colors are `oklch` color objects, with an sRGB `hex` as a fallback for tools that cannot read OKLCH.
+
+The groups:
+
+<PropsTable
+  items={[
+    { name: "color", type: "group", description: "The semantic colors of the page: text, borders, buttons, forms, cards and so on." },
+    { name: "dimension, number, font-family, font-weight, transition, shadow", type: "groups", description: "The rest of the root tokens, grouped by type." },
+    { name: "palette", type: "group", description: "The OKLCH palette: one token per hue and step." },
+    { name: "theme", type: "group", description: "One group per built-in theme (20), with the primary set it defines." },
+    { name: "extras", type: "group", description: "Root tokens of the opt-in extras, one group per extra." },
+  ]}
+/>
+
+A token name is the CSS custom property without `--pico-`, so `--pico-primary-background` is `color.primary-background`. The exact property name is in `$extensions["com.rusticstack.pico-reforged"].cssVar`.
+
+### Light and dark
+
+The format has no modes, so `$value` is the light value and the dark value sits in the vendor extension next to it:
+
+```json
+"muted-color": {
+  "$type": "color",
+  "$value": { "colorSpace": "oklch", "components": [0.5268, 0.0236, 264.35], "hex": "#646b79" },
+  "$extensions": {
+    "com.rusticstack.pico-reforged": {
+      "cssVar": "--pico-muted-color",
+      "dark": { "colorSpace": "oklch", "components": [0.6117, 0.0279, 263.25], "hex": "#7b8495" }
+    }
+  }
+}
+```
+
+A token without `dark` has the same value in both schemes.
+
+### Themes and values the format cannot hold
+
+The primary tokens in `color` point to the default theme, azure. To read another theme use `theme.<name>.primary` and the other tokens in that group. A custom theme from one color is computed, so it is not listed. Build it with `pico-reforged build --theme "#e5484d"` or `@pico { theme: #e5484d; }`. See [Themes](/docs/customization/themes).
+
+The format has no type for percentages, `url()` icons, `calc()` or `color-mix()`. Those tokens are not guessed into a type. They are listed under `cssOnly` in the root extension with the CSS as written, the dark value when it differs, and `responsive` overrides from width media queries.
+
+Only tokens set on `:root`, `:host` and `[data-theme]` are in the file. Hooks that a component sets on its own elements, such as `--pico-alert-accent`, are in `tokens.defines` of that component in `components.json`.
+
+## Uses
+
+- A design tool or Style Dictionary pipeline that reads `tokens.json`.
+- An editor plugin that suggests `--pico-*` names or the right markup for a component.
+- A linter that flags class names that `components.json` does not know.
+- An agent that looks up the exact markup of a component before it writes it.

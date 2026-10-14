@@ -1,0 +1,140 @@
+---
+title: Configuration reference
+description: Every @pico property, every @source rule and the safelist syntax.
+---
+
+Configuration sits in the stylesheet that imports Pico Reforged, next to the import. It is plain CSS: an unknown at-rule is valid CSS, and the plugin removes these rules from the output.
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  extras: tabs badge;
+  classless: false;
+  scope: none;
+  purge: safe;
+  safelist: aria-busy /^htmx-/;
+}
+
+@source "../content";
+@source not "../src/legacy";
+@source inline("modal-is-open aria-busy");
+```
+
+## @pico
+
+`name: value;` pairs. Later blocks win over earlier ones.
+
+<PropsTable
+  items={[
+    { name: "theme", type: "name | color | path", default: "azure", description: "A theme name, a color such as #e5484d, or a quoted path to a CSS file (relative to this file)." },
+    { name: "extras", type: "names | all | none", default: "none", description: "Opt-in extras, separated by spaces or commas." },
+    { name: "classless", type: "true | false", default: "false", description: "Use the class-less build." },
+    { name: "classes", type: "true | false", description: "Same as the compiler option of the same name. false drops every selector that needs a class." },
+    { name: "fluid", type: "true | false", description: "Same as the compiler option of the same name. No max width on the semantic container." },
+    { name: "semantic-container", type: "true | false", description: "Style body > header, main and footer as containers." },
+    { name: "responsive-spacings", type: "true | false", description: "Scale spacings with the viewport." },
+    { name: "responsive-typography", type: "true | false", description: "Scale type with the viewport." },
+    { name: "transitions", type: "true | false", description: "Keep or drop transitions." },
+    { name: "important", type: "true | false", description: "Keep or drop the !important declarations." },
+    { name: "scope", type: "selector | none", default: "none", description: "Prefix every rule with a selector such as .pico." },
+    { name: "exclude", type: "modules", description: "Modules to leave out, for example components/modal forms/input-range." },
+    { name: "targets", type: "browserslist query", description: "Browsers to compile for. The default is the browser floor." },
+    { name: "minify", type: "true | false", description: "Minify the output. Vite and Next.js minify CSS themselves, so leave it off there." },
+    { name: "purge", type: "safe | aggressive | off", default: "safe", description: "How unused rules are removed. auto still works as an alias for safe." },
+    { name: "safelist", type: "names", description: "Names to always keep: classes, ids, tags, attribute names, name=value or /regex/." },
+    { name: "source", type: "none | path", description: "none turns the automatic scan off. A quoted path sets the folder it starts from." },
+  ]}
+/>
+
+`theme` accepts the 20 built-in themes, or one color that becomes a custom theme. See [Themes](/docs/customization/themes). Run `npx pico-reforged themes`, `extras` or `modules` to list the valid names.
+
+`purge` in `@pico` sets how to purge. The `purge` plugin option sets when: `auto` purges only in production builds. See [Purge modes](/docs/integrations/purge-modes).
+
+## @source
+
+Paths are relative to the stylesheet. Without any `@source`, the scan covers the project folder.
+
+| Rule                           | Meaning                                                                                    |
+| ------------------------------ | ------------------------------------------------------------------------------------------ |
+| `@source "../content";`        | also scan this folder or file, even when it is git-ignored or inside `node_modules`        |
+| `@source "../app/**/*.html";`  | a glob; `{a,b}` works                                                                      |
+| `@source not "../legacy";`     | never scan this folder, file or glob                                                       |
+| `@source inline("a b {c,d}");` | names that count as used, as if a file held them. Braces expand: `{c,d}` gives `c` and `d` |
+
+`@source not inline(...)` is not supported, because Pico Reforged ships fixed CSS and there is nothing to block. It gives a warning.
+
+A file named by `@source` can be up to 32 MB. Files found by the automatic scan are skipped above 1 MB.
+
+## Safelist
+
+A safelist keeps rules whatever the scan finds. Put it in `@pico { safelist: ... }`, or pass `--safelist` to the CLI.
+
+```css
+@pico {
+  safelist: modal-is-open aria-busy data-tooltip /^htmx-/;
+}
+```
+
+| Form            | Keeps                                  |
+| --------------- | -------------------------------------- |
+| `modal-is-open` | a class, id, tag or attribute by name  |
+| `type=date`     | an attribute with a specific value     |
+| `/^htmx-/`      | every name that matches the expression |
+
+`@source inline("...")` does nearly the same job. Use `inline` for names that count as present in the content, and `safelist` for rules you want to keep regardless.
+
+## Imports
+
+The imports are listed in the [overview](/docs/integrations/overview#what-you-can-import). Combine them in one file when you want a theme and extras:
+
+```css
+@import "@rusticstack/pico-reforged";
+@import "@rusticstack/pico-reforged/colors";
+@import "@rusticstack/pico-reforged/extras/tabs";
+
+@pico {
+  theme: "#e5484d";
+}
+```
+
+## What the scan reads
+
+With no `@source`, the scan walks the project folder: the nearest folder with a `package.json` above the stylesheet (or the Vite and PostCSS root).
+
+- It respects every `.gitignore` it meets, including nested ones and the ones above the project when a `.git` folder exists.
+- It skips `node_modules`, `.git`, `.next`, `.astro`, `.svelte-kit`, `.nuxt`, `.output` and a few more tool cache folders at any depth. It skips `dist`, `build`, `out`, `coverage`, `target` and `venv` in the scan folder only, so `src/app/build` is scanned.
+- A folder that holds `BUILD_ID` or `build-manifest.json` is build output and is skipped. So is the `distDir` named in `next.config.*`.
+- It skips lock files, CSS and Sass files, images, fonts, archives and other binaries, files over 1 MB (reported as a warning) and any file with a NUL byte.
+- Packages the project links to are scanned too: any dependency whose `node_modules` entry points to a folder outside `node_modules`, whatever its version range (`workspace:*`, `link:`, `file:`). Paths that are not dependencies (tsconfig paths, `../../` imports) need `@source`.
+- Everything else is read as text: HTML, JSX, TSX, JS, TS, Vue, Svelte, Astro, Markdown, MDX, PHP, ERB, Nunjucks, Liquid, Handlebars, Twig, Python, Ruby, Go, Rust, JSON and more.
+
+Components in `node_modules` or in another workspace package are not scanned unless linked. Add them:
+
+```css
+@source "../../packages/ui";
+@source "../node_modules/some-ui-kit/dist";
+```
+
+The cache is per stylesheet. A file is read again only when its size or modification time changes, and the index is rebuilt on every pass, so a class removed from your sources leaves the output on the next build.
+
+## Scripts that toggle things
+
+A static scan cannot see a name that a script builds from pieces. These are read for you:
+
+- quoted strings in any scanned file, such as `classList.add("modal-is-open")` or `setAttribute("aria-busy", "true")`
+- attribute names in markup, with and without values, including `:attr`, `v-bind:attr` and `x-bind:attr`. A bound attribute counts as any value
+- `el.ariaBusy = ...` (read as `aria-busy`) and `el.dataset.tooltip` (read as `data-tooltip`)
+- properties that reflect to attributes: `btn.disabled = true`, `input.readOnly`, `el.hidden`, `el.popover`, `el.open`
+- values assigned as `type: "date"`, `{ role: "switch" }` or `input.type = "range"`
+- Svelte `class:name` directives and Vue or Alpine `:class` objects
+- `data-theme`, `dir` and `open`, which are always present
+
+A name assembled at run time is not found, such as `"aria-" + state` or `` `data-${name}` ``. Keep a full string somewhere in the sources, or list the name.
+
+Attributes set by a library in `node_modules` (`aria-current` from a `NavLink`, `aria-invalid` from a form library) are not visible to the scan. In `safe` mode every `aria-*` name is kept anyway. In `aggressive` mode, list the value:
+
+```css
+@source inline("aria-current=page aria-invalid=true");
+```

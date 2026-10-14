@@ -1,0 +1,15 @@
+{
+  "title": "Components",
+  "pages": [
+    "accordion",
+    "card",
+    "dropdown",
+    "group",
+    "loading",
+    "modal",
+    "nav",
+    "progress",
+    "tooltip",
+    "popover"
+  ]
+}

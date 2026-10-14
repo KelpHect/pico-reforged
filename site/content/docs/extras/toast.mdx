@@ -1,0 +1,181 @@
+---
+title: Toast
+description: Corner notifications from a popover stack, with one article per toast and a short script to add and remove them.
+---
+
+A toast stack is one `<section popover="manual" role="status">` that holds one `<article>` per notification. The popover puts the stack in the top layer, so it sits above everything without a z-index fight. It is opened once at page load, and a script adds and removes the articles.
+
+Load `css/extras/toast.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Markup
+
+Put the stack last in `body`, so its DOM order is its tab order. Each toast has a `p` for the message and, optionally, an action button and a dismiss button. The dismiss button is icon only, so it needs an `aria-label`.
+
+```html
+<section
+  id="toaster"
+  popover="manual"
+  role="status"
+  aria-label="Notifications"
+  aria-atomic="false"
+  data-placement="bottom-end"
+>
+  <article>
+    <p>Draft saved.</p>
+    <button type="button" aria-label="Dismiss notification">&times;</button>
+  </article>
+  <article role="alert">
+    <p><strong>Payment failed</strong> Your card ending 4242 was declined.</p>
+    <button type="button">Update card</button>
+    <button type="button" aria-label="Dismiss notification">&times;</button>
+  </article>
+</section>
+
+<script>
+  document.getElementById("toaster").showPopover?.();
+</script>
+```
+
+A live region must exist before its content changes, which is why the stack is opened at load and stays open. A `strong` as the first child of the `p` becomes a title on its own line. A button with an `aria-label` is the icon dismiss button, and any other button is a text action next to the message.
+
+Only the toasts take clicks. The stack itself has `pointer-events: none`, so the page stays usable around it. Where `popover` is not supported, the stack is a plain fixed box with `z-index: 1000` and still works.
+
+## Add toasts from script
+
+The CSS needs no script, but you need some to create toasts. This helper is about 30 lines. Copy it and adjust `MAX` and the timings. A toast times out after five seconds plus one second for every 120 characters, pauses while the pointer or focus is on it, and stays until dismissed when it is a danger toast or has an action button. The CSS fades out an `inert` toast, and the script removes it after the transition.
+
+<Example title="Toast stack" css={["pico.extras"]} height={300}>
+```html
+<style>
+  /* Page CSS. The extra ships no tone attribute: set the accent token on the toast you want. */
+  #toaster > [data-tone="success"] {
+    --pico-toast-accent: var(--pico-form-element-valid-border-color);
+  }
+  #toaster > [data-tone="danger"] {
+    --pico-toast-accent: var(--pico-form-element-invalid-border-color);
+  }
+</style>
+
+<p>
+  <button type="button" id="show-draft">Save draft</button>
+  <button type="button" id="show-sent" class="secondary">Send invoice</button>
+  <button type="button" id="show-failed" class="contrast">Charge card</button>
+</p>
+
+<section
+  id="toaster"
+  popover="manual"
+  role="status"
+  aria-label="Notifications"
+  aria-atomic="false"
+  data-placement="bottom-end"
+></section>
+
+<script>
+  (() => {
+    const stack = document.getElementById("toaster");
+    const MAX = 3;
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Open once at load: a live region must exist before its content changes.
+    try { stack.showPopover?.(); } catch {}
+
+    window.toast = (message, { tone, action } = {}) => {
+      const el = document.createElement("article");
+      const text = document.createElement("p");
+      text.textContent = message; // textContent, never innerHTML
+      el.append(text);
+      if (tone) el.dataset.tone = tone;
+      if (action) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = action.label;
+        b.addEventListener("click", () => { action.run(); close(); });
+        el.append(b);
+      }
+      const x = document.createElement("button");
+      x.type = "button";
+      x.setAttribute("aria-label", "Dismiss notification");
+      x.textContent = "×";
+      x.addEventListener("click", () => close());
+      el.append(x);
+
+      const sticky = tone === "danger" || !!action;
+      while (stack.children.length >= MAX) stack.firstElementChild.remove();
+      stack.append(el);
+
+      let timer, left = 5000 + Math.ceil(message.length / 120) * 1000, since = 0, held = 0;
+      function close() {
+        clearTimeout(timer);
+        if (el.inert) return;
+        el.inert = true; // the CSS fades out an inert toast
+        el.addEventListener("transitionend", () => el.remove(), { once: true });
+        setTimeout(() => el.remove(), reduce.matches ? 0 : 300);
+      }
+      const hold = () => { if (held++ === 0) { clearTimeout(timer); left -= Date.now() - since; } };
+      const release = () => { if (--held === 0) { since = Date.now(); timer = setTimeout(close, Math.max(left, 0)); } };
+      if (!sticky) {
+        el.addEventListener("pointerenter", hold);
+        el.addEventListener("pointerleave", release);
+        el.addEventListener("focusin", hold);
+        el.addEventListener("focusout", release);
+        since = Date.now();
+        timer = setTimeout(close, left);
+      }
+      return el;
+    };
+  })();
+
+  document.getElementById("show-draft").addEventListener("click", () => {
+    toast("Draft saved.", { action: { label: "Undo", run: () => {} } });
+  });
+  document.getElementById("show-sent").addEventListener("click", () => {
+    toast("Invoice sent", { tone: "success" });
+  });
+  document.getElementById("show-failed").addEventListener("click", () => {
+    toast("Payment failed. Update your card.", { tone: "danger" });
+  });
+</script>
+```
+</Example>
+
+Always set the message with `textContent`, never `innerHTML`, when it comes from user data.
+
+## Placement
+
+`data-placement` takes `top` or `bottom`, then `start`, `center` or `end`, joined with a hyphen. The default is `bottom-end`. Start and end follow the writing direction, so `end` is the left corner in right to left pages.
+
+```html
+<section popover="manual" role="status" aria-label="Notifications" data-placement="top-center">
+  <article><p>Draft saved.</p></article>
+</section>
+```
+
+The values are `top-start`, `top-center`, `top-end`, `bottom-start`, `bottom-center` and `bottom-end`.
+
+## Danger toasts
+
+`role="alert"` on an `article` gives it the danger accent with no extra CSS. For other tones, name them yourself and set `--pico-toast-accent` on the toast, as the style block above does for `data-tone`.
+
+## Dialogs
+
+A modal `dialog` opened after the stack sits above it in the top layer and makes the stack inert. Fire toasts for actions inside a modal after it closes, or give the dialog its own stack.
+
+## Accessibility
+
+- The stack is a `role="status"` live region with `aria-atomic="false"`, so each added toast is announced on its own and politely.
+- Give the stack a name with `aria-label`.
+- Danger toasts and toasts with an action do not time out, so nobody loses a message or an Undo they were still reading.
+- A toast pauses its timer while the pointer or keyboard focus is on it.
+- Motion (fade and scale) only runs under `prefers-reduced-motion: no-preference`.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-toast-accent", value: "var(--pico-primary-background)", description: "Color of the bar on the inline start edge. Set it on a single toast for a tone." },
+    { name: "--pico-toast-inset", value: "var(--pico-spacing)", description: "Distance from the viewport edge." },
+    { name: "--pico-toast-gap", value: "calc(var(--pico-spacing) * 0.5)", description: "Space between stacked toasts." },
+    { name: "--pico-toast-width", value: "min(22rem, 100% - 2 * var(--pico-toast-inset))", description: "Width of the stack." },
+  ]}
+/>

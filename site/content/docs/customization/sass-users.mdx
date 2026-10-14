@@ -1,0 +1,124 @@
+---
+title: Sass users
+description: Pico CSS v2.1.1 was customized with Sass variables. In Pico Reforged each one is a CSS variable or a compiler option.
+---
+
+Pico CSS v2.1.1 by Lucas Larroche was built from Sass, and you changed it with `@use "pico" with (...)`. Pico Reforged is plain CSS, so the Sass source is gone. Everything it did is now one of two things:
+
+- A CSS variable that you override in your own stylesheet. No build step.
+- A compiler option, for the switches that change which rules end up in the file. Use the CLI, a config file or the `@pico` block of the Vite and PostCSS integrations.
+
+## Option mapping
+
+| v2.1.1 Sass | Option | CLI flag | Default |
+| --- | --- | --- | --- |
+| `$modules` | `modules`, `exclude` | `--exclude components/modal` | all modules on |
+| `$theme-color` | `theme` | `--theme jade`, `--theme "#e5484d"` | `azure` |
+| `$enable-classes: false` | `classes: false` | `--no-classes`, or the classless entry | `true` |
+| `$enable-semantic-container` | `semanticContainer` | `--semantic-container` | `false` |
+| `$enable-viewport: false` | `fluid: true` | `--fluid` | `false` |
+| `$parent-selector: ".pico"` | `scope: ".pico"` | `--scope .pico` | none |
+| `$enable-responsive-typography` | `responsiveTypography` | `--no-responsive-typography` | `true` |
+| `$enable-responsive-spacings` | `responsiveSpacings` | `--responsive-spacings` | `false` |
+| `$enable-transitions: false` | `transitions: false` | `--no-transitions` | `true` |
+| `$enable-important: false` | `important: false` | `--no-important` | `true` |
+
+Three Sass variables have no option:
+
+| v2.1.1 Sass | Now |
+| --- | --- |
+| `$css-var-prefix` | Not kept. The `--pico-` prefix is part of the public API. |
+| `$semantic-root-element` | Not kept. The semantic container targets `body`. |
+| `$breakpoints` | Not an option. Override the values in your own CSS, see below. |
+
+The options are described with their defaults in [Building a custom bundle](/docs/customization/custom-bundle).
+
+## Before and after
+
+A Sass project that did this:
+
+```scss
+@use "pico" with (
+  $theme-color: "jade",
+  $enable-semantic-container: true,
+  $modules: (
+    "components/modal": false,
+  )
+);
+```
+
+links the ready-made jade file when it needs nothing more.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.jade.min.css" />
+```
+
+If it also needs the semantic container or has to leave a module out, it builds its own file.
+
+```shell
+npx pico-reforged build --theme jade --semantic-container --exclude components/modal --minify --out public/pico.css
+```
+
+Or it goes through the bundler plugin and puts the options in the stylesheet.
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  semantic-container: true;
+  exclude: components/modal;
+}
+```
+
+## Values are CSS variables now
+
+In Sass you changed a value by overriding a variable before the build. Now you override the CSS variable after the stylesheet. Colors, spacing, fonts, radius and form tokens all have a `--pico-*` variable. The full list is on [CSS variables](/docs/customization/css-variables).
+
+```css
+:root {
+  --pico-border-radius: 0;
+  --pico-font-family: Georgia, serif;
+  --pico-form-element-spacing-vertical: 0.5rem;
+}
+```
+
+Your CSS is outside the Pico cascade layers, so it wins without `!important`. See [Cascade layers and overriding](/docs/customization/cascade-layers).
+
+<Example title="A CSS variable instead of a Sass variable">
+```html
+<style>
+  :root {
+    --pico-border-radius: 0;
+    --pico-form-element-spacing-vertical: 0.5rem;
+  }
+</style>
+<form>
+  <input type="text" placeholder="Square corners, tighter padding" aria-label="Sample" />
+  <button type="button">Button</button>
+</form>
+```
+</Example>
+
+### Breakpoints
+
+The breakpoints are literal media queries in the source: 576, 768, 1024, 1280 and 1536 px. The container width and the root font size come from two variables set at each one. To change them, set the variables in your own media query.
+
+```css
+@media (width >= 1024px) {
+  :root {
+    --pico-container-max-width: 900px;
+    --pico-font-size: 112.5%;
+  }
+}
+```
+
+The default values are in [CSS variables](/docs/customization/css-variables).
+
+## What else changed
+
+- The browser floor is Chrome and Edge 111, Firefox 128 and Safari 16.4. See [Browser support](/docs/getting-started/browser-support).
+- The stylesheet sits in cascade layers, which Pico CSS v2.1.1 did not use.
+- Colors are OKLCH written with `light-dark()`.
+
+The rest of the migration, including the file names and what looks different, is in [Coming from Pico CSS](/docs/migration/from-pico-css).

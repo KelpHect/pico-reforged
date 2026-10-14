@@ -44,7 +44,7 @@ export const scheme: SchemeRow[] = [
 
   // Text
   ["color", ref("zinc-750"), ref("zinc-200")],
-  ["muted-color", ref("zinc-550"), ref("zinc-450")],
+  ["muted-color", ref("zinc-550"), ref("zinc-400")],
   ["muted-border-color", rgb(231, 234, 239.5), ref("slate-850")],
 
   // Primary aliases (the primary colors themselves live in src/themes/)

@@ -1,0 +1,34 @@
+---
+title: File
+description: The native file input with a styled selector button.
+---
+
+`input[type="file"]` has no border or background. The "Choose file" button is styled like a secondary button, and the file name uses the muted text color.
+
+<Example title="File" height={140}>
+```html
+<label>
+  File browser
+  <input type="file" name="file" />
+</label>
+```
+</Example>
+
+## Multiple files and accept
+
+<Example title="Multiple images" height={140}>
+```html
+<label>
+  Photos
+  <input type="file" name="photos" accept="image/*" multiple />
+</label>
+```
+</Example>
+
+## States
+
+Hover, active and focus on the input give the selector button the secondary hover colors. Focus also adds a secondary colored ring around the button.
+
+## Customization
+
+The button is the `::file-selector-button` pseudo-element. Its horizontal padding is `--pico-form-element-spacing-horizontal` and its vertical padding is half of `--pico-form-element-spacing-vertical`. The file name text uses `--pico-color`, which is set to the muted color on this input.

@@ -1,0 +1,54 @@
+---
+title: Input
+description: Text-like inputs are full width and styled by type, with focus rings and helper text.
+---
+
+Every text-like `input` is styled the same way: text, email, password, number, tel, url and the rest. Inputs are full width, with a border, a background, a focus ring and a bottom margin.
+
+<Example title="Text inputs" height={420}>
+```html
+<input type="text" name="text" placeholder="Text" aria-label="Text" />
+<input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="email" />
+<input type="number" name="number" placeholder="Number" aria-label="Number" />
+<input type="password" name="password" placeholder="Password" aria-label="Password" />
+<input type="tel" name="tel" placeholder="Phone" aria-label="Phone" autocomplete="tel" />
+<input type="url" name="url" placeholder="URL" aria-label="URL" />
+```
+</Example>
+
+Special types have their own pages: [Search](/docs/forms/search), [Date and time](/docs/forms/date-and-time), [Color](/docs/forms/color), [File](/docs/forms/file) and [Range](/docs/forms/range).
+
+## Labels and helper text
+
+Wrap the input in a `label`, or place a `label` before it. `<small>` right after the input is helper text. Link it with `aria-describedby` so screen readers read it with the field.
+
+<Example title="Label and helper text" height={200}>
+```html
+<label>
+  Email
+  <input type="email" name="email" placeholder="Email" autocomplete="email" aria-describedby="email-help" />
+  <small id="email-help">We will never share your email.</small>
+</label>
+```
+</Example>
+
+## States
+
+Disabled inputs are dimmed and ignore the pointer. Read-only inputs keep the normal look but get no focus ring.
+
+<Example title="Disabled and read-only" height={200}>
+```html
+<input type="text" value="Disabled" aria-label="Disabled" disabled />
+<input type="text" value="Read-only" aria-label="Read-only" readonly />
+```
+</Example>
+
+For valid and invalid styling, see [Validation states](/docs/forms/validation).
+
+## Accessibility
+
+Give every input a name a screen reader can use: a wrapping `label`, a `label` with `for`, or `aria-label` when a visible label would be redundant. A placeholder is a hint and does not replace a label. Add `autocomplete` values where they apply.
+
+## Customization
+
+Inputs use the shared form variables listed in the [Forms overview](/docs/forms/overview). The focus ring on text-like controls is `0.0625rem` wide, set through `--pico-outline-width` on the control.

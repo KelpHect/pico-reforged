@@ -1,0 +1,126 @@
+---
+title: Pagination
+description: Page links from a nav with an ordered list, with a current page, disabled edges and no script.
+---
+
+Pagination is a `nav` with an `ol` of links. The current page is `aria-current="page"`, and a disabled edge is a `span` with `role="link"` and `aria-disabled="true"`. No class and no JavaScript are needed, because the server normally knows the current page.
+
+Load `css/extras/pagination.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Basic pagination
+
+The hook is `aria-label="Pagination"` on the `nav` (the match ignores case). Page numbers and ellipses, which are the first, last, current and neighboring pages, come from your app logic. An ellipsis is an `li` with `aria-hidden="true"`.
+
+<Example title="Pagination" css={["pico.extras"]} height={110}>
+```html
+<nav aria-label="Pagination">
+  <ol>
+    <li><a href="?page=1" rel="prev">Previous</a></li>
+    <li><a href="?page=1" aria-label="Page 1">1</a></li>
+    <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+    <li><a href="?page=3" aria-label="Page 3">3</a></li>
+    <li aria-hidden="true">&hellip;</li>
+    <li><a href="?page=10" aria-label="Page 10">10</a></li>
+    <li><a href="?page=3" rel="next">Next</a></li>
+  </ol>
+</nav>
+```
+</Example>
+
+## Disabled edges
+
+On the first page, the previous item is not a link, because there is nowhere to go. Use a `span` with `role="link"` and `aria-disabled="true"`. It stays in the reading order, dimmed and unclickable.
+
+<Example title="First page" css={["pico.extras"]} height={110}>
+```html
+<nav aria-label="Team members pages" data-pagination>
+  <ol>
+    <li><span role="link" aria-disabled="true">Previous</span></li>
+    <li><a href="?page=1" aria-label="Page 1" aria-current="page">1</a></li>
+    <li><a href="?page=2" aria-label="Page 2">2</a></li>
+    <li><a href="?page=3" aria-label="Page 3">3</a></li>
+    <li aria-hidden="true">&hellip;</li>
+    <li><a href="?page=10" aria-label="Page 10">10</a></li>
+    <li><a href="?page=2" rel="next">Next</a></li>
+  </ol>
+</nav>
+```
+</Example>
+
+## Another label
+
+The default hook is `aria-label="Pagination"`. When the label says something else, so that a page with several lists can tell them apart, add `data-pagination` to the `nav`. The first example above uses the label, this one uses the attribute.
+
+## Icon-only previous and next
+
+Hide the arrow with `aria-hidden="true"` and name the link with `aria-label`. Arrows on a link with `rel` flip in right to left pages.
+
+<Example title="Icon pagination" css={["pico.extras"]} height={110}>
+```html
+<nav aria-label="Projects pages" data-pagination>
+  <ol>
+    <li>
+      <a href="?page=1" rel="prev" aria-label="Previous page"><span aria-hidden="true">&larr;</span></a>
+    </li>
+    <li><a href="?page=1" aria-label="Page 1">1</a></li>
+    <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+    <li><a href="?page=3" aria-label="Page 3">3</a></li>
+    <li>
+      <a href="?page=3" rel="next" aria-label="Next page"><span aria-hidden="true">&rarr;</span></a>
+    </li>
+  </ol>
+</nav>
+```
+</Example>
+
+## Size
+
+Set `--pico-pagination-item-size` on the `nav` for a compact or large list.
+
+<Example title="Compact pagination" css={["pico.extras"]} height={110}>
+```html
+<nav aria-label="Compact pages" data-pagination style="--pico-pagination-item-size: 1.75rem">
+  <ol>
+    <li>
+      <a href="?page=1" rel="prev" aria-label="Previous page"><span aria-hidden="true">&larr;</span></a>
+    </li>
+    <li><a href="?page=1" aria-label="Page 1">1</a></li>
+    <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+    <li><a href="?page=3" aria-label="Page 3">3</a></li>
+    <li>
+      <a href="?page=3" rel="next" aria-label="Next page"><span aria-hidden="true">&rarr;</span></a>
+    </li>
+  </ol>
+</nav>
+```
+</Example>
+
+## Updating without navigation
+
+If the list changes without a page load, move `aria-current` from script. The page numbers themselves still come from your app.
+
+```js
+const nav = document.querySelector('nav[aria-label="Pagination"]');
+function setCurrent(page) {
+  nav.querySelectorAll('a[aria-current="page"]').forEach((a) => a.removeAttribute("aria-current"));
+  const next = nav.querySelector('a[aria-label="Page ' + page + '"]');
+  if (next) next.setAttribute("aria-current", "page");
+}
+```
+
+## Accessibility
+
+- The `nav` needs a label, and each list on a page needs its own.
+- Name number links with `aria-label="Page 2"`, and mark the current one with `aria-current="page"`.
+- Use `rel="prev"` and `rel="next"` on the edge links.
+- The current page keeps a border, so it still shows under forced colors.
+- Hide ellipses from assistive technology with `aria-hidden="true"`.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-pagination-item-size", value: "2.25rem", description: "Minimum width and height of each item." },
+    { name: "--pico-pagination-gap", value: "0.25rem", description: "Space between items." },
+  ]}
+/>

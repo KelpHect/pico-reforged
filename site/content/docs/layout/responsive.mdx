@@ -1,0 +1,59 @@
+---
+title: Responsive and fluid
+description: Breakpoints, root font size, optional responsive spacings and the fluid build.
+---
+
+Pico Reforged uses five breakpoints, written as plain media queries with range syntax (`(width >= 768px)`). There are no Sass mixins to include.
+
+| Breakpoint  | Root font size | Container width |
+| ----------- | -------------- | --------------- |
+| below 576px | 100%           | 100%            |
+| 576px       | 106.25%        | 510px           |
+| 768px       | 112.5%         | 700px           |
+| 1024px      | 118.75%        | 950px           |
+| 1280px      | 125%           | 1200px          |
+| 1536px      | 131.25%        | 1450px          |
+
+Sizes are in `rem`, so the whole interface scales with `--pico-font-size`. For a fixed root size, build with `--no-responsive-typography`.
+
+## Responsive spacings
+
+By default the vertical spacing of landmarks, `section` and `article` is a constant `--pico-block-spacing-vertical`. The responsive spacings option makes it grow with the viewport, from 1.25 times `--pico-spacing` at 576px to 2.25 times at 1536px. For `article` the horizontal spacing grows the same way.
+
+```shell
+npx pico-reforged build --responsive-spacings --minify --out pico.css
+```
+
+The option is `responsiveSpacings` in a config file and in the Vite and PostCSS integrations.
+
+## Fluid build
+
+The fluid build sets `--pico-container-max-width: 100%` after the breakpoint values, so `.container` and the semantic container are full width at every size. When the semantic container is on, the side padding is kept.
+
+The CDN file is `pico.fluid.classless.min.css`, the same name as in Pico CSS v2.1.1:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.fluid.classless.min.css" />
+```
+
+To build your own:
+
+```shell
+npx pico-reforged build --entry classless --fluid --minify --out pico.fluid.css
+```
+
+The live examples on this site use the regular classless build, so they do not show the fluid width. Load `pico.fluid.classless.min.css` in a page to see it.
+
+## Your own queries
+
+Media queries cannot read CSS variables, so repeat the pixel values in your own queries:
+
+```css
+@media (width >= 768px) {
+  .sidebar {
+    display: block;
+  }
+}
+```
+
+See also [Grid](/docs/layout/grid) and [Container](/docs/layout/container).

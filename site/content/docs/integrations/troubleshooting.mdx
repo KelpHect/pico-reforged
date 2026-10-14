@@ -1,0 +1,85 @@
+---
+title: Troubleshooting
+description: Fixes for missing styles in production, empty scans, plugin order and the other common integration problems.
+---
+
+Correctness comes before size. If a style is missing in production, work through this page.
+
+## A style is missing in the production build
+
+Build twice, once with `purge: off` and once with the default, and compare the pages.
+
+```css
+@pico {
+  purge: off;
+}
+```
+
+If the problem disappears with `off`, the scan did not see a name your page needs. Find the name and make it visible:
+
+- A class that a script or a server writes: add it to the safelist, or add the file that holds it with `@source`.
+- An attribute written through a variable: `@source inline("aria-expanded=true")`.
+- A component from `node_modules` or another workspace package: `@source "../node_modules/some-ui-kit/dist";`.
+
+See the [Configuration reference](/docs/integrations/configuration) for the syntax. If you are on `aggressive` mode, go back to `safe` first, since `safe` never drops a rule for a tag or an attribute value.
+
+## Components from a UI kit lose their styles
+
+Components that live in `node_modules` or in another workspace package are not scanned, unless the package manager links the package into `node_modules` and the app depends on it. If a UI kit renders `<dialog>`, `<details>` or Pico Reforged classes for you, add it:
+
+```css
+@source "../../packages/ui";
+@source "../node_modules/some-ui-kit/dist";
+```
+
+## "purge skipped" warning
+
+The scan found no markup or script file, so the purge was skipped on purpose. A wrong root never turns into an empty stylesheet. Check these:
+
+- The stylesheet sits inside a folder that has a `package.json` above it. Set `root` (Vite) or `base` (PostCSS) if the project is somewhere else.
+- The files are not git-ignored. The scan respects every `.gitignore`.
+- The files are not in a skipped folder: `dist`, `build`, `out`, `coverage`, `target` and `venv` are skipped in the scan folder, and `node_modules`, `.next`, `.astro`, `.svelte-kit`, `.nuxt` and `.output` at any depth. Add them back with `@source`.
+
+## A file was not scanned
+
+The automatic scan skips files over 1 MB and reports a warning that names them. A file named by `@source` can be up to 32 MB. The CLI reads files up to 32 MB.
+
+## The CSS is not purged at all
+
+- The Vite plugin purges in `vite build` only, and the PostCSS plugin when `NODE_ENV` is `production`. Run the production build.
+- The stylesheet has to contain the `@import` of the package. A stylesheet that has no import is passed through.
+- With the CLI, `purge` changes only rules inside `@layer pico.*`. If a minifier or bundler already removed the layers, the command changes nothing and says so. Run it on the CSS before that step, or use the plugin.
+
+## `@pico` or `@source` shows up in the output
+
+The plugin did not run on that file. Check that the plugin is listed in the config (`pico()` in Vite, the plugin name first in `postcss.config.mjs`) and that no `postcss-import` runs before it. In Vite, put `pico()` first. With Tailwind in the same file, list `pico()` before the Tailwind plugin so `@pico` is gone before Tailwind reads the file.
+
+## Nesting or `light-dark()` in the output
+
+Without the plugin, the `style` export condition points your bundler at `src/pico.css`. That file is the plain source with nesting and `light-dark()`, which are below the Chrome 111 and Safari 16.4 floor unless your bundler lowers them. Use the Vite or PostCSS plugin, or import the built file `@rusticstack/pico-reforged/css/pico.min.css`.
+
+## Next.js loops or rebuilds forever
+
+The plugin never reports the project folder itself as a watched folder, because Next.js recursed without end on that when `distDir` was not the default. If you still see it, check that your own tooling does not write into a scanned folder on every build, and add that folder with `ignore`.
+
+## Types fail for the PostCSS plugin
+
+The entry for the PostCSS plugin exports `module.exports`. TypeScript older than 5.6 reads it only with `skipLibCheck`. Turn that on, or upgrade TypeScript.
+
+## A purged and an unpurged build differ
+
+Some differences are not purge errors:
+
+- Vite's CSS minifier writes `0px 0px` for `0% 0%` and drops a space in `oklch(... / .5)`. Computed styles of the purged and unpurged builds of the same plugin match.
+- `aria-busy` uses an animated SVG (`--pico-icon-loading`). Screenshots of a busy element differ from run to run. Override the variable with a static icon in both pages when you diff pixels.
+- Two dev servers on one project can make each other log a restart. Start one.
+
+## Check the result once per project
+
+1. Build with `purge: off` and with the default, and diff the pages. Render every route in a browser and compare screenshots or computed styles.
+2. Run `pico-reforged purge <outDir> --dry-run` to see the counts per file.
+3. Read the warnings. The plugins report an empty scan, unknown `@pico` properties and unsupported rules through the bundler. The purge command prints them to stderr.
+
+## Still stuck
+
+Open an issue at [github.com/rusticstack/pico-reforged](https://github.com/rusticstack/pico-reforged/issues) with your config, the stylesheet header and the name of the missing rule. Pico Reforged is a separate project and the original Pico CSS repository is archived, so do not report it there.

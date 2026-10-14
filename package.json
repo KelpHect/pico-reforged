@@ -22,6 +22,9 @@
     "css",
     "src",
     "dist",
+    "ai",
+    "skills",
+    "AGENTS.md",
     "README.md",
     "LICENSE.md"
   ],
@@ -60,6 +63,8 @@
       "types": "./dist/postcss.d.ts",
       "default": "./dist/postcss.js"
     },
+    "./tokens.json": "./ai/tokens.json",
+    "./components.json": "./ai/components.json",
     "./package.json": "./package.json"
   },
   "publishConfig": {
@@ -71,8 +76,9 @@
   },
   "packageManager": "pnpm@12.11.2",
   "scripts": {
-    "build": "node scripts/generate.ts && node scripts/cli.ts matrix css",
+    "build": "node scripts/generate.ts && node scripts/generate-ai.ts && node scripts/cli.ts matrix css",
     "generate": "node scripts/generate.ts",
+    "generate:ai": "node scripts/generate-ai.ts",
     "dev": "node --watch-path=src --watch-path=scripts scripts/dev-build.ts",
     "test": "vp test",
     "test:api": "node scripts/dev-build.ts && node test/api/check.ts dist-dev",

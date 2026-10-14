@@ -1,0 +1,60 @@
+---
+title: Code
+description: Inline code, code blocks, keyboard keys and program output in the monospace stack.
+---
+
+`code`, `kbd`, `samp` and `pre` use the monospace font stack, a tinted background and a slightly smaller size.
+
+<Example title="Inline code">
+```html
+<p>
+  Use <code>display: grid</code> for layout, press <kbd>Alt</kbd> + <kbd>Tab</kbd> to switch
+  windows and expect <samp>Build finished in 1.2s</samp> at the end.
+</p>
+```
+</Example>
+
+## Code blocks
+
+Put `<code>` inside `<pre>` for a block. The block scrolls sideways when a line is too long, and the inner `code` drops its own background and uses the block padding.
+
+<Example title="Code block">
+```html
+<pre><code>function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+console.log(greet("world"));</code></pre>
+```
+</Example>
+
+`samp` works the same way inside `pre`, and a `kbd` in `pre` gives you a command line.
+
+<Example title="Command and output">
+```html
+<pre><kbd>npm run build</kbd>
+<samp>Done.</samp></pre>
+```
+</Example>
+
+## Syntax highlighting
+
+Pico Reforged ships no highlighter. Use any library that adds classes or inline styles inside `pre code` and style the tokens yourself.
+
+## Accessibility
+
+A `pre` that scrolls horizontally should be reachable by keyboard. Add `tabindex="0"` to it if your target browsers do not make scrollable regions focusable. `kbd` is drawn with the text color as background and the page color as text, so it stays readable in light and dark mode.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-font-family-monospace", description: "Monospace font stack." },
+    { name: "--pico-code-background-color", description: "Background of code, samp and pre." },
+    { name: "--pico-code-color", description: "Text color of code, samp and pre." },
+    { name: "--pico-code-kbd-background-color", value: "var(--pico-color)", description: "Background of kbd." },
+    { name: "--pico-code-kbd-color", value: "var(--pico-background-color)", description: "Text color of kbd." },
+  ]}
+/>
+
+See also [Misc](/docs/content/misc) for other inline elements.

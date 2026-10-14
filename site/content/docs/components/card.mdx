@@ -1,0 +1,65 @@
+---
+title: Card
+description: A boxed surface from the article element, with an optional header and footer.
+---
+
+An `<article>` is a card. A `<header>` or `<footer>` as a direct child becomes a full-width band with its own background and a border toward the body. Nothing else is needed.
+
+<Example title="Card" height={300}>
+```html
+<article>
+  <header>Header</header>
+  Body of the card.
+  <footer>Footer</footer>
+</article>
+```
+</Example>
+
+Header and footer are optional, and you can use either one alone.
+
+<Example title="Body only and header only" height={300}>
+```html
+<article>A card with only a body.</article>
+<article>
+  <header>Header only</header>
+  Body text.
+</article>
+```
+</Example>
+
+## Cards in a grid
+
+Put cards in a `.grid` to place them side by side. The grid is part of the class build.
+
+<Example title="Cards in a grid" height={260}>
+```html
+<div class="grid">
+  <article>
+    <header>One</header>
+    First card.
+  </article>
+  <article>
+    <header>Two</header>
+    Second card.
+  </article>
+</div>
+```
+</Example>
+
+## Cards in other places
+
+The same surface is used inside a [modal](/docs/components/modal), where the `<article>` is the dialog box, and inside a bare popover, where an `<article>` child turns the popover into a card (see [Popover patterns](/docs/components/popover)). A card with `aria-busy="true"` shows a spinner, see [Loading](/docs/components/loading).
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-card-background-color", description: "Card surface. Light and dark values come from light-dark()." },
+    { name: "--pico-card-border-color", description: "Line between the body and the header or footer." },
+    { name: "--pico-card-box-shadow", value: "var(--pico-box-shadow)", description: "Shadow around the card." },
+    { name: "--pico-card-sectioning-background-color", description: "Background of the header and footer bands." },
+    { name: "--pico-block-spacing-vertical", value: "var(--pico-spacing)", description: "Vertical padding and bottom margin." },
+    { name: "--pico-block-spacing-horizontal", value: "var(--pico-spacing)", description: "Horizontal padding." },
+    { name: "--pico-border-radius", value: "0.25rem", description: "Corner radius, also applied to the header and footer ends." },
+  ]}
+/>

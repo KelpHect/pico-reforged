@@ -1,0 +1,145 @@
+---
+title: Typography
+description: Headings, paragraphs, lists, quotes and inline text styled by element, with a root font size that grows with the viewport.
+---
+
+Pico Reforged styles text by element. Write semantic HTML and the type scale, spacing and colors follow. There are no typography classes.
+
+## Responsive type
+
+The root font size is `100%` on small screens and steps up at each breakpoint. Everything sized in `rem` or `em` scales with it.
+
+| Viewport | Root font size |
+| --- | --- |
+| below 576px | 100% |
+| 576px and up | 106.25% |
+| 768px and up | 112.5% |
+| 1024px and up | 118.75% |
+| 1280px and up | 125% |
+| 1536px and up | 131.25% |
+
+## Headings
+
+`h1` to `h6` have their own size, line height and top spacing. A heading that follows a paragraph, list, table, form, figure or similar block gets extra space above it, so sections breathe without any margin classes.
+
+<Example title="Headings">
+```html
+<h1>Heading 1</h1>
+<h2>Heading 2</h2>
+<h3>Heading 3</h3>
+<h4>Heading 4</h4>
+<h5>Heading 5</h5>
+<h6>Heading 6</h6>
+```
+</Example>
+
+| Element | Font size |
+| --- | --- |
+| `h1` | 2rem |
+| `h2` | 1.75rem |
+| `h3` | 1.5rem |
+| `h4` | 1.25rem |
+| `h5` | 1.125rem |
+| `h6` | 1rem |
+
+### Heading group
+
+Wrap a title and a subtitle in `hgroup`. The last child is muted and sits tight under the title.
+
+<Example title="hgroup">
+```html
+<hgroup>
+  <h2>Heading group</h2>
+  <p>The subtitle uses the muted color.</p>
+</hgroup>
+```
+</Example>
+
+## Text
+
+Paragraphs, `strong`, `em`, `u`, `s`, `small`, `sub` and `sup` work as expected. `small` is set to `0.875em`.
+
+<Example title="Inline text">
+```html
+<p>
+  A paragraph with <strong>strong text</strong>, <em>emphasis</em>, <u>underline</u>,
+  <s>strikethrough</s> and <small>small print</small>. Water is H<sub>2</sub>O and E = mc<sup>2</sup>.
+</p>
+```
+</Example>
+
+## Lists
+
+Unordered lists use square markers. Nested lists sit closer to their parent. Description lists (`dl`) take the same text spacing as paragraphs.
+
+<Example title="Lists">
+```html
+<ul>
+  <li>First item</li>
+  <li>
+    Second item with children
+    <ul>
+      <li>Nested one</li>
+      <li>Nested two</li>
+    </ul>
+  </li>
+</ul>
+<ol>
+  <li>Open the box</li>
+  <li>Read the manual</li>
+  <li>Plug it in</li>
+</ol>
+<dl>
+  <dt>Cascade</dt>
+  <dd>The order in which competing rules are resolved.</dd>
+  <dt>Specificity</dt>
+  <dd>How strongly a selector claims an element.</dd>
+</dl>
+```
+</Example>
+
+## Blockquote
+
+A `blockquote` has a left border and padding. A `footer` inside it is muted, which suits an attribution with `cite`. In right-to-left pages the border flips to the other side.
+
+<Example title="Blockquote">
+```html
+<blockquote>
+  Simplicity is prerequisite for reliability.
+  <footer><cite>Edsger W. Dijkstra</cite></footer>
+</blockquote>
+```
+</Example>
+
+## Address
+
+`address` is not italic. It takes the same spacing as a paragraph.
+
+<Example title="Address">
+```html
+<address>
+  Example Street 12<br />
+  1000-001 Lisbon, Portugal
+</address>
+```
+</Example>
+
+## Related
+
+Links, `mark`, `ins`, `del`, `abbr` and `kbd` have their own pages: [Link](/docs/content/link) and [Misc](/docs/content/misc). Code is on [Code](/docs/content/code).
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-font-family", value: "var(--pico-font-family-sans-serif)", description: "Font stack for body text." },
+    { name: "--pico-font-size", value: "100%", description: "Root font size before the responsive steps." },
+    { name: "--pico-line-height", value: "1.5", description: "Base line height." },
+    { name: "--pico-typography-spacing-vertical", value: "1rem", description: "Space below text blocks." },
+    { name: "--pico-h1-color", description: "Color of h1. The same pattern exists for h2 to h6." },
+    { name: "--pico-blockquote-border-color", value: "var(--pico-muted-border-color)", description: "Left border of blockquote." },
+    { name: "--pico-blockquote-footer-color", value: "var(--pico-muted-color)", description: "Footer text inside blockquote." },
+  ]}
+/>
+
+Set the variables on `:root` to change them everywhere, or on one element to change only that element. See [Themes](/docs/customization/themes) for more.

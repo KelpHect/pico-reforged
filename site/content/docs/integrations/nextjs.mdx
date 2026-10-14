@@ -1,0 +1,71 @@
+---
+title: Next.js and PostCSS
+description: Add the PostCSS plugin to postcss.config.mjs and import the package from globals.css.
+---
+
+Next.js 16 (Turbopack and webpack) reads `postcss.config.mjs`. Put the plugin first and do not add `postcss-import` before it. This documentation site is built that way.
+
+```shell
+npm install @rusticstack/pico-reforged@next postcss
+```
+
+```js
+// postcss.config.mjs
+export default {
+  plugins: {
+    "@rusticstack/pico-reforged/postcss": {},
+  },
+};
+```
+
+```css
+/* app/globals.css */
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  purge: safe;
+}
+```
+
+```tsx
+// app/layout.tsx
+import "./globals.css";
+```
+
+The plugin purges when `NODE_ENV` is `production` (`next build`) and gives the full stylesheet in `next dev`. A working copy is in `examples/next` in the repository.
+
+## Plugin options
+
+Options go in the object next to the plugin name:
+
+```js
+export default {
+  plugins: {
+    "@rusticstack/pico-reforged/postcss": { purge: true },
+  },
+};
+```
+
+<PropsTable
+  items={[
+    { name: "purge", type: "auto | true | false", default: "auto", description: "When to purge. auto purges when NODE_ENV is production, true always, false never." },
+    { name: "base", type: "string", default: "detected", description: "Folder the automatic scan starts from." },
+    { name: "ignore", type: "string[]", description: "Extra folder names or paths the scan skips." },
+    { name: "minify", type: "boolean", default: "false", description: "Next.js minifies CSS itself, so leave this off." },
+  ]}
+/>
+
+## next/link and next/image
+
+`next/link` writes an `a` and `next/image` writes an `img`, and neither tag appears in your source. The default `safe` mode never drops a rule for a missing tag, so both keep their styles. Only `aggressive` mode needs help here, see [Purge modes](/docs/integrations/purge-modes).
+
+A router that sets `aria-current` at run time is covered the same way, because every `aria-*` attribute name counts as present in `safe` mode.
+
+## Notes
+
+- The plugin reports every scanned file as a `dependency` message and every folder that holds one as a `dir-dependency` with a flat `*` glob. The project folder itself is never reported as a folder, because Next.js recursed without end on that when `distDir` was not the default.
+- The scan skips the `.next` folder and the `distDir` named in `next.config.*`.
+- Components that live in `node_modules` or another workspace package are not scanned. Add them with `@source`, see the [Configuration reference](/docs/integrations/configuration#source).
+- Other PostCSS tools (Parcel, webpack with `postcss-loader`, Vite with `css.postcss`) use the same plugin. In Vite, prefer the [Vite plugin](/docs/integrations/vite).
+- The entry for the PostCSS plugin exports `module.exports`, which TypeScript older than 5.6 reads only with `skipLibCheck`.

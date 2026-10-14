@@ -1,0 +1,89 @@
+---
+title: Prompting tips
+description: How to ask an assistant for pages that use semantic HTML and Pico Reforged correctly.
+---
+
+Models write what they have seen most. For CSS frameworks that means Bootstrap and Tailwind names. A few lines in the prompt, or the [skill](/docs/ai/skill), move the output to semantic HTML.
+
+## Tell it the rules
+
+Say what the framework is and what to avoid:
+
+```text
+Use Pico Reforged (@rusticstack/pico-reforged). Write semantic HTML: button, label,
+article, details, dialog, table. Do not add utility classes or made-up component
+classes. Use a class only if the Pico Reforged docs list it.
+```
+
+Add the facts that decide the setup: class based or classless, the theme, and the extras you want.
+
+```text
+Use the classless build. Load the tabs and badge extras after the core file.
+Theme: jade.
+```
+
+## Ask for the element, not the look
+
+A prompt that names a look gets a div with classes. A prompt that names the job gets the element.
+
+| Instead of                        | Ask for                                              |
+| --------------------------------- | ---------------------------------------------------- |
+| "a card with a header and footer" | an `article` with a `header` and a `footer`          |
+| "a toggle switch"                 | a checkbox with `role="switch"`                      |
+| "a collapsible FAQ"               | `details` and `summary`                              |
+| "a popup"                         | a `dialog` opened with `showModal()`, or a `popover` |
+| "a status banner"                 | an element with `role="status"` and `data-variant`   |
+
+## Give it the exact markup
+
+When the model gets a component wrong, paste the entry from [`components.json`](/docs/ai/data-files) or the matching docs page and ask it to follow that. The `markup` field is the canonical example and `aria` lists the accessibility notes.
+
+```text
+Here is the alert markup from the Pico Reforged docs. Use the same structure for the
+three messages on this page.
+```
+
+Here is that markup:
+
+<Example title="Alert extra" height={150} css={["pico.extras"]}>
+```html
+<div role="status" data-variant="info">
+  <strong>Tip.</strong> You can drag files onto the table to upload them.
+</div>
+<div role="alert" data-variant="danger">
+  <strong>Payment failed.</strong> Your card was declined. Try another payment method.
+</div>
+```
+</Example>
+
+## Check the output
+
+These problems show up often. Look for them in a review, or tell the model about them up front.
+
+- Classes such as `btn`, `btn-primary`, `card`, `row`, `col` or `mt-4`. Nothing styles them.
+- A `div` around every input. A label wraps its control: `<label>Name <input name="name" /></label>`.
+- Classes in a classless page. The classless build has no class rules, so `.container`, `.grid` and `.secondary` do nothing there.
+- An extra used without its stylesheet. Extras are not in `pico.css`.
+- A `.dark` class for dark mode. Use `data-theme="dark"` on `html` or on any element.
+- State in classes such as `.active` or `.disabled`. Use `aria-current`, `aria-invalid`, `aria-busy`, `disabled` and `open`.
+- `!important` or inline colors. Override `--pico-*` properties in your own CSS, which sits outside the `pico` layer and wins without `!important`.
+- Sass variables such as `$primary`. There is no Sass.
+- Essential text in `data-tooltip`. It is not an accessible name or description.
+
+## Ask for accessible forms
+
+Name the states in the prompt so the model uses the right attributes: "show the email error with `aria-invalid="true"` and link the message with `aria-describedby`". Without it, models often add an error class.
+
+<Example title="Invalid field with a message" height={150}>
+```html
+<label>
+  Email
+  <input type="email" name="email" value="not-an-email" aria-invalid="true" aria-describedby="email-help" />
+  <small id="email-help">Enter an address like name@example.com.</small>
+</label>
+```
+</Example>
+
+## Keep the setup in the prompt
+
+If the project uses Vite or PostCSS, say so, and include the purge note: the integrations remove unused rules in production, and markup that only exists at run time needs `@source inline("name")` or a safelist. See [Integrations](/docs/integrations/overview) for the setup.

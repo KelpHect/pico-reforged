@@ -1,0 +1,75 @@
+---
+title: Container
+description: Center your content with .container or .container-fluid and set the maximum width per breakpoint.
+---
+
+A container centers its content and caps the width. Below 576px it is as wide as its parent, with a `1rem` gutter on each side. From 576px up the gutter is dropped and the width is capped.
+
+<Example title="Container" height={160}>
+```html
+<main class="container">
+  <h1>Hello, world!</h1>
+  <p>The content sits in a centered column.</p>
+</main>
+```
+</Example>
+
+## Classes
+
+| Class              | Behavior                                                     |
+| ------------------ | ------------------------------------------------------------ |
+| `.container`       | centered, with a maximum width that grows at each breakpoint |
+| `.container-fluid` | full width at every size, keeps the side gutter              |
+
+Both set `width: 100%`, center themselves with `margin-inline: auto` and use `padding-inline: var(--pico-spacing)`. Only `.container` has a `max-width`, and only `.container` drops the side padding from 576px.
+
+### Max widths
+
+The width is read from one variable, `--pico-container-max-width`, which is set on `:root` at each breakpoint. The modal reads the same variable.
+
+| Viewport    | `--pico-container-max-width` |
+| ----------- | ---------------------------- |
+| below 576px | `100%`                       |
+| 576px       | `510px`                      |
+| 768px       | `700px`                      |
+| 1024px      | `950px`                      |
+| 1280px      | `1200px`                     |
+| 1536px      | `1450px`                     |
+
+## Fluid container
+
+Use `.container-fluid` when the content should use the whole viewport width.
+
+<Example title="Fluid container" height={160}>
+```html
+<main class="container-fluid">
+  <h1>Hello, world!</h1>
+  <p>This container is full width at every size.</p>
+</main>
+```
+</Example>
+
+To make `.container` itself full width, build with the `fluid` option. It sets `--pico-container-max-width: 100%` after the breakpoint values. See [Responsive and fluid](/docs/layout/responsive).
+
+## Customization
+
+Override the variable to change the widths. This keeps one width at every breakpoint from 576px up:
+
+```css
+:root {
+  --pico-container-max-width: 1100px;
+}
+```
+
+For a different value per breakpoint, redeclare it inside the media queries you need, after the Pico Reforged stylesheet.
+
+<Tokens
+  items={[
+    { name: "--pico-container-max-width", value: "100% to 1450px", description: "Maximum width of .container, set per breakpoint on :root." },
+    { name: "--pico-spacing", value: "1rem", description: "Side gutter below 576px." },
+  ]}
+/>
+
+## Notes
+
+`.container` and `.container-fluid` stay global in the conditional build. They are not scoped under `.pico`, as in Pico CSS v2.1.1. To center the landmark elements without classes, see [Semantic container](/docs/layout/semantic-container).

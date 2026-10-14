@@ -1,0 +1,31 @@
+---
+title: Browser support
+description: Which browsers are supported, and what newer features do where they are missing.
+---
+
+Pico Reforged supports current browsers only. The floor is the same as Tailwind CSS v4.
+
+| Browser            | Minimum |
+| ------------------ | ------- |
+| Chrome, Edge       | 111     |
+| Firefox            | 128     |
+| Safari, iOS Safari | 16.4    |
+
+The default build target is the browserslist query `chrome >= 111, edge >= 111, firefox >= 128, safari >= 16.4, ios_saf >= 16.4`. Lightning CSS flattens nesting and lowers `light-dark()` for those browsers, so the ready-made files in `css/` work at the floor. There is no legacy build, no unlayered build and no polyfill. Browsers below the floor are not tested. If you must support them, stay on Pico CSS v2.1.1, or pass your own query with `--targets` or the `targets` option.
+
+## Newer features
+
+These are additive. Where a floor browser does not support one, the page still works.
+
+| Feature                                     | Without support                                     |
+| ------------------------------------------- | --------------------------------------------------- |
+| Popover and `popover="hint"`                | the element shows as normal content                 |
+| Anchor positioning                          | popovers open in the top layer with fixed placement |
+| `@starting-style` and `transition-behavior` | no open or close animation on dialogs and popovers  |
+| `::details-content` and `interpolate-size`  | accordions open and close instantly                 |
+
+## Your own CSS
+
+The ready-made files are compiled for the floor. Your own stylesheet is not, unless a bundler or an integration does it. Relative color syntax needs Chrome and Edge 119, so it is not available at the floor. `light-dark()` written in your own CSS is native from Chrome 123, Firefox 120 and Safari 17.5, so below that, use a CLI theme or write the two values yourself under `prefers-color-scheme` and `data-theme`.
+
+The unminified files in `src/` are the plain source. They still hold nesting and `light-dark()`, so load them directly only in current browsers.

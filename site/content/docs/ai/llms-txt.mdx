@@ -1,0 +1,45 @@
+---
+title: llms.txt and llms-full.txt
+description: A docs index and the full docs text for assistants, plus a Markdown copy of every page.
+---
+
+The docs are published in forms that language models and coding agents read without scraping HTML.
+
+## The files
+
+| URL                                | What it is                                                      |
+| ---------------------------------- | --------------------------------------------------------------- |
+| [`/llms.txt`](/llms.txt)           | a short header and an index of every docs page with its summary |
+| [`/llms-full.txt`](/llms-full.txt) | the text of every docs page in one file                         |
+| `/md/<section>/<page>.md`          | the Markdown of one page, for example `/md/ai/skill.md`         |
+
+`llms.txt` starts with the project name, a one-line description, and links to `llms-full.txt` and to the [skill](/docs/ai/skill) at `/skill/SKILL.md`. Below that is one line per page, taken from each page's `title` and `description`.
+
+Every docs page also has a **Copy page as Markdown** button at the top. Paste the result into an assistant when you ask for help with that page.
+
+## Use them
+
+Point a tool at the index and let it fetch the pages it needs:
+
+```text
+https://pico.rusticstack.com/llms.txt
+```
+
+Or give it everything at once. The file is large, so it fits best in tools with a long context window:
+
+```text
+https://pico.rusticstack.com/llms-full.txt
+```
+
+In a chat with web access, a prompt like this works:
+
+```text
+Read https://pico.rusticstack.com/llms.txt, then build a pricing page with Pico Reforged.
+Use semantic HTML and no utility classes.
+```
+
+## Notes
+
+The Markdown of a page keeps its live examples as `html` code blocks, so the model sees the exact markup. The files are generated from the same pages as the site, so they match it.
+
+For a project that already uses the package, the [skill](/docs/ai/skill) is a better fit than the docs: it is shorter, it is loaded only when needed, and it works offline.

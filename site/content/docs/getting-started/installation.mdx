@@ -1,0 +1,157 @@
+---
+title: Installation
+description: Use Pico Reforged from a CDN, from npm, through the Vite or PostCSS integration, or as a downloaded file.
+---
+
+Pick the route that fits the project. They all give you the same CSS.
+
+## CDN
+
+No build step. Link the file in the `<head>`. The file names are the same as in Pico CSS v2.1.1.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+```
+
+unpkg serves the same files:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+```
+
+Pin an exact version in production, for example `@rusticstack/pico-reforged@1.0.0-alpha.0`, so a new release never changes your pages. `@next` follows the newest pre-release.
+
+Other builds and themes are other file names, see the [version picker](/docs/getting-started/version-picker). The opt-in extras are separate files. Load them after the main file:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.extras.min.css"
+/>
+```
+
+To take a single extra, use `css/extras/tabs.min.css` or another name from `pico-reforged extras`.
+
+## npm
+
+```shell
+npm install @rusticstack/pico-reforged@next
+```
+
+pnpm, Yarn and Bun work the same way, for example `pnpm add @rusticstack/pico-reforged@next`.
+
+The built files are in `node_modules/@rusticstack/pico-reforged/css/`. Link one from your HTML, or copy it into your public folder. In a bundler the package root resolves to `css/pico.min.css`:
+
+```js
+import "@rusticstack/pico-reforged";
+```
+
+Other entry points:
+
+| Import                                   | File                         |
+| ---------------------------------------- | ---------------------------- |
+| `@rusticstack/pico-reforged`             | `css/pico.min.css`           |
+| `@rusticstack/pico-reforged/classless`   | `css/pico.classless.min.css` |
+| `@rusticstack/pico-reforged/colors`      | `css/pico.colors.min.css`    |
+| `@rusticstack/pico-reforged/extras`      | `css/pico.extras.min.css`    |
+| `@rusticstack/pico-reforged/extras/tabs` | `css/extras/tabs.min.css`    |
+| `@rusticstack/pico-reforged/css/<file>`  | any file in `css/`           |
+
+## Vite and PostCSS
+
+With an integration you import the package in your own CSS, and the build compiles it for the browser floor and removes the rules your sources never use. It works like `@import "tailwindcss"`.
+
+```css
+/* src/app.css */
+@import "@rusticstack/pico-reforged";
+```
+
+For Vite (6.3 or newer), add the plugin:
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineConfig({
+  plugins: [pico()],
+});
+```
+
+For Next.js and other PostCSS setups, put the PostCSS plugin first in the list:
+
+```js
+// postcss.config.mjs
+export default {
+  plugins: {
+    "@rusticstack/pico-reforged/postcss": {},
+  },
+};
+```
+
+Configuration sits next to the import, in plain CSS. `@pico` sets the theme, extras and purge mode, and `@source` adds files to the scan:
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  extras: tabs badge;
+  purge: safe;
+}
+
+@source "../content";
+@source inline("modal-is-open aria-busy");
+```
+
+In development you get the full stylesheet. In a production build the default `safe` mode drops a rule only when a class, an id or an attribute name it needs appears nowhere in your sources. `aggressive` also judges tags and attribute values, and is opt-in. Astro, SvelteKit, Nuxt and the rest are covered on the [Integrations](/docs/integrations/overview) page.
+
+## CLI
+
+The package installs a `pico-reforged` command (Node 22.18 or newer). The commands below need the package in your project (`npm install -D @rusticstack/pico-reforged`). Without an install, write `npx @rusticstack/pico-reforged` instead of `npx pico-reforged`. The command builds a custom file, lists what exists, and purges a built site.
+
+```shell
+npx pico-reforged build --theme jade --extras tabs,badge --minify --out public/pico.css
+npx pico-reforged themes
+npx pico-reforged extras
+npx pico-reforged modules
+npx pico-reforged matrix css
+npx pico-reforged purge public
+```
+
+| Command           | What it does                                  |
+| ----------------- | --------------------------------------------- |
+| `build [options]` | compile one stylesheet                        |
+| `matrix [outDir]` | write the full file set, default folder `css` |
+| `purge <outDir>`  | remove unused Pico rules from a built site    |
+| `themes`          | list the built-in themes                      |
+| `modules`         | list the modules that can be excluded         |
+| `extras`          | list the opt-in extras                        |
+
+Run `pico-reforged --help` for every flag. A theme can also be one color, for example `--theme "#e5484d"`.
+
+## Download
+
+For a plain file, take it from the npm package. Its `css/` folder holds every build.
+
+```shell
+npm pack @rusticstack/pico-reforged@next
+tar -xzf rusticstack-pico-reforged-*.tgz package/css
+```
+
+You can also save a file straight from the CDN link, or clone the [repository](https://github.com/rusticstack/pico-reforged) and run `pnpm install && pnpm build` to rebuild `css/`.
+
+## Next steps
+
+- [Usage](/docs/getting-started/usage): choose the class, class-less, conditional or fluid build.
+- [Browser support](/docs/getting-started/browser-support): what the compiled files target.

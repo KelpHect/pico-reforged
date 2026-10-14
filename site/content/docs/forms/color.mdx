@@ -1,0 +1,25 @@
+---
+title: Color
+description: The native color picker with a rounded swatch that fits the control height.
+---
+
+`input[type="color"]` is full width and as tall as a text input. The swatch fills the control and has rounded corners.
+
+<Example title="Color" height={140}>
+```html
+<label>
+  Favorite color
+  <input type="color" name="color" value="#0172ad" />
+</label>
+```
+</Example>
+
+The value is always a `#rrggbb` string. To build a theme from one color, see [Themes](/docs/customization/themes).
+
+## Accessibility
+
+Label the control, and do not rely on color alone to show what was chosen. Show the value as text where it matters.
+
+## Customization
+
+The swatch radius is half of `--pico-border-radius`. The border, background and focus colors follow the shared form variables in the [Forms overview](/docs/forms/overview).

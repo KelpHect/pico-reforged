@@ -1,270 +1,181 @@
-<p>
-  <a href="https://picocss.com" target="_blank">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/picocss/pico/HEAD/.github/logo-dark.svg">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/picocss/pico/HEAD/.github/logo-light.svg">
-      <img alt="Pico CSS" src="https://raw.githubusercontent.com/picocss/pico/HEAD/.github/logo-light.svg" width="auto" height="60">
-    </picture>
-  </a>
-</p>
+# Pico Reforged
 
-[![Github release](https://img.shields.io/github/v/release/picocss/pico?color=0172ad&logo=github&logoColor=white)](https://github.com/picocss/pico/releases/latest)
-[![npm version](https://img.shields.io/npm/v/@picocss/pico?color=0172ad)](https://www.npmjs.com/package/@picocss/pico)
-[![License](https://img.shields.io/badge/license-MIT-%230172ad)](https://github.com/picocss/pico/blob/master/LICENSE.md)
-[![X (formerly Twitter)](https://img.shields.io/twitter/url/https/twitter.com/picocss.svg?style=social&label=Follow%20%40picocss)](https://x.com/picocss)
+Minimal CSS for semantic HTML, rewritten in plain modern CSS.
 
-## Pico CSS is no longer maintained
+Pico Reforged continues [Pico CSS](https://github.com/picocss/pico) v2.1.1, the final upstream release, which is MIT licensed and archived. Pico CSS and its original design are the work of Lucas Larroche and the Pico contributors. This project is a fork with its own name. It is not the official Pico CSS and is not affiliated with it. The Pico CSS name and logo belong to the original project.
 
-[v2.1.1](https://github.com/picocss/pico/releases/tag/v2.1.1) is the final release.
+The classes, attributes and `--pico-*` variables of v2.1.1 are kept, and the CDN file names in `css/` are the same, so most pages work by changing one URL.
 
-**Why**<br>
-Today, AI can generate lightweight, standalone, accessible HTML with just the CSS it needs, so a Minimal CSS Framework for Semantic HTML matters less than it used to. To stay relevant, Pico CSS would need a full rewrite: plain modern CSS instead of Sass, built on features it doesn't use today (OKLCH colors, cascade layers, Popover, anchor positioning) with fallbacks for older browsers, and a native compiler that strips unused CSS and makes customization easy. That would be a different project. Pico CSS stays as it is.
+## What's new
 
-**What this means**
+- Plain CSS source in `src/`, no Sass. Cascade layers (`pico.tokens`, `pico.theme`, `pico.core`, `pico.extras`, `pico.utilities`), so your own CSS wins without `!important`.
+- OKLCH colors and `light-dark()`. Light and dark are written once.
+- The same 20 themes, plus custom themes from a single color.
+- Opt-in extras for apps: tabs, alert, toast, badge, avatar, skeleton, app shell, data table, pagination, stepper and empty state.
+- Popover and anchor positioning patterns, animated dialogs and accordions. The old markup still works.
+- A compiler and CLI for custom bundles, scoping, classless builds and purging unused CSS.
+- Vite and PostCSS integrations that purge unused rules in production, safely by default.
+- Size: the minified `pico.min.css` is about 80 kB, 12 kB gzipped, about the same as v2.1.1 minified.
 
-- Nothing breaks. [npm](https://www.npmjs.com/package/@picocss/pico), the [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@picocss/pico) and [picocss.com](https://picocss.com) stay online for the long term.
-- The repositories are archived. No new issues, PRs or releases.
-- Pico CSS is [MIT licensed](LICENSE.md). You're free to fork it and take it further. See [community forks](https://github.com/picocss/pico/forks).
-- The Pico CSS name and logo are not covered by the MIT license. Please give your fork its own name, so users don't confuse it with the original.
+## Install
 
-**Thank you**<br>
-What started as a small side project ended up powering thousands of websites. Thank you to everyone who used it, opened issues, sent pull requests and wrote kind messages over the years.
-
----
-
-## Minimal CSS Framework for Semantic HTML
-
-A minimalist and lightweight starter kit that prioritizes semantic syntax, making every HTML element responsive and elegant by default.
-
-Write HTML, Add Pico CSS, and Voilà!
-
-## What’s new in v2?
-
-Pico v2.0 features better accessibility, easier customization with SASS, a complete color palette, a new group component, and 20 precompiled color themes totaling over 100 combinations accessible via CDN.
-
-[Read more](https://picocss.com/docs/v2)
-
-## A Superpowered HTML Reset
-
-With just the right amount of everything, Pico is great starting point for a clean and lightweight design system.
-
-- Class-light and Semantic
-- Great Styles with Just CSS
-- Responsive Everything
-- Light or Dark Mode
-- Easy Customization
-- Optimized Performance
-
-## Table of contents
-
-- [Quick start](#quick-start)
-- [Class-less version](#class-less-version)
-- [Limitations](#limitations)
-- [Documentation](#documentation)
-- [Browser Support](#browser-support)
-- [Contributing](#contributing)
-- [Copyright and license](#copyright-and-license)
-
-## Quick start
-
-There are 4 ways to get started with pico.css:
-
-### Install manually
-
-[Download Pico](https://github.com/picocss/pico/archive/refs/heads/main.zip) and link `/css/pico.min.css` in the `<head>` of your website.
-
-```html
-<link rel="stylesheet" href="css/pico.min.css">
+```sh
+npm install @rusticstack/pico-reforged@next
+# or
+pnpm add @rusticstack/pico-reforged@next
 ```
 
-### Usage from CDN
-
-Alternatively, you can use [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@picocss/pico) to link pico.css.
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-```
-
-### Install with NPM
-
-```shell
-npm install @picocss/pico
-```
-
-Or
-
-```shell
-yarn add @picocss/pico
-```
-
-Then, import Pico into your SCSS file with [@use](https://sass-lang.com/documentation/at-rules/use):
-
-```SCSS
-@use "pico";
-```
-
-### Use it with a bundler
-
-`@rusticstack/pico-reforged` ships a Vite plugin, a PostCSS plugin (Next.js) and a `purge` command for static output. Import it once and the production CSS only holds what your app uses:
-
-```css
-@import "@rusticstack/pico-reforged";
-@pico {
-  theme: jade;
-}
-```
-
-Setup for Vite, Astro, Next.js, SvelteKit, Nuxt and static generators is in [docs/integrations.md](docs/integrations.md).
-
-### Install with Composer
-
-```shell
-composer require picocss/pico
-```
-
-### Starter HTML template
-
-```HTML
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <link rel="stylesheet" href="css/pico.min.css">
-    <title>Hello world!</title>
-  </head>
-  <body>
-    <main class="container">
-      <h1>Hello world!</h1>
-    </main>
-  </body>
-</html>
-```
-
-## Class-less version
-
-Pico provides a `.classless` version.
-
-In this version, `<header>`, `<main>`, and `<footer>` inside `<body>` act as containers to define a centered or a fluid viewport.
-
-Use the default `.classless` version if you need centered viewports:
+Link a built file from `node_modules/@rusticstack/pico-reforged/css/` or use the CDN:
 
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0-alpha.0/css/pico.min.css"
 />
 ```
 
-Or use the `.fluid.classless` version if you need a fluid container:
+The files in `css/` use the same names as v2.1.1:
 
-```html
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.fluid.classless.min.css"
->
-```
+| File                                                   | What it is                              |
+| ------------------------------------------------------ | --------------------------------------- |
+| `css/pico.min.css`                                     | the full build, azure theme             |
+| `css/pico.<theme>.min.css`                             | the full build in one of the 20 themes  |
+| `css/pico.classless.min.css`                           | classless                               |
+| `css/pico.classless.<theme>.min.css`                   | classless in one theme                  |
+| `css/pico.conditional.min.css`                         | scoped to `.pico`, class build          |
+| `css/pico.classless.conditional.<theme>.min.css`       | scoped to `.pico`, classless            |
+| `css/pico.fluid.classless.min.css`                     | classless with a full width container   |
+| `css/pico.colors.min.css`                              | color and background utility classes    |
+| `css/pico.extras.min.css`, `css/extras/<name>.min.css` | the opt-in extras (all of them, or one) |
 
-Then just write pure HTML, and it should look great:
+Every file also has an unminified version without `.min`.
+
+With Vite or Next.js you can import the package once in your CSS and get a purged stylesheet in production, see [Build integrations](#build-integrations).
+
+## Quick start
 
 ```html
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark">
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
-    >
-    <title>Hello, world!</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/pico.min.css" />
+    <title>Hello</title>
   </head>
   <body>
-    <main>
-      <h1>Hello, world!</h1>
+    <main class="container">
+      <h1>Hello, world</h1>
+      <button>Click me</button>
     </main>
   </body>
 </html>
 ```
 
-## Limitations
+More pages are in [`examples/`](examples/). Run `pnpm build` once, then open them in a browser.
 
-Pico CSS can be used without custom CSS for quick or small projects. However, it’s designed as a starting point, like a “reset CSS on steroids”. As Pico does not integrate any helpers or utilities `.classes`, this minimal CSS framework requires SCSS or CSS knowledge to build large projects.
+## Classless and conditional
 
-[Read more](https://picocss.com/docs/usage-scenarios)
+The classless build styles the elements and needs no classes. `body > header`, `body > main` and `body > footer` become the centered container.
 
-## Documentation
+```html
+<link rel="stylesheet" href="css/pico.classless.min.css" />
+```
 
-**Getting started**
+The conditional build only styles what is inside `.pico`, so Pico can live next to other CSS:
 
-- [Quick start](https://picocss.com/docs)
-- [Version picker `New`](https://picocss.com/docs/version-picker)
-- [Color schemes](https://picocss.com/docs/color-schemes)
-- [Class-less version](https://picocss.com/docs/classless)
-- [Conditional styling `New`](https://picocss.com/docs/conditional)
-- [RTL](https://picocss.com/docs/rtl)
+```html
+<link rel="stylesheet" href="css/pico.conditional.min.css" />
+<section class="pico">...</section>
+```
 
-**Customization**
+## Themes and dark mode
 
-- [CSS Variables](https://picocss.com/docs/css-variables)
-- [Sass](https://picocss.com/docs/sass)
-- [Colors `New`](https://picocss.com/docs/colors)
+Pick a theme by file name, for example `css/pico.jade.min.css`. The themes are amber, azure, blue, cyan, fuchsia, green, grey, indigo, jade, lime, orange, pink, pumpkin, purple, red, sand, slate, violet, yellow and zinc.
 
-**Layout**
+Dark mode follows the system by default. Force it with `data-theme` on any element:
 
-- [Container](https://picocss.com/docs/container)
-- [Landmarks & section](https://picocss.com/docs/landmarks-section)
-- [Grid](https://picocss.com/docs/grid)
-- [Overflow auto `New`](https://picocss.com/docs/overflow-auto)
+```html
+<html data-theme="dark"></html>
+```
 
-**Content**
+Make a theme from one color with the CLI:
 
-- [Typography](https://picocss.com/docs/typography)
-- [Link](https://picocss.com/docs/link)
-- [Button](https://picocss.com/docs/button)
-- [Table](https://picocss.com/docs/table)
+```sh
+npx pico-reforged build --theme "#e5484d" --minify --out public/pico.css
+```
 
-**Forms**
+See [docs/customization.md](docs/customization.md) for variables, layers, scoped builds and a runtime theme with relative colors.
 
-- [Overview](https://picocss.com/docs/forms)
-- [Input](https://picocss.com/docs/forms/input)
-- [Textarea](https://picocss.com/docs/forms/textarea)
-- [Select](https://picocss.com/docs/forms/select)
-- [Checkboxes](https://picocss.com/docs/forms/checkboxes)
-- [Radios](https://picocss.com/docs/forms/radios)
-- [Switch](https://picocss.com/docs/forms/switch)
-- [Range](https://picocss.com/docs/forms/range)
+## Extras
 
-**Components**
+Extras are separate and never part of `pico.css`. They use semantic HTML and ARIA, so there are no classes to learn.
 
-- [Accordion](https://picocss.com/docs/accordion)
-- [Card](https://picocss.com/docs/card)
-- [Dropdown](https://picocss.com/docs/dropdown)
-- [Group `New`](https://picocss.com/docs/group)
-- [Loading](https://picocss.com/docs/loading)
-- [Modal](https://picocss.com/docs/modal)
-- [Nav](https://picocss.com/docs/nav)
-- [Progress](https://picocss.com/docs/progress)
-- [Tooltip](https://picocss.com/docs/tooltip)
+```html
+<link rel="stylesheet" href="css/pico.min.css" />
+<link rel="stylesheet" href="css/pico.extras.min.css" />
+```
 
-**About**
+Or load one: `css/extras/tabs.min.css`. The extras are tabs, alert, toast, badge, avatar, skeleton, app-shell, data-table, pagination, stepper and empty-state. [`examples/dashboard.html`](examples/dashboard.html) uses several of them.
 
-- [What’s new in v2?](https://picocss.com/docs/v2)
-- [Mission](https://picocss.com/docs/mission)
-- [Usage scenarios](https://picocss.com/docs/usage-scenarios)
-- [Brand](https://picocss.com/docs/brand)
-- [Built With](https://picocss.com/docs/built-with)
+## CLI
 
-## Browser Support
+```sh
+npx pico-reforged build --theme jade --extras tabs,badge --minify --out pico.css
+```
 
-Pico CSS is designed and tested for the latest stable Chrome, Firefox, Edge, and Safari releases. It does not support any version of IE, including IE 11.
+| Command                         | What it does                               |
+| ------------------------------- | ------------------------------------------ |
+| `pico-reforged build [options]` | compile one stylesheet                     |
+| `pico-reforged matrix [outDir]` | write the full file set, default `css`     |
+| `pico-reforged purge <outDir>`  | remove unused Pico rules from a built site |
+| `pico-reforged themes`          | list the built-in themes                   |
+| `pico-reforged modules`         | list the modules that can be excluded      |
+| `pico-reforged extras`          | list the opt-in extras                     |
 
-## Contributing
+Run `pico-reforged --help` for every build option (`--no-classes`, `--scope`, `--exclude`, `--fluid`, `--purge`, `--targets` and more).
 
-Contributions are closed. This repository is archived.
+## Build integrations
 
-## Copyright and license
+Import the package once in your CSS. In production the plugin scans your project and keeps only the rules you use.
 
-Licensed under the [MIT License](https://github.com/picocss/pico/blob/master/LICENSE.md).
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineConfig({ plugins: [pico()] });
+```
+
+```css
+/* src/app.css */
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  extras: tabs badge;
+}
+```
+
+Next.js uses the PostCSS plugin, `@rusticstack/pico-reforged/postcss`. Purging is safe by default: a rule is dropped only when a class, an id or an attribute name it needs is nowhere in your sources, so components, routers and scripts cannot lose a style they need. `purge: aggressive` also judges tags and attribute values and saves more, but needs `@source` or a safelist for markup that only exists at run time. Static site generators can run `pico-reforged purge <outDir>` on the built folder.
+
+Setup for Vite, Astro, SvelteKit, Nuxt, Next.js and static generators is in [docs/integrations.md](docs/integrations.md). Working configs are in [`examples/vite`](examples/vite) and [`examples/next`](examples/next).
+
+## Browser support
+
+Chrome and Edge 111, Firefox 128 and Safari and iOS Safari 16.4, the same floor as Tailwind CSS v4. There is no legacy build. Newer features (popover, anchor positioning, `@starting-style`) are additive and degrade to a working page. Details are in [docs/browser-support.md](docs/browser-support.md).
+
+## Coming from Pico CSS
+
+Most pages work by swapping the CDN URL. The changes that matter (the browser floor, Sass settings, a few visual differences) are in [docs/migration.md](docs/migration.md).
+
+## Links
+
+- Site: [pico.rusticstack.com](https://pico.rusticstack.com)
+- Docs: [architecture](docs/architecture.md), [integrations](docs/integrations.md), [customization](docs/customization.md), [migration](docs/migration.md)
+- Issues: [github.com/rusticstack/pico-reforged/issues](https://github.com/rusticstack/pico-reforged/issues)
+- Contributing: [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)
+
+## License
+
+[MIT](LICENSE.md). Copyright (c) 2019-2024 Pico (Lucas Larroche and contributors), copyright (c) 2026 rusticstack.

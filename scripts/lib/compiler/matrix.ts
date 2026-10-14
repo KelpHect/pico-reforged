@@ -33,7 +33,7 @@ export function banner(): string {
   const { version } = packageInfo();
   return `/*!
  * Pico Reforged v${version} (https://pico.rusticstack.com)
- * Copyright 2019-2025 Lucas Larroche and the Pico CSS authors
+ * Copyright 2019-2024 Lucas Larroche and the Pico CSS authors
  * Copyright 2026 rusticstack
  * Licensed under MIT
  */`;

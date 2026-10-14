@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Popover patterns</title>
+    <link rel="stylesheet" href="../css/pico.min.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Popover patterns</h1>
+      <p>
+        These are opt-in and additive. The v2.1.1 markup (<code>details.dropdown</code>,
+        <code>data-tooltip</code>) still works. Where a pattern is not supported the content falls
+        back to normal flow or a fixed position.
+      </p>
+
+      <h2>Dropdown menu</h2>
+      <p>A button with <code>popovertarget</code> and a <code>ul</code> with <code>popover</code>. No script.</p>
+      <button popovertarget="menu">Actions</button>
+      <ul popover id="menu">
+        <li><a href="#edit">Edit</a></li>
+        <li><a href="#duplicate" aria-current="page">Duplicate</a></li>
+        <li><a href="#archive">Archive</a></li>
+      </ul>
+
+      <h2>Tooltip</h2>
+      <p>
+        <code>popover="hint"</code> needs a few lines of script to show on hover and focus. The
+        older <code>data-tooltip</code> attribute needs none.
+      </p>
+      <p>
+        <button id="save" class="secondary" aria-describedby="save-tip">Save</button>
+        <span popover="hint" id="save-tip" role="tooltip">Saved to your account</span>
+        <a href="#top" data-tooltip="No script needed" data-placement="right">Plain tooltip</a>
+      </p>
+
+      <h2>Exclusive accordion</h2>
+      <p>Details elements that share a <code>name</code> open one at a time.</p>
+      <details name="faq" open>
+        <summary>What changed from Pico CSS?</summary>
+        <p>Plain CSS source, OKLCH colors, cascade layers and a small compiler.</p>
+      </details>
+      <details name="faq">
+        <summary>Can I keep using the old classes?</summary>
+        <p>Yes. The class and attribute surface of v2.1.1 is kept.</p>
+      </details>
+      <details name="faq">
+        <summary>What about older browsers?</summary>
+        <p>The floor is Chrome and Edge 111, Firefox 128 and Safari 16.4.</p>
+      </details>
+
+      <h2>Modal</h2>
+      <p>A dialog opened with <code>showModal()</code> animates in and out with no extra classes.</p>
+      <button type="button" id="open-modal">Open the modal</button>
+      <dialog id="modal">
+        <article>
+          <header>
+            <button type="button" aria-label="Close" rel="prev" id="close-modal"></button>
+            <p><strong>Delete this project?</strong></p>
+          </header>
+          <p>This cannot be undone.</p>
+        </article>
+      </dialog>
+    </main>
+
+    <script>
+      const tip = document.getElementById("save-tip");
+      const invoker = document.getElementById("save");
+      const show = () => tip.showPopover?.({ source: invoker });
+      const hide = () => tip.hidePopover?.();
+      invoker.addEventListener("mouseenter", show);
+      invoker.addEventListener("focus", show);
+      invoker.addEventListener("mouseleave", hide);
+      invoker.addEventListener("blur", hide);
+
+      const modal = document.getElementById("modal");
+      document.getElementById("open-modal").addEventListener("click", () => modal.showModal());
+      document.getElementById("close-modal").addEventListener("click", () => modal.close());
+    </script>
+  </body>
+</html>

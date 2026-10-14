@@ -1,0 +1,132 @@
+---
+title: Vite
+description: Add the plugin to vite.config and import the package from a stylesheet. Astro, SvelteKit, Nuxt and React Router take the same plugin.
+---
+
+The Vite plugin runs before Vite's own CSS handling (`enforce: "pre"`), replaces the `@import` with the compiled stylesheet, and removes the `@pico` and `@source` rules from the file. It needs Vite 6.3 or newer. It was tested with Vite 7 and 8, and Astro 6.
+
+```shell
+npm install @rusticstack/pico-reforged@next
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineConfig({
+  plugins: [pico()],
+});
+```
+
+```css
+/* src/app.css, imported from your entry file */
+@import "@rusticstack/pico-reforged";
+```
+
+```js
+// src/main.js
+import "./app.css";
+```
+
+`vite dev` serves the full stylesheet. `vite build` scans the project and purges. A working copy is in `examples/vite` in the repository.
+
+## Plugin options
+
+<PropsTable
+  items={[
+    { name: "purge", type: "auto | true | false", default: "auto", description: "When to purge. auto purges in vite build only, true always, false never. How to purge is set by @pico { purge } in the stylesheet." },
+    { name: "root", type: "string", default: "detected", description: "Folder the automatic scan starts from. The default is the nearest folder with a package.json above the stylesheet." },
+    { name: "ignore", type: "string[]", description: "Extra folder names or paths the scan skips. The build output folder is skipped for you." },
+    { name: "minify", type: "boolean", default: "false", description: "Vite minifies CSS itself, so leave this off." },
+  ]}
+/>
+
+A script can import the package too. `import "@rusticstack/pico-reforged";` is treated as a root with the default settings, so it is purged as well. Use a stylesheet when you need `@pico` or `@source`.
+
+## Astro
+
+```js
+// astro.config.mjs
+import { defineConfig } from "astro/config";
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineConfig({
+  vite: { plugins: [pico()] },
+});
+```
+
+```astro
+---
+// src/layouts/Base.astro
+import "../styles/app.css";
+---
+```
+
+`.astro`, `.md` and `.mdx` files are scanned. Markdown renders to tags that are not in the source, which is why the default `safe` mode never drops a rule for a missing tag.
+
+## SvelteKit
+
+```ts
+// vite.config.ts
+import { sveltekit } from "@sveltejs/kit/vite";
+import { defineConfig } from "vite";
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineConfig({
+  plugins: [pico(), sveltekit()],
+});
+```
+
+```svelte
+<!-- src/routes/+layout.svelte -->
+<script>
+  import "../app.css";
+</script>
+<slot />
+```
+
+Svelte `class:name` directives are read by the scanner.
+
+## Nuxt
+
+```ts
+// nuxt.config.ts
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineNuxtConfig({
+  css: ["~/assets/css/app.css"],
+  vite: { plugins: [pico()] },
+});
+```
+
+```css
+/* assets/css/app.css */
+@import "@rusticstack/pico-reforged";
+```
+
+## React Router and other Vite apps
+
+React Router (framework mode), TanStack Start, Remix on Vite, Solid Start, Qwik and anything else configured through `vite.config.ts` take the same plugin.
+
+```ts
+import { reactRouter } from "@react-router/dev/vite";
+import { defineConfig } from "vite";
+import pico from "@rusticstack/pico-reforged/vite";
+
+export default defineConfig({
+  plugins: [pico(), reactRouter()],
+});
+```
+
+Put `pico()` first. Server and client builds both compile the stylesheet, and the second one reuses the first one's work.
+
+## With Tailwind
+
+If the same file also imports Tailwind, `@source` rules are left in place for Tailwind to read. List `pico()` before the Tailwind plugin so `@pico` is gone before Tailwind sees it.
+
+## Next steps
+
+- Set a theme, extras and a safelist in the [Configuration reference](/docs/integrations/configuration).
+- Know what `safe` keeps in [Purge modes](/docs/integrations/purge-modes).
+- If a style goes missing in production, see [Troubleshooting](/docs/integrations/troubleshooting).

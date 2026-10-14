@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Forms</title>
+    <link rel="stylesheet" href="../css/pico.min.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Forms</h1>
+
+      <form>
+        <fieldset>
+          <legend>Profile</legend>
+          <label>
+            First name
+            <input name="first" autocomplete="given-name" placeholder="First name" />
+          </label>
+          <label>
+            Email
+            <input type="email" name="email" placeholder="you@example.com" aria-describedby="email-help" />
+            <small id="email-help">We never share it.</small>
+          </label>
+          <div class="grid">
+            <label>
+              Birthday
+              <input type="date" name="birthday" />
+            </label>
+            <label>
+              Favorite color
+              <input type="color" name="color" value="#0172ad" />
+            </label>
+          </div>
+          <label>
+            Country
+            <select name="country" required>
+              <option value="" selected disabled>Select one</option>
+              <option>Portugal</option>
+              <option>Brazil</option>
+              <option>Spain</option>
+            </select>
+          </label>
+          <label>
+            Bio
+            <textarea name="bio" rows="3" placeholder="A few words about you"></textarea>
+          </label>
+          <label>
+            Avatar
+            <input type="file" name="avatar" />
+          </label>
+          <label>
+            Volume
+            <input type="range" name="volume" value="40" />
+          </label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Preferences</legend>
+          <label><input type="checkbox" name="news" checked /> Newsletter</label>
+          <label><input type="checkbox" role="switch" name="dark" /> Dark mode</label>
+          <label><input type="radio" name="plan" value="free" checked /> Free</label>
+          <label><input type="radio" name="plan" value="pro" /> Pro</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Validation states</legend>
+          <label>
+            Valid
+            <input name="ok" value="ana@example.com" aria-invalid="false" />
+          </label>
+          <label>
+            Invalid
+            <input name="bad" value="not an email" aria-invalid="true" aria-describedby="bad-help" />
+            <small id="bad-help">Enter a valid email address.</small>
+          </label>
+          <label>
+            Disabled
+            <input name="off" value="Read only" disabled />
+          </label>
+        </fieldset>
+
+        <fieldset role="group">
+          <input type="email" name="newsletter" placeholder="Join the newsletter" aria-label="Email" />
+          <input type="submit" value="Subscribe" />
+        </fieldset>
+
+        <input type="search" name="q" placeholder="Search" aria-label="Search" />
+        <button type="submit">Save</button>
+        <button type="reset" class="secondary outline">Reset</button>
+        <button type="submit" aria-busy="true">Saving</button>
+      </form>
+    </main>
+  </body>
+</html>

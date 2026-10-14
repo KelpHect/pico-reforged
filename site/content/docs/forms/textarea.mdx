@@ -1,0 +1,43 @@
+---
+title: Textarea
+description: A full width multi-line field that resizes vertically and shares the input styles.
+---
+
+`textarea` shares the look of the text input. It is a block, full width, and only resizes vertically.
+
+<Example title="Textarea" height={200}>
+```html
+<textarea name="bio" rows="4" placeholder="Write a short bio" aria-label="Short bio"></textarea>
+```
+</Example>
+
+## With a label
+
+<Example title="Textarea with label and helper text" height={260}>
+```html
+<label>
+  Message
+  <textarea name="message" rows="4" placeholder="Your message" aria-describedby="message-help"></textarea>
+  <small id="message-help">Up to 500 characters.</small>
+</label>
+```
+</Example>
+
+## Validation
+
+With `aria-invalid`, the valid or invalid icon is drawn at the top right, sized like a single line input, instead of the vertical center used on inputs.
+
+<Example title="Valid and invalid" height={340}>
+```html
+<textarea name="ok" rows="2" aria-label="Valid" aria-invalid="false">Looks good.</textarea>
+<small>Thanks.</small>
+<textarea name="bad" rows="2" aria-label="Invalid" aria-invalid="true">x</textarea>
+<small>Write at least 20 characters.</small>
+```
+</Example>
+
+See [Validation states](/docs/forms/validation) for details.
+
+## Notes
+
+Disabled and read-only work as on [Input](/docs/forms/input). Use `rows` to set the starting height. Customization uses the shared form variables from the [Forms overview](/docs/forms/overview).

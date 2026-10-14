@@ -17,7 +17,7 @@
 [data-theme] {
   --pico-background-color: light-dark(oklch(1 0 0), oklch(0.2026 0.017 266.4));
   --pico-color: light-dark(oklch(0.3546 0.0155 259.81), oklch(0.8285 0.0137 262.37));
-  --pico-muted-color: light-dark(oklch(0.5268 0.0236 264.35), oklch(0.6117 0.0279 263.25));
+  --pico-muted-color: light-dark(oklch(0.5268 0.0236 264.35), oklch(0.6557 0.0302 265.34));
   --pico-muted-border-color: light-dark(oklch(0.9363 0.0081 262.77), oklch(0.2682 0.0241 264.04));
   --pico-primary-border: var(--pico-primary-background);
   --pico-primary-hover-border: var(--pico-primary-hover-background);

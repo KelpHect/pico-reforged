@@ -1,0 +1,171 @@
+---
+title: App shell
+description: A page layout for apps with a sticky header, a sidebar that becomes a drawer on small screens, a main area and a footer.
+---
+
+The app shell lays out a whole page. Put `data-app-shell` on `body` and give it a skip link, a `header`, an `aside`, a `main` and a `footer`, in that order. Below 1024px the sidebar is a drawer, a non-modal popover opened by a button in the header. From 1024px it is a column of its own, next to the main area.
+
+Because the hook is on `body`, a live frame cannot show it. See it working in the dashboard on the [examples page](/examples).
+
+Load `css/extras/app-shell.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Markup
+
+```html
+<body data-app-shell>
+  <a href="#main">Skip to content</a>
+
+  <header>
+    <button type="button" popovertarget="app-nav">
+      <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      <span>Menu</span>
+    </button>
+    <strong>Acme Cloud</strong>
+    <nav aria-label="Account">
+      <ul>
+        <li><a href="#account">Account</a></li>
+        <li><a href="#signout">Sign out</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <aside id="app-nav" popover aria-label="Sidebar">
+    <nav aria-label="Main">
+      <small>Workspace</small>
+      <ul>
+        <li><a href="#home" aria-current="page">Overview</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#inbox">Inbox<small>12</small></a></li>
+      </ul>
+      <small>Manage</small>
+      <ul>
+        <li><a href="#team">Team</a></li>
+        <li>
+          <details open>
+            <summary>Settings</summary>
+            <ul>
+              <li><a href="#general">General</a></li>
+              <li><a href="#billing">Billing</a></li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main id="main" tabindex="-1">
+    <header>
+      <hgroup>
+        <h1>Overview</h1>
+        <p>Usage for the last 7 days across all projects.</p>
+      </hgroup>
+      <button type="button">New project</button>
+    </header>
+
+    <section aria-labelledby="stats">
+      <h2 id="stats">This week</h2>
+      <article>
+        <p><small>Active users</small></p>
+        <strong>2,481</strong>
+      </article>
+      <article>
+        <p><small>Deployments</small></p>
+        <strong>96</strong>
+      </article>
+    </section>
+
+    <section aria-labelledby="recent">
+      <h2 id="recent">Recent deployments</h2>
+      <figure role="region" aria-label="Deployments table" tabindex="0">
+        <table>
+          <thead>
+            <tr><th scope="col">Project</th><th scope="col">Status</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">billing-api</th><td>Ready</td></tr>
+            <tr><th scope="row">web-app</th><td>Building</td></tr>
+          </tbody>
+        </table>
+      </figure>
+    </section>
+  </main>
+
+  <footer>
+    <small>Acme Cloud v2.3.0</small>
+  </footer>
+</body>
+```
+
+The rules the markup follows:
+
+- The hook is `data-app-shell` on `body`. No class is needed, so it works in the classless build.
+- The children of `body` come in this order: skip link to `#main`, `header`, `aside`, `main`, `footer`.
+- In the header, the toggle button needs only `popovertarget`. The browser exposes the expanded state, so do not add a static `aria-expanded`. The toggle is shown only below 1024px, and below 576px only its icon shows (the label stays for assistive technology).
+- The `aside` is a `popover` with an `aria-label`. Inside it, a `nav aria-label="Main"`. A `small` before a `ul` is a group label, `aria-current="page"` marks the current link, an `svg` with `aria-hidden="true"` before the link text is the icon, a `small` inside a link is a count, and a `details` inside an `li` is a nested group.
+- `main` has `id="main"` and `tabindex="-1"`, so the skip link can land on it. A `header` directly in `main` is the page title row. A `section` that holds `article` elements lays them out in a responsive grid.
+- A `figure` around a table scrolls sideways on narrow screens. Give it `role="region"`, an `aria-label` and `tabindex="0"`.
+- The header is at least `--pico-app-shell-header-height` tall. A long brand is cut with an ellipsis and account links wrap, so nothing scrolls sideways at 320px.
+
+Pages that contain the shell get `scroll-padding-block-start`, so anchor links and focus jumps land below the sticky header.
+
+## JavaScript
+
+The shell works without script: the toggle opens and closes the drawer, Escape closes it, and focus returns to the toggle. A few lines make it better. This one moves focus into the drawer when it opens, and closes it when you tap the dimmed scrim (a tap on the scrim lands on the `aside` itself, which light dismiss ignores).
+
+```js
+const drawer = document.querySelector("body[data-app-shell] > aside[popover]");
+drawer.addEventListener("toggle", (e) => {
+  if (e.newState === "open") drawer.querySelector("a")?.focus();
+});
+drawer.addEventListener("click", (e) => {
+  if (e.target === drawer) drawer.hidePopover();
+});
+```
+
+In a single page app, close the drawer after in-app navigation:
+
+```js
+drawer.addEventListener("click", (e) => {
+  if (e.target.closest("a[href]")) drawer.hidePopover();
+});
+```
+
+If the window grows past 1024px while the drawer is open, the drawer stays pinned over the sidebar column. Close it when that happens:
+
+```js
+matchMedia("(width >= 1024px)").addEventListener("change", (e) => {
+  if (e.matches) drawer.hidePopover();
+});
+```
+
+## Known gaps
+
+- The drawer is non-modal. Tab leaves it into the page without closing it.
+- The scrim tap needs the script above.
+- A header that wraps to several lines is not tracked by the sticky offsets. Set `--pico-app-shell-header-height` to the real height.
+- Where `popover` is not supported, the sidebar stays in the page flow and the toggle is hidden.
+
+## Accessibility
+
+- The skip link is off screen until it has focus.
+- Each `nav` has its own `aria-label` ("Account", "Main"), so landmarks are told apart.
+- The drawer follows the popover rules: Escape closes it and focus returns to the button that opened it.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-app-shell-nav-width", value: "16rem", description: "Width of the sidebar column from 1024px." },
+    { name: "--pico-app-shell-header-height", value: "3.5rem", description: "Minimum header height, also used for the scroll offset." },
+    { name: "--pico-app-shell-background-color", value: "var(--pico-background-color)", description: "Fill of the skip link." },
+    { name: "--pico-app-shell-border-color", value: "var(--pico-muted-border-color)", description: "Lines between header, sidebar and main." },
+    { name: "--pico-app-shell-nav-background-color", value: "var(--pico-card-sectioning-background-color)", description: "Sidebar background." },
+    { name: "--pico-app-shell-nav-muted-color", description: "Color of group labels and idle sidebar text." },
+    { name: "--pico-app-shell-nav-hover-background-color", value: "var(--pico-secondary-focus)", description: "Sidebar link on hover." },
+    { name: "--pico-app-shell-nav-current-background-color", value: "var(--pico-form-element-selected-background-color)", description: "Background of the current link." },
+    { name: "--pico-app-shell-nav-current-color", value: "var(--pico-contrast)", description: "Text color of the current link." },
+    { name: "--pico-app-shell-scrim-color", value: "var(--pico-modal-overlay-background-color)", description: "Dim layer behind the drawer." },
+  ]}
+/>

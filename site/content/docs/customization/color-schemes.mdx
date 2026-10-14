@@ -1,0 +1,140 @@
+---
+title: Color schemes
+description: Light and dark mode follow the system by default. Force a scheme with data-theme on the page or on any element.
+---
+
+Pico Reforged ships one set of color tokens that works in both schemes. Out of the box the page follows the system setting (`prefers-color-scheme`). You can force light or dark for the whole page, or for any part of it, with a `data-theme` attribute.
+
+## How it works
+
+The stylesheet sets `color-scheme: light dark` on `:root`, and `data-theme="light"` or `data-theme="dark"` narrows it to one scheme.
+
+```css
+:root,
+:host {
+  color-scheme: light dark;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+```
+
+Every semantic color is written once, with the `light-dark()` function. The first value is for the light scheme and the second for the dark one.
+
+```css
+:root,
+:host,
+[data-theme] {
+  --pico-background-color: light-dark(oklch(1 0 0), oklch(0.2026 0.017 266.4));
+}
+```
+
+There is no second block of dark overrides and no duplicated token list. The few values that cannot be colors, such as the valid and invalid icons of form fields, switch with `[data-theme="dark"]` and a `prefers-color-scheme` media query instead (see the [CSS variables](/docs/customization/css-variables) page).
+
+Because `color-scheme` is also set, the browser draws its own controls (scrollbars, form widgets, the default canvas color) in the matching scheme.
+
+## Force a scheme
+
+Put `data-theme` on `html` to fix the whole page.
+
+```html
+<html lang="en" data-theme="dark">
+```
+
+The attribute is the same one that Pico CSS v2.1.1 used, so an existing toggle keeps working. Remove the attribute to go back to following the system.
+
+## Any element can have its own scheme
+
+The color tokens are declared on `:root`, `:host` and every `[data-theme]` element, so a subtree recomputes its colors. A dark block on a light page, or a light card on a dark page, needs no extra CSS.
+
+<Example title="Light and dark side by side">
+```html
+<section data-theme="light" style="padding: 1rem; background: var(--pico-background-color);">
+  <h3>Always light</h3>
+  <p>This block ignores the system setting.</p>
+  <button>Primary</button>
+  <button class="secondary">Secondary</button>
+</section>
+<section data-theme="dark" style="padding: 1rem; background: var(--pico-background-color);">
+  <h3>Always dark</h3>
+  <p>This block ignores it too.</p>
+  <button>Primary</button>
+  <button class="secondary">Secondary</button>
+  <article data-theme="light">
+    <p>A light card nested in the dark block.</p>
+  </article>
+</section>
+```
+</Example>
+
+The page you are reading follows the color scheme menu in the header. The examples on this site follow it too, except the blocks above that set their own `data-theme`.
+
+## Add a switch
+
+A switch only has to set the attribute. This one toggles a section, so the rest of the page is untouched. For a whole page, use `document.documentElement` instead.
+
+<Example title="A scheme toggle">
+```html
+<section id="area" data-theme="light" style="padding: 1rem; background: var(--pico-background-color);">
+  <p>Press the button to change the scheme of this block.</p>
+  <button id="toggle" class="outline" type="button">Switch to dark</button>
+</section>
+<script>
+  const area = document.getElementById("area");
+  const toggle = document.getElementById("toggle");
+  toggle.addEventListener("click", () => {
+    const next = area.dataset.theme === "dark" ? "light" : "dark";
+    area.dataset.theme = next;
+    toggle.textContent = "Switch to " + (next === "dark" ? "light" : "dark");
+  });
+</script>
+```
+</Example>
+
+To remember the choice, store it and set the attribute before the page paints, so there is no flash of the wrong scheme. Put this in the `<head>`, before the stylesheet.
+
+```html
+<script>
+  try {
+    const saved = localStorage.getItem("scheme");
+    if (saved) document.documentElement.dataset.theme = saved;
+  } catch {}
+</script>
+```
+
+Then write the choice in your toggle with `localStorage.setItem("scheme", next)`.
+
+## Your own colors in both schemes
+
+Use `light-dark()` in your own CSS the same way. The function is native in Chrome and Edge 123, Firefox 120 and Safari 17.5. Those are newer than the browser floor of Pico Reforged (Chrome and Edge 111, Firefox 128, Safari 16.4), and your stylesheet is not compiled for it. In Chrome and Edge 111 to 122 and Safari 16.4 to 17.4 a `light-dark()` value is invalid and the declaration is dropped. See [Browser support](/docs/getting-started/browser-support).
+
+If you need those browsers, write the two schemes with selectors instead.
+
+```css
+:root {
+  --brand-surface: oklch(0.97 0.01 250);
+}
+
+[data-theme="dark"] {
+  --brand-surface: oklch(0.25 0.02 250);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --brand-surface: oklch(0.25 0.02 250);
+  }
+}
+```
+
+The compiler lowers `light-dark()` for the floor in the files it builds, so a theme made with the CLI does not have this limit. See [Themes](/docs/customization/themes).
+
+## Accessibility notes
+
+- Keep the system default unless you offer a visible switch. People who set dark mode in their system expect it.
+- A forced `data-theme` does not change the system setting. The browser's own chrome around the page keeps following the system.
+- When you override a color token, check the text contrast in both schemes.

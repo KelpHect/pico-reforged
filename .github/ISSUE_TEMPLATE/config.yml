@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Get Help
-    url: https://github.com/picocss/pico/discussions/categories/help
-    about: If you can't get something to work the way you expect, open a question in our discussion forums.
-  - name: Feature Request
-    url: https://github.com/picocss/pico/discussions/categories/ideas
-    about: Suggest any ideas you have using our discussion forums.
+  - name: Get help
+    url: https://github.com/rusticstack/pico-reforged/discussions/categories/q-a
+    about: If you can't get something to work the way you expect, ask in the discussions.
+  - name: Feature request
+    url: https://github.com/rusticstack/pico-reforged/discussions/categories/ideas
+    about: Suggest ideas in the discussions.

@@ -1,0 +1,114 @@
+---
+title: Extras overview
+description: Opt-in components for apps and dashboards, kept out of the default files and loaded one by one or all together.
+---
+
+Extras are components that Pico CSS never had: tabs, alert, toast, badge, avatar, skeleton, app shell, data table, pagination, stepper and empty state. They are opt-in. The default `pico.css` and `pico.classless.css` carry none of their rules, only the layer order statement.
+
+Every extra follows the same rules. Semantic HTML and ARIA come first, and a `data-*` attribute is added only where semantics cannot say it. No class is required, so they work in the classless build too. They use logical properties for right to left, and their motion stops under `prefers-reduced-motion`. Newer features such as popover and `@starting-style` are enhancements with a usable fallback.
+
+## Load them
+
+Extras sit in their own cascade layer, `pico.extras`, after `pico.core` and before `pico.utilities`. That order lets an extra restyle things core already styles (a `table` becomes a data table, a `nav` becomes pagination) without raising specificity. Your own unlayered CSS still wins over all of it.
+
+### CDN
+
+All extras in one file, after the main stylesheet:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.extras.min.css"
+/>
+```
+
+One extra on its own:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/extras/tabs.min.css"
+/>
+```
+
+Install the package with `npm install @rusticstack/pico-reforged@next` to serve the same files from `css/pico.extras.min.css` and `css/extras/<name>.min.css` yourself.
+
+### Vite and PostCSS
+
+With a bundler, import the extras next to the main stylesheet. `@rusticstack/pico-reforged/extras` is all of them and `@rusticstack/pico-reforged/extras/tabs` is one.
+
+```css
+@import "@rusticstack/pico-reforged";
+@import "@rusticstack/pico-reforged/extras/tabs";
+```
+
+Or name them in the `@pico` rule and let the plugin add the imports:
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  extras: tabs badge;
+}
+```
+
+`extras` takes names separated by spaces or commas, `all` or `none`. See [Integrations](/docs/integrations/overview) for the plugin setup and the purge modes.
+
+### CLI
+
+```shell
+npx pico-reforged extras
+npx pico-reforged build --extras tabs,badge --minify --out pico.css
+npx pico-reforged build --extras all --minify --out pico.css
+```
+
+The first command lists the names. Unknown names are an error. `--entry extras` builds the extras alone.
+
+## Try it
+
+Badges are a `data-badge` attribute on `span`, `data`, `a` or `button`, and the value picks the color. An alert is a `role="status"` or `role="alert"` element with a `data-variant`.
+
+<Example title="Badges and an alert" css={["pico.extras"]} height={200}>
+```html
+<p>
+  <span data-badge>Default</span>
+  <span data-badge="secondary">Secondary</span>
+  <span data-badge="success">Active</span>
+  <span data-badge="warning">Pending</span>
+  <span data-badge="danger">Failed</span>
+</p>
+<div role="status" data-variant="success">
+  <strong>Saved.</strong> Your changes are live.
+</div>
+```
+</Example>
+
+The `css` prop of `<Example>` loads `pico.extras` into the frame. On your own page you link the same file.
+
+## The extras
+
+| Extra | Hook |
+| --- | --- |
+| [Tabs](/docs/extras/tabs) | `role="tablist"`, `role="tab"` and `role="tabpanel"`, or `data-tabs` for the version without script |
+| [Alert](/docs/extras/alert) | `role="alert"`, `role="status"` or `output` with `data-variant` |
+| [Toast](/docs/extras/toast) | `section[popover="manual"][role="status"]` with one `article` per toast |
+| [Badge](/docs/extras/badge) | `data-badge` |
+| [Avatar](/docs/extras/avatar) | `span[data-avatar]` |
+| [Skeleton](/docs/extras/skeleton) | `data-skeleton` placeholders inside `aria-busy="true"` |
+| [App shell](/docs/extras/app-shell) | `data-app-shell` on `body` |
+| [Data table](/docs/extras/data-table) | `data-table` on the table, `aria-sort` on sortable headers |
+| [Pagination](/docs/extras/pagination) | `nav` labelled "Pagination" (or `data-pagination`) with `ol`, `li` and `a` |
+| [Stepper](/docs/extras/stepper) | `ol[data-stepper]` with `aria-current="step"` |
+| [Empty state](/docs/extras/empty-state) | `data-empty` |
+
+Full pages of the app shell, data table, tabs and alerts are on the [examples page](/examples).
+
+## Purge and scripts
+
+The default purge mode is `safe`. It drops a `data-*` hook when no file in your sources mentions it, so an extra you do not use costs nothing. If a script builds the markup and the attribute name is only in a string you did not scan, keep it with `@source inline("data-variant")` or a safelist entry. See [Integrations](/docs/integrations/overview).
+
+Some extras need a few lines of script (tabs, dismissible alerts, toast, sorting). Those scripts are short, have no dependencies, and are shown on each page. The CSS never needs them.

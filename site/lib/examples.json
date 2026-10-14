@@ -1,0 +1,52 @@
+[
+  {
+    "slug": "basic",
+    "title": "Basic page",
+    "description": "A landing page from plain markup, a few classes and one stylesheet.",
+    "source": "examples/basic.html"
+  },
+  {
+    "slug": "forms",
+    "title": "Forms",
+    "description": "Sign-in and sign-up forms with validation states and a switch.",
+    "source": "examples/forms.html"
+  },
+  {
+    "slug": "classless",
+    "title": "Class-less article",
+    "description": "A content page with no class attributes, using the class-less build.",
+    "source": "examples/classless.html"
+  },
+  {
+    "slug": "popover",
+    "title": "Popover patterns",
+    "description": "Native popover and anchor positioning for menus and tooltips.",
+    "source": "examples/popover.html"
+  },
+  {
+    "slug": "custom-theme",
+    "title": "Custom theme",
+    "description": "A brand color turned into theme tokens with relative color syntax.",
+    "source": "examples/custom-theme.html"
+  },
+  {
+    "slug": "dashboard",
+    "title": "Dashboard",
+    "description": "App shell, data table and badges from the opt-in extras.",
+    "source": "examples/dashboard.html"
+  },
+  {
+    "slug": "kitchen-sink",
+    "title": "Kitchen sink",
+    "description": "Every element and component the stylesheet touches, on one page.",
+    "source": "test/fixtures/kitchen-sink.html"
+  },
+  {
+    "slug": "tabs",
+    "title": "Tabs",
+    "description": "Tab lists and panels built on ARIA roles, an opt-in extra.",
+    "source": "test/fixtures/extras/tabs.html",
+    "extra": "pico.extras",
+    "stylesheet": "pico"
+  }
+]

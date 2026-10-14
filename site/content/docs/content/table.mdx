@@ -1,0 +1,123 @@
+---
+title: Table
+description: Full width tables with row borders, an optional striped style and a wrapper for horizontal scrolling.
+---
+
+A `<table>` fills its container and has a border under each row. Header and footer cells are semibold with a thicker border.
+
+<Example title="Table">
+```html
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Planet</th>
+      <th scope="col">Diameter (km)</th>
+      <th scope="col">Moons</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">Mercury</th>
+      <td>4,879</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th scope="row">Earth</th>
+      <td>12,756</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th scope="row">Mars</th>
+      <td>6,792</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th scope="row">Total moons</th>
+      <td></td>
+      <td>3</td>
+    </tr>
+  </tfoot>
+</table>
+```
+</Example>
+
+## Striped
+
+Add `.striped` to shade every other body row.
+
+<Example title="Striped table">
+```html
+<table class="striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Role</th>
+      <th scope="col">Team</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Ana Ribeiro</td>
+      <td>Designer</td>
+      <td>Product</td>
+    </tr>
+    <tr>
+      <td>Bruno Matos</td>
+      <td>Engineer</td>
+      <td>Platform</td>
+    </tr>
+    <tr>
+      <td>Carla Sousa</td>
+      <td>Engineer</td>
+      <td>Web</td>
+    </tr>
+  </tbody>
+</table>
+```
+</Example>
+
+## Wide tables
+
+A table is 100% wide but cannot get narrower than its content. On a narrow screen, wrap the table in `.overflow-auto` so it scrolls sideways instead of breaking the page.
+
+<Example title="Scrolling wrapper">
+```html
+<div class="overflow-auto">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Default</th>
+        <th scope="col">Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>purge</td>
+        <td>How unused selectors are removed from the output of a build</td>
+        <td>safe</td>
+        <td>safe, aggressive or off</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+</Example>
+
+## Accessibility
+
+Use `<th>` with `scope="col"` or `scope="row"` for headers, and add a `<caption>` when the table needs a title. Reach for a table only for tabular data, not for layout. For sortable or selectable tables, see the [data table extra](/docs/extras/data-table).
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-table-border-color", value: "var(--pico-muted-border-color)", description: "Row borders." },
+    { name: "--pico-table-row-stripped-background-color", description: "Background of odd rows in .striped tables. The name keeps the spelling from Pico CSS." },
+    { name: "--pico-border-width", value: "0.0625rem", description: "Row border width. Header and footer cells use 0.1875rem." },
+    { name: "--pico-spacing", value: "1rem", description: "Cells use half of it vertically and all of it horizontally." },
+  ]}
+/>

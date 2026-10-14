@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Custom theme</title>
+    <link rel="stylesheet" href="../css/pico.min.css" />
+    <style>
+      /*
+        One brand color, every primary token derived with relative color syntax.
+        Unlayered CSS beats Pico's layers, so no !important is needed.
+        light-dark() needs Chrome 123, Firefox 120 or Safari 17.5. For older browsers at the
+        floor, make the theme with the CLI instead: pico-reforged build --theme "#e5484d".
+      */
+      :root,
+      [data-theme] {
+        --brand: oklch(0.62 0.19 25);
+
+        --pico-primary: light-dark(oklch(from var(--brand) 0.5 c h), oklch(from var(--brand) 0.75 c h));
+        --pico-primary-background: oklch(from var(--brand) 0.5 c h);
+        --pico-primary-underline: light-dark(
+          oklch(from var(--brand) 0.5 c h / 0.5),
+          oklch(from var(--brand) 0.75 c h / 0.5)
+        );
+        --pico-primary-hover: light-dark(oklch(from var(--brand) 0.42 c h), oklch(from var(--brand) 0.82 c h));
+        --pico-primary-hover-background: light-dark(
+          oklch(from var(--brand) 0.45 c h),
+          oklch(from var(--brand) 0.56 c h)
+        );
+        --pico-primary-focus: light-dark(
+          oklch(from var(--brand) 0.62 c h / 0.5),
+          oklch(from var(--brand) 0.75 c h / 0.375)
+        );
+        --pico-primary-inverse: oklch(1 0 0);
+        --pico-text-selection-color: light-dark(
+          oklch(from var(--brand) 0.62 c h / 0.25),
+          oklch(from var(--brand) 0.75 c h / 0.2)
+        );
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Custom theme</h1>
+      <p>
+        Change <code>--brand</code> in the style block and every primary color follows. This page
+        uses <code>oklch(0.62 0.19 25)</code>.
+      </p>
+
+      <p>
+        <label>
+          Hue
+          <input type="range" id="hue" min="0" max="360" value="25" />
+        </label>
+        <button type="button" class="outline" id="scheme">Toggle dark mode</button>
+      </p>
+
+      <p>
+        <button>Primary</button>
+        <button class="secondary">Secondary</button>
+        <button class="outline">Outline</button>
+        <a href="#top">A link</a>
+      </p>
+
+      <label>
+        A focused field uses the brand ring
+        <input type="text" placeholder="Click here" />
+      </label>
+      <label><input type="checkbox" role="switch" checked /> A switch</label>
+      <progress value="60" max="100"></progress>
+    </main>
+
+    <script>
+      const root = document.documentElement;
+      document.getElementById("hue").addEventListener("input", (e) => {
+        root.style.setProperty("--brand", "oklch(0.62 0.19 " + e.target.value + ")");
+      });
+      document.getElementById("scheme").addEventListener("click", () => {
+        const dark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const current = root.dataset.theme || (dark ? "dark" : "light");
+        root.dataset.theme = current === "dark" ? "light" : "dark";
+      });
+    </script>
+  </body>
+</html>

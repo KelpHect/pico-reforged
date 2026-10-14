@@ -1,0 +1,79 @@
+---
+title: Integrations overview
+description: Import the package once in your CSS and get a stylesheet that holds only what your app uses.
+---
+
+Install the package, import it once in your CSS, and the production stylesheet holds only what your app uses. The integration finds the stylesheet that imports Pico Reforged, reads your project's sources, and compiles the CSS for you. It works like `@import "tailwindcss"`.
+
+```shell
+npm install @rusticstack/pico-reforged@next
+```
+
+```css
+/* src/app.css */
+@import "@rusticstack/pico-reforged";
+```
+
+Pico Reforged is a plain CSS rewrite of Pico CSS v2.1.1 by Lucas Larroche (MIT). It is not the official Pico CSS.
+
+## Pick your setup
+
+| You use                                                                | Go to                                           |
+| ---------------------------------------------------------------------- | ----------------------------------------------- |
+| Vite, Astro, SvelteKit, Nuxt, React Router, TanStack Start, Solid Start | [Vite](/docs/integrations/vite)                 |
+| Next.js, or any tool that reads `postcss.config`                       | [Next.js and PostCSS](/docs/integrations/nextjs) |
+| Hugo, Jekyll, Eleventy, Zola, Bun, plain HTML                          | [Static sites and the purge CLI](/docs/integrations/static-sites) |
+| htmx or Alpine.js on top of any of the above                           | [htmx and Alpine](/docs/integrations/htmx-alpine) |
+
+If you just want a stylesheet, skip all of this and use the CDN file:
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+```
+
+The file names in `css/` are the same as in Pico CSS v2.1.1, so a CDN link only needs the package name changed.
+
+## How it picks the rules
+
+- In development the full stylesheet is served. Nothing is scanned, so there is nothing to wait for.
+- In production the project is scanned and the stylesheet is compiled for the [browser floor](/docs/getting-started/browser-support) (Chrome and Edge 111, Firefox 128, Safari and iOS Safari 16.4).
+- The default mode is `safe`. A rule is dropped only when a class, an id or an attribute name it needs is nowhere in your sources. A tag name or an attribute value that was not seen never drops a rule. See [Purge modes](/docs/integrations/purge-modes).
+- Rules outside the `pico.*` layers, which means your own CSS, are never touched.
+- A scan that finds no files never purges.
+
+## Configuration lives in the stylesheet
+
+Options sit next to the import, as plain CSS. An unknown at-rule is valid CSS, and the plugin removes these rules from the output.
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+  extras: tabs badge;
+  purge: safe;
+}
+
+@source "../content";
+```
+
+The full list is in the [Configuration reference](/docs/integrations/configuration).
+
+## What you can import
+
+| Import                                   | Gives you                                            |
+| ---------------------------------------- | ---------------------------------------------------- |
+| `@rusticstack/pico-reforged`             | the full build                                       |
+| `@rusticstack/pico-reforged/classless`   | the class-less build                                 |
+| `@rusticstack/pico-reforged/colors`      | the `.pico-color-*` and `.pico-background-*` classes |
+| `@rusticstack/pico-reforged/extras`      | all [opt-in extras](/docs/extras/overview)               |
+| `@rusticstack/pico-reforged/extras/tabs` | one extra                                            |
+
+The imports can sit in one file or be combined. `layer(name)`, `supports(...)` and a media query after the specifier wrap the compiled CSS.
+
+## Without the plugin
+
+The same `@import` still works in a bundler that has no Pico Reforged plugin. The `style` export condition points it at `src/pico.css`, so you get the full, unpurged stylesheet. That file is plain source and still holds nesting and `light-dark()`, which are below the Chrome 111 and Safari 16.4 floor unless your bundler lowers them. The plugin compiles for the floor itself.

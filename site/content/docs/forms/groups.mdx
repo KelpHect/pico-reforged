@@ -1,0 +1,65 @@
+---
+title: Groups
+description: Join inputs, selects and buttons into one bar with role="group", or a search form with role="search".
+---
+
+Set `role="group"` on a `fieldset` (or any container) and its children are joined: flat inner corners, borders that overlap by one border width, and one shared focus ring. Inputs and selects share the width, and buttons keep their own.
+
+<Example title="Input with a button" height={120}>
+```html
+<fieldset role="group">
+  <input type="email" placeholder="Enter your email" aria-label="Email" />
+  <input type="submit" value="Subscribe" />
+</fieldset>
+```
+</Example>
+
+## Mixed controls
+
+Inputs, selects and buttons can be combined in any order.
+
+<Example title="Select, input and button" height={140}>
+```html
+<fieldset role="group">
+  <select name="unit" aria-label="Unit">
+    <option>Kilograms</option>
+    <option>Pounds</option>
+  </select>
+  <input type="number" name="weight" placeholder="Weight" aria-label="Weight" />
+  <button type="button" class="secondary">Add</button>
+</fieldset>
+```
+</Example>
+
+## Search
+
+`role="search"` works the same way, with pill shaped outer ends. Put it on a `form`. See also [Search](/docs/forms/search).
+
+<Example title="Search form" height={120}>
+```html
+<form role="search">
+  <input name="search" type="search" placeholder="Search" aria-label="Search" />
+  <input type="submit" value="Search" />
+</form>
+```
+</Example>
+
+## Focus ring
+
+The ring is drawn on the group, not on each child. When a button inside has focus, the ring uses the color of that button (primary, `.secondary` or `.contrast`). When an input has focus, the group gets a thin border ring and the buttons get a primary border.
+
+## Accessibility
+
+Give each control in a group its own name with `label` or `aria-label`, since there is no visible label per control. Add `aria-label` or `aria-labelledby` on the group when it needs a name of its own.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-group-box-shadow", description: "Shadow of the group. Switches to the focus shadows below." },
+    { name: "--pico-group-box-shadow-focus-with-button", description: "Group shadow while a button has focus." },
+    { name: "--pico-group-box-shadow-focus-with-input", value: "0 0 0 0.0625rem var(--pico-form-element-border-color)", description: "Group shadow while an input has focus." },
+  ]}
+/>
+
+Buttons inside a group use `2rem` of horizontal padding, set through `--pico-form-element-spacing-horizontal`.

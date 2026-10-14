@@ -1,0 +1,45 @@
+---
+title: Date and time
+description: Date, datetime-local, month, time and week inputs with a drawn picker icon.
+---
+
+The five date and time types share one style: a drawn calendar or clock icon on the inline-end side, with the native picker behind it.
+
+<Example title="Date and time inputs" height={560}>
+```html
+<label>
+  Date
+  <input type="date" name="date" />
+</label>
+<label>
+  Date and time
+  <input type="datetime-local" name="datetime-local" />
+</label>
+<label>
+  Month
+  <input type="month" name="month" />
+</label>
+<label>
+  Time
+  <input type="time" name="time" />
+</label>
+<label>
+  Week
+  <input type="week" name="week" />
+</label>
+```
+</Example>
+
+## Browser differences
+
+In Chromium and WebKit browsers the drawn icon is shown, and the native picker button sits invisibly on top of it, so a click opens the browser picker. Firefox draws its own picker icon, so the drawn one is removed there. The pickers themselves are native, so their look is up to the browser.
+
+The `time` input uses a clock icon (`--pico-icon-time`) and the others use a calendar (`--pico-icon-date`).
+
+## Validation
+
+Date and time inputs do not draw the valid or invalid icon, since their own icon is already there. The border and focus ring still follow `aria-invalid`. See [Validation states](/docs/forms/validation).
+
+## Customization
+
+The icon position and width are `--pico-icon-position` (`0.75rem`) and `--pico-icon-width` (`1rem`), set on the input. On right-to-left pages the icon moves to the left.

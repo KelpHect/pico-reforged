@@ -1,0 +1,435 @@
+/* Layout for the documentation site. Colors and type come from Pico Reforged tokens. */
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--pico-spacing);
+  inset-block-start: -4rem;
+  z-index: 100;
+  padding: calc(var(--pico-spacing) / 2) var(--pico-spacing);
+  background: var(--pico-background-color);
+  border-radius: var(--pico-border-radius);
+}
+.skip-link:focus {
+  inset-block-start: var(--pico-spacing);
+}
+
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 50;
+  background: color-mix(in oklab, var(--pico-background-color) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-block-end: var(--pico-border-width) solid var(--pico-muted-border-color);
+}
+.site-header nav {
+  align-items: center;
+  flex-wrap: wrap;
+}
+.site-links {
+  margin-inline: auto;
+}
+.site-tools li {
+  padding-block: 0;
+}
+.site-tools button,
+.site-tools summary {
+  margin-bottom: 0;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--pico-color);
+  font-size: 1.125rem;
+}
+.brand strong {
+  color: var(--pico-primary);
+}
+.brand-mark {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-primary-background);
+  color: var(--pico-primary-inverse);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.search-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  inline-size: auto;
+}
+.search-button kbd {
+  font-size: 0.75rem;
+  padding: 0.1rem 0.4rem;
+}
+.search-dialog article {
+  inline-size: min(40rem, 100%);
+}
+.search-dialog header {
+  display: flex;
+  gap: var(--pico-spacing);
+  align-items: center;
+}
+.search-dialog header input {
+  margin: 0;
+}
+.search-dialog .search-results {
+  display: block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-block-size: 50vh;
+  overflow: auto;
+}
+.search-dialog .search-results li {
+  display: block;
+  padding: 0;
+  list-style: none;
+}
+.search-dialog .search-results a {
+  display: grid;
+  margin: 0;
+  padding: 0.5rem 0;
+  text-decoration: none;
+}
+.search-results small {
+  color: var(--pico-muted-color);
+}
+
+.theme-menu summary {
+  margin: 0;
+}
+.theme-panel {
+  right: 0;
+  left: auto;
+  min-inline-size: 16rem;
+  padding: var(--pico-spacing);
+}
+.scheme-group {
+  margin-bottom: var(--pico-spacing);
+}
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+.swatch {
+  inline-size: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  margin: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+}
+.swatch[aria-pressed="true"] {
+  border-color: var(--pico-color);
+  outline: 2px solid var(--pico-background-color);
+  outline-offset: -4px;
+}
+
+/* Home */
+.hero {
+  padding-block: calc(var(--pico-block-spacing-vertical) * 3);
+  text-align: center;
+  background: radial-gradient(
+    ellipse at top,
+    color-mix(in oklab, var(--pico-primary-background) 14%, transparent),
+    transparent 70%
+  );
+}
+.hero h1 {
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  letter-spacing: -0.03em;
+}
+.lead {
+  font-size: 1.25rem;
+  color: var(--pico-muted-color);
+}
+.hero .lead {
+  max-inline-size: 40rem;
+  margin-inline: auto;
+}
+.hero-actions {
+  display: flex;
+  gap: var(--pico-spacing);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-block-start: var(--pico-spacing);
+}
+.eyebrow {
+  margin-block-end: 0.25rem;
+  color: var(--pico-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--pico-grid-column-gap);
+}
+.feature-grid article {
+  margin: 0;
+}
+.container section {
+  margin-block: calc(var(--pico-block-spacing-vertical) * 1.5);
+}
+
+/* Code */
+.code-block pre,
+.example-code pre,
+.docs-article pre {
+  margin-bottom: var(--pico-spacing);
+}
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+}
+:root[data-theme="dark"] .shiki,
+:root[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .shiki,
+  :root:not([data-theme="light"]) .shiki span {
+    color: var(--shiki-dark);
+  }
+}
+pre.shiki {
+  background-color: var(--pico-code-background-color);
+}
+/* The GitHub token colors miss WCAG AA on the code background, so darken (light) or lighten (dark) them */
+.shiki span[style*="--shiki-light:#22863A" i] {
+  --shiki-light: #116329 !important;
+}
+.shiki span[style*="--shiki-light:#D73A49" i] {
+  --shiki-light: #b31d28 !important;
+}
+.shiki span[style*="--shiki-light:#E36209" i] {
+  --shiki-light: #953800 !important;
+}
+.shiki span[style*="--shiki-light:#6A737D" i] {
+  --shiki-light: #57606a !important;
+}
+.shiki span[style*="--shiki-dark:#6A737D" i] {
+  --shiki-dark: #8b949e !important;
+}
+
+/* Live examples */
+.example {
+  margin: 0 0 calc(var(--pico-spacing) * 1.5);
+  border: var(--pico-border-width) solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  overflow: hidden;
+}
+.example figcaption {
+  margin: 0;
+  padding: 0.5rem var(--pico-spacing);
+  font-size: 0.875rem;
+  color: var(--pico-muted-color);
+  border-block-end: var(--pico-border-width) solid var(--pico-muted-border-color);
+}
+.example-frame {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 5rem;
+  border: 0;
+  background: var(--pico-background-color);
+}
+.example-code {
+  border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
+}
+.example-code pre {
+  margin: 0;
+  border-radius: 0;
+}
+
+/* Docs */
+.docs-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: calc(var(--pico-spacing) * 2);
+  align-items: start;
+}
+@media (min-width: 992px) {
+  .docs-shell {
+    grid-template-columns: 14rem minmax(0, 1fr);
+  }
+}
+@media (min-width: 1280px) {
+  .docs-shell {
+    grid-template-columns: 14rem minmax(0, 1fr) 13rem;
+  }
+}
+.docs-sidebar,
+.docs-toc {
+  font-size: 0.9375rem;
+  padding-block: var(--pico-block-spacing-vertical);
+}
+@media (min-width: 992px) {
+  .docs-sidebar,
+  .docs-toc {
+    position: sticky;
+    inset-block-start: 6rem;
+    max-block-size: calc(100vh - 7rem);
+    overflow: auto;
+  }
+}
+.docs-sidebar details {
+  margin-bottom: 0.25rem;
+  border: 0;
+}
+.docs-sidebar summary {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+.docs-sidebar ul,
+.docs-toc ul {
+  margin: 0 0 var(--pico-spacing);
+  padding: 0;
+  list-style: none;
+}
+.docs-sidebar li,
+.docs-toc li {
+  padding: 0;
+  list-style: none;
+}
+.docs-sidebar a,
+.docs-toc a {
+  display: block;
+  padding: 0.2rem 0.5rem;
+  text-decoration: none;
+  color: var(--pico-muted-color);
+  border-inline-start: 2px solid transparent;
+}
+.docs-sidebar a:hover,
+.docs-toc a:hover {
+  color: var(--pico-color);
+}
+.docs-sidebar a[aria-current],
+.docs-toc a[aria-current] {
+  color: var(--pico-primary);
+  border-inline-start-color: var(--pico-primary);
+}
+.docs-toc h2 {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--pico-muted-color);
+}
+.docs-toc li[data-depth="3"] a {
+  padding-inline-start: 1.25rem;
+}
+.docs-toc li[data-depth="4"] a {
+  padding-inline-start: 2rem;
+}
+.docs-toc {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .docs-toc {
+    display: block;
+  }
+}
+.docs-main {
+  padding-block: var(--pico-block-spacing-vertical);
+  min-inline-size: 0;
+}
+.docs-article > header {
+  margin-bottom: calc(var(--pico-spacing) * 1.5);
+}
+.docs-article h2,
+.docs-article h3 {
+  scroll-margin-block-start: 5rem;
+}
+.page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  inline-size: auto;
+}
+.page-actions button,
+.page-actions a {
+  inline-size: auto;
+  margin: 0;
+  font-size: 0.875rem;
+  padding: 0.35rem 0.75rem;
+}
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--pico-spacing);
+  margin-block-start: calc(var(--pico-spacing) * 3);
+  padding-block-start: var(--pico-spacing);
+  border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
+}
+.pager a {
+  display: grid;
+  text-decoration: none;
+}
+.pager a[rel="next"] {
+  text-align: end;
+  margin-inline-start: auto;
+}
+.docs-index .grid {
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+
+/* Examples page */
+.example-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: var(--pico-grid-column-gap);
+}
+.example-cards article {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.example-preview {
+  inline-size: 100%;
+  block-size: 20rem;
+  border: var(--pico-border-width) solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+}
+
+.site-footer {
+  margin-block-start: calc(var(--pico-block-spacing-vertical) * 3);
+  padding-block: var(--pico-block-spacing-vertical);
+  border-block-start: var(--pico-border-width) solid var(--pico-muted-border-color);
+}
+.not-found {
+  padding-block: calc(var(--pico-block-spacing-vertical) * 3);
+  text-align: center;
+}
+
+/* Pico lays out every nav as a row. The docs navs are columns. */
+nav.docs-sidebar,
+nav.docs-toc {
+  display: block;
+}
+.docs-sidebar ul,
+.docs-toc ul {
+  display: block;
+  margin-inline: 0;
+}
+.docs-sidebar li,
+.docs-toc li {
+  display: block;
+  margin: 0;
+}
+.docs-sidebar details > summary {
+  margin-bottom: 0.25rem;
+}
+.site-footer nav ul {
+  flex-wrap: wrap;
+}

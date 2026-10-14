@@ -1,0 +1,118 @@
+---
+title: Version picker
+description: All 238 CDN files of the Pico CSS v2.1.1 set, how their names combine, and the extras on top.
+---
+
+Pico Reforged ships the same 238 files as Pico CSS v2.1.1, with the same names, in the `css/` folder. Every file also has an unminified twin without `.min`. On top of that there are 24 files for the opt-in extras.
+
+## How names combine
+
+A name is built from the build, an optional theme and the suffix:
+
+```text
+pico[.fluid][.classless][.conditional][.<theme>][.min].css
+```
+
+Only the combinations in the table below exist. The default theme is azure, and it has no theme part: `pico.min.css` is azure.
+
+| Build                                | Stem                               | Themes                       | Files |
+| ------------------------------------ | ---------------------------------- | ---------------------------- | ----- |
+| Class (default)                      | `pico`                             | azure (no part) + 19 others  | 40    |
+| Class-less                           | `pico.classless`                   | azure (no part) + 19 others  | 40    |
+| Conditional, scoped to `.pico`       | `pico.conditional`                 | azure (no part) + 19 others  | 40    |
+| Class-less, conditional              | `pico.classless.conditional`       | 19 others, no azure file     | 38    |
+| Fluid class-less                     | `pico.fluid.classless`             | azure (no part) + 19 others  | 40    |
+| Fluid class-less, conditional        | `pico.fluid.classless.conditional` | 19 others, no azure file     | 38    |
+| Color utility classes                | `pico.colors`                      | none                         | 2     |
+
+That is 236 files for the six builds plus 2 for colors, 238 in all, counting the minified and the unminified file of each. Upstream never published an azure file for the two scoped class-less builds, and neither does this project. To get one, build it: `pico-reforged build --entry classless --scope .pico --minify`.
+
+### Themes
+
+amber, blue, cyan, fuchsia, green, grey, indigo, jade, lime, orange, pink, pumpkin, purple, red, sand, slate, violet, yellow and zinc, plus azure as the default. Put the theme name after the build stem:
+
+```text
+pico.jade.min.css
+pico.classless.jade.min.css
+pico.conditional.jade.min.css
+pico.classless.conditional.jade.min.css
+pico.fluid.classless.jade.min.css
+pico.fluid.classless.conditional.jade.min.css
+```
+
+For a color that is not in the list, build a theme from one color with the [CLI](/docs/getting-started/installation#cli) or the [integrations](/docs/integrations/overview).
+
+## Extras
+
+The extras are not part of the 238. They are layered, carry their own tokens, and load after the main file.
+
+| File                       | What it is                                                                                          |
+| -------------------------- | --------------------------------------------------------------------------------------------------- |
+| `pico.extras.min.css`      | all eleven extras                                                                                   |
+| `extras/<name>.min.css`    | one extra: tabs, alert, toast, badge, avatar, skeleton, app-shell, data-table, pagination, stepper, empty-state |
+
+That is 2 files for `pico.extras` and 22 under `extras/`, 24 in total. See [Extras](/docs/extras/overview).
+
+## Pick a file
+
+Choose the options and copy the link. This uses the same naming rules as the table above.
+
+<Example title="File name builder" height={420}>
+```html
+<form id="picker">
+  <label>
+    Build
+    <select name="build">
+      <option value="pico">Class (default)</option>
+      <option value="pico.classless">Class-less</option>
+      <option value="pico.conditional">Conditional (.pico)</option>
+      <option value="pico.classless.conditional">Class-less, conditional</option>
+      <option value="pico.fluid.classless">Fluid class-less</option>
+      <option value="pico.fluid.classless.conditional">Fluid class-less, conditional</option>
+    </select>
+  </label>
+  <label>
+    Theme
+    <select name="theme">
+      <option value="">azure (default)</option>
+      <option>amber</option><option>blue</option><option>cyan</option>
+      <option>fuchsia</option><option>green</option><option>grey</option>
+      <option>indigo</option><option>jade</option><option>lime</option>
+      <option>orange</option><option>pink</option><option>pumpkin</option>
+      <option>purple</option><option>red</option><option>sand</option>
+      <option>slate</option><option>violet</option><option>yellow</option>
+      <option>zinc</option>
+    </select>
+  </label>
+  <label>
+    <input type="checkbox" name="min" checked />
+    Minified
+  </label>
+</form>
+<p id="note"></p>
+<pre><code id="out"></code></pre>
+<script>
+  const form = document.getElementById("picker");
+  const out = document.getElementById("out");
+  const note = document.getElementById("note");
+  const base = "https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/";
+  function update() {
+    const build = form.build.value;
+    const theme = form.theme.value;
+    const missing = !theme && build.endsWith(".conditional") && build.includes("classless");
+    const name = build + (theme ? "." + theme : "") + (form.min.checked ? ".min" : "") + ".css";
+    out.textContent = missing ? "" : '<link rel="stylesheet" href="' + base + name + '" />';
+    note.textContent = missing
+      ? "No azure file for this build. Pick a theme, or build it with the CLI."
+      : "";
+  }
+  form.addEventListener("input", update);
+  update();
+</script>
+```
+</Example>
+
+## Related
+
+- [Usage](/docs/getting-started/usage) explains when to use each build.
+- [Themes](/docs/customization/themes) shows how to try them.

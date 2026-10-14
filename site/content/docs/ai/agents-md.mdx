@@ -1,0 +1,59 @@
+---
+title: AGENTS.md
+description: The file for people and agents who work on the Pico Reforged repository itself.
+---
+
+`AGENTS.md` at the root of the repository tells an agent how to work on Pico Reforged itself: where the source lives, which files are generated, the CSS rules and the commands. It is not the file to read when you build a page with Pico Reforged. For that, use the [skill](/docs/ai/skill).
+
+The file is shipped in the npm package too, so it is next to the code in `node_modules/@rusticstack/pico-reforged/AGENTS.md`.
+
+## What it covers
+
+### Layout and commands
+
+The CSS is plain CSS in `src/`, with the entries `pico.css`, `pico.classless.css`, `pico.colors.css` and `pico.extras.css`. `css/` is build output and is never edited by hand. The commands are run with pnpm:
+
+```shell
+pnpm build        # tokens, themes, AI files, then the whole file matrix into css/
+pnpm test         # Vitest
+pnpm test:api     # the v2.1.1 public surface
+pnpm test:visual  # pixel diff against v2.1.1
+pnpm test:extras  # screenshots and axe-core for each extra
+pnpm check        # format, lint and types
+```
+
+### Generated files
+
+Some files are produced from data and must not be edited: the palette, scheme and theme CSS, `ai/tokens.json`, `ai/components.json` and the references in the skill. The file says which source to change and which generator to run. A test fails when a generated file is stale.
+
+### CSS rules
+
+The rules an agent has to keep when it edits `src/`:
+
+- All rules sit in the `pico` layer, in the order `pico.tokens`, `pico.theme`, `pico.core`, `pico.extras`, `pico.utilities`.
+- Colors are OKLCH, and light and dark values are written once with `light-dark()`.
+- Specificity stays at the v2.1.1 level or lower, and logical properties are used so RTL needs no overrides.
+- Semantic HTML and ARIA come first. An extra uses at most one documented `data-*` hook and needs no class.
+- Every public selector and `--pico-*` variable of v2.1.1 stays, unless the [migration notes](/docs/migration/from-pico-css) list the removal.
+
+### Adding an extra
+
+The file lists the steps: the CSS file with its tokens, the entry in the extras list, a fixture, an entry in `scripts/data/components.ts`, and then `pnpm generate:ai`, `pnpm check` and `pnpm test`.
+
+### Writing style
+
+Plain and short, no emoji, no dashes used as punctuation, and no AI attribution or co-author trailers in commits or pull requests. Commit messages follow `type: short description`.
+
+## Use it with your tool
+
+Many coding agents read `AGENTS.md` on their own. Claude Code reads `CLAUDE.md`, so a project can point to it from there. Cloning the repository is enough for contributions: the agent finds the file at the root.
+
+If you maintain your own project that uses Pico Reforged, do not copy this file. Write your own `AGENTS.md` and refer to the skill in it:
+
+```md
+## Styling
+
+This project uses Pico Reforged. Read .claude/skills/pico-reforged/SKILL.md before you
+write markup. Use semantic HTML, no utility classes, and change the look with --pico-*
+custom properties.
+```

@@ -1,0 +1,47 @@
+---
+title: Progress
+description: A slim progress bar from the progress element, with a sliding indeterminate state.
+---
+
+The native `<progress>` element is a full-width bar, 0.5rem tall, with rounded ends. Set `value` and `max` for a determinate bar.
+
+<Example title="Progress" height={140}>
+```html
+<progress value="35" max="100"></progress>
+<progress value="80" max="100"></progress>
+```
+</Example>
+
+## Indeterminate
+
+Leave out `value` and the bar is indeterminate: a segment slides across the track. The animation only runs when `prefers-reduced-motion` is `no-preference`. With reduced motion the bar shows the plain track.
+
+<Example title="Indeterminate progress" height={100}>
+```html
+<progress></progress>
+```
+</Example>
+
+## Accessibility
+
+Label the bar. Either wrap it with a `<label>` or add `aria-label` or `aria-labelledby`, otherwise a screen reader announces only a percentage with no subject. For work that has no measurable end, prefer the indeterminate bar or [aria-busy](/docs/components/loading) over a fake value.
+
+<Example title="Labeled progress" height={120}>
+```html
+<label for="upload">Uploading</label>
+<progress id="upload" value="60" max="100"></progress>
+```
+</Example>
+
+## Customization
+
+The fill color follows the primary color, so a [theme](/docs/customization/themes) changes it without any extra work.
+
+<Tokens
+  items={[
+    { name: "--pico-progress-color", value: "var(--pico-primary-background)", description: "Fill color." },
+    { name: "--pico-progress-background-color", description: "Track color." },
+    { name: "--pico-border-radius", value: "0.25rem", description: "Corner radius of the track and the fill." },
+    { name: "--pico-transition", value: "0.2s ease-in-out", description: "Transition of the fill width in WebKit and Blink." },
+  ]}
+/>

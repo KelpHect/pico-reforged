@@ -1,0 +1,129 @@
+---
+title: Avatar
+description: User images and initials in a circle, with sizes, a status dot and overlapping groups.
+---
+
+An avatar is a `<span data-avatar>` that holds an image, initials, or both. The image sits over the initials. If the image fails to load, the initials show. No class is needed.
+
+Load `css/extras/avatar.min.css`, or the whole set from `css/pico.extras.min.css`. See the [overview](/docs/extras/overview).
+
+## Sizes
+
+`sm` is 2rem, the default is 2.5rem, `lg` is 3.5rem and `xl` is 5rem. The initials scale with the circle. Give each avatar `role="img"` and an `aria-label` with the person's name.
+
+<Example title="Avatar sizes" css={["pico.extras"]} height={140}>
+```html
+<p>
+  <span data-avatar="sm" role="img" aria-label="Ada Lovelace">AL</span>
+  <span data-avatar role="img" aria-label="Ada Lovelace">AL</span>
+  <span data-avatar="lg" role="img" aria-label="Ada Lovelace">AL</span>
+  <span data-avatar="xl" role="img" aria-label="Ada Lovelace">AL</span>
+</p>
+```
+</Example>
+
+## Image with initials fallback
+
+Put an empty-`alt` image before the initials. The name is already on the wrapper, so the image is decorative. When the image fails, a tiny script removes it so no broken icon is drawn and the initials show. The second avatar below has an image that does not exist.
+
+<Example title="Image and fallback" css={["pico.extras"]} height={140}>
+```html
+<p>
+  <span data-avatar="lg" role="img" aria-label="Ada Lovelace"
+    ><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23a14f2a'/%3E%3Ccircle cx='40' cy='32' r='14' fill='%23f3d3b8'/%3E%3Cellipse cx='40' cy='78' rx='26' ry='24' fill='%23f3d3b8'/%3E%3C/svg%3E" alt="" width="56" height="56" />AL</span
+  >
+  <span data-avatar="lg" role="img" aria-label="Grace Hopper"
+    ><img src="/missing/grace.webp" alt="" width="56" height="56" />GH</span
+  >
+</p>
+
+<script>
+  document.querySelectorAll("[data-avatar] > img").forEach((img) => {
+    img.addEventListener("error", () => img.remove());
+  });
+</script>
+```
+</Example>
+
+## Status
+
+`data-status` takes `online`, `away`, `busy` or `offline`. The dot is drawn by the wrapper, so no extra element is needed. The shape carries the state as well as the color: solid for online, half filled for away, a bar for busy and hollow for offline. Put the status in the `aria-label` too.
+
+<Example title="Status dots" css={["pico.extras"]} height={140}>
+```html
+<p>
+  <span data-avatar data-status="online" role="img" aria-label="Ada Lovelace, online">AL</span>
+  <span data-avatar data-status="away" role="img" aria-label="Grace Hopper, away">GH</span>
+  <span data-avatar data-status="busy" role="img" aria-label="Alan Turing, busy">AT</span>
+  <span data-avatar data-status="offline" role="img" aria-label="Edsger Dijkstra, offline">ED</span>
+</p>
+```
+</Example>
+
+## Group
+
+A `role="group"` with a label, whose children are avatars, overlaps them. A ring in the surface color separates each one. A final `+3` avatar works as an overflow count.
+
+<Example title="Avatar group" css={["pico.extras"]} height={120}>
+```html
+<div role="group" aria-label="Project members">
+  <span data-avatar role="img" aria-label="Ada Lovelace">AL</span>
+  <span data-avatar role="img" aria-label="Grace Hopper">GH</span>
+  <span data-avatar role="img" aria-label="Alan Turing">AT</span>
+  <span data-avatar role="img" aria-label="3 more people">+3</span>
+</div>
+```
+</Example>
+
+Form groups are left alone. The group rules apply only when the children are avatars, or links or buttons that hold only an avatar.
+
+## Links and menu triggers
+
+An `a`, `button` or `summary` that holds only an avatar loses its button or link chrome. Keyboard focus draws a 3:1 ring on the avatar itself. Visible initials inside a link or button start the accessible name ("AL, Ada Lovelace"), so speech input can say what it sees.
+
+<Example title="Avatar links and a menu" css={["pico.extras"]} height={260}>
+```html
+<div role="group" aria-label="Team">
+  <a href="#ada"
+    ><span data-avatar data-status="online" role="img" aria-label="AL, Ada Lovelace, online">AL</span></a
+  >
+  <a href="#grace"
+    ><span data-avatar role="img" aria-label="GH, Grace Hopper">GH</span></a
+  >
+</div>
+
+<details class="dropdown">
+  <summary aria-label="Account menu">
+    <span data-avatar role="img" aria-label="GH, Grace Hopper">GH</span>
+  </summary>
+  <ul>
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#out">Sign out</a></li>
+  </ul>
+</details>
+```
+</Example>
+
+## Accessibility
+
+- `role="img"` and an `aria-label` give the avatar a name. Leave out the label only when a name sits right next to it, and then hide the avatar with `aria-hidden="true"`.
+- State the status in the label, because the dot is decorative.
+- Initials are isolated from the page direction, so `+3` stays `+3` in right to left text.
+
+## Customization
+
+The status ring takes the color of the surface under it. Inside a card, a card header or footer and a dropdown menu, the ring color is already set to match. On any other colored surface, set `--pico-avatar-ring-color` yourself.
+
+<Tokens
+  items={[
+    { name: "--pico-avatar-size", value: "2.5rem", description: "Diameter. The sm, lg and xl values set it to 2rem, 3.5rem and 5rem." },
+    { name: "--pico-avatar-overlap", value: "0.375rem", description: "How much avatars in a group overlap." },
+    { name: "--pico-avatar-background-color", value: "var(--pico-secondary-background)", description: "Fill behind the initials." },
+    { name: "--pico-avatar-color", value: "var(--pico-secondary-inverse)", description: "Initials color." },
+    { name: "--pico-avatar-ring-color", value: "var(--pico-background-color)", description: "Ring around the status dot and between grouped avatars." },
+    { name: "--pico-avatar-status-online-color", value: "var(--pico-ins-color)", description: "Online dot." },
+    { name: "--pico-avatar-status-offline-color", value: "var(--pico-muted-color)", description: "Offline dot." },
+    { name: "--pico-avatar-status-away-color", description: "Away dot." },
+    { name: "--pico-avatar-status-busy-color", value: "var(--pico-del-color)", description: "Busy dot." },
+  ]}
+/>

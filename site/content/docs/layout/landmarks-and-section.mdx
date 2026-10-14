@@ -1,0 +1,61 @@
+---
+title: Landmarks and section
+description: Vertical spacing for body > header, main and footer, and for section.
+---
+
+Pico Reforged styles the three page landmarks that are direct children of `body`, plus `section`. Use real landmark elements: they help assistive technology and need no classes.
+
+<Example title="Landmarks" height={420}>
+```html
+<header>
+  <h1>Site title</h1>
+</header>
+<main class="container">
+  <section>
+    <h2>First section</h2>
+    <p>Sections get a bottom margin so they stack with a steady rhythm.</p>
+  </section>
+  <section>
+    <h2>Second section</h2>
+    <p>More content.</p>
+  </section>
+</main>
+<footer>
+  <small>Footer text</small>
+</footer>
+```
+</Example>
+
+## What is styled
+
+| Selector                                        | Style                                               |
+| ----------------------------------------------- | --------------------------------------------------- |
+| `body`                                          | `width: 100%` and no margin                         |
+| `main`                                          | `display: block`                                    |
+| `body > header`, `body > main`, `body > footer` | `padding-block: var(--pico-block-spacing-vertical)` |
+| `section`                                       | `margin-bottom: var(--pico-block-spacing-vertical)` |
+
+Only direct children of `body` get the landmark padding. A `header` inside an `article` is a card header and is styled by the [Card](/docs/components/card) rules instead.
+
+## Accessibility
+
+A `header` or `footer` that is a direct child of `body` is exposed as a banner or content info landmark. Keep one `main` per page and give each `section` a heading, or an `aria-label`, so it reads as a region.
+
+## Customization
+
+The spacing comes from one variable. Change it on `:root` or on a single element:
+
+```css
+:root {
+  --pico-block-spacing-vertical: 2rem;
+}
+```
+
+The variable can also grow with the viewport, see [Responsive and fluid](/docs/layout/responsive).
+
+<Tokens
+  items={[
+    { name: "--pico-block-spacing-vertical", value: "var(--pico-spacing)", description: "Vertical padding of landmarks and bottom margin of section." },
+    { name: "--pico-spacing", value: "1rem", description: "Base spacing the block spacing is built from." },
+  ]}
+/>

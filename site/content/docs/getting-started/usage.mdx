@@ -1,0 +1,101 @@
+---
+title: Usage
+description: Choose between the class, class-less, conditional and fluid builds, and force light or dark.
+---
+
+Pico Reforged comes in a few builds. They share the same tokens, themes and element styles. What differs is whether classes are available, where the styles apply, and how wide the page container is. All of them are ready-made files in `css/`, see the [version picker](/docs/getting-started/version-picker) for the names.
+
+| Build                | File                           | Use it for                                                    |
+| -------------------- | ------------------------------ | ------------------------------------------------------------- |
+| Class (default)      | `pico.min.css`                 | apps and pages that use `.container`, `.grid`, `.outline`     |
+| Class-less           | `pico.classless.min.css`       | content pages, generated HTML, Markdown output                |
+| Conditional          | `pico.conditional.min.css`     | Pico inside part of a page, next to other CSS                 |
+| Fluid class-less     | `pico.fluid.classless.min.css` | class-less with a full-width container                        |
+
+## Class build
+
+The default build styles elements by tag and adds optional classes: `.container`, `.container-fluid`, `.grid`, `.secondary`, `.contrast`, `.outline`, `.overflow-auto` and a few more. Wrap the page in a `.container`, and the width follows the breakpoints.
+
+<Example title="Class build">
+```html
+<main class="container">
+  <h1>Class build</h1>
+  <div class="grid">
+    <button>Primary</button>
+    <button class="secondary">Secondary</button>
+    <button class="outline">Outline</button>
+  </div>
+</main>
+```
+</Example>
+
+For a full-width container in this build, use `class="container-fluid"`. See [Container](/docs/layout/container).
+
+## Class-less build
+
+Every selector that needs a class is dropped. Elements are styled by tag and by ARIA or attribute hooks, and `body > header`, `body > main` and `body > footer` become centered containers, so you need no `.container`. The details and a live example are on the [Class-less version](/docs/getting-started/class-less-version) page.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.classless.min.css"
+/>
+```
+
+## Conditional build
+
+The conditional files prefix every rule with `.pico`, so the styles reach only what is inside that element. The rest of the page is left to your own CSS or another framework.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.conditional.min.css"
+/>
+
+<main class="pico">
+  <h1>Styled by Pico Reforged</h1>
+  <button>Primary</button>
+</main>
+<p>Not styled.</p>
+```
+
+The `:root` and `html` rules, the `*`, `body` and `.container` rules and the `.modal-is-*` classes on `html` stay global, as in Pico CSS v2.1.1. The scoped class-less files read the semantic container as `.pico body > main`, so put `class="pico"` on `<html>` there.
+
+For another selector, build the file yourself:
+
+```shell
+npx pico-reforged build --scope .docs --minify --out docs.css
+```
+
+## Fluid class-less build
+
+`pico.fluid.classless.min.css` is the class-less build with no maximum width on the semantic container. Header, main and footer fill the viewport and keep their padding. A scoped variant exists too, but only with a theme, for example `pico.fluid.classless.conditional.jade.min.css`.
+
+## Light and dark
+
+All builds follow the system setting. Set `data-theme` on `<html>` to force a scheme for the page, or on any element to force it for that element only. The color tokens are recomputed inside it, so a light card on a dark page works.
+
+<Example title="A light card on a dark page" height={230}>
+```html
+<section data-theme="dark" style="padding: 1rem; background: var(--pico-background-color)">
+  <h3>Dark section</h3>
+  <p>This section is always dark.</p>
+  <article data-theme="light">
+    <p>This card is always light.</p>
+    <button>Action</button>
+  </article>
+</section>
+```
+</Example>
+
+To let visitors switch, toggle the attribute in a script and keep the choice in `localStorage`.
+
+## Combining
+
+Builds and options mix. A themed, scoped class-less file is `pico.classless.conditional.jade.min.css`. For a combination that has no ready-made file (a custom color, fewer modules, extras built in), use the CLI:
+
+```shell
+npx pico-reforged build --entry classless --theme "#e5484d" --extras tabs --minify --out public/pico.css
+```
+
+Related pages: [Themes](/docs/customization/themes), [Integrations](/docs/integrations/overview), [Extras](/docs/extras/overview).

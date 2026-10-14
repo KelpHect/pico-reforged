@@ -1,0 +1,78 @@
+---
+title: Tooltip
+description: A tooltip from the data-tooltip attribute, or from a popover with hint for browsers that support it.
+---
+
+There are two ways to add a tooltip. `data-tooltip` is the Pico CSS v2.1.1 attribute: pure CSS, no script. The popover version uses `popover="hint"` and a few lines of script, and it can sit outside the clipping box of its parent.
+
+## data-tooltip
+
+Add `data-tooltip` to any element. The text is drawn from the attribute in a bubble above the element, on hover and on keyboard focus.
+
+<Example title="Tooltip" height={160}>
+```html
+<p>
+  Tooltip on a <a href="#" data-tooltip="Tooltip text">link</a> and on a
+  <button data-tooltip="Another tooltip">button</button>.
+</p>
+```
+</Example>
+
+On elements that are not links, buttons or inputs, such as plain text, the element gets a dotted underline and a help cursor so it reads as something you can hover. Such an element must be focusable (for example with `tabindex="0"`) for the tooltip to show on keyboard focus.
+
+### Placement
+
+`data-placement` takes `top` (the default), `right`, `bottom` or `left`.
+
+<Example title="Tooltip placement" height={240}>
+```html
+<p style="text-align: center; margin-top: 3rem">
+  <button data-tooltip="Top" data-placement="top" class="secondary">Top</button>
+  <button data-tooltip="Right" data-placement="right" class="secondary">Right</button>
+  <button data-tooltip="Bottom" data-placement="bottom" class="secondary">Bottom</button>
+  <button data-tooltip="Left" data-placement="left" class="secondary">Left</button>
+</p>
+```
+</Example>
+
+The bubble is one line and never wraps. It is built from `::before` and `::after` of the element, so it cannot be used on elements that already need those pseudo-elements, and a parent with `overflow: hidden` clips it. On devices with a real pointer the bubble slides in, and on touch screens it just appears. The popover version below has neither limit.
+
+## Popover hint
+
+Use an element with `popover="hint"` (or `popover` with `role="tooltip"`) and link it to its trigger with `aria-describedby`. The CSS gives it the same bubble as `data-tooltip` and places it above the trigger with anchor positioning, flipping below when there is no room. It does not intercept the pointer.
+
+A hint is not opened by the browser on hover, so a small script shows it on `mouseenter` and `focus` and hides it on `mouseleave` and `blur`. Passing `source` ties the popover to the trigger as its anchor.
+
+<Example title="Popover tooltip" height={160}>
+```html
+<button id="save" class="secondary" aria-describedby="save-tip">Save</button>
+<span popover="hint" id="save-tip" role="tooltip">Saved to your account</span>
+
+<script>
+  const tip = document.getElementById("save-tip");
+  const trigger = document.getElementById("save");
+  const show = () => tip.showPopover?.({ source: trigger });
+  const hide = () => tip.hidePopover?.();
+  trigger.addEventListener("mouseenter", show);
+  trigger.addEventListener("focus", show);
+  trigger.addEventListener("mouseleave", hide);
+  trigger.addEventListener("blur", hide);
+</script>
+```
+</Example>
+
+Where the browser does not support `popover`, the span shows as normal text next to the button. If you need to support that case, keep `data-tooltip` for it, or hide the span until script has checked for support. See [Popover patterns](/docs/components/popover) for placement and the support table.
+
+## Accessibility
+
+A tooltip should add a short hint, never the only copy of important information. The text must also reach people who cannot hover. `data-tooltip` shows on focus, so keyboard users get it. For the popover version, `aria-describedby` on the trigger lets screen readers read the hint. Do not put links or buttons inside a tooltip.
+
+## Customization
+
+<Tokens
+  items={[
+    { name: "--pico-tooltip-background-color", value: "var(--pico-contrast-background)", description: "Bubble and caret color." },
+    { name: "--pico-tooltip-color", value: "var(--pico-contrast-inverse)", description: "Text color." },
+    { name: "--pico-border-radius", value: "0.25rem", description: "Bubble corner radius." },
+  ]}
+/>

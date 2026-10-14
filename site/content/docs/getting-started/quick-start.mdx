@@ -1,0 +1,90 @@
+---
+title: Quick start
+description: Add one stylesheet to a page and get a styled document.
+---
+
+Pico Reforged styles native HTML elements. Link the stylesheet, write semantic markup, and you are done. There is nothing to compile for the CDN route.
+
+## Link the stylesheet
+
+Add this to the `<head>` of your page. The package ships under the `next` tag for now, so the link uses `@next`.
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+/>
+```
+
+Prefer npm? Run `npm install @rusticstack/pico-reforged@next` and see [Installation](/docs/getting-started/installation).
+
+## Starter template
+
+Set the viewport, wrap your content in `<main class="container">`, and use plain elements inside.
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+    />
+    <title>Hello, world</title>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Hello, world</h1>
+    </main>
+  </body>
+</html>
+```
+
+## A first look
+
+Every example in these docs is a live page in a sandboxed frame. The theme and color scheme you pick in the header apply to it.
+
+<Example title="Semantic markup with a few classes">
+```html
+<main class="container">
+  <hgroup>
+    <h1>Hello, world</h1>
+    <p>Plain HTML, styled.</p>
+  </hgroup>
+  <p>
+    Buttons, forms, tables and dialogs all work without classes.
+  </p>
+  <button>Primary</button>
+  <button class="secondary">Secondary</button>
+  <button class="contrast">Contrast</button>
+  <button class="outline">Outline</button>
+  <form>
+    <label>
+      Email
+      <input type="email" name="email" placeholder="you@example.com" />
+    </label>
+    <button type="submit">Subscribe</button>
+  </form>
+</main>
+```
+</Example>
+
+## Light and dark
+
+The page follows the visitor's system setting through `color-scheme`. To force one, set `data-theme="light"` or `data-theme="dark"` on `<html>`, or on any element to switch only that part of the page.
+
+```html
+<html lang="en" data-theme="dark">
+```
+
+## Pick a theme
+
+The default theme is azure. For another color, link a themed file instead, for example `css/pico.jade.min.css`. See [Themes](/docs/customization/themes).
+
+## Next steps
+
+- [Installation](/docs/getting-started/installation) for npm, Vite, Next.js and downloads.
+- [Usage](/docs/getting-started/usage) to choose between the class, class-less, conditional and fluid builds.
+- [Version picker](/docs/getting-started/version-picker) for every file name.

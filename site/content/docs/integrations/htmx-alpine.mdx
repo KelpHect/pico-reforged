@@ -1,0 +1,108 @@
+---
+title: htmx and Alpine
+description: Keep the right styles when markup arrives from the server or is toggled by a small script.
+---
+
+htmx and Alpine.js add markup and attributes after the page loads. A build-time scan reads your files, not the page as the browser sees it, so the question is always the same: does the name appear somewhere in the sources? The default [safe purge](/docs/integrations/purge-modes) covers most of this on its own. This page covers the rest.
+
+## htmx
+
+Pico Reforged does not style htmx's own classes (`htmx-request`, `htmx-swapping`). What matters is the markup the server sends back, and the classes and attributes it carries.
+
+If the server templates are inside the project, they are scanned. If they live elsewhere, add them with `@source`:
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@source "../../backend/templates";
+```
+
+### Loading state with aria-busy
+
+The loading state is `aria-busy="true"` (see [Loading](/docs/components/loading)). It shows a spinner on buttons, links with `role="button"`, articles and sections, and htmx can set it from a handler or a template.
+
+<Example title="Busy button" height={120}>
+```html
+<button aria-busy="true">Saving</button>
+<button aria-busy="true" aria-label="Please wait" class="secondary"></button>
+```
+</Example>
+
+```html
+<form hx-post="/subscribe" hx-target="#result" hx-swap="outerHTML">
+  <fieldset role="group">
+    <input type="email" name="email" placeholder="Email" aria-label="Email" />
+    <button type="submit">Subscribe</button>
+  </fieldset>
+</form>
+<p id="result"></p>
+```
+
+```js
+document.body.addEventListener("htmx:beforeRequest", (event) => {
+  event.detail.elt.setAttribute("aria-busy", "true");
+});
+document.body.addEventListener("htmx:afterRequest", (event) => {
+  event.detail.elt.removeAttribute("aria-busy");
+});
+```
+
+The string `aria-busy` is in the script, so the scan sees it. In `safe` mode every `aria-*` name counts as present anyway. In `aggressive` mode, if the name is only written through a variable, keep it:
+
+```css
+@pico {
+  purge: aggressive;
+  safelist: aria-busy;
+}
+```
+
+### Fragments and aggressive mode
+
+The scanner treats `hx-get` and the other htmx attributes, Turbo, Unpoly, Livewire, LiveView and Datastar as a sign that fragments arrive from the server. In `aggressive` mode it then keeps the common content and form tags (`p`, `ul`, `table`, `blockquote`, `code`, `button`, `label`, `select`, `dialog`, `input` and so on), plus the `type`, `role`, `disabled`, `aria-busy` and `aria-invalid` rules. Classes in those fragments still need to be in a scanned file, `@source` or the safelist.
+
+If you serve the same CSS to several apps, a regular expression in the safelist is shorter than listing names:
+
+```css
+@pico {
+  safelist: /^htmx-/;
+}
+```
+
+## Alpine.js
+
+The scanner reads Alpine's attributes as text:
+
+- `:class`, `x-bind:class` and `x-show` expressions are read as identifiers, so a class in `:class="{ 'secondary': active }"` counts as used
+- bound attributes (`:aria-expanded="open"`, `x-bind:disabled="busy"`) count as any value
+- `x-data` objects with quoted strings are read like any other script
+
+```html
+<div x-data="{ open: false }">
+  <button type="button" :aria-expanded="open" @click="open = !open" class="outline">
+    Details
+  </button>
+  <article x-show="open">Hidden until the button is pressed.</article>
+</div>
+```
+
+If a class name only appears inside a computed string, add it with `@source inline`:
+
+```css
+@source inline("secondary outline contrast");
+```
+
+For disclosure widgets, prefer the native `<details>` element (see [Accordion](/docs/components/accordion)), which needs no script and is styled out of the box. Popovers and dialogs also work without Alpine, see [Modal](/docs/components/modal), [Dropdown](/docs/components/dropdown) and [Popover](/docs/components/popover).
+
+## Attributes toggled by JavaScript
+
+Names like `aria-expanded`, `aria-invalid`, `aria-current`, `aria-busy`, `aria-disabled` and `data-*` stay when they appear in a string or in markup. When the attribute is written through a variable, add it:
+
+```css
+@source inline("aria-expanded=true aria-invalid=true");
+```
+
+A name built from pieces, such as `"aria-" + state` or `` `data-${name}` ``, is not found. Keep a full string somewhere in the sources, or list the name.
+
+## HTML from somewhere else
+
+For HTML that comes from a CMS, a database, a Markdown file outside the project or another repository, add the files with `@source`. The default `safe` mode already keeps every rule that only lacks a tag, so only classes in that markup need `@source` or a safelist.

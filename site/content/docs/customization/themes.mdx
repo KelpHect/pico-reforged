@@ -1,0 +1,215 @@
+---
+title: Themes
+description: Pick one of 20 color themes, build one from a single color with the CLI or the @pico config, or derive one at run time with relative color syntax.
+---
+
+A theme sets the primary color tokens. Everything else, the neutral light and dark colors included, stays the same. Azure is the default.
+
+## Ready-made themes
+
+Twenty themes ship as separate files: amber, azure, blue, cyan, fuchsia, green, grey, indigo, jade, lime, orange, pink, pumpkin, purple, red, sand, slate, violet, yellow and zinc. Each swatch below shows the primary background of a theme, with the text color that sits on it.
+
+<Example title="The 20 themes">
+```html
+<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+  <button type="button" style="background-color: #ffbf00; border-color: #ffbf00; color: #000000;">amber</button>
+  <button type="button" style="background-color: #0172ad; border-color: #0172ad; color: #ffffff;">azure</button>
+  <button type="button" style="background-color: #2060df; border-color: #2060df; color: #ffffff;">blue</button>
+  <button type="button" style="background-color: #047878; border-color: #047878; color: #ffffff;">cyan</button>
+  <button type="button" style="background-color: #c1208b; border-color: #c1208b; color: #ffffff;">fuchsia</button>
+  <button type="button" style="background-color: #398712; border-color: #398712; color: #ffffff;">green</button>
+  <button type="button" style="background-color: #ababab; border-color: #ababab; color: #000000;">grey</button>
+  <button type="button" style="background-color: #524ed2; border-color: #524ed2; color: #ffffff;">indigo</button>
+  <button type="button" style="background-color: #007a50; border-color: #007a50; color: #ffffff;">jade</button>
+  <button type="button" style="background-color: #a5d601; border-color: #a5d601; color: #000000;">lime</button>
+  <button type="button" style="background-color: #d24317; border-color: #d24317; color: #ffffff;">orange</button>
+  <button type="button" style="background-color: #d92662; border-color: #d92662; color: #ffffff;">pink</button>
+  <button type="button" style="background-color: #ff9500; border-color: #ff9500; color: #000000;">pumpkin</button>
+  <button type="button" style="background-color: #9236a4; border-color: #9236a4; color: #ffffff;">purple</button>
+  <button type="button" style="background-color: #c52f21; border-color: #c52f21; color: #ffffff;">red</button>
+  <button type="button" style="background-color: #ccc6b4; border-color: #ccc6b4; color: #000000;">sand</button>
+  <button type="button" style="background-color: #525f7a; border-color: #525f7a; color: #ffffff;">slate</button>
+  <button type="button" style="background-color: #7540bf; border-color: #7540bf; color: #ffffff;">violet</button>
+  <button type="button" style="background-color: #f2df0d; border-color: #f2df0d; color: #000000;">yellow</button>
+  <button type="button" style="background-color: #646b79; border-color: #646b79; color: #ffffff;">zinc</button>
+</div>
+```
+</Example>
+
+Use the theme menu in the header of this site to switch the stylesheet of every live example on the page.
+
+### Link a theme file
+
+The azure theme is the plain file. Any other theme adds its name before `.min.css`.
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.jade.min.css" />
+```
+
+The file names are the ones of Pico CSS v2.1.1. The two classless conditional builds have no azure file, as in v2.1.1, so for azure build them yourself. Every other combination exists in all 20 themes.
+
+| Build | Azure (default) | Jade |
+| --- | --- | --- |
+| Class | `pico.min.css` | `pico.jade.min.css` |
+| Classless | `pico.classless.min.css` | `pico.classless.jade.min.css` |
+| Conditional (scoped to `.pico`) | `pico.conditional.min.css` | `pico.conditional.jade.min.css` |
+| Classless conditional | none, build it | `pico.classless.conditional.jade.min.css` |
+| Fluid classless | `pico.fluid.classless.min.css` | `pico.fluid.classless.jade.min.css` |
+| Fluid classless conditional | none, build it | `pico.fluid.classless.conditional.jade.min.css` |
+
+Drop the `.min` for the readable file. See [Building a custom bundle](/docs/customization/custom-bundle) for the builds that have no ready-made file.
+
+### Pick a theme with the CLI or the config
+
+```shell
+npx pico-reforged themes
+npx pico-reforged build --theme jade --minify --out public/pico.css
+```
+
+In a Vite or PostCSS project, name it in the stylesheet that imports the package.
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: jade;
+}
+```
+
+## A theme from one color
+
+The compiler turns one color into a full 19-step OKLCH scale. It keeps the hue and chroma of your color, borrows the lightness curve of the azure scale, and clamps the chroma to what the sRGB screen can show. Then it maps the steps onto the primary tokens like a built-in theme. The text color on the primary background is black or white, whichever has more contrast.
+
+### With the CLI
+
+```shell
+npx pico-reforged build --theme "#e5484d" --minify --out public/pico.css
+```
+
+`--theme` takes a theme name, a CSS color (a hex value, or `rgb()`, `hsl()`, `oklch()` and the like) or the path of a CSS file.
+
+### With the @pico config
+
+With the [Vite or PostCSS integration](/docs/integrations/overview), the color goes next to the import.
+
+```css
+@import "@rusticstack/pico-reforged";
+
+@pico {
+  theme: #e5484d;
+}
+```
+
+A quoted path works too, relative to the stylesheet: `theme: "./brand.css";`. The compiler builds with the default theme first, then adds your file, so the file only needs the tokens you change.
+
+### With a config file or the API
+
+`pico.config.json`, or a `pico.config.ts` that exports the options, takes the color or a hue and chroma pair.
+
+```ts
+// pico.config.ts
+export default {
+  theme: { color: "#e5484d" },
+  // or: theme: { hue: 25, chroma: 0.19 },
+  minify: true,
+};
+```
+
+```ts
+import { compile } from "@rusticstack/pico-reforged/compiler";
+
+const { css } = await compile({ theme: { hue: 25, chroma: 0.19 }, minify: true });
+```
+
+## A theme at run time
+
+Without a build step, derive the primary tokens from one color with relative color syntax. Change `--brand` and every primary token follows. The slider below changes its hue.
+
+<Example title="Primary tokens from one brand color">
+```html
+<style>
+  :root,
+  [data-theme] {
+    --brand: oklch(0.62 0.19 25);
+
+    --pico-primary: light-dark(oklch(from var(--brand) 0.5 c h), oklch(from var(--brand) 0.75 c h));
+    --pico-primary-background: oklch(from var(--brand) 0.5 c h);
+    --pico-primary-underline: light-dark(
+      oklch(from var(--brand) 0.5 c h / 0.5),
+      oklch(from var(--brand) 0.75 c h / 0.5)
+    );
+    --pico-primary-hover: light-dark(oklch(from var(--brand) 0.42 c h), oklch(from var(--brand) 0.82 c h));
+    --pico-primary-hover-background: light-dark(
+      oklch(from var(--brand) 0.45 c h),
+      oklch(from var(--brand) 0.56 c h)
+    );
+    --pico-primary-focus: light-dark(
+      oklch(from var(--brand) 0.62 c h / 0.5),
+      oklch(from var(--brand) 0.75 c h / 0.375)
+    );
+    --pico-primary-inverse: oklch(1 0 0);
+    --pico-text-selection-color: light-dark(
+      oklch(from var(--brand) 0.62 c h / 0.25),
+      oklch(from var(--brand) 0.75 c h / 0.2)
+    );
+  }
+</style>
+
+<label>
+  Hue
+  <input type="range" id="hue" min="0" max="360" value="25" />
+</label>
+<p>
+  <button>Primary</button>
+  <button class="outline">Outline</button>
+  <a href="#brand">A link</a>
+</p>
+<input type="text" placeholder="Focus this field" aria-label="Sample field" />
+
+<script>
+  document.getElementById("hue").addEventListener("input", (event) => {
+    document.documentElement.style.setProperty("--brand", "oklch(0.62 0.19 " + event.target.value + ")");
+  });
+</script>
+```
+</Example>
+
+The same page is in the repository as `examples/custom-theme.html`. This only restyles the tokens that a theme sets, so the secondary and contrast colors stay neutral.
+
+Two features carry the browser requirements here. Relative color syntax is native in Chrome and Edge 119, Firefox 128 and Safari 16.4, and `light-dark()` in your own CSS in Chrome and Edge 123, Firefox 120 and Safari 17.5. Your own stylesheet is not compiled, so a browser below those versions drops the declaration. Pico Reforged itself supports Chrome and Edge 111, so if you need the whole floor, make the theme with the CLI. The compiler lowers `light-dark()` and OKLCH for the floor in the files it builds. See [Browser support](/docs/getting-started/browser-support).
+
+## Override tokens in CSS
+
+A theme is only a set of custom properties, so you can also override them by hand. Your CSS is not in a cascade layer, so it wins over the theme file.
+
+<Example title="Overriding tokens on one element">
+```html
+<article style="--pico-primary-background: oklch(0.55 0.2 25); --pico-primary-border: oklch(0.55 0.2 25); --pico-primary-hover-background: oklch(0.48 0.2 25); --pico-primary-hover-border: oklch(0.48 0.2 25); --pico-border-radius: 1rem;">
+  <h3>A red, rounder card</h3>
+  <p>The tokens are scoped to this element only.</p>
+  <button>Primary</button>
+</article>
+```
+</Example>
+
+Some tokens are aliases of others, and an alias is resolved where it is declared, on `:root`. `--pico-primary-border` is `var(--pico-primary-background)` there, so when you change the background on a single element you must set the matching border token too, as above (and `--pico-primary-hover-border` for the hover state). On `:root` the alias follows your override, so one declaration is enough.
+
+## Tokens a theme sets
+
+<Tokens
+  items={[
+    { name: "--pico-primary", description: "Links and accents." },
+    { name: "--pico-primary-background", description: "Primary button background." },
+    { name: "--pico-primary-underline", description: "Link underline color." },
+    { name: "--pico-primary-hover", description: "Link color on hover." },
+    { name: "--pico-primary-hover-background", description: "Primary button background on hover." },
+    { name: "--pico-primary-focus", description: "Focus ring color." },
+    { name: "--pico-primary-inverse", description: "Text on a primary background." },
+    { name: "--pico-text-selection-color", description: "Background of selected text." },
+    { name: "--pico-switch-thumb-box-shadow", description: "Shadow of the switch thumb." },
+  ]}
+/>
+
+## Nested schemes
+
+Theme tokens are declared on `:root`, `:host` and every `[data-theme]` element, so a dark section inside a light page recomputes its own colors. See [Color schemes](/docs/customization/color-schemes).

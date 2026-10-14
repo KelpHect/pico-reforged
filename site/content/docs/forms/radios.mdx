@@ -1,0 +1,58 @@
+---
+title: Radios
+description: Radio buttons drawn with CSS, for choosing one option from a set.
+---
+
+Radios work like [checkboxes](/docs/forms/checkboxes), but only one option of a set with the same `name` can be selected. Wrap each one in a `label`, and name the set with a `fieldset` and `legend`.
+
+<Example title="Radios" height={230}>
+```html
+<fieldset>
+  <legend>Language preference:</legend>
+  <label>
+    <input type="radio" name="language" value="english" checked />
+    English
+  </label>
+  <label>
+    <input type="radio" name="language" value="french" />
+    French
+  </label>
+  <label>
+    <input type="radio" name="language" value="portuguese" />
+    Portuguese
+  </label>
+</fieldset>
+```
+</Example>
+
+## Control before label
+
+A label that follows its control with `for` and `id` stays inline, so a set can sit on one line.
+
+<Example title="Radios next to labels" height={120}>
+```html
+<fieldset>
+  <input type="radio" id="small" name="size" value="small" checked />
+  <label for="small">Small</label>
+  <input type="radio" id="large" name="size" value="large" />
+  <label for="large">Large</label>
+</fieldset>
+```
+</Example>
+
+## Validation
+
+`aria-invalid` changes the border color of a checked radio. See [Validation states](/docs/forms/validation).
+
+<Example title="Invalid radio" height={110}>
+```html
+<label>
+  <input type="radio" name="plan" checked aria-invalid="true" />
+  Pro
+</label>
+```
+</Example>
+
+## Customization
+
+The border is `0.125rem` wide. A checked radio draws a primary colored ring, `0.35em` thick, around the center. Colors come from the active [theme](/docs/customization/themes).
