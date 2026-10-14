@@ -15,7 +15,8 @@ type Decls = Map<string, string>;
 
 function declsOf(block: string): Decls {
   const map: Decls = new Map();
-  for (const m of block.matchAll(/^\s*--pico-([a-z0-9-]+): (.*);$/gm)) map.set(m[1] as string, m[2] as string);
+  for (const m of block.matchAll(/^\s*--pico-([a-z0-9-]+): (.*);$/gm))
+    map.set(m[1] as string, m[2] as string);
   return map;
 }
 
@@ -86,20 +87,26 @@ function diff(a: string, b: string): number {
   const y = colorsOf(b);
   if (x.skeleton !== y.skeleton || x.colors.length !== y.colors.length) return Infinity;
   let worst = 0;
-  x.colors.forEach((c, i) => c.forEach((v, k) => (worst = Math.max(worst, Math.abs(v - (y.colors[i]?.[k] ?? 0))))));
+  x.colors.forEach((c, i) =>
+    c.forEach((v, k) => (worst = Math.max(worst, Math.abs(v - (y.colors[i]?.[k] ?? 0))))),
+  );
   return worst;
 }
 
-const refCss = read(theme === "azure" ? "test/reference/v2.1.1/pico.css" : `test/reference/v2.1.1/pico.${theme}.css`);
+const refCss = read(
+  theme === "azure" ? "test/reference/v2.1.1/pico.css" : `test/reference/v2.1.1/pico.${theme}.css`,
+);
 const refLight = declsOf(between(refCss, "[data-theme=light],\n:root:not([data-theme=dark])"));
 const refDark = declsOf(between(refCss, "\n[data-theme=dark] {"));
 
 const mine = declsOf(read("src/tokens/scheme.css") + read(`src/themes/${theme}.css`));
-const own = (scheme: "light" | "dark"): Decls => new Map([...mine].map(([k, v]) => [k, pick(v, scheme)]));
+const own = (scheme: "light" | "dark"): Decls =>
+  new Map([...mine].map(([k, v]) => [k, pick(v, scheme)]));
 const myLight = own("light");
 const myDark = own("dark");
 
-const skip = /^(icon-|font|line-height|border-|outline|transition|spacing|typography|block|grid|nav|group|modal-overlay-b|scrollbar|text-underline|button-|form-element-disabled|loading)/;
+const skip =
+  /^(icon-|font|line-height|border-|outline|transition|spacing|typography|block|grid|nav|group|modal-overlay-b|scrollbar|text-underline|button-|form-element-disabled|loading)/;
 let max = 0;
 let bad = 0;
 let rows = 0;
@@ -117,7 +124,9 @@ for (const [name] of refLight) {
   rows++;
   if (w > max && w !== Infinity) max = w;
   if (w > 1.01) bad++;
-  if (all || w > 0.8) console.log(`${name} | ${l.toFixed(2)} | ${d.toFixed(2)}${w > 1.01 ? "  <-- MISMATCH" : ""}`);
+  if (all || w > 0.8)
+    console.log(`${name} | ${l.toFixed(2)} | ${d.toFixed(2)}${w > 1.01 ? "  <-- MISMATCH" : ""}`);
 }
-for (const name of mine.keys()) if (!refLight.has(name)) console.log(`${name} | only in new output`);
+for (const name of mine.keys())
+  if (!refLight.has(name)) console.log(`${name} | only in new output`);
 console.log(`${rows} tokens compared, max channel difference ${max.toFixed(2)}, ${bad} over 1`);

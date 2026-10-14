@@ -18,7 +18,9 @@ export function parseScope(scope: string): Selector {
       },
     });
   } catch (error) {
-    throw new Error(`Invalid scope selector "${scope}": ${(error as Error).message}`);
+    throw new Error(`Invalid scope selector "${scope}": ${(error as Error).message}`, {
+      cause: error,
+    });
   }
   if (!found || found.length !== 1 || (found[0] as Selector).length === 0) {
     throw new Error(`Invalid scope selector "${scope}": give exactly one selector`);

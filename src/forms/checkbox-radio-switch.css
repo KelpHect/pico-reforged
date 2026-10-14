@@ -123,10 +123,18 @@ label:has([type="checkbox"], [type="radio"]) {
   --pico-background-color: var(--pico-form-element-invalid-border-color);
 }
 
-:is([type="checkbox"], [type="radio"])[aria-invalid="false"]:is(:checked, :checked:active, :checked:focus) {
+:is([type="checkbox"], [type="radio"])[aria-invalid="false"]:is(
+    :checked,
+    :checked:active,
+    :checked:focus
+  ) {
   --pico-border-color: var(--pico-form-element-valid-border-color);
 }
 
-:is([type="checkbox"], [type="radio"]):is(:checked, :checked:active, :checked:focus)[aria-invalid="true"] {
+:is([type="checkbox"], [type="radio"]):is(
+    :checked,
+    :checked:active,
+    :checked:focus
+  )[aria-invalid="true"] {
   --pico-border-color: var(--pico-form-element-invalid-border-color);
 }

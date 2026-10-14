@@ -31,7 +31,13 @@ progress {
 /* Indeterminate state: a sliding bar, only when motion is welcome */
 @media (prefers-reduced-motion: no-preference) {
   progress:indeterminate {
-    background: var(--pico-progress-background-color) linear-gradient(to right, var(--pico-progress-color) 30%, var(--pico-progress-background-color) 30%) top left / 150% 150% no-repeat;
+    background: var(--pico-progress-background-color)
+      linear-gradient(
+        to right,
+        var(--pico-progress-color) 30%,
+        var(--pico-progress-background-color) 30%
+      )
+      top left / 150% 150% no-repeat;
     animation: progress-indeterminate 1s linear infinite;
 
     &[value]::-webkit-progress-value {

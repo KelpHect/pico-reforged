@@ -37,7 +37,7 @@ async function build(input: CompileOptions): Promise<Built> {
       removedByClassless: done.counts.removedByClassless,
       removedByPurge: done.counts.removedByPurge,
       excludedModules: [...new Set(bundled.excluded)],
-      warnings: purgeWarnings(index),
+      warnings: [...options.warnings, ...purgeWarnings(index)],
     },
   };
   if (done.map) built.map = done.map;

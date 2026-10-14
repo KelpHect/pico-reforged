@@ -3,12 +3,12 @@ import { execFileSync, execSync, spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(fileURLToPath(new URL("../../", import.meta.url)));
 const dir = mkdtempSync(join(tmpdir(), "pico-cli-"));
-after(() => rmSync(dir, { recursive: true, force: true }));
+afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
 const run = (script: string, args: string[], cwd = root) =>
   spawnSync(process.execPath, [script, ...args], { cwd, encoding: "utf8" });
@@ -32,14 +32,13 @@ test("build writes a file and prints a size line", () => {
     "--fluid",
     "--exclude",
     "components/modal,forms/input-range",
-    "--no-layers",
     "--minify",
     "--out",
     out,
   ]);
   assert.equal(res.status, 0, res.stderr);
   const css = readFileSync(out, "utf8");
-  assert.doesNotMatch(css, /@layer/);
+  assert.match(css, /@layer/);
   assert.match(css, /\.pico body ?> ?main/);
   assert.doesNotMatch(css, /dialog>article/);
   assert.match(res.stderr, /excluded/);
@@ -79,7 +78,7 @@ test("build with --purge", () => {
   assert.doesNotMatch(res.stdout, /details\.dropdown/);
 });
 
-test("matrix writes the v2.1.1 file names", { timeout: 300_000 }, () => {
+test("matrix writes the v2.1.1 file names", () => {
   const out = join(dir, "matrix");
   const res = run("scripts/cli.ts", ["matrix", out]);
   assert.equal(res.status, 0, res.stderr);
@@ -104,7 +103,7 @@ test("matrix writes the v2.1.1 file names", { timeout: 300_000 }, () => {
   assert.match(text, /Lucas Larroche/);
   assert.match(text, /2026 rusticstack/);
   assert.match(text, /https:\/\/pico\.rusticstack\.com/);
-});
+}, 300_000);
 
 test("unknown commands and themes fail", () => {
   assert.equal(run("scripts/cli.ts", ["wat"]).status, 2);
@@ -113,14 +112,15 @@ test("unknown commands and themes fail", () => {
   assert.match(res.stderr, /Unknown theme/);
 });
 
-test("the emitted CLI in dist/ runs as plain JavaScript", { timeout: 120_000 }, () => {
-  execSync("npx tsc -p tsconfig.build.json", { cwd: root, stdio: "pipe" });
+test("the packed CLI in dist/ runs as plain JavaScript", () => {
+  execSync("pnpm exec vp pack", { cwd: root, stdio: "pipe" });
   const cli = join(root, "dist", "cli.js");
   assert.ok(existsSync(cli));
   const source = readFileSync(cli, "utf8");
   assert.ok(source.startsWith("#!/usr/bin/env node"));
   assert.doesNotMatch(source, /from "\.[^"]*\.ts"/);
-  assert.ok(existsSync(join(root, "dist", "data", "palette.json")));
+  assert.ok(existsSync(join(root, "dist", "compiler.js")));
+  assert.ok(existsSync(join(root, "dist", "compiler.d.ts")));
 
   // Run it without type stripping, the way Node treats code inside node_modules.
   const out = join(dir, "dist-build.css");
@@ -133,6 +133,6 @@ test("the emitted CLI in dist/ runs as plain JavaScript", { timeout: 120_000 }, 
   assert.match(readFileSync(out, "utf8"), /--pico-primary/);
   assert.equal(
     execFileSync(process.execPath, [cli, "--version"], { encoding: "utf8" }).trim(),
-    JSON.parse(readFileSync(join(root, "package.json"), "utf8")).version,
+    (JSON.parse(readFileSync(join(root, "package.json"), "utf8")) as { version: string }).version,
   );
-});
+}, 120_000);

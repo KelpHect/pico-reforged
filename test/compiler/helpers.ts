@@ -6,7 +6,7 @@ export function mapSelectors(css: string, fn: (sel: Selector) => Selector[]): st
   const result = transform({
     filename: "test.css",
     code: Buffer.from(css),
-    visitor: { Selector: (sel: Selector) => fn(sel) } as never,
+    visitor: { Selector: (sel: Selector) => fn(sel) },
   });
   return new TextDecoder().decode(result.code);
 }

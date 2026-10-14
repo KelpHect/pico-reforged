@@ -5,7 +5,8 @@ export type TagMatch = {
   end: number;
 };
 
-const isSpace = (ch: string | undefined): boolean => ch === " " || ch === "\n" || ch === "\t" || ch === "\r" || ch === "\f";
+const isSpace = (ch: string | undefined): boolean =>
+  ch === " " || ch === "\n" || ch === "\t" || ch === "\r" || ch === "\f";
 const NAME_END = /[\s=<>"'/]/;
 
 /** Skips a { ... } expression with nested braces and strings. Returns the index after the closing brace, or -1. */

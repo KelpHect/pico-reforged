@@ -7,8 +7,10 @@
 @layer pico.tokens {
   :root, :host {
     --pico-font-family-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --pico-font-family-sans-serif: system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue", sans-serif, var(--pico-font-family-emoji);
-    --pico-font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace, var(--pico-font-family-emoji);
+    --pico-font-family-sans-serif: system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue",
+    sans-serif, var(--pico-font-family-emoji);
+    --pico-font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace,
+    var(--pico-font-family-emoji);
     --pico-font-family: var(--pico-font-family-sans-serif);
     --pico-line-height: 1.5;
     --pico-font-weight: 400;
@@ -27,10 +29,11 @@
     --pico-form-element-spacing-vertical: .75rem;
     --pico-form-element-spacing-horizontal: 1rem;
     --pico-container-max-width: 100%;
-    --pico-button-box-shadow: 0 0 0 #0000;
-    --pico-button-hover-box-shadow: 0 0 0 #0000;
-    --pico-group-box-shadow: 0 0 0 #0000;
-    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    --pico-button-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
+    --pico-button-hover-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
+    --pico-group-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
+    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width)
+    var(--pico-primary-focus);
     --pico-group-box-shadow-focus-with-input: 0 0 0 .0625rem var(--pico-form-element-border-color);
     --pico-form-element-disabled-opacity: .5;
     --pico-loading-spinner-opacity: .5;
@@ -49,14 +52,6 @@
     --pico-icon-search: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(136, 145, 164)' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
     --pico-icon-close: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(136, 145, 164)' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E");
     --pico-icon-loading: url("data:image/svg+xml,%3Csvg fill='none' height='24' width='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' %3E%3Cstyle%3E g %7B animation: rotate 2s linear infinite; transform-origin: center center; %7D circle %7B stroke-dasharray: 75,100; stroke-dashoffset: -5; animation: dash 1.5s ease-in-out infinite; stroke-linecap: round; %7D @keyframes rotate %7B 0%25 %7B transform: rotate(0deg); %7D 100%25 %7B transform: rotate(360deg); %7D %7D @keyframes dash %7B 0%25 %7B stroke-dasharray: 1,100; stroke-dashoffset: 0; %7D 50%25 %7B stroke-dasharray: 44.5,100; stroke-dashoffset: -17.5; %7D 100%25 %7B stroke-dasharray: 44.5,100; stroke-dashoffset: -62; %7D %7D %3C/style%3E%3Cg%3E%3Ccircle cx='12' cy='12' r='10' fill='none' stroke='rgb(136, 145, 164)' stroke-width='4' /%3E%3C/g%3E%3C/svg%3E");
-  }
-
-  @supports (color: lab(0% 0 0)) {
-    :root, :host {
-      --pico-button-box-shadow: 0 0 0 lab(0% 0 0 / 0);
-      --pico-button-hover-box-shadow: 0 0 0 lab(0% 0 0 / 0);
-      --pico-group-box-shadow: 0 0 0 lab(0% 0 0 / 0);
-    }
   }
 
   @media (width >= 576px) {
@@ -126,71 +121,71 @@
   }
 
   :root, :host, [data-theme] {
-    --pico-background-color: var(--lightningcss-light, #fff) var(--lightningcss-dark, #13171f);
-    --pico-color: var(--lightningcss-light, #373c44) var(--lightningcss-dark, #c2c7d0);
-    --pico-muted-color: var(--lightningcss-light, #646b79) var(--lightningcss-dark, #7b8495);
-    --pico-muted-border-color: var(--lightningcss-light, #e7eaef) var(--lightningcss-dark, #202632);
+    --pico-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(20.26% .017 266.4));
+    --pico-color: var(--lightningcss-light, oklch(35.46% .0155 259.81)) var(--lightningcss-dark, oklch(82.85% .0137 262.37));
+    --pico-muted-color: var(--lightningcss-light, oklch(52.68% .0236 264.35)) var(--lightningcss-dark, oklch(61.17% .0279 263.25));
+    --pico-muted-border-color: var(--lightningcss-light, oklch(93.63% .0081 262.77)) var(--lightningcss-dark, oklch(26.82% .0241 264.04));
     --pico-primary-border: var(--pico-primary-background);
     --pico-primary-hover-border: var(--pico-primary-hover-background);
     --pico-primary-hover-underline: var(--pico-primary-hover);
-    --pico-secondary: var(--lightningcss-light, #5d6b89) var(--lightningcss-dark, #969eaf);
-    --pico-secondary-background: #525f7a;
+    --pico-secondary: var(--lightningcss-light, oklch(52.78% .0504 265.2)) var(--lightningcss-dark, oklch(69.84% .0265 265.52));
+    --pico-secondary-background: oklch(48.52% .0465 264.66);
     --pico-secondary-border: var(--pico-secondary-background);
-    --pico-secondary-underline: var(--lightningcss-light, #5d6b8980) var(--lightningcss-dark, #969eaf80);
-    --pico-secondary-hover: var(--lightningcss-light, #48536b) var(--lightningcss-dark, #b3b9c5);
-    --pico-secondary-hover-background: var(--lightningcss-light, #48536b) var(--lightningcss-dark, #5d6b89);
+    --pico-secondary-underline: var(--lightningcss-light, oklch(52.78% .0504 265.2 / .5)) var(--lightningcss-dark, oklch(69.84% .0265 265.52 / .5));
+    --pico-secondary-hover: var(--lightningcss-light, oklch(44.24% .0421 265.51)) var(--lightningcss-dark, oklch(78.47% .0183 264.46));
+    --pico-secondary-hover-background: var(--lightningcss-light, oklch(44.24% .0421 265.51)) var(--lightningcss-dark, oklch(52.78% .0504 265.2));
     --pico-secondary-hover-border: var(--pico-secondary-hover-background);
     --pico-secondary-hover-underline: var(--pico-secondary-hover);
-    --pico-secondary-focus: var(--lightningcss-light, #5d6b8940) var(--lightningcss-dark, #909ebe40);
-    --pico-secondary-inverse: #fff;
-    --pico-contrast: var(--lightningcss-light, #181c25) var(--lightningcss-dark, #dfe3eb);
-    --pico-contrast-background: var(--lightningcss-light, #181c25) var(--lightningcss-dark, #eff1f4);
+    --pico-secondary-focus: var(--lightningcss-light, oklch(52.78% .0504 265.2 / .25)) var(--lightningcss-dark, oklch(69.93% .0497 266.52 / .25));
+    --pico-secondary-inverse: oklch(100% 0 0);
+    --pico-contrast: var(--lightningcss-light, oklch(22.65% .0186 266.15)) var(--lightningcss-dark, oklch(91.51% .0117 264.51));
+    --pico-contrast-background: var(--lightningcss-light, oklch(22.65% .0186 266.15)) var(--lightningcss-dark, oklch(95.75% .0046 258.32));
     --pico-contrast-border: var(--pico-contrast-background);
-    --pico-contrast-underline: var(--lightningcss-light, #181c2580) var(--lightningcss-dark, #dfe3eb80);
-    --pico-contrast-hover: var(--lightningcss-light, #000) var(--lightningcss-dark, #fff);
-    --pico-contrast-hover-background: var(--lightningcss-light, #000) var(--lightningcss-dark, #fff);
+    --pico-contrast-underline: var(--lightningcss-light, oklch(22.65% .0186 266.15 / .5)) var(--lightningcss-dark, oklch(91.51% .0117 264.51 / .5));
+    --pico-contrast-hover: var(--lightningcss-light, oklch(0% 0 0)) var(--lightningcss-dark, oklch(100% 0 0));
+    --pico-contrast-hover-background: var(--lightningcss-light, oklch(0% 0 0)) var(--lightningcss-dark, oklch(100% 0 0));
     --pico-contrast-hover-border: var(--pico-contrast-hover-background);
     --pico-contrast-hover-underline: var(--lightningcss-light, var(--pico-secondary-hover)) var(--lightningcss-dark, var(--pico-contrast-hover));
-    --pico-contrast-focus: var(--lightningcss-light, #5d6b8940) var(--lightningcss-dark, #cfd5e240);
-    --pico-contrast-inverse: var(--lightningcss-light, #fff) var(--lightningcss-dark, #000);
-    --pico-box-shadow: .0145rem .029rem .174rem var(--lightningcss-light, #8191b504) var(--lightningcss-dark, #07080c04), .0335rem .067rem .402rem var(--lightningcss-light, #8191b506) var(--lightningcss-dark, #07080c06), .0625rem .125rem .75rem var(--lightningcss-light, #8191b508) var(--lightningcss-dark, #07080c08), .1125rem .225rem 1.35rem var(--lightningcss-light, #8191b509) var(--lightningcss-dark, #07080c09), .2085rem .417rem 2.502rem var(--lightningcss-light, #8191b50b) var(--lightningcss-dark, #07080c0b), .5rem 1rem 6rem var(--lightningcss-light, #8191b50f) var(--lightningcss-dark, #07080c0f), 0 0 0 .0625rem var(--lightningcss-light, #8191b504) var(--lightningcss-dark, #07080c04);
-    --pico-h1-color: var(--lightningcss-light, #2d3138) var(--lightningcss-dark, #f0f1f3);
-    --pico-h2-color: var(--lightningcss-light, #373c44) var(--lightningcss-dark, #e0e3e7);
-    --pico-h3-color: var(--lightningcss-light, #424751) var(--lightningcss-dark, #c2c7d0);
-    --pico-h4-color: var(--lightningcss-light, #4d535e) var(--lightningcss-dark, #b3b9c5);
-    --pico-h5-color: var(--lightningcss-light, #5c6370) var(--lightningcss-dark, #a4acba);
-    --pico-h6-color: var(--lightningcss-light, #646b79) var(--lightningcss-dark, #8891a4);
-    --pico-mark-background-color: var(--lightningcss-light, #fce6bf) var(--lightningcss-dark, #014063);
-    --pico-mark-color: var(--lightningcss-light, #0f1114) var(--lightningcss-dark, #fff);
-    --pico-ins-color: var(--lightningcss-light, #1c6954) var(--lightningcss-dark, #62af9a);
-    --pico-del-color: var(--lightningcss-light, #883835) var(--lightningcss-dark, #ce7e7b);
+    --pico-contrast-focus: var(--lightningcss-light, oklch(52.78% .0504 265.2 / .25)) var(--lightningcss-dark, oklch(87.23% .0191 265.97 / .25));
+    --pico-contrast-inverse: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(0% 0 0));
+    --pico-box-shadow: .0145rem .029rem .174rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .01698)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .01698)), .0335rem .067rem .402rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .024)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .024)), .0625rem .125rem .75rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .03)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .03)), .1125rem .225rem 1.35rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .036)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .036)), .2085rem .417rem 2.502rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .04302)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .04302)), .5rem 1rem 6rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .06)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .06)), 0 0 0 .0625rem var(--lightningcss-light, oklch(65.7% .057 266.11 / .015)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .015));
+    --pico-h1-color: var(--lightningcss-light, oklch(31.21% .0137 261.71)) var(--lightningcss-dark, oklch(95.79% .0029 264.54));
+    --pico-h2-color: var(--lightningcss-light, oklch(35.46% .0155 259.81)) var(--lightningcss-dark, oklch(91.47% .0063 255.48));
+    --pico-h3-color: var(--lightningcss-light, oklch(39.71% .0181 264.34)) var(--lightningcss-dark, oklch(82.85% .0137 262.37));
+    --pico-h4-color: var(--lightningcss-light, oklch(44.1% .0197 262.66)) var(--lightningcss-dark, oklch(78.47% .0183 264.46));
+    --pico-h5-color: var(--lightningcss-light, oklch(49.83% .0225 262.91)) var(--lightningcss-dark, oklch(74.25% .0221 261.75));
+    --pico-h6-color: var(--lightningcss-light, oklch(52.68% .0236 264.35)) var(--lightningcss-dark, oklch(65.57% .0302 265.34));
+    --pico-mark-background-color: var(--lightningcss-light, oklch(93.45% .0562 81.9)) var(--lightningcss-dark, oklch(35.55% .0829 241.5));
+    --pico-mark-color: var(--lightningcss-light, oklch(17.68% .007 258.37)) var(--lightningcss-dark, oklch(100% 0 0));
+    --pico-ins-color: var(--lightningcss-light, oklch(47.03% .0817 170.23)) var(--lightningcss-dark, oklch(69.81% .0833 174.16));
+    --pico-del-color: var(--lightningcss-light, oklch(45.03% .1099 25)) var(--lightningcss-dark, oklch(67.66% .0995 22.35));
     --pico-blockquote-border-color: var(--pico-muted-border-color);
     --pico-blockquote-footer-color: var(--pico-muted-color);
     --pico-table-border-color: var(--pico-muted-border-color);
-    --pico-table-row-stripped-background-color: #6f78870a;
-    --pico-code-background-color: var(--lightningcss-light, #f3f4f7) var(--lightningcss-dark, #1a1e28);
-    --pico-code-color: var(--lightningcss-light, #646b79) var(--lightningcss-dark, #8891a4);
+    --pico-table-row-stripped-background-color: oklch(57.04% .0255 260.69 / .0375);
+    --pico-code-background-color: var(--lightningcss-light, oklch(96.81% .0034 258.32)) var(--lightningcss-dark, oklch(23.71% .02 265.5));
+    --pico-code-color: var(--lightningcss-light, oklch(52.68% .0236 264.35)) var(--lightningcss-dark, oklch(65.57% .0302 265.34));
     --pico-code-kbd-background-color: var(--pico-color);
     --pico-code-kbd-color: var(--pico-background-color);
-    --pico-form-element-background-color: var(--lightningcss-light, #fbfbfc) var(--lightningcss-dark, #1c212c);
-    --pico-form-element-selected-background-color: var(--lightningcss-light, #dfe3eb) var(--lightningcss-dark, #2a3140);
-    --pico-form-element-border-color: var(--lightningcss-light, #cfd5e2) var(--lightningcss-dark, #2a3140);
-    --pico-form-element-color: var(--lightningcss-light, #23262c) var(--lightningcss-dark, #e0e3e7);
-    --pico-form-element-placeholder-color: var(--lightningcss-light, var(--pico-muted-color)) var(--lightningcss-dark, #8891a4);
-    --pico-form-element-active-background-color: var(--lightningcss-light, #fff) var(--lightningcss-dark, #1a1e28);
+    --pico-form-element-background-color: var(--lightningcss-light, oklch(98.94% .0011 258.32)) var(--lightningcss-dark, oklch(24.76% .0214 264.94));
+    --pico-form-element-selected-background-color: var(--lightningcss-light, oklch(91.51% .0117 264.51)) var(--lightningcss-dark, oklch(31.31% .0287 265.24));
+    --pico-form-element-border-color: var(--lightningcss-light, oklch(87.23% .0191 265.97)) var(--lightningcss-dark, oklch(31.31% .0287 265.24));
+    --pico-form-element-color: var(--lightningcss-light, oklch(26.81% .012 264.35)) var(--lightningcss-dark, oklch(91.47% .0063 255.48));
+    --pico-form-element-placeholder-color: var(--lightningcss-light, var(--pico-muted-color)) var(--lightningcss-dark, oklch(65.57% .0302 265.34));
+    --pico-form-element-active-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(23.71% .02 265.5));
     --pico-form-element-active-border-color: var(--pico-primary-border);
     --pico-form-element-focus-color: var(--pico-primary-border);
-    --pico-form-element-invalid-border-color: var(--lightningcss-light, #b86a6b) var(--lightningcss-dark, #964a50);
-    --pico-form-element-invalid-active-border-color: var(--lightningcss-light, #c84f48) var(--lightningcss-dark, #b73f3b);
+    --pico-form-element-invalid-border-color: var(--lightningcss-light, oklch(61% .1 19.58)) var(--lightningcss-dark, oklch(50.45% .1014 16.42));
+    --pico-form-element-invalid-active-border-color: var(--lightningcss-light, oklch(58.72% .156 26.3)) var(--lightningcss-dark, oklch(53.8% .1559 25.93));
     --pico-form-element-invalid-focus-color: var(--pico-form-element-invalid-active-border-color);
-    --pico-form-element-valid-border-color: var(--lightningcss-light, #4c9a8a) var(--lightningcss-dark, #2a7b6f);
-    --pico-form-element-valid-active-border-color: var(--lightningcss-light, #279977) var(--lightningcss-dark, #16896a);
+    --pico-form-element-valid-border-color: var(--lightningcss-light, oklch(63.3% .0822 177.5)) var(--lightningcss-dark, oklch(53.07% .0798 181.54));
+    --pico-form-element-valid-active-border-color: var(--lightningcss-light, oklch(61.14% .1121 168.13)) var(--lightningcss-dark, oklch(56.24% .1078 168.51));
     --pico-form-element-valid-focus-color: var(--pico-form-element-valid-active-border-color);
-    --pico-switch-background-color: var(--lightningcss-light, #bfc7d9) var(--lightningcss-dark, #333c4e);
+    --pico-switch-background-color: var(--lightningcss-light, oklch(82.9% .0267 266.58)) var(--lightningcss-dark, oklch(35.57% .0337 264));
     --pico-switch-checked-background-color: var(--pico-primary-background);
-    --pico-switch-color: #fff;
-    --pico-range-border-color: var(--lightningcss-light, #dfe3eb) var(--lightningcss-dark, #202632);
-    --pico-range-active-border-color: var(--lightningcss-light, #bfc7d9) var(--lightningcss-dark, #2a3140);
+    --pico-switch-color: oklch(100% 0 0);
+    --pico-range-border-color: var(--lightningcss-light, oklch(91.51% .0117 264.51)) var(--lightningcss-dark, oklch(26.82% .0241 264.04));
+    --pico-range-active-border-color: var(--lightningcss-light, oklch(82.9% .0267 266.58)) var(--lightningcss-dark, oklch(31.31% .0287 265.24));
     --pico-range-thumb-border-color: var(--pico-background-color);
     --pico-range-thumb-color: var(--pico-secondary-background);
     --pico-range-thumb-active-color: var(--pico-primary-background);
@@ -198,78 +193,20 @@
     --pico-accordion-active-summary-color: var(--pico-primary-hover);
     --pico-accordion-close-summary-color: var(--pico-color);
     --pico-accordion-open-summary-color: var(--pico-muted-color);
-    --pico-card-background-color: var(--lightningcss-light, var(--pico-background-color)) var(--lightningcss-dark, #181c25);
+    --pico-card-background-color: var(--lightningcss-light, var(--pico-background-color)) var(--lightningcss-dark, oklch(22.65% .0186 266.15));
     --pico-card-border-color: var(--lightningcss-light, var(--pico-muted-border-color)) var(--lightningcss-dark, var(--pico-card-background-color));
     --pico-card-box-shadow: var(--pico-box-shadow);
-    --pico-card-sectioning-background-color: var(--lightningcss-light, #fbfbfc) var(--lightningcss-dark, #1a1e28);
-    --pico-dropdown-background-color: var(--lightningcss-light, #fff) var(--lightningcss-dark, #181c25);
-    --pico-dropdown-border-color: var(--lightningcss-light, #eff1f4) var(--lightningcss-dark, #202632);
+    --pico-card-sectioning-background-color: var(--lightningcss-light, oklch(98.94% .0011 258.32)) var(--lightningcss-dark, oklch(23.71% .02 265.5));
+    --pico-dropdown-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(22.65% .0186 266.15));
+    --pico-dropdown-border-color: var(--lightningcss-light, oklch(95.75% .0046 258.32)) var(--lightningcss-dark, oklch(26.82% .0241 264.04));
     --pico-dropdown-box-shadow: var(--pico-box-shadow);
     --pico-dropdown-color: var(--pico-color);
-    --pico-dropdown-hover-background-color: var(--lightningcss-light, #eff1f4) var(--lightningcss-dark, #202632);
-    --pico-modal-overlay-background-color: var(--lightningcss-light, #e8eaedbf) var(--lightningcss-dark, #07080abf);
-    --pico-progress-background-color: var(--lightningcss-light, #dfe3eb) var(--lightningcss-dark, #202632);
+    --pico-dropdown-hover-background-color: var(--lightningcss-light, oklch(95.75% .0046 258.32)) var(--lightningcss-dark, oklch(26.82% .0241 264.04));
+    --pico-modal-overlay-background-color: var(--lightningcss-light, oklch(93.64% .0046 258.33 / .75)) var(--lightningcss-dark, oklch(13.65% .004 256.38 / .75));
+    --pico-progress-background-color: var(--lightningcss-light, oklch(91.51% .0117 264.51)) var(--lightningcss-dark, oklch(26.82% .0241 264.04));
     --pico-progress-color: var(--pico-primary-background);
     --pico-tooltip-background-color: var(--pico-contrast-background);
     --pico-tooltip-color: var(--pico-contrast-inverse);
-  }
-
-  @supports (color: lab(0% 0 0)) {
-    :root, :host, [data-theme] {
-      --pico-form-element-placeholder-color: var(--lightningcss-light, var(--pico-muted-color)) var(--lightningcss-dark, lab(59.9084% -.295162 -11.2431));
-      --pico-card-background-color: var(--lightningcss-light, var(--pico-background-color)) var(--lightningcss-dark, lab(10.1643% .115328 -6.84852));
-      --pico-background-color: var(--lightningcss-light, lab(100% 0 0)) var(--lightningcss-dark, lab(7.41467% .132874 -6.23203));
-      --pico-color: var(--lightningcss-light, lab(25.0758% -.66343 -5.70756)) var(--lightningcss-dark, lab(80.0531% -.495642 -5.13442));
-      --pico-muted-color: var(--lightningcss-light, lab(44.9953% -.376374 -8.77748)) var(--lightningcss-dark, lab(54.8297% -.617236 -10.3535));
-      --pico-muted-border-color: var(--lightningcss-light, lab(92.5799% -.293195 -3.04899)) var(--lightningcss-dark, lab(14.9774% -.0851154 -8.82729));
-      --pico-secondary: var(--lightningcss-light, lab(44.926% .251174 -18.4639)) var(--lightningcss-dark, lab(64.8831% -.29707 -9.89807));
-      --pico-secondary-background: lab(40.0131% .0920296 -17.0201);
-      --pico-secondary-underline: var(--lightningcss-light, lab(44.926% .251174 -18.4639 / .5)) var(--lightningcss-dark, lab(64.8831% -.29707 -9.89807 / .5));
-      --pico-secondary-hover: var(--lightningcss-light, lab(35.066% .280634 -15.431)) var(--lightningcss-dark, lab(74.9436% -.400245 -6.86533));
-      --pico-secondary-hover-background: var(--lightningcss-light, lab(35.066% .280634 -15.431)) var(--lightningcss-dark, lab(44.926% .251174 -18.4639));
-      --pico-secondary-focus: var(--lightningcss-light, lab(44.926% .251174 -18.4639 / .25)) var(--lightningcss-dark, lab(64.8315% .241697 -18.3693 / .25));
-      --pico-secondary-inverse: lab(100% 0 0);
-      --pico-contrast: var(--lightningcss-light, lab(10.1643% .115328 -6.84852)) var(--lightningcss-dark, lab(90.1014% -.28953 -4.40965));
-      --pico-contrast-background: var(--lightningcss-light, lab(10.1643% .115328 -6.84852)) var(--lightningcss-dark, lab(95.0575% -.291228 -1.71349));
-      --pico-contrast-underline: var(--lightningcss-light, lab(10.1643% .115328 -6.84852 / .5)) var(--lightningcss-dark, lab(90.1014% -.28953 -4.40965 / .5));
-      --pico-contrast-hover: var(--lightningcss-light, lab(0% 0 0)) var(--lightningcss-dark, lab(100% 0 0));
-      --pico-contrast-hover-background: var(--lightningcss-light, lab(0% 0 0)) var(--lightningcss-dark, lab(100% 0 0));
-      --pico-contrast-focus: var(--lightningcss-light, lab(44.926% .251174 -18.4639 / .25)) var(--lightningcss-dark, lab(85.0956% -.256658 -7.18412 / .25));
-      --pico-contrast-inverse: var(--lightningcss-light, lab(100% 0 0)) var(--lightningcss-dark, lab(0% 0 0));
-      --pico-box-shadow: .0145rem .029rem .174rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .01698)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .01698)), .0335rem .067rem .402rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .024)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .024)), .0625rem .125rem .75rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .03)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .03)), .1125rem .225rem 1.35rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .036)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .036)), .2085rem .417rem 2.502rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .04302)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .04302)), .5rem 1rem 6rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .06)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .06)), 0 0 0 .0625rem var(--lightningcss-light, lab(59.8714% .424147 -20.9576 / .015)) var(--lightningcss-dark, lab(2.29862% -.0326186 -1.51291 / .015));
-      --pico-h1-color: var(--lightningcss-light, lab(20.1463% -.433654 -5.07026)) var(--lightningcss-dark, lab(95.1044% -.0797212 -1.09792));
-      --pico-h2-color: var(--lightningcss-light, lab(25.0758% -.66343 -5.70756)) var(--lightningcss-dark, lab(90.0921% -.498325 -2.31859));
-      --pico-h3-color: var(--lightningcss-light, lab(29.9764% -.285298 -6.72983)) var(--lightningcss-dark, lab(80.0531% -.495642 -5.13442));
-      --pico-h4-color: var(--lightningcss-light, lab(35.069% -.509471 -7.30436)) var(--lightningcss-dark, lab(74.9436% -.400245 -6.86533));
-      --pico-h5-color: var(--lightningcss-light, lab(41.702% -.54571 -8.34537)) var(--lightningcss-dark, lab(70.0428% -.790715 -8.22496));
-      --pico-h6-color: var(--lightningcss-light, lab(44.9953% -.376374 -8.77748)) var(--lightningcss-dark, lab(59.9084% -.295162 -11.2431));
-      --pico-mark-background-color: var(--lightningcss-light, lab(92.5424% 3.43403 21.9527)) var(--lightningcss-dark, lab(25.0707% -7.28615 -26.1574));
-      --pico-mark-color: var(--lightningcss-light, lab(4.9751% -.266477 -2.01176)) var(--lightningcss-dark, lab(100% 0 0));
-      --pico-ins-color: var(--lightningcss-light, lab(39.6308% -28.4411 5.07603)) var(--lightningcss-dark, lab(66.0625% -28.8204 2.98392));
-      --pico-del-color: var(--lightningcss-light, lab(35.1523% 34.5049 19.9742)) var(--lightningcss-dark, lab(61.4954% 31.3894 15.4348));
-      --pico-table-row-stripped-background-color: lab(50.0656% -.952631 -9.40993 / .0375);
-      --pico-code-background-color: var(--lightningcss-light, lab(96.2904% -.216633 -1.26722)) var(--lightningcss-dark, lab(11.3878% .0630617 -7.35345));
-      --pico-code-color: var(--lightningcss-light, lab(44.9953% -.376374 -8.77748)) var(--lightningcss-dark, lab(59.9084% -.295162 -11.2431));
-      --pico-form-element-background-color: var(--lightningcss-light, lab(98.7675% -.0708699 -.410461)) var(--lightningcss-dark, lab(12.5996% .0123382 -7.85736));
-      --pico-form-element-selected-background-color: var(--lightningcss-light, lab(90.1014% -.28953 -4.40965)) var(--lightningcss-dark, lab(20.1512% .114381 -10.5261));
-      --pico-form-element-border-color: var(--lightningcss-light, lab(85.0956% -.256658 -7.18412)) var(--lightningcss-dark, lab(20.1512% .114381 -10.5261));
-      --pico-form-element-color: var(--lightningcss-light, lab(15.0419% -.191495 -4.46318)) var(--lightningcss-dark, lab(90.0921% -.498325 -2.31859));
-      --pico-form-element-active-background-color: var(--lightningcss-light, lab(100% 0 0)) var(--lightningcss-dark, lab(11.3878% .0630617 -7.35345));
-      --pico-form-element-invalid-border-color: var(--lightningcss-light, lab(53.7238% 31.9719 13.7473)) var(--lightningcss-dark, lab(41.4251% 32.7852 11.9114));
-      --pico-form-element-invalid-active-border-color: var(--lightningcss-light, lab(50.5938% 48.7919 30.301)) var(--lightningcss-dark, lab(44.8693% 48.9514 30.3994));
-      --pico-form-element-valid-border-color: var(--lightningcss-light, lab(58.4771% -28.5678 1.12915)) var(--lightningcss-dark, lab(46.5509% -27.7555 -1.01907));
-      --pico-form-element-valid-active-border-color: var(--lightningcss-light, lab(56.4051% -38.8632 8.54154)) var(--lightningcss-dark, lab(50.6625% -37.5107 7.946));
-      --pico-switch-background-color: var(--lightningcss-light, lab(80.028% -.180185 -10.0066)) var(--lightningcss-dark, lab(25.0713% -.0737309 -12.3255));
-      --pico-switch-color: lab(100% 0 0);
-      --pico-range-border-color: var(--lightningcss-light, lab(90.1014% -.28953 -4.40965)) var(--lightningcss-dark, lab(14.9774% -.0851154 -8.82729));
-      --pico-range-active-border-color: var(--lightningcss-light, lab(80.028% -.180185 -10.0066)) var(--lightningcss-dark, lab(20.1512% .114381 -10.5261));
-      --pico-card-sectioning-background-color: var(--lightningcss-light, lab(98.7675% -.0708699 -.410461)) var(--lightningcss-dark, lab(11.3878% .0630617 -7.35345));
-      --pico-dropdown-background-color: var(--lightningcss-light, lab(100% 0 0)) var(--lightningcss-dark, lab(10.1643% .115328 -6.84852));
-      --pico-dropdown-border-color: var(--lightningcss-light, lab(95.0575% -.291228 -1.71349)) var(--lightningcss-dark, lab(14.9774% -.0851154 -8.82729));
-      --pico-dropdown-hover-background-color: var(--lightningcss-light, lab(95.0575% -.291228 -1.71349)) var(--lightningcss-dark, lab(14.9774% -.0851154 -8.82729));
-      --pico-modal-overlay-background-color: var(--lightningcss-light, lab(92.6099% -.29093 -1.71342 / .75)) var(--lightningcss-dark, lab(2.29272% -.116348 -.670871 / .75));
-      --pico-progress-background-color: var(--lightningcss-light, lab(90.1014% -.28953 -4.40965)) var(--lightningcss-dark, lab(14.9774% -.0851154 -8.82729));
-    }
   }
 
   :root, :host, [data-theme="light"] {
@@ -306,29 +243,15 @@
 
 @layer pico.theme {
   :root, :host, [data-theme] {
-    --pico-text-selection-color: var(--lightningcss-light, #b7880040) var(--lightningcss-dark, #c7940030);
-    --pico-primary: var(--lightningcss-light, #876400) var(--lightningcss-dark, #c79400);
-    --pico-primary-background: #ffbf00;
-    --pico-primary-underline: var(--lightningcss-light, #87640080) var(--lightningcss-dark, #c7940080);
-    --pico-primary-hover: var(--lightningcss-light, #694d00) var(--lightningcss-dark, #e8ae01);
-    --pico-primary-hover-background: var(--lightningcss-light, #e8ae01) var(--lightningcss-dark, #fecc63);
-    --pico-primary-focus: var(--lightningcss-light, #b7880080) var(--lightningcss-dark, #c7940060);
-    --pico-primary-inverse: #000;
-    --pico-switch-thumb-box-shadow: 0 0 .5rem #00000040;
-  }
-
-  @supports (color: lab(0% 0 0)) {
-    :root, :host, [data-theme] {
-      --pico-text-selection-color: var(--lightningcss-light, lab(60.0566% 11.4651 64.5263 / .25)) var(--lightningcss-dark, lab(64.9088% 12.3004 68.646 / .1875));
-      --pico-primary: var(--lightningcss-light, lab(44.9778% 8.86208 51.6624)) var(--lightningcss-dark, lab(64.9088% 12.3004 68.646));
-      --pico-primary-background: lab(81.6214% 14.6107 82.754);
-      --pico-primary-underline: var(--lightningcss-light, lab(44.9778% 8.86208 51.6624 / .5)) var(--lightningcss-dark, lab(64.9088% 12.3004 68.646 / .5));
-      --pico-primary-hover: var(--lightningcss-light, lab(34.9261% 7.43242 43.1709)) var(--lightningcss-dark, lab(75.0087% 13.3598 77.0924));
-      --pico-primary-hover-background: var(--lightningcss-light, lab(75.0087% 13.3598 77.0924)) var(--lightningcss-dark, lab(85.0498% 10.0718 58.0818));
-      --pico-primary-focus: var(--lightningcss-light, lab(60.0566% 11.4651 64.5263 / .5)) var(--lightningcss-dark, lab(64.9088% 12.3004 68.646 / .375));
-      --pico-primary-inverse: lab(0% 0 0);
-      --pico-switch-thumb-box-shadow: 0 0 .5rem lab(0% 0 0 / .25);
-    }
+    --pico-text-selection-color: var(--lightningcss-light, oklch(65.47% .1344 83.99 / .25)) var(--lightningcss-dark, oklch(69.65% .143 83.87 / .1875));
+    --pico-primary: var(--lightningcss-light, oklch(52.48% .1076 84.48)) var(--lightningcss-dark, oklch(69.65% .143 83.87));
+    --pico-primary-background: oklch(84.03% .1724 84.08);
+    --pico-primary-underline: var(--lightningcss-light, oklch(52.48% .1076 84.48 / .5)) var(--lightningcss-dark, oklch(69.65% .143 83.87 / .5));
+    --pico-primary-hover: var(--lightningcss-light, oklch(43.83% .0899 84.43)) var(--lightningcss-dark, oklch(78.33% .1606 84.34));
+    --pico-primary-hover-background: var(--lightningcss-light, oklch(78.33% .1606 84.34)) var(--lightningcss-dark, oklch(86.94% .1345 83.74));
+    --pico-primary-focus: var(--lightningcss-light, oklch(65.47% .1344 83.99 / .5)) var(--lightningcss-dark, oklch(69.65% .143 83.87 / .375));
+    --pico-primary-inverse: oklch(0% 0 0);
+    --pico-switch-thumb-box-shadow: 0 0 .5rem oklch(0% 0 0 / .25);
   }
 
   .pico [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]):not(.outline):before {
@@ -713,7 +636,8 @@
   }
 
   .pico button:focus, .pico button[aria-current]:not([aria-current="false"]):focus, .pico [type="submit"]:focus, .pico [type="submit"][aria-current]:not([aria-current="false"]):focus, .pico [type="reset"]:focus, .pico [type="reset"][aria-current]:not([aria-current="false"]):focus, .pico [type="button"]:focus, .pico [type="button"][aria-current]:not([aria-current="false"]):focus, .pico [role="button"]:focus, .pico [role="button"][aria-current]:not([aria-current="false"]):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+    0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
   }
 
   .pico [type="submit"], .pico [type="reset"], .pico [type="button"] {
@@ -747,11 +671,13 @@
   }
 
   .pico :is(button, [type="submit"], [type="button"], [role="button"]).secondary:focus, .pico :is(button, [type="submit"], [type="button"], [role="button"]).secondary[aria-current]:not([aria-current="false"]):focus, .pico [type="reset"]:focus, .pico [type="reset"][aria-current]:not([aria-current="false"]):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+    0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
   }
 
   .pico [type="file"]::file-selector-button:focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+    0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
   }
 
   .pico :is(button, [type="submit"], [type="button"], [role="button"]).contrast {
@@ -767,7 +693,8 @@
   }
 
   .pico :is(button, [type="submit"], [type="button"], [role="button"]).contrast:focus, .pico :is(button, [type="submit"], [type="button"], [role="button"]).contrast[aria-current]:not([aria-current="false"]):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+      0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
   }
 
   .pico :is(button, [type="submit"], [type="button"], [role="button"]).outline, .pico [type="reset"].outline {
@@ -991,16 +918,15 @@
   }
 
   .pico [type="search"] {
-    -webkit-appearance: textfield;
+    appearance: textfield;
     outline-offset: -2px;
   }
 
   .pico [type="search"]::-webkit-search-decoration {
-    -webkit-appearance: none;
+    appearance: none;
   }
 
-  .pico ::-webkit-file-upload-button {
-    -webkit-appearance: button;
+  .pico ::file-selector-button {
     font: inherit;
   }
 
@@ -1023,7 +949,8 @@
   }
 
   .pico input:not([type="checkbox"], [type="radio"], [type="range"]) {
-    block-size: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+    block-size: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 +
+      var(--pico-border-width) * 2);
   }
 
   .pico fieldset {
@@ -1118,7 +1045,8 @@
   }
 
   .pico :where(input, select, textarea)[aria-invalid="false"]:is(:active, :focus):not([type="checkbox"], [type="radio"]) {
-    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-valid-focus-color) !important;
+    --pico-box-shadow: 0 0 0 var(--pico-outline-width)
+          var(--pico-form-element-valid-focus-color) !important;
   }
 
   .pico :where(input, select, textarea)[aria-invalid="true"] {
@@ -1130,7 +1058,8 @@
   }
 
   .pico :where(input, select, textarea)[aria-invalid="true"]:is(:active, :focus):not([type="checkbox"], [type="radio"]) {
-    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-invalid-focus-color) !important;
+    --pico-box-shadow: 0 0 0 var(--pico-outline-width)
+          var(--pico-form-element-invalid-focus-color) !important;
   }
 
   [dir="rtl"] .pico :where(input, select, textarea):not([type="checkbox"], [type="radio"]):is([aria-invalid], [aria-invalid="true"], [aria-invalid="false"]) {
@@ -1138,16 +1067,6 @@
   }
 
   .pico input::placeholder, .pico textarea::placeholder, .pico select:invalid {
-    color: var(--pico-form-element-placeholder-color);
-    opacity: 1;
-  }
-
-  .pico input::-webkit-input-placeholder {
-    color: var(--pico-form-element-placeholder-color);
-    opacity: 1;
-  }
-
-  .pico textarea::-webkit-input-placeholder {
     color: var(--pico-form-element-placeholder-color);
     opacity: 1;
   }
@@ -1180,7 +1099,8 @@
   }
 
   .pico textarea[aria-invalid] {
-    --pico-icon-height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+    --pico-icon-height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 +
+        var(--pico-border-width) * 2);
     background-position: right .75rem top !important;
     background-size: 1rem var(--pico-icon-height) !important;
   }
@@ -1393,7 +1313,8 @@
   }
 
   .pico [type="file"]::file-selector-button {
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
+    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
+      var(--pico-form-element-spacing-horizontal);
     margin-inline-end: calc(var(--pico-spacing) / 2);
   }
 
@@ -1403,7 +1324,8 @@
   }
 
   .pico [type="file"]:focus::file-selector-button {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+      0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
   }
 
   .pico [type="range"] {
@@ -1530,10 +1452,6 @@
     display: none;
   }
 
-  .pico details summary::-moz-list-bullet {
-    list-style-type: none;
-  }
-
   .pico details summary:after {
     float: right;
     background-image: var(--pico-icon-chevron);
@@ -1601,7 +1519,8 @@
 
       .pico details:not(.dropdown)::details-content {
         block-size: 0;
-        transition: block-size var(--pico-transition), content-visibility var(--pico-transition) allow-discrete;
+        transition: block-size var(--pico-transition),
+          content-visibility var(--pico-transition) allow-discrete;
         overflow-y: clip;
       }
 
@@ -1610,7 +1529,8 @@
       }
 
       .pico details:not(.dropdown) > summary:not([role]) {
-        transition: color var(--pico-transition), margin-bottom var(--pico-transition);
+        transition: color var(--pico-transition),
+          margin-bottom var(--pico-transition);
       }
     }
   }
@@ -1673,7 +1593,8 @@
   }
 
   .pico details.dropdown > summary:not([role]) {
-    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 +
+        var(--pico-border-width) * 2);
     padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
     border: var(--pico-border-width) solid var(--pico-form-element-border-color);
     border-radius: var(--pico-border-radius);
@@ -1683,7 +1604,10 @@
     cursor: pointer;
     -webkit-user-select: none;
     user-select: none;
-    transition: background-color var(--pico-transition), border-color var(--pico-transition), color var(--pico-transition), box-shadow var(--pico-transition);
+    transition: background-color var(--pico-transition),
+      border-color var(--pico-transition),
+      color var(--pico-transition),
+      box-shadow var(--pico-transition);
   }
 
   .pico details.dropdown > summary:not([role]):active, .pico details.dropdown > summary:not([role]):focus {
@@ -1722,7 +1646,8 @@
 
   .pico nav details.dropdown > summary:not([role]) {
     height: calc(1rem * var(--pico-line-height) + var(--pico-nav-link-spacing-vertical) * 2);
-    padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2) var(--pico-nav-link-spacing-horizontal);
+    padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2)
+      var(--pico-nav-link-spacing-horizontal);
   }
 
   .pico nav details.dropdown > summary:not([role]):focus-visible {
@@ -1742,7 +1667,8 @@
     color: var(--pico-dropdown-color);
     white-space: nowrap;
     opacity: 0;
-    transition: opacity var(--pico-transition), transform 0s ease-in-out 1s;
+    transition: opacity var(--pico-transition),
+    transform 0s ease-in-out 1s;
     flex-direction: column;
     padding: 0;
     display: flex;
@@ -1757,7 +1683,8 @@
 
   .pico details.dropdown > summary + ul li {
     width: 100%;
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
+    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
+      var(--pico-form-element-spacing-horizontal);
     margin-bottom: 0;
     list-style: none;
   }
@@ -1771,8 +1698,10 @@
   }
 
   .pico details.dropdown > summary + ul li a {
-    margin: calc(var(--pico-form-element-spacing-vertical) * -.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
+    margin: calc(var(--pico-form-element-spacing-vertical) * -.5)
+        calc(var(--pico-form-element-spacing-horizontal) * -1);
+    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
+        var(--pico-form-element-spacing-horizontal);
     color: var(--pico-dropdown-color);
     text-overflow: ellipsis;
     border-radius: 0;
@@ -1799,7 +1728,8 @@
 
   .pico details.dropdown[open] > summary + ul {
     opacity: 1;
-    transition: opacity var(--pico-transition), transform 0s ease-in-out 0s;
+    transition: opacity var(--pico-transition),
+      transform 0s ease-in-out 0s;
     transform: scaleY(1);
   }
 
@@ -1867,35 +1797,36 @@
     --pico-form-element-spacing-horizontal: 2rem;
   }
 
-  @supports selector(:has(*)) {
-    .pico :is([role="search"], [role="group"]):has(button.secondary:focus, [type="submit"].secondary:focus, [type="button"].secondary:focus, [role="button"].secondary:focus) {
-      --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
-    }
+  .pico :is([role="search"], [role="group"]):has(button.secondary:focus, [type="submit"].secondary:focus, [type="button"].secondary:focus, [role="button"].secondary:focus) {
+    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width)
+      var(--pico-secondary-focus);
+  }
 
-    .pico :is([role="search"], [role="group"]):has(button.contrast:focus, [type="submit"].contrast:focus, [type="button"].contrast:focus, [role="button"].contrast:focus) {
-      --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
-    }
+  .pico :is([role="search"], [role="group"]):has(button.contrast:focus, [type="submit"].contrast:focus, [type="button"].contrast:focus, [role="button"].contrast:focus) {
+    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width)
+      var(--pico-contrast-focus);
+  }
 
-    .pico :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) {
-      --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-button);
-    }
+  .pico :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) {
+    --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-button);
+  }
 
-    .pico :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) input:not([type="checkbox"], [type="radio"]), .pico :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) select {
-      border-color: #0000;
-    }
+  .pico :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) input:not([type="checkbox"], [type="radio"]), .pico :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) select {
+    border-color: #0000;
+  }
 
-    .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) {
-      --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-input);
-    }
+  .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) {
+    --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-input);
+  }
 
-    .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) button, .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) [type="submit"], .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) [type="button"], .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) [role="button"] {
-      --pico-button-box-shadow: 0 0 0 var(--pico-border-width) var(--pico-primary-border);
-      --pico-button-hover-box-shadow: 0 0 0 var(--pico-border-width) var(--pico-primary-hover-border);
-    }
+  .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) button, .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) [type="submit"], .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) [type="button"], .pico :is([role="search"], [role="group"]):has(input:not([type="submit"], [type="button"]):focus, select:focus) [role="button"] {
+    --pico-button-box-shadow: 0 0 0 var(--pico-border-width) var(--pico-primary-border);
+    --pico-button-hover-box-shadow: 0 0 0 var(--pico-border-width)
+        var(--pico-primary-hover-border);
+  }
 
-    .pico :is([role="search"], [role="group"]) button:focus, .pico :is([role="search"], [role="group"]) [type="submit"]:focus, .pico :is([role="search"], [role="group"]) [type="reset"]:focus, .pico :is([role="search"], [role="group"]) [type="button"]:focus, .pico :is([role="search"], [role="group"]) [role="button"]:focus {
-      box-shadow: none;
-    }
+  .pico :is([role="search"], [role="group"]) button:focus, .pico :is([role="search"], [role="group"]) [type="submit"]:focus, .pico :is([role="search"], [role="group"]) [type="reset"]:focus, .pico :is([role="search"], [role="group"]) [type="button"]:focus, .pico :is([role="search"], [role="group"]) [role="button"]:focus {
+    box-shadow: none;
   }
 
   .pico [role="search"] > :first-child {
@@ -1941,6 +1872,7 @@
     min-width: 100%;
     height: inherit;
     min-height: 100%;
+    -webkit-backdrop-filter: var(--pico-modal-overlay-backdrop-filter);
     backdrop-filter: var(--pico-modal-overlay-backdrop-filter);
     background-color: var(--pico-modal-overlay-background-color);
     color: var(--pico-color);
@@ -2056,6 +1988,7 @@
 
   @keyframes modal-overlay {
     from {
+      -webkit-backdrop-filter: none;
       backdrop-filter: none;
       background-color: #0000;
     }
@@ -2078,6 +2011,7 @@
       }
 
       html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) .pico dialog:not([open]) {
+        -webkit-backdrop-filter: none;
         backdrop-filter: none;
         background-color: #0000;
       }
@@ -2097,6 +2031,7 @@
 
       @starting-style {
         html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) .pico dialog[open] {
+          -webkit-backdrop-filter: none;
           backdrop-filter: none;
           background-color: #0000;
         }
@@ -2145,7 +2080,8 @@
   }
 
   .pico nav li :where(a, [role="link"]) {
-    margin: calc(var(--pico-nav-link-spacing-vertical) * -1) calc(var(--pico-nav-link-spacing-horizontal) * -1);
+    margin: calc(var(--pico-nav-link-spacing-vertical) * -1)
+      calc(var(--pico-nav-link-spacing-horizontal) * -1);
     display: inline-block;
   }
 
@@ -2215,7 +2151,8 @@
   }
 
   .pico aside li {
-    padding: calc(var(--pico-nav-element-spacing-vertical) * .5) var(--pico-nav-element-spacing-horizontal);
+    padding: calc(var(--pico-nav-element-spacing-vertical) * .5)
+    var(--pico-nav-element-spacing-horizontal);
   }
 
   .pico aside li a:not([role="button"]) {
@@ -2261,7 +2198,11 @@
 
   @media (prefers-reduced-motion: no-preference) {
     .pico progress:indeterminate {
-      background: var(--pico-progress-background-color) linear-gradient(to right, var(--pico-progress-color) 30%, var(--pico-progress-background-color) 30%) top left / 150% 150% no-repeat;
+      background: var(--pico-progress-background-color)
+      linear-gradient(to right,
+        var(--pico-progress-color) 30%,
+        var(--pico-progress-background-color) 30%)
+      top left / 150% 150% no-repeat;
       animation: 1s linear infinite progress-indeterminate;
     }
 
@@ -2487,7 +2428,8 @@
 
   .pico :is(ul, menu)[popover] li {
     width: 100%;
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
+    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
+      var(--pico-form-element-spacing-horizontal);
     margin-bottom: 0;
     list-style: none;
   }
@@ -2501,8 +2443,10 @@
   }
 
   .pico :is(ul, menu)[popover] li a {
-    margin: calc(var(--pico-form-element-spacing-vertical) * -.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5) var(--pico-form-element-spacing-horizontal);
+    margin: calc(var(--pico-form-element-spacing-vertical) * -.5)
+        calc(var(--pico-form-element-spacing-horizontal) * -1);
+    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
+        var(--pico-form-element-spacing-horizontal);
     color: var(--pico-dropdown-color);
     text-overflow: ellipsis;
     border-radius: 0;
@@ -2546,7 +2490,9 @@
       margin-block: var(--pico-outline-width);
       min-inline-size: max(anchor-size(inline), 10rem);
       position-area: block-end span-inline-end;
-      position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+      position-try-fallbacks: flip-block,
+      flip-inline,
+      flip-block flip-inline;
       inset: auto;
     }
 

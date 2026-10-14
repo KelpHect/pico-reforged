@@ -26,10 +26,11 @@ src/                     CSS source, plain CSS, loadable in a current browser wi
   colors/                color and background utility classes (generated)
 scripts/
   cli.ts                 CLI entry (`pico-reforged build`, `matrix`, `themes`, `modules`)
-  dev-build.ts           quick azure build into dist-dev/, used by tests and `npm run dev`
-  lib/compiler/          the compiler: config, bundle, classless, scope, purge, theme, legacy, matrix, report
+  dev-build.ts           quick azure build into dist-dev/, used by `pnpm test:api`, `pnpm test:visual` and `pnpm dev`
+  lib/compiler/          the compiler: config, bundle, transforms, module-tokens, classless, scope, purge, theme, matrix, report
   data/                  palette.json, themes.ts, scheme.ts (the inputs to generation)
   generate.ts            writes src/tokens/palette.css, scheme.css, src/themes/*.css, src/colors/*.css
+vite.config.ts          Vite+ config: test, lint, fmt and pack in one file
 css/                     build output, same file names as v2.1.1 so CDN paths keep working
 test/
   reference/v2.1.1/      frozen upstream build output
@@ -93,7 +94,7 @@ Every semantic color token from v2.1.1 keeps its name (`--pico-background-color`
 [data-theme="dark"] { color-scheme: dark; }
 ```
 
-Natively, `light-dark()` inside a custom property resolves against the `color-scheme` of the element that uses the variable. The compiler's lowered version (`var(--lightningcss-light, a) var(--lightningcss-dark, b)`) resolves where the variable is declared instead. That's why `scheme.css` and the theme files declare their tokens on `:root, :host, [data-theme]` and not just `:root`. The values get recomputed on every `[data-theme]` subtree, and nested themes work in both native and lowered builds. Lightning CSS 1.33 lowers `light-dark()` and OKLCH (to hex plus `lab()` inside `@supports`) for the `defaults` targets, and that was checked before this design was fixed.
+Natively, `light-dark()` inside a custom property resolves against the `color-scheme` of the element that uses the variable. The compiler's lowered version (`var(--lightningcss-light, a) var(--lightningcss-dark, b)`) resolves where the variable is declared instead. That's why `scheme.css` and the theme files declare their tokens on `:root, :host, [data-theme]` and not just `:root`. The values get recomputed on every `[data-theme]` subtree, and nested themes work in both native and lowered builds. Lightning CSS 1.33 lowers `light-dark()` and OKLCH (to hex plus `lab()` inside `@supports`) for the floor targets (see Browser floor), and that was checked before this design was fixed.
 
 `light-dark()` only takes colors. The few scheme-dependent values that are not plain colors (the valid and invalid icon data URIs, the white-icon `filter` on contrast buttons) live in `src/tokens/scheme-images.css`, using this selector set for dark:
 
@@ -139,19 +140,19 @@ At runtime, without the compiler, `examples/custom-theme.html` shows the same id
 
 The v2.1.1 Sass switches become compiler options:
 
-| v2.1.1 Sass | Reforged config | How it works |
-| --- | --- | --- |
-| `$modules` | `modules` | files are left out of the bundle |
-| `$theme-color` | `theme` | picks a file in `src/themes/` or generates one |
-| `$enable-classes: false` | `classes: false` | drops every selector that needs a class, except classes inside `:not()` |
-| `$enable-semantic-container` | `semanticContainer` | adds `layout/semantic-container.css` |
-| `$enable-viewport: false` | `fluid: true` | sets `--pico-container-max-width: 100%` after the breakpoint values |
-| `$parent-selector: ".pico"` | `scope: ".pico"` | prefixes selectors, leaves `:root`, `:host` and `html` rules on the root |
-| `$enable-responsive-typography` | `responsiveTypography` | drops the root font size breakpoints |
-| `$enable-responsive-spacings` | `responsiveSpacings` | adds `layout/responsive-spacings.css` |
-| `$enable-transitions: false` | `transitions: false` | sets `--pico-transition: 0s` and removes every `animation-*` and `transition-*` declaration with a hard-coded duration (modal, tooltip, progress, switch thumb, open and close transitions), as the Sass left those out |
-| `$enable-important: false` | `important: false` | strips `!important` from utilities |
-| `$css-var-prefix` | not kept | the prefix is part of the public API |
+| v2.1.1 Sass                     | Reforged config        | How it works                                                                                                                                                                                       |
+| ------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `$modules`                      | `modules`              | files are left out of the bundle                                                                                                                                                                   |
+| `$theme-color`                  | `theme`                | picks a file in `src/themes/` or generates one                                                                                                                                                     |
+| `$enable-classes: false`        | `classes: false`       | drops every selector that needs a class, except classes inside `:not()`                                                                                                                            |
+| `$enable-semantic-container`    | `semanticContainer`    | adds `layout/semantic-container.css`                                                                                                                                                               |
+| `$enable-viewport: false`       | `fluid: true`          | sets `--pico-container-max-width: 100%` after the breakpoint values                                                                                                                                |
+| `$parent-selector: ".pico"`     | `scope: ".pico"`       | prefixes selectors, leaves `:root`, `:host` and `html` rules on the root                                                                                                                           |
+| `$enable-responsive-typography` | `responsiveTypography` | drops the root font size breakpoints                                                                                                                                                               |
+| `$enable-responsive-spacings`   | `responsiveSpacings`   | adds `layout/responsive-spacings.css`                                                                                                                                                              |
+| `$enable-transitions: false`    | `transitions: false`   | sets `--pico-transition: 0s`, removes every `transition-*` and `animation-*` declaration (the indeterminate progress bar keeps its animation, as in v2.1.1) and drops the `@starting-style` blocks |
+| `$enable-important: false`      | `important: false`     | strips `!important` from utilities                                                                                                                                                                 |
+| `$css-var-prefix`               | not kept               | the prefix is part of the public API                                                                                                                                                               |
 
 Breakpoints are literal media queries in source, written with range syntax (`(width >= 768px)`): 576, 768, 1024, 1280 and 1536 px, with container widths of 510, 700, 950, 1200 and 1450 px and root sizes of 106.25%, 112.5%, 118.75%, 125% and 131.25%. Container widths are exposed as `--pico-container-max-width`, set in `tokens/core.css` per breakpoint, so `.container`, the semantic container and the modal all read one variable.
 
@@ -162,11 +163,11 @@ Breakpoints are literal media queries in source, written with range syntax (`(wi
 3. Pick or generate the theme.
 4. Bundle with Lightning CSS (`bundleAsync`), which resolves `@import ... layer()`.
 5. Run selector passes with a Lightning CSS visitor: classless filter, scope prefix, purge.
-6. Lower and minify with Lightning CSS for the targets (browserslist `defaults` by default). This handles nesting, `light-dark()`, OKLCH fallbacks, range media queries and vendor prefixes.
-7. Optionally strip `@layer` (`layers: false`) for the legacy build.
+6. Lower and minify with Lightning CSS for the targets (`DEFAULT_TARGETS`, see Browser floor). This handles nesting and `light-dark()` lowering and the vendor prefixes the floor still needs.
+7. Drop the custom properties that only an excluded module read (`module-tokens.ts`), then drop rules with an empty `:is()`, `:where()` or `:has()` list.
 8. Write the file plus a size report.
 
-The default `npm run build` writes the full v2.1.1 file matrix into `css/`: `pico`, `pico.classless`, `pico.conditional`, `pico.classless.conditional`, `pico.fluid.classless` and `pico.fluid.classless.conditional`, each for the plain build and the 20 themes, each with a `.min.css`, plus `pico.colors(.min).css`.
+The default `pnpm build` writes the full v2.1.1 file matrix into `css/`: `pico`, `pico.classless`, `pico.conditional`, `pico.classless.conditional`, `pico.fluid.classless` and `pico.fluid.classless.conditional`, each for the plain build and the 20 themes, each with a `.min.css`, plus `pico.colors(.min).css`.
 
 ### Purge
 
@@ -177,49 +178,95 @@ The default `npm run build` writes the full v2.1.1 file matrix into `css/`: `pic
 How the pieces behave where the plan left room:
 
 - Entry text is edited before bundling. Disabled modules are bundled as an empty file by the resolver, modules the entry does not import (`layout/semantic-container`, `layout/responsive-spacings`) are inserted after their anchor import, and the theme import is replaced with the chosen theme. The themes option takes a name, `{ color }`, `{ hue, chroma }` or a CSS file path (the default theme followed by that file).
-- Nesting is lowered first (`Features.Nesting` is always on), so every selector pass sees flat selectors. Lightning CSS 1.33 cannot hand a style rule back from a visitor (var() fails to deserialize), so selectors go through the per-selector `Selector` hook, which also drops a rule once all its selectors are gone. Nodes that must be returned (layer removal, `!important` stripping) go through `clean()` in `legacy.ts`.
+- Nesting is lowered first (`Features.Nesting` is always on), so every selector pass sees flat selectors. Lightning CSS 1.33 cannot hand a style rule back from a visitor (var() fails to deserialize), so selectors go through the per-selector `Selector` hook, which also drops a rule once all its selectors are gone. Nodes that must be returned (`!important` stripping, motion stripping) go through `clean()` in `transforms.ts`.
 - Classless: a selector goes if it has a class outside `:not()`; `:is()`, `:where()` and `:has()` lists are filtered branch by branch. Checked by running the filter over the v2.1.1 `pico.css` and diffing with the v2.1.1 `pico.classless.css`. The only rule v2.1.1 kept that the filter drops is `table.striped`, which is the one entry in `CLASSLESS_KEEP`. v2.1.1 also wrote `:not(.outline)` away in two selectors (no effect without classes) and dropped the unused modal keyframes, which `pruneKeyframes` does here.
 - Scope: checked the same way against `pico.conditional.css`. `:root`, `:host`, `html` and a lone `[data-theme]` stay; when one of them or `[dir]` is followed by a descendant, the scope goes after it (`[dir=rtl] .pico select`); `@keyframes`, `@media` and `@supports` are untouched. Kept global, as in v2.1.1: `*`, `::before`, `::after`, `body`, `main`, `.container`, `.container-fluid`, `.grid` and the `.modal-is-*` classes on `<html>` (see `scope-global.ts`). Not reproduced, because they were accidents: v2.1.1 left the element-level token overrides (`a`, `h1`, `[role=group] button` and so on) and `[type=reset].outline` unscoped. Here they are scoped.
 - Fluid: sets `--pico-container-max-width: 100%` in `pico.core` and, when the semantic container is on, puts the side padding back (semantic-container.css zeroes it from 576px up, v2.1.1 fluid kept it). Checked against `pico.fluid.classless.css` with the visual harness: 0 px difference.
 - `important: false` also leaves out `utilities/reduce-motion` and so does `transitions: false`, as v2.1.1 built it only when both were on.
 - `important: false` strips `!important` everywhere. v2.1.1 also left out the `textarea[aria-invalid]` icon block and the Firefox date and time block; here they stay, without `!important`. This is intended: the textarea icon sits at the top right and the Firefox date inputs lose their calendar icon padding, which keeps the same look as the default build.
 - `@scope` is not supported in theme files: the selector passes also rewrite its prelude.
+- `transitions: false` follows `$enable-transitions: false` from v2.1.1 (checked against `git show a07563dd:scss/...`): every `transition-*` and `animation-*` declaration goes, including those that read `var(--pico-transition)`, the modal and tooltip keyframes go with them, and the `@starting-style` blocks are dropped since nothing transitions. `--pico-transition` is still set to `0s` for rules a user adds. The one exception is `progress:indeterminate`, whose animation is the only sign of a busy state and which v2.1.1 also left alone.
+- Unknown config keys do not fail the build. `resolveOptions` collects a warning per key into `stats.warnings`, which the CLI prints. `exclude` is accepted as a shorthand for `modules: { name: false }`, as a list or a comma separated string. A module name that does not exist is still an error.
+- Excluding a module also drops the custom properties only it reads. `module-tokens.ts` maps each module to token name prefixes (for example `components/modal` to `--pico-modal-`, `--pico-icon-close` and `--pico-scrollbar-width`). A candidate is removed only when no remaining `var()` reads it, and the pass repeats until nothing more goes, so alias chains collapse.
+- A selector with an empty `:is()`, `:where()` or `:has()` list matches nothing, so the rule is dropped. Rules that put `:is([aria-current]...)` after `::file-selector-button` were dead too, since only user-action pseudo-classes parse there and the browser drops the whole rule. That branch is gone from `src/content/button.css`.
+- Source cleanups for the floor: the `::-webkit-file-upload-button`, `::-webkit-input-placeholder` and `-webkit-appearance` hand-written prefixes are replaced by their standard forms, the `::-moz-list-bullet` rule on accordion summaries is gone (the summary already has `list-style-type: none`), and the `@supports selector(:has(*))` wrapper around the group focus ring is gone.
 - Purge: classes are collected from `class` attributes and from every quoted string in the scanned files, so `classList.add("modal-is-open")` counts. Attributes are collected with their values; one set from script by name only matches any value. `data-theme` and `dir` always count as present. A safelisted name keeps every selector that mentions it. Unused `@keyframes` go with the rules. The tag scanner reads quoted values and `{...}` expressions, so `>` inside `x-data="a > b"` or `() => go()` does not end a tag. Attributes bound to an expression (`aria-busy={x}`, `:aria-busy`, `v-bind:`, `x-bind:`, `${x}`) count as present with any value. `open` always counts as present because the browser toggles it. Lowercase words in quoted strings count as tags (`createElement("dialog")`). A content glob that matches no file is reported in `stats.warnings`, printed by the CLI.
 - The matrix writes the same names as v2.1.1, which has no plain `pico.classless.conditional.css` and no plain `pico.fluid.classless.conditional.css`, and no `pico.azure.css` (azure is the plain file).
-- `npm pack` ships `dist/`, JavaScript emitted by `tsconfig.build.json`, because Node does not strip types inside `node_modules`. The compiler reads `src/` at run time, so `src/` is in the package too.
+- `pnpm pack` and `npm publish` ship `dist/`, built by `vp pack` (tsdown): `dist/cli.js` (the `pico-reforged` binary), `dist/compiler.js` and `dist/compiler.d.ts` (the `./compiler` export) and one shared chunk. Node does not strip types inside `node_modules`, so the packed files are plain JavaScript and the CLI runs on Node 22.18+ and 24 with `--no-experimental-strip-types`. The compiler reads `src/` at run time, so `src/` is in the package too, and finds the package root by walking up from its own file, so the same code works from `scripts/lib/compiler/` and from `dist/`.
 
 ## Popover and anchor positioning
 
 All of these are additive. The v2.1.1 markup keeps working in every browser.
 
-| Component | v2.1.1 markup (kept) | New option | Fallback |
-| --- | --- | --- | --- |
-| Dropdown | `<details class="dropdown">` | `<button popovertarget="m">` plus `<ul popover id="m">`, anchored under the button with `position-area` and `position-try-fallbacks: flip-block` | without anchor positioning the popover still opens in the top layer, placed with fixed fallback styles |
-| Tooltip | `[data-tooltip]` with `[data-placement]` | `[popover="hint"]` or `[role="tooltip"][popover]` anchored to its invoker | the `data-tooltip` pattern needs nothing new |
-| Modal | `<dialog>` with `.modal-is-*` classes | `<dialog>` with `showModal()` only, opened and closed with `@starting-style` and `transition-behavior: allow-discrete` | no animation, dialog still opens |
-| Accordion | `<details>` | `details[name]` exclusive groups, animated height with `::details-content` and `interpolate-size` | instant open and close |
+| Component | v2.1.1 markup (kept)                     | New option                                                                                                                                       | Fallback                                                                                               |
+| --------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Dropdown  | `<details class="dropdown">`             | `<button popovertarget="m">` plus `<ul popover id="m">`, anchored under the button with `position-area` and `position-try-fallbacks: flip-block` | without anchor positioning the popover still opens in the top layer, placed with fixed fallback styles |
+| Tooltip   | `[data-tooltip]` with `[data-placement]` | `[popover="hint"]` or `[role="tooltip"][popover]` anchored to its invoker                                                                        | the `data-tooltip` pattern needs nothing new                                                           |
+| Modal     | `<dialog>` with `.modal-is-*` classes    | `<dialog>` with `showModal()` only, opened and closed with `@starting-style` and `transition-behavior: allow-discrete`                           | no animation, dialog still opens                                                                       |
+| Accordion | `<details>`                              | `details[name]` exclusive groups, animated height with `::details-content` and `interpolate-size`                                                | instant open and close                                                                                 |
 
 Anchor rules sit in `@supports (anchor-name: --a)` blocks. Popover rules use `:popover-open` and `[popover]`, which are ignored where unsupported.
 
-## Fallback strategy
+## Browser floor
 
-| Feature | Source uses | Older browsers get |
-| --- | --- | --- |
-| Nesting | native `&` | flattened by the compiler |
-| OKLCH | `oklch()` | compiler adds rgb or lab fallbacks, including inside custom properties |
-| `light-dark()` | everywhere colors differ by scheme | compiler lowering with `color-scheme` variables |
-| Range media queries | `(width >= 768px)` | rewritten to `min-width` |
-| Cascade layers | `@layer pico.*` | no fallback in the default build, `layers: false` gives an unlayered build |
-| `:has()` | group focus rings | same as v2.1.1, no ring change where unsupported |
-| Popover | opt-in patterns | content shows as normal flow when the attribute is ignored |
-| Anchor positioning | opt-in patterns | top-layer popover with fixed placement |
-| `@starting-style` | dialog and popover entry | no entry animation |
-| `::details-content` | accordion animation | no animation |
+The default `targets` is the exported constant `DEFAULT_TARGETS` in `scripts/lib/compiler/config.ts`:
 
-Target support for the default build is browserslist `defaults` plus `@layer` (Chrome 99, Edge 99, Firefox 97, Safari 15.4). The full table is in `docs/browser-support.md`.
+```
+chrome >= 111, edge >= 111, firefox >= 128, safari >= 16.4, ios_saf >= 16.4
+```
+
+This is the same floor as Tailwind CSS v4. There is no legacy support: no unlayered build and no fallback for browsers below it. The `targets` option and `--targets` still take any browserslist query for people who want something else. The full table is in `docs/browser-support.md`.
+
+| Feature                                  | Source uses                        | At the floor                                                                                       |
+| ---------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------- |
+| Cascade layers                           | `@layer pico.*`                    | native (Chrome 99, Firefox 97, Safari 15.4), kept as written                                       |
+| `:has()`                                 | group focus rings                  | native (Chrome 105, Firefox 121, Safari 15.4), no `@supports` guard                                |
+| Range media queries                      | `(width >= 768px)`                 | native (Chrome 104, Firefox 63, Safari 16.4), kept as written                                      |
+| OKLCH                                    | `oklch()`                          | native (Chrome 111, Firefox 113, Safari 15.4), no fallback is emitted                              |
+| Nesting                                  | native `&`                         | flattened by the compiler (native from Chrome 120, Firefox 117, Safari 17.2)                       |
+| `light-dark()`                           | everywhere colors differ by scheme | compiler lowering with `color-scheme` variables (native from Chrome 123, Firefox 120, Safari 17.5) |
+| Popover                                  | opt-in patterns                    | content shows as normal flow where the attribute is ignored                                        |
+| Anchor positioning                       | opt-in patterns                    | top-layer popover with fixed placement where unsupported                                           |
+| `@starting-style`, `transition-behavior` | dialog and popover entry           | no entry animation where unsupported                                                               |
+| `::details-content`, `interpolate-size`  | accordion animation                | no animation                                                                                       |
+
+Moving from browserslist `defaults` to the floor shrank the matrix (minified, gzip -9, header without file name):
+
+| File                     | Before raw | Before gzip | After raw | After gzip |
+| ------------------------ | ---------- | ----------- | --------- | ---------- |
+| `pico.min.css`           | 87,123     | 13,170      | 80,094    | 11,970     |
+| `pico.classless.min.css` | 76,671     | 12,121      | 69,613    | 10,921     |
+
+Most of the saving is the dropped OKLCH to `lab()` fallbacks and prefixes. The source cleanups for the floor account for about 500 bytes of it.
+
+## Toolchain
+
+One tool, [Vite+](https://viteplus.dev) 1.2.0 (`vite-plus`, command `vp`), runs everything. It bundles Vitest 5, Oxlint with tsgolint, Oxfmt and tsdown, and reads one `vite.config.ts`. There is no Vite build: the CSS in `src/` is plain and the compiler is the build. The package manager is pnpm (`packageManager` in `package.json`), the runtime is Node 22.18+ (24 recommended), and TypeScript 7 (`tsc`) does the standalone type check.
+
+| Script             | Runs                                      | What it does                                                                                                                            |
+| ------------------ | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm build`       | `generate.ts`, then `cli.ts matrix css`   | regenerates tokens, themes and color classes, then writes the 238 files into `css/`                                                     |
+| `pnpm dev`         | `dev-build.ts` under `node --watch-path`  | rebuilds `dist-dev/` on change                                                                                                          |
+| `pnpm test`        | `vp test`                                 | Vitest over `test/**/*.test.ts`                                                                                                         |
+| `pnpm test:api`    | `dev-build.ts`, then `test/api/check.ts`  | v2.1.1 API coverage check                                                                                                               |
+| `pnpm test:visual` | `dev-build.ts`, then `test/visual/run.ts` | Playwright pixel diff against v2.1.1                                                                                                    |
+| `pnpm lint`        | `vp lint`                                 | Oxlint, type-aware, over `scripts/`, `test/` and `vite.config.ts`                                                                       |
+| `pnpm fmt`         | `vp fmt`                                  | Oxfmt for TS, JSON, Markdown, YAML and `src/**/*.css`                                                                                   |
+| `pnpm check`       | `vp check`                                | format check, lint and type check together                                                                                              |
+| `pnpm typecheck`   | `tsc -p .`                                | TypeScript 7 type check                                                                                                                 |
+| `pnpm run pack`    | `vp pack`                                 | tsdown build of `dist/cli.js` and `dist/compiler.js` plus `.d.ts`. Use `pnpm run pack`: plain `pnpm pack` is pnpm's own tarball command |
+
+Notes on the setup:
+
+- Lint runs the `correctness`, `suspicious` and `perf` categories plus the type-aware rules (`no-floating-promises`, `no-misused-promises`, `await-thenable`, `no-unsafe-*`, `restrict-template-expressions` and others) with `typeCheck` on. The few rules turned off, and why, are commented in `vite.config.ts`.
+- Oxfmt formats `src/**/*.css` except the files `scripts/generate.ts` writes (`tokens/palette.css`, `tokens/scheme.css`, `themes/`, `colors/`). It only changes whitespace: with the formatted sources, the minified output of ten build variants is byte-identical to the output of the unformatted sources, and the readable output differs only in whitespace inside custom property values. Markdown code samples are left as written.
+- Tests moved from `node:test` to Vitest. The assertions still use `node:assert/strict`. The CLI test builds `dist/` with `vp pack` and runs it with `--no-experimental-strip-types`.
+- `pnpm-workspace.yaml` holds `minimumReleaseAgeExclude` entries for Vite+ 1.2.0 and Playwright, which pnpm added because those versions are newer than its release age gate. Remove them once the versions are old enough. No dependency needs a build script: Lightning CSS ships prebuilt binaries as optional packages, so nothing needs approving.
+- `.gitattributes` forces LF (`* text=auto eol=lf`) and `.editorconfig` sets the same for editors.
 
 ## Testing
 
+- `pnpm test` runs the Vitest suites in `test/compiler/`: classless, purge, scope, options, CLI, the review regressions and the browser floor leftovers.
 - `test/api/check.ts` compares the built `css/pico.css`, `pico.classless.css`, `pico.conditional.css` and `pico.colors.css` against `test/api/baseline.json`. Every class, attribute hook, `--pico-*` variable and keyframe name from v2.1.1 must exist, unless it is listed as removed in `docs/migration.md`.
 - `test/visual/run.ts` loads each fixture with the v2.1.1 CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. Differences are reviewed by hand. The goal is near-identical output, except where a change is a deliberate improvement listed in the migration guide.
 

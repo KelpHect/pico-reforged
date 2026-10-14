@@ -3,13 +3,13 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { compile } from "../../scripts/lib/compiler/index.ts";
 import { emptyIndex, purgeSelectors, scanText } from "../../scripts/lib/compiler/purge.ts";
 import { headers, mapSelectors } from "./helpers.ts";
 
 const dir = mkdtempSync(join(tmpdir(), "pico-review2-"));
-after(() => rmSync(dir, { recursive: true, force: true }));
+afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
 const write = (name: string, text: string): string => {
   const file = join(dir, name);
@@ -62,7 +62,7 @@ test("classes used as unquoted object keys (clsx, Vue :class) are found", async 
   );
   assert.ok(has(h, ".contrast"), "clsx({ contrast: on }) did not register contrast");
   const v = await purged("vue.html", `<button :class="{ secondary: isSecondary }">x</button>`);
-  assert.ok(has(v, ".secondary"), ":class=\"{ secondary: x }\" did not register secondary");
+  assert.ok(has(v, ".secondary"), ':class="{ secondary: x }" did not register secondary');
 });
 
 test("an apostrophe in text does not hide a script string on the same line", async () => {
@@ -76,9 +76,8 @@ test("an apostrophe in text does not hide a script string on the same line", asy
 test("attribute values that HTML matches case-insensitively (type) keep their rules", () => {
   const index = emptyIndex();
   scanText(index, '<input type="Checkbox"><input type="RADIO">');
-  const out = mapSelectors(
-    'input[type=checkbox] {a: b} input[type=radio] {a: b}',
-    (sel) => purgeSelectors(index, [sel]),
+  const out = mapSelectors("input[type=checkbox] {a: b} input[type=radio] {a: b}", (sel) =>
+    purgeSelectors(index, [sel]),
   );
   assert.match(out, /checkbox/, 'input[type=checkbox] dropped for type="Checkbox"');
   assert.match(out, /radio/, 'input[type=radio] dropped for type="RADIO"');

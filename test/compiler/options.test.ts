@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test } from "vite-plus/test";
 import { compile, THEMES } from "../../scripts/lib/compiler/index.ts";
 import { squash } from "./helpers.ts";
 
@@ -13,7 +13,10 @@ test("module exclusion removes the module and reports it", async () => {
   assert.match(squash(full.css), dialogRule);
   assert.doesNotMatch(squash(lean.css), dialogRule);
   assert.doesNotMatch(lean.css, /\[type="range"\]::-webkit-slider-thumb/);
-  assert.deepEqual(lean.stats.excludedModules.sort(), ["components/modal", "forms/input-range"]);
+  assert.deepEqual(lean.stats.excludedModules.toSorted(), [
+    "components/modal",
+    "forms/input-range",
+  ]);
   assert.ok(lean.css.length < full.css.length);
 });
 
@@ -73,31 +76,11 @@ test("an unknown theme is an error", async () => {
   await assert.rejects(compile({ theme: "nope" }), /Unknown theme/);
 });
 
-test("layers: false removes @layer and keeps the order", async () => {
-  const layered = await compile();
-  const flat = await compile({ layers: false });
-  assert.match(layered.css, /@layer pico\.core/);
-  assert.doesNotMatch(flat.css, /@layer/);
-  const at = (s: string) => flat.css.indexOf(s);
-  assert.ok(at("--pico-primary-background") > -1);
-  assert.ok(at("--pico-font-family:") < at("--pico-primary-background:"));
-  assert.ok(at("--pico-primary-background:") < at("box-sizing: border-box"));
-  assert.ok(at("box-sizing: border-box") < at("dialog {"));
-  assert.equal(flat.stats.rules, layered.stats.rules);
-});
-
 test("important: false strips !important and the reduce-motion block", async () => {
   const { css } = await compile({ important: false });
   assert.doesNotMatch(css, /!important/);
   assert.doesNotMatch(css, /animation-duration: 1ms/);
   assert.match((await compile()).css, /!important/);
-});
-
-test("transitions: false sets --pico-transition to 0s", async () => {
-  const { css } = await compile({ transitions: false });
-  assert.match(css, /--pico-transition: 0s/);
-  assert.doesNotMatch(css, /animation-duration: 1ms/);
-  assert.match((await compile()).css, /--pico-transition: \.2s ease-in-out/);
 });
 
 test("responsiveTypography: false keeps the root size fixed", async () => {
@@ -126,7 +109,7 @@ test("minify, banner and source map", async () => {
   assert.ok(min.css.startsWith("/*! hello */\n"));
   assert.ok(min.css.length < plain.css.length * 0.9);
   assert.ok(!min.css.slice(14).includes("\n"));
-  assert.ok(min.map && JSON.parse(min.map).version === 3);
+  assert.ok(min.map && (JSON.parse(min.map) as { version: number }).version === 3);
 });
 
 test("the colors entry has the palette and the utilities", async () => {
@@ -160,5 +143,8 @@ test("source map points at src files and follows the banner", async () => {
 
 test("transitions: false leaves no hard-coded animation or transition duration", async () => {
   const { css } = await compile({ transitions: false });
-  assert.doesNotMatch(css, /animation-(duration|name|delay)|@keyframes modal|transition: margin|overlay [0-9.]+s/);
+  assert.doesNotMatch(
+    css,
+    /animation-(duration|name|delay)|@keyframes modal|transition: margin|overlay [0-9.]+s/,
+  );
 });

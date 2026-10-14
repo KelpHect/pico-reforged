@@ -21,6 +21,7 @@
 Today, AI can generate lightweight, standalone, accessible HTML with just the CSS it needs, so a Minimal CSS Framework for Semantic HTML matters less than it used to. To stay relevant, Pico CSS would need a full rewrite: plain modern CSS instead of Sass, built on features it doesn't use today (OKLCH colors, cascade layers, Popover, anchor positioning) with fallbacks for older browsers, and a native compiler that strips unused CSS and makes customization easy. That would be a different project. Pico CSS stays as it is.
 
 **What this means**
+
 - Nothing breaks. [npm](https://www.npmjs.com/package/@picocss/pico), the [jsDelivr CDN](https://www.jsdelivr.com/package/npm/@picocss/pico) and [picocss.com](https://picocss.com) stay online for the long term.
 - The repositories are archived. No new issues, PRs or releases.
 - Pico CSS is [MIT licensed](LICENSE.md). You're free to fork it and take it further. See [community forks](https://github.com/picocss/pico/forks).

@@ -3,6 +3,7 @@ export { buildMatrix, matrixNames, MATRIX_VARIANTS } from "./matrix.ts";
 export {
   MODULES,
   THEMES,
+  DEFAULT_TARGETS,
   DEFAULT_THEME,
   findConfigFile,
   loadConfigFile,

@@ -2,12 +2,12 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { compile } from "../../scripts/lib/compiler/index.ts";
 import { squash } from "./helpers.ts";
 
 const dir = mkdtempSync(join(tmpdir(), "pico-purge-"));
-after(() => rmSync(dir, { recursive: true, force: true }));
+afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
 const page = join(dir, "page.html");
 writeFileSync(

@@ -11,7 +11,8 @@
 
   &::file-selector-button {
     margin-inline-end: calc(var(--pico-spacing) / 2);
-    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
+      var(--pico-form-element-spacing-horizontal);
   }
 
   &:is(:hover, :active, :focus)::file-selector-button {
@@ -20,6 +21,8 @@
   }
 
   &:focus::file-selector-button {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+    --pico-box-shadow:
+      var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+      0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
   }
 }

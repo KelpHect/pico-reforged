@@ -48,7 +48,8 @@
   li {
     width: 100%;
     margin-bottom: 0;
-    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
+      var(--pico-form-element-spacing-horizontal);
     list-style: none;
 
     &:first-of-type {
@@ -61,8 +62,10 @@
 
     a {
       display: block;
-      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
-      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5)
+        calc(var(--pico-form-element-spacing-horizontal) * -1);
+      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
+        var(--pico-form-element-spacing-horizontal);
       overflow: hidden;
       border-radius: 0;
       color: var(--pico-dropdown-color);
@@ -114,7 +117,10 @@
     margin-block: var(--pico-outline-width);
     min-inline-size: max(anchor-size(inline), 10rem);
     position-area: block-end span-inline-end;
-    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
   }
 
   :is([popover="hint"], [popover][role="tooltip"]) {

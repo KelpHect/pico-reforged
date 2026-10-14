@@ -56,29 +56,105 @@ const same = (inverse: Inverse, light: SchemeSteps, dark: SchemeSteps): ThemeDef
 });
 
 export const themes: Record<string, ThemeDef> = {
-  amber: same("black", { background: 200, hoverBackground: 250 }, { background: 200, hoverBackground: 150 }),
-  azure: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
-  blue: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
-  cyan: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
-  fuchsia: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
-  green: same("white", { background: 500, hoverBackground: 550 }, { background: 500, hoverBackground: 450 }),
-  grey: same("black", { background: 300, hoverBackground: 350 }, { background: 300, hoverBackground: 250 }),
-  indigo: same("white", { background: 600, hoverBackground: 650 }, { background: 600, hoverBackground: 550 }),
-  jade: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
-  lime: same("black", { background: 200, hoverBackground: 250 }, { background: 200, hoverBackground: 150 }),
-  orange: same("white", { background: 500, hoverBackground: 550 }, { background: 500, hoverBackground: 450 }),
-  pink: same("white", { background: 500, hoverBackground: 550 }, { background: 500, hoverBackground: 450 }),
-  pumpkin: same("black", { background: 300, hoverBackground: 350 }, { background: 300, hoverBackground: 250 }),
-  purple: same("white", { background: 600, hoverBackground: 650 }, { background: 600, hoverBackground: 550 }),
-  red: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
-  sand: same("black", { background: 200, hoverBackground: 250 }, { background: 200, hoverBackground: 150 }),
-  slate: same("white", { background: 600, hoverBackground: 650 }, { background: 600, hoverBackground: 550 }),
-  violet: same("white", { background: 600, hoverBackground: 650 }, { background: 600, hoverBackground: 550 }),
+  amber: same(
+    "black",
+    { background: 200, hoverBackground: 250 },
+    { background: 200, hoverBackground: 150 },
+  ),
+  azure: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
+  blue: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
+  cyan: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
+  fuchsia: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
+  green: same(
+    "white",
+    { background: 500, hoverBackground: 550 },
+    { background: 500, hoverBackground: 450 },
+  ),
+  grey: same(
+    "black",
+    { background: 300, hoverBackground: 350 },
+    { background: 300, hoverBackground: 250 },
+  ),
+  indigo: same(
+    "white",
+    { background: 600, hoverBackground: 650 },
+    { background: 600, hoverBackground: 550 },
+  ),
+  jade: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
+  lime: same(
+    "black",
+    { background: 200, hoverBackground: 250 },
+    { background: 200, hoverBackground: 150 },
+  ),
+  orange: same(
+    "white",
+    { background: 500, hoverBackground: 550 },
+    { background: 500, hoverBackground: 450 },
+  ),
+  pink: same(
+    "white",
+    { background: 500, hoverBackground: 550 },
+    { background: 500, hoverBackground: 450 },
+  ),
+  pumpkin: same(
+    "black",
+    { background: 300, hoverBackground: 350 },
+    { background: 300, hoverBackground: 250 },
+  ),
+  purple: same(
+    "white",
+    { background: 600, hoverBackground: 650 },
+    { background: 600, hoverBackground: 550 },
+  ),
+  red: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
+  sand: same(
+    "black",
+    { background: 200, hoverBackground: 250 },
+    { background: 200, hoverBackground: 150 },
+  ),
+  slate: same(
+    "white",
+    { background: 600, hoverBackground: 650 },
+    { background: 600, hoverBackground: 550 },
+  ),
+  violet: same(
+    "white",
+    { background: 600, hoverBackground: 650 },
+    { background: 600, hoverBackground: 550 },
+  ),
   // mix(yellow-100, yellow-50) in v2.1.1, as an sRGB literal
   yellow: same(
     "black",
     { background: 100, hoverBackground: 150 },
     { background: 100, hoverBackground: { rgb: [247.5, 232, 96.5] } },
   ),
-  zinc: same("white", { background: 550, hoverBackground: 600 }, { background: 550, hoverBackground: 500 }),
+  zinc: same(
+    "white",
+    { background: 550, hoverBackground: 600 },
+    { background: 550, hoverBackground: 500 },
+  ),
 };

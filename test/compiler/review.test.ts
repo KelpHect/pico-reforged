@@ -3,12 +3,12 @@ import assert from "node:assert/strict";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { after, test } from "node:test";
+import { afterAll, test } from "vite-plus/test";
 import { compile } from "../../scripts/lib/compiler/index.ts";
 import { headers } from "./helpers.ts";
 
 const dir = mkdtempSync(join(tmpdir(), "pico-review-"));
-after(() => rmSync(dir, { recursive: true, force: true }));
+afterAll(() => rmSync(dir, { recursive: true, force: true }));
 
 const content = (name: string, text: string): string => {
   const file = join(dir, name);
@@ -21,7 +21,8 @@ const purged = async (name: string, text: string): Promise<string[]> => {
 };
 const anyHeader = (list: string[], needle: string): boolean => list.some((h) => h.includes(needle));
 /** A rule that applies to an element that has aria-busy="true" (not just the :not() form). */
-const busyRule = (list: string[]): boolean => list.some((h) => /(?<!:not\()\[aria-busy="true"\]/.test(h));
+const busyRule = (list: string[]): boolean =>
+  list.some((h) => /(?<!:not\()\[aria-busy="true"\]/.test(h));
 
 test("purge keeps [open] rules when the markup has details and dialog that start closed", async () => {
   const h = await purged(
@@ -41,7 +42,10 @@ test("purge keeps attribute rules for JSX bound values", async () => {
 });
 
 test("purge keeps attribute rules after an arrow function in the same tag", async () => {
-  const h = await purged("arrow.html", `<button onClick={() => go()} aria-busy="true">Save</button>`);
+  const h = await purged(
+    "arrow.html",
+    `<button onClick={() => go()} aria-busy="true">Save</button>`,
+  );
   assert.ok(busyRule(h), "a > inside an attribute value ended the tag early");
 });
 
@@ -56,9 +60,12 @@ test("purge understands Vue and Alpine bound attributes (:aria-busy, v-bind:aria
 });
 
 test("purge keeps element rules for tags created from script", async () => {
-  const h = await purged("script.js", `const d = document.createElement("dialog"); document.body.append(d);`);
+  const h = await purged(
+    "script.js",
+    `const d = document.createElement("dialog"); document.body.append(d);`,
+  );
   assert.ok(
-    h.some((s) => /(^|[\s,])dialog([\s,.:\[]|$)/.test(s)),
+    h.some((s) => /(^|[\s,])dialog([\s,.:[]|$)/.test(s)),
     "createElement('dialog') does not register a dialog tag",
   );
 });

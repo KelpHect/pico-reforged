@@ -31,7 +31,10 @@ details.dropdown {
   }
 
   > summary:not([role]) {
-    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 + var(--pico-border-width) * 2);
+    height: calc(
+      1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 +
+        var(--pico-border-width) * 2
+    );
     padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
     border: var(--pico-border-width) solid var(--pico-form-element-border-color);
     border-radius: var(--pico-border-radius);
@@ -40,7 +43,11 @@ details.dropdown {
     line-height: inherit;
     cursor: pointer;
     user-select: none;
-    transition: background-color var(--pico-transition), border-color var(--pico-transition), color var(--pico-transition), box-shadow var(--pico-transition);
+    transition:
+      background-color var(--pico-transition),
+      border-color var(--pico-transition),
+      color var(--pico-transition),
+      box-shadow var(--pico-transition);
 
     &:active,
     &:focus {
@@ -81,7 +88,8 @@ nav details.dropdown {
 
   > summary:not([role]) {
     height: calc(1rem * var(--pico-line-height) + var(--pico-nav-link-spacing-vertical) * 2);
-    padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2) var(--pico-nav-link-spacing-horizontal);
+    padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2)
+      var(--pico-nav-link-spacing-horizontal);
 
     &:focus-visible {
       box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
@@ -108,7 +116,9 @@ details.dropdown > summary + ul {
   color: var(--pico-dropdown-color);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity var(--pico-transition), transform 0s ease-in-out 1s;
+  transition:
+    opacity var(--pico-transition),
+    transform 0s ease-in-out 1s;
 
   /* The ul itself needs dir="rtl", an ancestor is not enough */
   &[dir="rtl"] {
@@ -119,7 +129,8 @@ details.dropdown > summary + ul {
   li {
     width: 100%;
     margin-bottom: 0;
-    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
+      var(--pico-form-element-spacing-horizontal);
     list-style: none;
 
     &:first-of-type {
@@ -133,8 +144,10 @@ details.dropdown > summary + ul {
     /* Negative margins stretch the hover background to the menu edges */
     a {
       display: block;
-      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
-      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5)
+        calc(var(--pico-form-element-spacing-horizontal) * -1);
+      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
+        var(--pico-form-element-spacing-horizontal);
       overflow: hidden;
       border-radius: 0;
       color: var(--pico-dropdown-color);
@@ -168,7 +181,9 @@ details.dropdown[open] {
   > summary + ul {
     transform: scaleY(1);
     opacity: 1;
-    transition: opacity var(--pico-transition), transform 0s ease-in-out 0s;
+    transition:
+      opacity var(--pico-transition),
+      transform 0s ease-in-out 0s;
   }
 
   /* Invisible layer that closes the menu on an outside click */

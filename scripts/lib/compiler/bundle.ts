@@ -6,9 +6,17 @@ import type { Targets } from "lightningcss";
 import { ROOT, SRC } from "./config.ts";
 import type { ResolvedOptions } from "./config.ts";
 import { filterClassless } from "./classless.ts";
-import { clean, dropRootFontSizeSteps, overrideCss, stripImportant, stripMotion } from "./legacy.ts";
+import {
+  clean,
+  dropRootFontSizeSteps,
+  overrideCss,
+  stripImportant,
+  stripMotion,
+} from "./transforms.ts";
 import { purgeSelectors } from "./purge.ts";
 import type { ContentIndex } from "./purge.ts";
+import { orphanCandidates, orphanVisitor } from "./module-tokens.ts";
+import { hasEmptyList } from "./selector.ts";
 import type { Selector } from "./selector.ts";
 import { parseScope, scopeSelector } from "./scope.ts";
 import { SCOPE_GLOBAL } from "./scope-global.ts";
@@ -108,7 +116,7 @@ function runPass(stage: Stage, options: ResolvedOptions, visitor: object, minify
     projectRoot: ROOT,
     ...(stage.map ? { inputSourceMap: stage.map } : {}),
     targets: toTargets(options.targets),
-    visitor: visitor as never,
+    visitor,
   });
   const next: Stage = { css: decode(result.code) };
   if (result.map) next.map = decode(result.map);
@@ -139,6 +147,20 @@ function pruneKeyframes(stage: Stage, options: ResolvedOptions): Stage {
     },
     false,
   );
+}
+
+/** Removes the custom properties of excluded modules that no remaining rule reads. */
+function dropOrphanTokens(stage: Stage, options: ResolvedOptions, excluded: string[]): Stage {
+  const prefixes = orphanCandidates(excluded);
+  if (prefixes.length === 0) return stage;
+  let current = stage;
+  // A dropped token can be the only reader of another, so go on until nothing is left to drop.
+  for (let i = 0; i < 4; i++) {
+    const removed = { count: 0 };
+    current = runPass(current, options, orphanVisitor(prefixes, current.css, removed), false);
+    if (removed.count === 0) break;
+  }
+  return current;
 }
 
 /** Final lowering and minify, its own pass so it also covers what the visitor passes changed. */
@@ -177,6 +199,8 @@ export function finalize(
             if (!options.important && stripImportant(rule.value)) changed = true;
             if (changed) return clean(rule);
           },
+          // Entry animations for dialogs and popovers only exist to be transitioned.
+          "starting-style": () => (options.transitions ? undefined : []),
           media(rule: { value: Parameters<typeof dropRootFontSizeSteps>[0] }) {
             if (!options.responsiveTypography && dropRootFontSizeSteps(rule.value))
               return clean(rule);
@@ -194,9 +218,10 @@ export function finalize(
       if (list.length === 0) return list;
     }
     if (index) list = purgeSelectors(index, list);
-    return list;
+    return list.filter((s) => !hasEmptyList(s));
   };
-  const removedBy = (list: Selector[]): "classless" | "purge" | null => {
+  const removedBy = (list: Selector[]): "classless" | "purge" | "dead" | null => {
+    if (list.every(hasEmptyList)) return "dead";
     if (filterClasses && list.every((s) => filterClassless([s]).length === 0)) return "classless";
     if (index && list.every((s) => keep(s).length === 0)) return "purge";
     return null;
@@ -223,21 +248,6 @@ export function finalize(
 
   if (filterClasses || index || !options.transitions) stage = pruneKeyframes(stage, options);
 
-  if (!options.layers) {
-    // Layers can nest, so repeat until none is left.
-    for (let i = 0; i < 4 && /@layer\b/.test(stage.css); i++) {
-      stage = runPass(
-        stage,
-        options,
-        {
-          Rule: {
-            "layer-statement": () => [],
-            "layer-block": (rule: { value: { rules: unknown } }) => clean(rule.value.rules),
-          },
-        },
-        false,
-      );
-    }
-  }
+  stage = dropOrphanTokens(stage, options, bundled.excluded);
   return { ...stage, counts };
 }

@@ -22,8 +22,6 @@
 @import url("./content/figure.css") layer(pico.core);
 @import url("./content/misc.css") layer(pico.core);
 
-
-
 @import url("./forms/basics.css") layer(pico.core);
 @import url("./forms/checkbox-radio-switch.css") layer(pico.core);
 @import url("./forms/input-color.css") layer(pico.core);

@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test } from "vite-plus/test";
 import { filterClassless } from "../../scripts/lib/compiler/classless.ts";
 import { compile } from "../../scripts/lib/compiler/index.ts";
 import { headers, mapSelectors, squash } from "./helpers.ts";

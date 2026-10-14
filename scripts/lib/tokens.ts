@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import paletteJson from "../data/palette.json" with { type: "json" };
 import { formatOklch, rgbToTriple } from "./color.ts";
 import type { Triple } from "./color.ts";
 import { shadowLayers } from "../data/scheme.ts";
@@ -11,11 +11,12 @@ export type Palette = {
   white: Triple;
 };
 
-export const palette: Palette = JSON.parse(
-  readFileSync(new URL("../data/palette.json", import.meta.url), "utf8"),
-);
+// JSON arrays are typed number[], the triples are fixed-length.
+export const palette = paletteJson as unknown as Palette;
 
-export const STEPS = [950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350, 300, 250, 200, 150, 100, 50];
+export const STEPS = [
+  950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350, 300, 250, 200, 150, 100, 50,
+];
 
 // "slate-500", "white" or "black" to a triple.
 export function paletteTriple(name: string): Triple {
@@ -54,8 +55,8 @@ export function schemeValue(light: SchemeValue, dark: SchemeValue): string {
   }
   if ("shadow" in light && "shadow" in dark) {
     return shadowValue((alpha) => {
-      const l = colorValue({ ...light.shadow, alpha } as SchemeColor);
-      const d = colorValue({ ...dark.shadow, alpha } as SchemeColor);
+      const l = colorValue({ ...light.shadow, alpha });
+      const d = colorValue({ ...dark.shadow, alpha });
       return l === d ? l : `light-dark(${l}, ${d})`;
     });
   }

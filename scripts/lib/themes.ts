@@ -25,7 +25,8 @@ export function themeRows(def: ThemeDef, lookup: Lookup): { rows: Row[]; darkInv
     const s = shared[scheme];
     const d: SchemeSteps = def[scheme];
     const inverse: Inverse = typeof def.inverse === "string" ? def.inverse : def.inverse[scheme];
-    const stepOrRgb = (v: SchemeSteps["background"]): Triple => (typeof v === "object" ? rgbToTriple(v.rgb) : lookup(v));
+    const stepOrRgb = (v: SchemeSteps["background"]): Triple =>
+      typeof v === "object" ? rgbToTriple(v.rgb) : lookup(v);
     return {
       inverse,
       "text-selection-color": formatOklch(lookup(s.selection), s.selectionAlpha),
@@ -60,7 +61,8 @@ export function themeRows(def: ThemeDef, lookup: Lookup): { rows: Row[]; darkInv
 function rowsToCss(rows: Row[]): string {
   return rows
     .map(([name, light, dark]) => {
-      const value = dark === null ? light : light === dark ? light : `light-dark(${light}, ${dark})`;
+      const value =
+        dark === null ? light : light === dark ? light : `light-dark(${light}, ${dark})`;
       return `  --pico-${name}: ${value};`;
     })
     .join("\n");

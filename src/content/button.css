@@ -78,7 +78,8 @@ button:is([aria-current]:not([aria-current="false"])):focus,
 [role="button"]:focus,
 [role="button"]:is([aria-current]:not([aria-current="false"])):focus {
   --pico-box-shadow:
-    var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+    0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
 }
 
 [type="submit"],
@@ -97,21 +98,29 @@ button:is([aria-current]:not([aria-current="false"])):focus,
   cursor: pointer;
 }
 
-:is(button, [type="submit"], [type="button"], [role="button"]).secondary:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+:is(button, [type="submit"], [type="button"], [role="button"]).secondary:is(
+    [aria-current]:not([aria-current="false"]),
+    :hover,
+    :active,
+    :focus
+  ),
 [type="reset"]:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
-[type="file"]::file-selector-button:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
+[type="file"]::file-selector-button:is(:hover, :active, :focus) {
   --pico-background-color: var(--pico-secondary-hover-background);
   --pico-border-color: var(--pico-secondary-hover-border);
   --pico-color: var(--pico-secondary-inverse);
 }
 
 :is(button, [type="submit"], [type="button"], [role="button"]).secondary:focus,
-:is(button, [type="submit"], [type="button"], [role="button"]).secondary:is([aria-current]:not([aria-current="false"])):focus,
+:is(button, [type="submit"], [type="button"], [role="button"]).secondary:is(
+    [aria-current]:not([aria-current="false"])
+  ):focus,
 [type="reset"]:focus,
 [type="reset"]:is([aria-current]:not([aria-current="false"])):focus,
 [type="file"]::file-selector-button:focus {
   --pico-box-shadow:
-    var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+    var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+    0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
 }
 
 /* Contrast */
@@ -129,7 +138,8 @@ button:is([aria-current]:not([aria-current="false"])):focus,
   &:focus,
   &:is([aria-current]:not([aria-current="false"])):focus {
     --pico-box-shadow:
-      var(--pico-button-hover-box-shadow, 0 0 0 transparent), 0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
+      var(--pico-button-hover-box-shadow, 0 0 0 transparent),
+      0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
   }
 }
 
@@ -141,7 +151,12 @@ button:is([aria-current]:not([aria-current="false"])):focus,
   --pico-border-color: var(--pico-primary);
 }
 
-:is(button, [type="submit"], [type="button"], [role="button"]).outline:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+:is(button, [type="submit"], [type="button"], [role="button"]).outline:is(
+    [aria-current]:not([aria-current="false"]),
+    :hover,
+    :active,
+    :focus
+  ),
 [type="reset"].outline:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
   --pico-background-color: transparent;
   --pico-color: var(--pico-primary-hover);
@@ -155,7 +170,12 @@ button:is([aria-current]:not([aria-current="false"])):focus,
   --pico-border-color: var(--pico-secondary);
 }
 
-:is(button, [type="submit"], [type="button"], [role="button"]).outline.secondary:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+:is(button, [type="submit"], [type="button"], [role="button"]).outline.secondary:is(
+    [aria-current]:not([aria-current="false"]),
+    :hover,
+    :active,
+    :focus
+  ),
 [type="reset"].outline:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
   --pico-color: var(--pico-secondary-hover);
   --pico-border-color: var(--pico-secondary-hover);
@@ -172,7 +192,8 @@ button:is([aria-current]:not([aria-current="false"])):focus,
 }
 
 :where(button, [type="submit"], [type="reset"], [type="button"], [role="button"])[disabled],
-:where(fieldset[disabled]) :is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]) {
+:where(fieldset[disabled])
+  :is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]) {
   opacity: 0.5;
   pointer-events: none;
 }

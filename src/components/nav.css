@@ -39,7 +39,8 @@ nav {
 
   & li :where(a, [role="link"]) {
     display: inline-block;
-    margin: calc(var(--pico-nav-link-spacing-vertical) * -1) calc(var(--pico-nav-link-spacing-horizontal) * -1);
+    margin: calc(var(--pico-nav-link-spacing-vertical) * -1)
+      calc(var(--pico-nav-link-spacing-horizontal) * -1);
 
     &:not(:hover) {
       text-decoration: none;
@@ -68,7 +69,20 @@ nav {
   & li button,
   & li [role="button"],
   & li [type="button"],
-  & li input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="search"], [type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+  &
+    li
+    input:not(
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="file"],
+      [type="search"],
+      [type="date"],
+      [type="datetime-local"],
+      [type="month"],
+      [type="time"],
+      [type="week"]
+    ) {
     padding-inline: var(--pico-nav-link-spacing-horizontal);
   }
 
@@ -76,7 +90,9 @@ nav {
     padding-inline-end: var(--pico-nav-link-spacing-horizontal);
   }
 
-  & li input:is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+  &
+    li
+    input:is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
     padding-left: var(--pico-nav-link-spacing-horizontal);
   }
 }
@@ -124,7 +140,8 @@ aside li {
 }
 
 aside li {
-  padding: calc(var(--pico-nav-element-spacing-vertical) * 0.5) var(--pico-nav-element-spacing-horizontal);
+  padding: calc(var(--pico-nav-element-spacing-vertical) * 0.5)
+    var(--pico-nav-element-spacing-horizontal);
 
   & a:not([role="button"]) {
     display: block;

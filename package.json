@@ -30,8 +30,8 @@
     "./css/*": "./css/*",
     "./src/*": "./src/*",
     "./compiler": {
-      "types": "./dist/lib/compiler/index.d.ts",
-      "default": "./dist/lib/compiler/index.js"
+      "types": "./dist/compiler.d.ts",
+      "default": "./dist/compiler.js"
     },
     "./package.json": "./package.json"
   },
@@ -42,15 +42,20 @@
   "engines": {
     "node": ">=22.18"
   },
+  "packageManager": "pnpm@12.11.2",
   "scripts": {
-    "build": "npm run generate && node scripts/cli.ts matrix css",
+    "build": "node scripts/generate.ts && node scripts/cli.ts matrix css",
     "generate": "node scripts/generate.ts",
     "dev": "node --watch-path=src --watch-path=scripts scripts/dev-build.ts",
-    "typecheck": "tsc -p .",
-    "test": "node scripts/dev-build.ts && node --test \"test/**/*.test.ts\" && node test/api/check.ts dist-dev",
+    "test": "vp test",
+    "test:api": "node scripts/dev-build.ts && node test/api/check.ts dist-dev",
     "test:visual": "node scripts/dev-build.ts && node test/visual/run.ts",
-    "prepack": "npm run build && tsc -p tsconfig.build.json",
-    "format": "prettier --write \"scripts/**/*.ts\" \"test/**/*.ts\" tsconfig.build.json"
+    "lint": "vp lint",
+    "fmt": "vp fmt",
+    "check": "vp check",
+    "typecheck": "tsc -p .",
+    "pack": "vp pack",
+    "prepack": "pnpm run build && vp pack"
   },
   "keywords": [
     "css",
@@ -60,8 +65,8 @@
     "minimal",
     "native-html",
     "oklch",
-    "semantic",
-    "pico"
+    "pico",
+    "semantic"
   ],
   "dependencies": {
     "browserslist": "^4.29.3",
@@ -74,7 +79,7 @@
     "pixelmatch": "^8.0.0",
     "playwright": "^1.64.1",
     "pngjs": "^7.0.0",
-    "prettier": "^3.5.3",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vite-plus": "1.2.0"
   }
 }

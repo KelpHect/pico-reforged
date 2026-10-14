@@ -3,38 +3,42 @@
 // Compares built CSS against baseline.json. removed.json shape:
 // { "classes": ["name"], "attributes": [...], "properties": [...], "keyframes": [...], "elements": [...] }
 // A "*" key applies to every file, a file name key applies to that file only.
-import { existsSync, readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { extractApi } from './extract.ts';
-import type { Api } from './extract.ts';
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { extractApi } from "./extract.ts";
+import type { Api } from "./extract.ts";
 
 type Kind = keyof Api;
 
 const here = dirname(fileURLToPath(import.meta.url));
-const dev = process.argv.includes('--dev');
-const dir = process.argv.slice(2).find((a) => !a.startsWith('--'));
+const dev = process.argv.includes("--dev");
+const dir = process.argv.slice(2).find((a) => !a.startsWith("--"));
 if (!dir) {
-  console.error('usage: node test/api/check.ts <built-dir> [--dev]');
+  console.error("usage: node test/api/check.ts <built-dir> [--dev]");
   process.exit(2);
 }
 
 const files = [
-  'pico.css',
-  'pico.classless.css',
-  'pico.conditional.css',
-  'pico.fluid.classless.css',
-  'pico.colors.css',
+  "pico.css",
+  "pico.classless.css",
+  "pico.conditional.css",
+  "pico.fluid.classless.css",
+  "pico.colors.css",
 ];
-const devFiles = new Set(['pico.css', 'pico.colors.css']);
-const kinds: Kind[] = ['classes', 'attributes', 'properties', 'keyframes', 'elements'];
-const baseline: Record<string, Api> = JSON.parse(readFileSync(join(here, 'baseline.json'), 'utf8'));
-const removed: Record<string, Partial<Api>> = JSON.parse(
-  readFileSync(join(here, 'removed.json'), 'utf8'),
-);
+const devFiles = new Set(["pico.css", "pico.colors.css"]);
+const kinds: Kind[] = ["classes", "attributes", "properties", "keyframes", "elements"];
+const baseline = JSON.parse(readFileSync(join(here, "baseline.json"), "utf8")) as Record<
+  string,
+  Api
+>;
+const removed = JSON.parse(readFileSync(join(here, "removed.json"), "utf8")) as Record<
+  string,
+  Partial<Api>
+>;
 
 const allowed = (file: string, kind: Kind): Set<string> =>
-  new Set([...(removed['*']?.[kind] ?? []), ...(removed[file]?.[kind] ?? [])]);
+  new Set([...(removed["*"]?.[kind] ?? []), ...(removed[file]?.[kind] ?? [])]);
 
 let failed = false;
 for (const file of files) {
@@ -66,12 +70,13 @@ for (const file of files) {
     const added = [...now].filter((x) => !ref.has(x));
     if (missing.length) {
       fileFailed = true;
-      lines.push(`  missing ${kind} (${missing.length}): ${missing.join(' ')}`);
+      lines.push(`  missing ${kind} (${missing.length}): ${missing.join(" ")}`);
     }
-    if (skipped.length) lines.push(`  allowlisted ${kind} (${skipped.length}): ${skipped.join(' ')}`);
-    if (added.length) lines.push(`  added ${kind} (${added.length}): ${added.join(' ')}`);
+    if (skipped.length)
+      lines.push(`  allowlisted ${kind} (${skipped.length}): ${skipped.join(" ")}`);
+    if (added.length) lines.push(`  added ${kind} (${added.length}): ${added.join(" ")}`);
   }
-  console.log(`${file}: ${fileFailed ? 'FAIL' : 'ok'}`);
+  console.log(`${file}: ${fileFailed ? "FAIL" : "ok"}`);
   lines.forEach((l) => console.log(l));
   if (fileFailed) failed = true;
 }

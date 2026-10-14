@@ -5,6 +5,7 @@ import { parseArgs } from "node:util";
 import {
   buildMatrix,
   compile,
+  DEFAULT_TARGETS,
   findConfigFile,
   formatStats,
   formatTable,
@@ -38,8 +39,7 @@ Build options
   --no-responsive-typography
   --no-transitions
   --no-important
-  --no-layers            remove @layer for browsers without cascade layers
-  --targets <query>      browserslist query, default "defaults"
+  --targets <query>      browserslist query, default "${DEFAULT_TARGETS}"
   --minify
   --source-map
   --out <file>           write to a file instead of stdout
@@ -78,7 +78,6 @@ const fromFlags = (values: Record<string, unknown>): CompileOptions => {
   if (values["no-responsive-typography"]) o.responsiveTypography = false;
   if (values["no-transitions"]) o.transitions = false;
   if (values["no-important"]) o.important = false;
-  if (values["no-layers"]) o.layers = false;
   if (values["targets"]) o.targets = values["targets"] as string;
   if (values["minify"]) o.minify = true;
   if (values["source-map"]) o.sourceMap = true;
@@ -103,7 +102,6 @@ async function build(argv: string[]): Promise<void> {
       "no-responsive-typography": { type: "boolean" },
       "no-transitions": { type: "boolean" },
       "no-important": { type: "boolean" },
-      "no-layers": { type: "boolean" },
       targets: { type: "string" },
       minify: { type: "boolean" },
       "source-map": { type: "boolean" },

@@ -26,10 +26,6 @@ details {
       display: none;
     }
 
-    &::-moz-list-bullet {
-      list-style-type: none;
-    }
-
     &::after {
       display: block;
       width: 1rem;
@@ -101,7 +97,9 @@ details {
       &::details-content {
         block-size: 0;
         overflow-y: clip;
-        transition: block-size var(--pico-transition), content-visibility var(--pico-transition) allow-discrete;
+        transition:
+          block-size var(--pico-transition),
+          content-visibility var(--pico-transition) allow-discrete;
       }
 
       &[open]::details-content {
@@ -109,7 +107,9 @@ details {
       }
 
       & > summary:not([role]) {
-        transition: color var(--pico-transition), margin-bottom var(--pico-transition);
+        transition:
+          color var(--pico-transition),
+          margin-bottom var(--pico-transition);
       }
     }
   }

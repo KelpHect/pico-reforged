@@ -5,7 +5,6 @@ type MediaValue = Extract<Rule, { type: "media" }>["value"];
 
 /**
  * Appended to the entry, inside pico.core so it beats the token layers whatever the order.
- * With layers: false the wrapper is removed and the end of the file wins instead.
  */
 export function overrideCss(options: {
   transitions: boolean;
@@ -39,13 +38,15 @@ export function stripImportant(style: StyleValue): boolean {
 const MOTION = /^(animation|transition)(-|$)/;
 
 /**
- * transitions: false. Drops the animation and transition declarations that carry hard-coded
- * durations (modal, tooltip, switch thumb, progress, open and close transitions). Those that
- * use var(--pico-transition) stay, as the token is already 0s.
+ * transitions: false, as $enable-transitions: false was in v2.1.1. Removes every animation and
+ * transition declaration, including the ones that read var(--pico-transition) (the token is
+ * also set to 0s for rules a user adds). The indeterminate progress bar keeps its animation
+ * because it is the only thing that shows the bar is busy, and v2.1.1 kept it too.
  */
 export function stripMotion(style: StyleValue): boolean {
   const block = style.declarations;
   if (!block) return false;
+  if (JSON.stringify(style.selectors).includes('"indeterminate"')) return false;
   let changed = false;
   for (const key of ["declarations", "importantDeclarations"] as const) {
     const list = block[key];
@@ -55,8 +56,7 @@ export function stripMotion(style: StyleValue): boolean {
         d.property === "unparsed"
           ? (d.value as { propertyId: { property: string } }).propertyId.property
           : d.property;
-      if (!MOTION.test(prop)) return true;
-      return d.property === "unparsed" && JSON.stringify(d.value).includes("--pico-transition");
+      return !MOTION.test(prop);
     });
     if (kept.length !== list.length) {
       block[key] = kept;

@@ -17,7 +17,13 @@ input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]) {
 }
 
 /* The native picker button sits invisibly on top of the drawn icon */
-:is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"])::-webkit-calendar-picker-indicator {
+:is(
+  [type="date"],
+  [type="datetime-local"],
+  [type="month"],
+  [type="time"],
+  [type="week"]
+)::-webkit-calendar-picker-indicator {
   inline-size: var(--pico-icon-width);
   margin-inline-end: calc(var(--pico-icon-width) * -1);
   margin-inline-start: var(--pico-icon-position);
@@ -32,11 +38,19 @@ input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]) {
   }
 }
 
-[dir="rtl"] :is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+[dir="rtl"]
+  :is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
   text-align: right;
 }
 
 /* Drawn icon moves to the inline-end side in RTL */
-[dir="rtl"] input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]):is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+[dir="rtl"]
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]):is(
+    [type="date"],
+    [type="datetime-local"],
+    [type="month"],
+    [type="time"],
+    [type="week"]
+  ) {
   background-position: center left var(--pico-icon-position);
 }

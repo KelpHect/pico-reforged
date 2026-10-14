@@ -33,7 +33,21 @@ const BOUND_PREFIX = /^(?:v-bind:|x-bind:|:)/;
 /** Identifier-like tokens, with hyphens for class names. */
 const IDENT = /[A-Za-z_][\w-]*/g;
 /** Attributes whose values HTML compares case-insensitively. */
-const CASE_INSENSITIVE_ATTRS = new Set(["type", "dir", "method", "rel", "align", "lang", "hidden", "disabled", "checked", "readonly", "selected", "required", "multiple"]);
+const CASE_INSENSITIVE_ATTRS = new Set([
+  "type",
+  "dir",
+  "method",
+  "rel",
+  "align",
+  "lang",
+  "hidden",
+  "disabled",
+  "checked",
+  "readonly",
+  "selected",
+  "required",
+  "multiple",
+]);
 const ALWAYS_PRESENT_TAGS = ["html", "body", "head"];
 
 export function emptyIndex(safelist: (string | RegExp)[] = []): ContentIndex {
@@ -124,7 +138,10 @@ export async function buildIndex(options: PurgeOptions): Promise<ContentIndex> {
   const files = new Set<string>();
   for (const pattern of options.content) {
     let matched = 0;
-    const pat = process.platform === "win32" && !existsSync(pattern) ? pattern.replaceAll("\\", "/") : pattern;
+    const pat =
+      process.platform === "win32" && !existsSync(pattern)
+        ? pattern.replaceAll("\\", "/")
+        : pattern;
     const found = existsSync(pattern) && statSync(pattern).isFile() ? [pattern] : glob(pat);
     for await (const file of found) {
       files.add(file);
@@ -164,8 +181,7 @@ function attrMatches(
     CASE_INSENSITIVE_ATTRS.has(name) ||
     (op as { caseSensitivity?: string }).caseSensitivity === "ascii-case-insensitive";
   const want = fold ? op.value.toLowerCase() : op.value;
-  if ([...(have as Set<string>)].some((v) => matchOp(op.operator, fold ? v.toLowerCase() : v, want)))
-    return true;
+  if ([...have].some((v) => matchOp(op.operator, fold ? v.toLowerCase() : v, want))) return true;
   return safelisted(index, `${name}=${want}`);
 }
 

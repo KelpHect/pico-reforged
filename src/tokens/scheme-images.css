@@ -23,19 +23,39 @@
 
 /* White icon on filled buttons (chevron on summary buttons, spinner on busy buttons) */
 details summary[role="button"]:not(.outline)::after,
-[aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]):not(.outline)::before {
+[aria-busy="true"]:not(input, select, textarea):is(
+    button,
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [role="button"]
+  ):not(.outline)::before {
   filter: brightness(0) invert(1);
 }
 
 /* Contrast buttons are light in the dark scheme, so their icon turns black */
 [data-theme="dark"] details summary[role="button"].contrast:not(.outline)::after,
-[data-theme="dark"] [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]).contrast:not(.outline)::before {
+[data-theme="dark"]
+  [aria-busy="true"]:not(input, select, textarea):is(
+    button,
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [role="button"]
+  ).contrast:not(.outline)::before {
   filter: brightness(0);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) details summary[role="button"].contrast:not(.outline)::after,
-  :root:not([data-theme="light"]) [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]).contrast:not(.outline)::before {
+  :root:not([data-theme="light"])
+    [aria-busy="true"]:not(input, select, textarea):is(
+      button,
+      [type="submit"],
+      [type="button"],
+      [type="reset"],
+      [role="button"]
+    ).contrast:not(.outline)::before {
     filter: brightness(0);
   }
 }

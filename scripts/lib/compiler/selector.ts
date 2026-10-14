@@ -46,3 +46,10 @@ export function isRootLike(c: SelectorComponent): boolean {
 
 /** Runs `fn` on every style rule's selector list; `fn` returns the replacement list. */
 export type SelectorPass = (list: Selector[]) => Selector[];
+
+/** True when a selector holds an :is(), :where() or :has() with no branch, which never matches. */
+export function hasEmptyList(sel: Selector): boolean {
+  return sel.some(
+    (c) => isListPseudo(c) && (c.selectors.length === 0 || c.selectors.some(hasEmptyList)),
+  );
+}

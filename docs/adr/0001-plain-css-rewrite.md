@@ -43,3 +43,11 @@ Pico Reforged is a fork published as `@rusticstack/pico-reforged`. It does not u
 ## Amendment, 2026-10-14
 
 Item 3 originally meant one sublayer per module category. In practice that inverted the v2.1.1 cascade wherever a later module relied on specificity to beat an earlier one. The layers are now `pico.tokens`, `pico.theme`, `pico.core` (every module, in v2.1.1 order) and `pico.utilities` (color classes). See the cascade layers section of `docs/architecture.md`.
+
+## Amendment, 2026-10-14: browser floor and toolchain
+
+Two parts of the original decision changed.
+
+Browser floor. The decision listed "fallbacks for older browsers" and the consequences promised an optional unlayered build for Safari before 15.4 and Chrome before 99. Both are withdrawn. Pico Reforged now supports modern browsers only, with the same floor as Tailwind CSS v4: Chrome and Edge 111, Firefox 128, Safari and iOS Safari 16.4. The compiler's default `targets` is that query, exported as `DEFAULT_TARGETS`. The `layers: false` option, the `--no-layers` flag and the code behind them are removed, and so are the hand-written fallbacks for browsers below the floor (the `-webkit-file-upload-button` and `-webkit-input-placeholder` selectors, the `@supports selector(:has(*))` guard). Cascade layers are native at the floor, so the default build keeps them as written. Lightning CSS still flattens nesting and lowers `light-dark()` for the floor, and no longer emits OKLCH fallbacks. The minified full build went from 87,123 to 80,094 bytes (13,170 to 11,970 gzip) and the classless build from 76,671 to 69,613 bytes (12,121 to 10,921 gzip). Anyone who needs an older browser can pass their own `targets`, but nothing below the floor is tested or supported.
+
+Toolchain. Item 7 allowed build-time JavaScript dependencies and left the choice open. The repository now uses Vite+ (`vite-plus` 1.2.0) on pnpm, configured from one `vite.config.ts`: Vitest 5 for tests, Oxlint with type-aware rules for lint, Oxfmt for TypeScript, JSON, Markdown, YAML and hand-written CSS, and tsdown (`vp pack`) to build `dist/cli.js` and `dist/compiler.js` with declarations. TypeScript 7 stays as the type checker. Prettier, `package-lock.json` and `tsconfig.build.json` are gone. The shipped CSS is unchanged in kind: plain, small and usable without a build.

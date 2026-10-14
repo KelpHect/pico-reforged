@@ -1,5 +1,5 @@
 // Minimal types for the parts of pngjs the harness uses (no @types/pngjs installed).
-declare module 'pngjs' {
+declare module "pngjs" {
   export class PNG {
     constructor(options: { width: number; height: number });
     width: number;

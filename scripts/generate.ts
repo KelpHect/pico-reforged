@@ -18,8 +18,11 @@ const SELECTOR = ":root,\n:host,\n[data-theme]";
 function paletteCss() {
   const lines = [];
   for (const [hue, byStep] of Object.entries(palette.hues)) {
-    for (const step of STEPS) lines.push(`  --pico-color-${hue}-${step}: ${formatOklch(byStep[step] as Triple)};`);
-    lines.push(`  --pico-color-${hue}: ${formatOklch(byStep[palette.main[hue] as number] as Triple)};`);
+    for (const step of STEPS)
+      lines.push(`  --pico-color-${hue}-${step}: ${formatOklch(byStep[step] as Triple)};`);
+    lines.push(
+      `  --pico-color-${hue}: ${formatOklch(byStep[palette.main[hue] as number] as Triple)};`,
+    );
   }
   lines.push(`  --pico-color-light: ${formatOklch(palette.white)};`);
   lines.push(`  --pico-color-dark: ${formatOklch(palette.black)};`);
@@ -29,7 +32,9 @@ function paletteCss() {
 }
 
 function schemeCss() {
-  const decls = scheme.map(([name, light, dark]) => `  --pico-${name}: ${schemeValue(light, dark)};`);
+  const decls = scheme.map(
+    ([name, light, dark]) => `  --pico-${name}: ${schemeValue(light, dark)};`,
+  );
   return `${GENERATED}
 :root,
 :host {
@@ -53,7 +58,9 @@ ${decls.join("\n")}
 // Same rule as v2.1.1: light text on dark backgrounds, judged on the sRGB value with the
 // W3C brightness formula (299, 587, 114) against half of white.
 function textFor(triple: Triple): "light" | "dark" {
-  const [r, g, b] = tripleToRgb(triple).map((v) => Math.round(Math.min(255, Math.max(0, v)))) as Triple;
+  const [r, g, b] = tripleToRgb(triple).map((v) =>
+    Math.round(Math.min(255, Math.max(0, v))),
+  ) as Triple;
   const brightness = Math.round((r * 299 + g * 587 + b * 114) / 1000);
   return brightness < 127.5 ? "light" : "dark";
 }

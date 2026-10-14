@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { test } from "node:test";
+import { test } from "vite-plus/test";
 import { compile } from "../../scripts/lib/compiler/index.ts";
 import { parseScope, scopeSelector } from "../../scripts/lib/compiler/scope.ts";
 import { SCOPE_GLOBAL } from "../../scripts/lib/compiler/scope-global.ts";
@@ -69,8 +69,8 @@ test("full build: every rule is scoped except the known global ones", async () =
         ) ||
         /^\.(container|container-fluid|grid|modal-is)/.test(p) ||
         /^(\d+%|from|to)$/.test(p) ||
-        /^:where\(\.modal-is/.test(p) ||
-        /^html:not/.test(p) ||
+        p.startsWith(":where(.modal-is") ||
+        p.startsWith("html:not") ||
         /^:(root|host)/.test(p);
       assert.ok(ok, `unscoped selector: ${p}`);
     }

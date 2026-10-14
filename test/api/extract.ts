@@ -1,9 +1,9 @@
 // Builds test/api/baseline.json from the frozen v2.1.1 reference CSS.
-import { transform } from 'lightningcss';
-import type { SelectorComponent } from 'lightningcss';
-import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { transform } from "lightningcss";
+import type { SelectorComponent } from "lightningcss";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const here = dirname(fileURLToPath(import.meta.url));
 
@@ -18,7 +18,7 @@ export interface Api {
 type Selector = SelectorComponent[];
 
 // Returns sorted lists of names used by a stylesheet (Buffer or string).
-export function extractApi(code: Buffer | string, filename = 'x.css'): Api {
+export function extractApi(code: Buffer | string, filename = "x.css"): Api {
   const classes = new Set<string>();
   const attributes = new Set<string>();
   const properties = new Set<string>();
@@ -34,27 +34,29 @@ export function extractApi(code: Buffer | string, filename = 'x.css'): Api {
     }
     for (const c of selector as Selector) {
       switch (c.type) {
-        case 'class':
+        case "class":
           classes.add(c.name);
           break;
-        case 'attribute': {
+        case "attribute": {
           const op = c.operation;
           attributes.add(op ? `${c.name}${opSymbol(op.operator)}${op.value}` : c.name);
           break;
         }
-        case 'type':
+        case "type":
           elements.add(c.name);
           break;
-        case 'pseudo-class': {
+        case "pseudo-class": {
           const sels = (c as { selectors?: Selector[] }).selectors;
           if (Array.isArray(sels)) sels.forEach(walk);
           break;
         }
-        case 'pseudo-element': {
+        case "pseudo-element": {
           const sel = (c as { selector?: Selector }).selector;
           if (sel) walk(sel);
           break;
         }
+        default:
+          break;
       }
     }
   };
@@ -72,19 +74,19 @@ export function extractApi(code: Buffer | string, filename = 'x.css'): Api {
         keyframes(rule) {
           const name = rule.value.name as unknown;
           keyframes.add(
-            typeof name === 'string' ? name : ((name as { value?: string }).value ?? String(name)),
+            typeof name === "string" ? name : ((name as { value?: string }).value ?? String(name)),
           );
         },
       },
       Declaration: {
         custom(decl) {
-          if (decl.name.startsWith('--pico-')) properties.add(decl.name);
+          if (decl.name.startsWith("--pico-")) properties.add(decl.name);
         },
       },
     },
   });
 
-  const out = (s: Set<string>): string[] => [...s].sort();
+  const out = (s: Set<string>): string[] => [...s].toSorted();
   return {
     classes: out(classes),
     attributes: out(attributes),
@@ -95,12 +97,12 @@ export function extractApi(code: Buffer | string, filename = 'x.css'): Api {
 }
 
 const symbols: Record<string, string> = {
-  equal: '=',
-  includes: '~=',
-  'dash-match': '|=',
-  prefix: '^=',
-  substring: '*=',
-  suffix: '$=',
+  equal: "=",
+  includes: "~=",
+  "dash-match": "|=",
+  prefix: "^=",
+  substring: "*=",
+  suffix: "$=",
 };
 
 function opSymbol(op: string): string {
@@ -108,12 +110,14 @@ function opSymbol(op: string): string {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-  const dir = join(here, '..', 'reference', 'v2.1.1');
+  const dir = join(here, "..", "reference", "v2.1.1");
   const baseline: Record<string, Api> = {};
-  for (const f of readdirSync(dir).filter((n) => n.endsWith('.css')).sort()) {
+  for (const f of readdirSync(dir)
+    .filter((n) => n.endsWith(".css"))
+    .toSorted()) {
     baseline[f] = extractApi(readFileSync(join(dir, f)), f);
   }
-  writeFileSync(join(here, 'baseline.json'), JSON.stringify(baseline, null, 2) + '\n');
+  writeFileSync(join(here, "baseline.json"), JSON.stringify(baseline, null, 2) + "\n");
   for (const [f, v] of Object.entries(baseline)) {
     console.log(
       `${f}: ${v.classes.length} classes, ${v.attributes.length} attrs, ${v.properties.length} props, ${v.keyframes.length} keyframes, ${v.elements.length} elements`,

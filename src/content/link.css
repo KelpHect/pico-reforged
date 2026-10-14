@@ -23,7 +23,12 @@ a {
     box-shadow var(--pico-transition);
 }
 
-:where(a:not([role="button"])):is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+:where(a:not([role="button"])):is(
+  [aria-current]:not([aria-current="false"]),
+  :hover,
+  :active,
+  :focus
+),
 [role="link"]:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
   --pico-color: var(--pico-primary-hover);
   --pico-underline: var(--pico-primary-hover-underline);
@@ -41,7 +46,12 @@ a {
   --pico-underline: var(--pico-secondary-underline);
 }
 
-:where(a:not([role="button"])).secondary:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+:where(a:not([role="button"])).secondary:is(
+    [aria-current]:not([aria-current="false"]),
+    :hover,
+    :active,
+    :focus
+  ),
 [role="link"].secondary:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
   --pico-color: var(--pico-secondary-hover);
   --pico-underline: var(--pico-secondary-hover-underline);
@@ -53,7 +63,12 @@ a {
   --pico-underline: var(--pico-contrast-underline);
 }
 
-:where(a:not([role="button"])).contrast:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+:where(a:not([role="button"])).contrast:is(
+    [aria-current]:not([aria-current="false"]),
+    :hover,
+    :active,
+    :focus
+  ),
 [role="link"].contrast:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
   --pico-color: var(--pico-contrast-hover);
   --pico-underline: var(--pico-contrast-hover-underline);
