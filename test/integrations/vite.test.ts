@@ -55,7 +55,8 @@ test("vite build: Pico is compiled and purged against the project", async () => 
   assert.ok(
     hasSelector(css, "button") && hasSelector(css, ".secondary") && hasSelector(css, "[aria-busy"),
   );
-  assert.ok(!hasSelector(css, "dialog") && !hasSelector(css, ".contrast"), "unused rules are gone");
+  assert.ok(hasSelector(css, "dialog"), "safe mode keeps unseen tags");
+  assert.ok(!hasSelector(css, ".contrast"), "unused rules are gone");
   assert.match(css, /oklch\(51\.16% \.1145 160\.67\)/, "jade theme");
 });
 
@@ -63,10 +64,10 @@ test("vite build: the output folder is not scanned", async () => {
   const dir = makeProject({
     ...files,
     // a stale build from an earlier run that used a dialog
-    "dist/old.html": "<dialog></dialog>",
+    "dist/old.html": '<button class="contrast">x</button>',
   });
   const css = await buildCss(dir);
-  assert.ok(!hasSelector(css, "dialog"));
+  assert.ok(!hasSelector(css, ".contrast"));
 });
 
 test("vite build: purge false keeps everything", async () => {
@@ -84,7 +85,7 @@ test("vite build: the package's own css file, imported from a script, is purged 
   const css = await buildCss(dir, pico(), {
     resolve: { alias: { "@rusticstack/pico-reforged": `${ROOT}css/pico.min.css` } },
   });
-  assert.ok(hasSelector(css, "p") && !hasSelector(css, "dialog"));
+  assert.ok(hasSelector(css, "p") && !hasSelector(css, ".contrast"));
 });
 
 test("vite build: works next to Tailwind-style files that do not mention Pico", async () => {

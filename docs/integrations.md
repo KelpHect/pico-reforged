@@ -10,8 +10,9 @@ Install the package, import it once in your CSS, and the production stylesheet h
 How it picks the rules:
 
 - In development the full stylesheet is served. Nothing is scanned, so there is nothing to wait for.
-- In production the project is scanned and a rule is kept when at least one of its selectors could match something in the sources. The check looks at tags, classes, ids and attributes (with their values) only. Pseudo-classes are ignored, so `button:hover` stays when `button` is used.
-- Correctness comes first. A scan that finds no file never purges. Classes, tags and attributes that a script sets are read from the script text. `a`, `img` and `h1` to `h6` are always kept, because link and image components (`next/link`, `next/image`, `RouterLink`, `NuxtLink`, Astro `Image`) and run-time heading levels write those tags without them appearing in the sources. When the project writes HTML at run time (Markdown, a rich text or CMS renderer, `marked`, `showdown`, `remark`, `innerHTML`, `v-html`, `dangerouslySetInnerHTML`, `{@html}`, `| safe`, `{{{x}}}`, `mark_safe`, `html_safe`, `Html.Raw`, `template.HTML`, `th:utext`), or fetches server-rendered fragments (`hx-get` and the other htmx attributes, Turbo, Unpoly, Livewire, LiveView, Datastar), the common content and form tags (`p`, `ul`, `table`, `blockquote`, `code`, `button`, `label`, `select`, `dialog`, `input` and so on) are kept. Fragment code also keeps the `type`, `role`, `disabled`, `aria-busy` and `aria-invalid` rules. A file over 1 MB counts as a source that writes HTML at run time. Class names that only appear in markup you cannot scan still need `@source` or a safelist.
+- In production the project is scanned. The default mode is `safe`: a rule is dropped only when a class name, an id or an attribute name it needs is nowhere in the sources. A tag name or an attribute value that was not seen never drops a rule, and the attribute names that frameworks and the browser set at run time (`role`, `type`, every `aria-*`, `disabled`, `hidden`, `open`, `popover`, `value`, `href` and the like) always count as present. So `next/link` and `next/image`, a heading level chosen at run time, `aria-current` from a router, `btn.disabled = true` and server templates that write attribute values cannot lose a rule. What goes: unused classes (`.secondary`, `.outline`, `.grid`, `.pico-color-*`), unused `data-*` hooks (extras such as `data-tabs`, `data-tooltip`) and unused keyframes. Pseudo-classes are ignored, so `button:hover` stays when `button` is used.
+- `aggressive` is the opt-in mode that also judges tags and attribute values. It saves more and can drop rules the sources only show at run time, see [Aggressive mode](#aggressive-mode).
+- Correctness comes first. A scan that finds no file never purges. Classes and attribute names that a script sets are read from the script text. The rest of this point is about `aggressive` mode: `a`, `img` and `h1` to `h6` are always kept, because link and image components (`next/link`, `next/image`, `RouterLink`, `NuxtLink`, Astro `Image`) and run-time heading levels write those tags without them appearing in the sources. When the project writes HTML at run time (Markdown, a rich text or CMS renderer, `marked`, `showdown`, `remark`, `innerHTML`, `v-html`, `dangerouslySetInnerHTML`, `{@html}`, `| safe`, `{{{x}}}`, `mark_safe`, `html_safe`, `Html.Raw`, `template.HTML`, `th:utext`), or fetches server-rendered fragments (`hx-get` and the other htmx attributes, Turbo, Unpoly, Livewire, LiveView, Datastar), the common content and form tags (`p`, `ul`, `table`, `blockquote`, `code`, `button`, `label`, `select`, `dialog`, `input` and so on) are kept. Fragment code also keeps the `type`, `role`, `disabled`, `aria-busy` and `aria-invalid` rules. A file over 1 MB counts as a source that writes HTML at run time. Class names that only appear in markup you cannot scan still need `@source` or a safelist.
 - Rules that live outside the Pico layers (your own CSS) are never touched.
 - How much you save depends on the page. The root variables, the base reset and the color scheme tokens always stay. A page that uses most of Pico gets about 10% less CSS; a small page (headings, paragraphs, links, a button) gets about 60% less.
 
@@ -42,12 +43,12 @@ Vite 6.3 or newer (Vite 8 included). The plugin runs before Vite's own CSS handl
 
 Options:
 
-| Option   | Default  | What it does                                                                                   |
-| -------- | -------- | ---------------------------------------------------------------------------------------------- |
-| `purge`  | `"auto"` | `"auto"` purges in `vite build` only, `true` always, `false` never                             |
-| `root`   | detected | folder the automatic scan starts from (nearest `package.json` above the stylesheet by default) |
-| `ignore` | none     | extra folder names or paths the scan skips (the build output folder is skipped for you)        |
-| `minify` | `false`  | Vite minifies CSS itself, so leave this off                                                    |
+| Option   | Default  | What it does                                                                                                       |
+| -------- | -------- | ------------------------------------------------------------------------------------------------------------------ |
+| `purge`  | `"auto"` | `"auto"` purges in `vite build` only, `true` always, `false` never (when to purge, not how, see `@pico { purge }`) |
+| `root`   | detected | folder the automatic scan starts from (nearest `package.json` above the stylesheet by default)                     |
+| `ignore` | none     | extra folder names or paths the scan skips (the build output folder is skipped for you)                            |
+| `minify` | `false`  | Vite minifies CSS itself, so leave this off                                                                        |
 
 A script can import the package too. `import "@rusticstack/pico-reforged";` is treated as a root with the default settings, so it is purged as well. Use a stylesheet when you need `@pico` or `@source`.
 
@@ -186,13 +187,14 @@ npx pico-reforged purge public
 
 `pico-reforged purge <outDir>` reads every text file in the folder (HTML, JS and so on, up to 32 MB each) and rewrites the built CSS files in place.
 
-| Flag                | What it does                                                                                         |
-| ------------------- | ---------------------------------------------------------------------------------------------------- |
-| `--css <glob>`      | stylesheets to rewrite, relative to `outDir`. Default `**/*.css`. Repeatable                         |
-| `--content <glob>`  | more files to read names from, for templates that are not in `outDir` (a server's views). Repeatable |
-| `--safelist <name>` | keep a class, id, tag or attribute. `/regex/` works. Repeatable                                      |
-| `--keep-types`      | keep rules that only lack tags in the content. Use it when the HTML comes from a CMS or a database   |
-| `--dry-run`         | print what would change, write nothing                                                               |
+| Flag                | What it does                                                                                            |
+| ------------------- | ------------------------------------------------------------------------------------------------------- |
+| `--css <glob>`      | stylesheets to rewrite, relative to `outDir`. Default `**/*.css`. Repeatable                            |
+| `--content <glob>`  | more files to read names from, for templates that are not in `outDir` (a server's views). Repeatable    |
+| `--safelist <name>` | keep a class, id, tag or attribute. `/regex/` works. Repeatable                                         |
+| `--mode <mode>`     | `safe` (default) or `aggressive`. `auto` is accepted as `safe`. See [Aggressive mode](#aggressive-mode) |
+| `--keep-types`      | with `--mode aggressive`, keep rules that only lack tags in the content                                 |
+| `--dry-run`         | print what would change, write nothing                                                                  |
 
 The command only touches rules inside `@layer pico.*` blocks, at the top level or inside a wrapper layer such as `@layer base { @layer pico.core { ... } }`. Everything else in the file, your own CSS above all, is written back exactly as it was. A file without a Pico layer is skipped. If a minifier or bundler removed the layers, the command changes nothing and says so.
 
@@ -210,7 +212,7 @@ Configuration sits in the stylesheet that imports Pico Reforged, next to the imp
   extras: tabs badge;
   classless: false;
   scope: none;
-  purge: auto;
+  purge: safe;
   safelist: aria-busy /^htmx-/;
 }
 
@@ -245,11 +247,21 @@ The imports can sit in one file or be combined. `layer(name)`, `supports(...)` a
 | `exclude`                                                                                                            | modules to leave out, for example `components/modal forms/input-range`                          |
 | `targets`                                                                                                            | a browserslist query                                                                            |
 | `minify`                                                                                                             | `true` or `false`                                                                               |
-| `purge`                                                                                                              | `auto` (default), `safe` or `off`                                                               |
+| `purge`                                                                                                              | `safe` (default), `aggressive` or `off`. `auto` is an alias for `safe`                          |
 | `safelist`                                                                                                           | names to always keep: classes, ids, tags, attribute names, `name=value` or `/regex/`            |
 | `source`                                                                                                             | `none` turns the automatic scan off, a quoted path sets the folder it starts from               |
 
-`purge: safe` keeps every rule that only lacks tags in the content. Classes, ids and attribute rules are still checked, so a class or an `[aria-invalid=true]` that only appears in templates the scan cannot see is removed. Use it when you cannot trust the tags in your sources, and add those templates with `@source`. `purge: off` never purges this stylesheet.
+`purge: safe` (the default) never drops a rule because a tag or an attribute value was not seen. It drops a rule only when a class, an id or an attribute name is absent from the content, and the run-time attribute names listed above never count as absent. It saves less than `aggressive` and cannot break a page that only differs from its sources at run time. A class that only appears in markup you cannot scan still needs `@source` or a safelist. `purge: off` never purges this stylesheet. `purge: auto` was the first name of the default and still works as `safe`.
+
+#### Aggressive mode
+
+`purge: aggressive` (`--mode aggressive` for the command) also judges tag names and attribute values: `dialog` goes when no `<dialog>` is in the sources, `[type="date"]` goes when no `type="date"` is. It removes more, and it is only safe when the sources show all the markup the page will have. It can drop rules for:
+
+- tags that a component emits (`next/link` writes `a`, `next/image` writes `img`) or that code picks at run time (`createElement(`h${level}`)`),
+- attribute values that a router, a script or a server template writes (`aria-current="page"`, `el.disabled = true`, `type="<%= kind %>"`),
+- HTML from a CMS, JSON or Markdown that is not in the scanned files.
+
+The scanner keeps some of these by heuristics (link and image tags, the content tags when it sees a Markdown or HTML-string renderer, reflected properties), but a heuristic cannot see everything. Use aggressive mode when you have checked the result: add run-time markup with `@source` (files) or `@source inline("dialog type=date")`, name it in `safelist`, and diff a `purge: off` build against the aggressive one.
 
 ### `@source`
 
@@ -321,7 +333,7 @@ A name assembled at run time is not found: `"aria-" + state`, `` `data-${name}` 
 @source inline("aria-expanded=true aria-invalid=true");
 ```
 
-**HTML that comes from somewhere else** (a CMS, a database, a Markdown file outside the project, another repository): add the files with `@source`, or use `purge: safe`. A renderer that the scan does not recognise by name is the case `purge: safe` is for.
+**HTML that comes from somewhere else** (a CMS, a database, a Markdown file outside the project, another repository): add the files with `@source`. The default `safe` mode already keeps every rule that only lacks a tag, so only classes in that markup need `@source` or a safelist.
 
 **Monorepos.** Components in another workspace package are scanned when the app depends on the package (any version range) and the package manager links it into `node_modules`. Otherwise add them with `@source`. The build warns when the scan finds no markup or script file at all.
 

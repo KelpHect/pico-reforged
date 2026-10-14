@@ -92,8 +92,17 @@ test("@pico accepts a color or a CSS file as theme and rejects bad values", () =
   assert.throws(bad("@pico { theme: nope; }"), /unknown theme/);
   assert.throws(bad("@pico { extras: tabs nope; }"), /unknown extra "nope"/);
   assert.throws(bad("@pico { fluid: maybe; }"), /takes true or false/);
-  assert.throws(bad("@pico { purge: sometimes; }"), /auto, safe or off/);
+  assert.throws(bad("@pico { purge: sometimes; }"), /safe, aggressive or off/);
   assert.throws(bad("@pico { theme }"), /expected "name: value"/);
+  // "auto" shipped first and stays an alias for "safe"
+  assert.equal(
+    parseRoot('@import "@rusticstack/pico-reforged"; @pico { purge: auto; }')?.config.purge,
+    "safe",
+  );
+  assert.equal(
+    parseRoot('@import "@rusticstack/pico-reforged"; @pico { purge: aggressive; }')?.config.purge,
+    "aggressive",
+  );
   // unknown properties warn, they do not stop the build
   const warned = parseRoot('@import "@rusticstack/pico-reforged"; @pico { colour: red; }');
   assert.match(warned?.config.warnings[0] ?? "", /unknown property "colour"/);

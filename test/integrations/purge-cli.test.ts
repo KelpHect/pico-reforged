@@ -36,7 +36,7 @@ test("purge CLI rewrites the pico layers in place and leaves user CSS alone", as
   const run = cli(["purge", dir]);
   assert.equal(run.status, 0, run.stderr);
   const out = readFileSync(`${dir}/assets/site.css`, "utf8");
-  assert.ok(out.length < css.length / 2, `${out.length} of ${css.length}`);
+  assert.ok(out.length < css.length * 0.9, `${out.length} of ${css.length}`);
   // what the page uses is there
   assert.ok(
     hasSelector(out, "button") && hasSelector(out, ".secondary") && hasSelector(out, "[aria-busy"),
@@ -46,7 +46,8 @@ test("purge CLI rewrites the pico layers in place and leaves user CSS alone", as
   const blocks = findPicoBlocks(out);
   assert.ok(blocks.length > 0);
   const picoText = blocks.map((b) => b.body).join("\n");
-  assert.ok(!hasSelector(picoText, "dialog") && !hasSelector(picoText, ".contrast"));
+  assert.ok(hasSelector(picoText, "dialog"), "safe mode keeps tags that were not seen");
+  assert.ok(!hasSelector(picoText, ".contrast"));
   assert.ok(!hasSelector(picoText, "[data-badge"), "badge extra is unused");
   // the user's CSS outside the pico layers is untouched, even when it looks unused
   assert.ok(out.startsWith(userCss), "user CSS before Pico is byte for byte the same");
@@ -82,13 +83,31 @@ test("purge CLI: --safelist and --content keep what the build output cannot show
   const picoOnly = findPicoBlocks(out)
     .map((b) => b.body)
     .join("\n");
-  assert.ok(!hasSelector(picoOnly, "dialog"));
+  assert.ok(!hasSelector(picoOnly, ".contrast"));
   assert.ok(out.includes("{\n"), "a readable file stays readable");
+});
+
+test("purge CLI: --mode aggressive drops unseen tags, safe and auto keep them", async () => {
+  const sizes: Record<string, number> = {};
+  for (const mode of ["safe", "auto", "aggressive"]) {
+    const { dir } = await fixture(true);
+    const run = cli(["purge", dir, "--mode", mode]);
+    assert.equal(run.status, 0, run.stderr);
+    const out = readFileSync(`${dir}/assets/site.css`, "utf8");
+    sizes[mode] = out.length;
+    const picoText = findPicoBlocks(out)
+      .map((b) => b.body)
+      .join("\n");
+    assert.equal(hasSelector(picoText, "dialog"), mode !== "aggressive", mode);
+  }
+  assert.equal(sizes["safe"], sizes["auto"]);
+  assert.ok((sizes["aggressive"] as number) < (sizes["safe"] as number));
+  assert.equal(cli(["purge", ".", "--mode", "nope"]).status, 2);
 });
 
 test("purge CLI: --keep-types keeps rules that only lack tags", async () => {
   const { dir } = await fixture(true);
-  const run = cli(["purge", dir, "--keep-types"]);
+  const run = cli(["purge", dir, "--mode", "aggressive", "--keep-types"]);
   assert.equal(run.status, 0, run.stderr);
   const out = readFileSync(`${dir}/assets/site.css`, "utf8");
   assert.ok(hasSelector(out, "dialog") && hasSelector(out, "blockquote"));

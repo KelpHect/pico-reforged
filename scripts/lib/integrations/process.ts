@@ -98,7 +98,7 @@ export class Engine {
     const dependencies: Dependencies = { config: [], files: [], dirs: [] };
     if (config.themeFile) dependencies.config.push(toPosix(resolve(cssDir, config.themeFile)));
 
-    const mode = config.purge ?? "auto";
+    const mode = config.purge ?? "safe";
     let scan: ScanResult | undefined;
     let purgeInfo: ProcessResult["purge"];
     let scanRoot: string | undefined;
@@ -239,14 +239,14 @@ export class Engine {
     parsed: RootParse,
     options: CompileOptions,
     scan: ScanResult | undefined,
-    keepTypes: boolean,
+    conservative: boolean,
     minify: boolean,
     safelist: (string | RegExp)[],
   ): Promise<{ css: string; warnings: string[]; removed: number }> {
     const warnings: string[] = [];
     let removed = 0;
     const purge = scan
-      ? { index: scan.index, safelist, ...(keepTypes ? { keepTypes: true } : {}) }
+      ? { index: scan.index, safelist, ...(conservative ? { conservative: true } : {}) }
       : (false as const);
     const parts: string[] = [];
     const run = async (extra: CompileOptions): Promise<string> => {

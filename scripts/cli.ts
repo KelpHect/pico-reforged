@@ -33,6 +33,8 @@ Purge options (pico-reforged purge <outDir>)
   --css <glob>           stylesheets to rewrite, relative to outDir (default **/*.css, repeatable)
   --content <glob>       more files to read names from, relative to the working directory (repeatable)
   --safelist <name>      keep this class, id, tag or attribute (repeatable). /regex/ is accepted
+  --mode <mode>          safe (default) never drops a rule for a missing tag or attribute value,
+                         aggressive also drops those, so run-time markup needs --safelist
   --keep-types           keep rules that only lack tags in the content (CMS or Markdown output)
   --dry-run              report and write nothing
 
@@ -159,6 +161,7 @@ async function purgeSite(argv: string[]): Promise<void> {
       css: { type: "string", multiple: true },
       content: { type: "string", multiple: true },
       safelist: { type: "string", multiple: true },
+      mode: { type: "string" },
       "keep-types": { type: "boolean" },
       "dry-run": { type: "boolean" },
       targets: { type: "string" },
@@ -170,11 +173,18 @@ async function purgeSite(argv: string[]): Promise<void> {
     process.exitCode = 2;
     return;
   }
+  const mode = values.mode === "auto" ? "safe" : values.mode;
+  if (mode !== undefined && mode !== "safe" && mode !== "aggressive") {
+    console.error(`--mode takes safe or aggressive, found "${values.mode}"`);
+    process.exitCode = 2;
+    return;
+  }
   const safelist = (values.safelist ?? []).map((entry) => {
     const m = /^\/(.+)\/([a-z]*)$/.exec(entry);
     return m ? new RegExp(m[1] as string, m[2]) : entry;
   });
   const options: PurgeOutputOptions = { dir, safelist };
+  if (mode) options.mode = mode;
   if (values.css) options.css = values.css;
   if (values.content) options.content = values.content;
   if (values["keep-types"]) options.keepTypes = true;

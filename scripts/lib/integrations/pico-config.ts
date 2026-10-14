@@ -7,7 +7,7 @@ import { splitTopLevel, stripComments } from "./css-scan.ts";
  * CSS-first configuration, written in the stylesheet that imports Pico Reforged:
  *
  *   @import "@rusticstack/pico-reforged";
- *   @pico { theme: jade; extras: tabs badge; scope: none; purge: auto; safelist: aria-busy; }
+ *   @pico { theme: jade; extras: tabs badge; scope: none; purge: safe; safelist: aria-busy; }
  *   @source "../content";
  *   @source not "../src/legacy";
  *   @source inline("modal-is-open");
@@ -17,7 +17,8 @@ import { splitTopLevel, stripComments } from "./css-scan.ts";
 
 export const PICO_PACKAGE = "@rusticstack/pico-reforged";
 
-export type PurgeMode = "auto" | "safe" | "off";
+/** "safe" never drops a rule for a missing tag or attribute value. "auto" is an alias for it. */
+export type PurgeMode = "safe" | "aggressive" | "off";
 
 /** What an `@source` line asks for. Paths are as written, resolved by the caller. */
 export type SourceRule = { pattern: string; not: boolean };
@@ -226,10 +227,10 @@ export function applyPicoBlock(config: PicoConfig, body: string): void {
         break;
       case "purge": {
         const v = unquote(value).toLowerCase();
-        if (v !== "auto" && v !== "safe" && v !== "off") {
-          throw new Error(`@pico: "purge" takes auto, safe or off, found "${value}"`);
+        if (v !== "auto" && v !== "safe" && v !== "aggressive" && v !== "off") {
+          throw new Error(`@pico: "purge" takes safe, aggressive or off, found "${value}"`);
         }
-        config.purge = v;
+        config.purge = v === "auto" ? "safe" : v;
         break;
       }
       case "safelist":

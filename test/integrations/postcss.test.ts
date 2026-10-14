@@ -41,10 +41,10 @@ test("production: the import becomes Pico, purged against the project", async ()
   assert.ok(hasSelector(css, ".secondary"), "class from the markup");
   assert.ok(hasSelector(css, "[data-badge"), "the badge extra is on and used");
   assert.ok(hasSelector(css, "[aria-busy"), "attribute from the markup");
-  assert.ok(!hasSelector(css, "dialog"), "dialog is not used");
-  assert.ok(!hasSelector(css, "details"), "details is not used");
+  assert.ok(hasSelector(css, "dialog"), "safe mode keeps tags that were not seen");
   assert.ok(!hasSelector(css, ".contrast"), "unused class is gone");
-  assert.ok(!hasSelector(css, "[role=switch]") && !hasSelector(css, '[role="switch"]'));
+  assert.ok(!hasSelector(css, "[data-tooltip"), "unused data hook is gone");
+  assert.ok(hasSelector(css, "[role=switch]") || hasSelector(css, '[role="switch"]'));
   // the theme from @pico is the jade one
   assert.match(css, /--pico-primary-background:\s*oklch\(51\.16% \.1145 160\.67\)/);
   assert.equal(result.warnings().length, 0, result.warnings().map(String).join("\n"));
@@ -64,7 +64,7 @@ test("development: the full stylesheet, no scan", async () => {
 test("purge: true forces the purge, purge: false disables it", async () => {
   process.env["NODE_ENV"] = "development";
   const forced = (await run(await read("src/app.css"), { purge: true })).css;
-  assert.ok(!hasSelector(forced, "dialog"));
+  assert.ok(!hasSelector(forced, ".contrast"));
   process.env["NODE_ENV"] = "production";
   const off = (await run(await read("src/app.css"), { purge: false })).css;
   assert.ok(hasSelector(off, "dialog"));
@@ -100,18 +100,18 @@ test("content changes give new output: nothing stays from deleted markup", async
   const dir = makeProject({
     "package.json": "{}",
     "app.css": '@import "@rusticstack/pico-reforged";\n',
-    "index.html": '<main><dialog open></dialog><button class="first-class">x</button></main>',
+    "index.html": '<main><button class="secondary">x</button></main>',
   });
   const plugin = pico();
   const build = () =>
     postcss([plugin]).process('@import "@rusticstack/pico-reforged";\n', {
       from: `${dir}/app.css`,
     });
-  assert.ok(hasSelector((await build()).css, "dialog"));
+  assert.ok(hasSelector((await build()).css, ".secondary"));
   write(dir, "index.html", "<main><button>x</button></main>");
   assert.ok(
-    !hasSelector((await build()).css, "dialog"),
-    "dialog left the markup, so it left the CSS",
+    !hasSelector((await build()).css, ".secondary"),
+    "the class left the markup, so it left the CSS",
   );
 });
 
@@ -121,8 +121,8 @@ test("@source adds content that lives elsewhere, @source not removes some", asyn
     "app/app.css":
       '@import "@rusticstack/pico-reforged";\n@source "../content";\n@source not "../skip";\n',
     "app/index.html": "<main><p>x</p></main>",
-    "content/page.html": "<details><summary>s</summary></details>",
-    "skip/page.html": "<dialog></dialog>",
+    "content/page.html": '<button class="secondary">s</button>',
+    "skip/page.html": '<button class="contrast">s</button>',
   });
   const css = (
     await run(
@@ -131,8 +131,8 @@ test("@source adds content that lives elsewhere, @source not removes some", asyn
       `${dir}/app/app.css`,
     )
   ).css;
-  assert.ok(hasSelector(css, "details"), "from @source");
-  assert.ok(!hasSelector(css, "dialog"), "from @source not");
+  assert.ok(hasSelector(css, ".secondary"), "from @source");
+  assert.ok(!hasSelector(css, ".contrast"), "from @source not");
 });
 
 test("safelist and inline sources keep what only a script adds", async () => {
@@ -151,6 +151,44 @@ test("safelist and inline sources keep what only a script adds", async () => {
   ).css;
   assert.ok(hasSelector(css, "[aria-invalid"), "safelist keeps the attribute rules");
   assert.ok(hasSelector(css, ".modal-is-open"), "inline source keeps the class rule");
+});
+
+test("the default is safe: tags and attribute values never drop a rule", async () => {
+  const dir = makeProject({
+    "package.json": "{}",
+    "app.css": '@import "@rusticstack/pico-reforged";\n',
+    "index.html": "<main><a>x</a></main>",
+  });
+  const css = (
+    await run(
+      await (await import("node:fs/promises")).readFile(`${dir}/app.css`, "utf8"),
+      {},
+      `${dir}/app.css`,
+    )
+  ).css;
+  assert.ok(hasSelector(css, "dialog") && hasSelector(css, "img"), "tags stay");
+  assert.ok(hasSelector(css, '[aria-current="page"]') || hasSelector(css, "[aria-current"));
+  assert.ok(hasSelector(css, "[disabled") && hasSelector(css, '[type="date"]'), "value not seen");
+  assert.ok(!hasSelector(css, ".contrast") && !hasSelector(css, "[data-tooltip"));
+});
+
+test("purge: auto is an alias for safe, purge: aggressive drops unseen tags and values", async () => {
+  const source = (mode: string) =>
+    `@import "@rusticstack/pico-reforged";
+@pico { purge: ${mode}; }
+`;
+  const dir = makeProject({
+    "package.json": "{}",
+    "app.css": source("x"),
+    "index.html": '<main><a>x</a><input type="text"></main>',
+  });
+  const one = async (mode: string) => (await run(source(mode), {}, `${dir}/app.css`)).css;
+  const [safe, auto, aggressive] = [await one("safe"), await one("auto"), await one("aggressive")];
+  assert.equal(auto, safe);
+  assert.ok(hasSelector(safe, "dialog") && hasSelector(safe, '[type="date"]'));
+  assert.ok(!hasSelector(aggressive, "dialog"), "tag not seen");
+  assert.ok(!hasSelector(aggressive, '[type="date"]'), "value not seen");
+  assert.ok(hasSelector(aggressive, "a") && aggressive.length < safe.length);
 });
 
 test("purge: safe keeps the rules that only lack tags", async () => {
@@ -220,7 +258,7 @@ test("a script import of the package CSS file becomes a root", async () => {
   const result = await postcss([pico({ base: dir })]).process("/* prebuilt */ body{}", {
     from: `${ROOT}css/pico.min.css`,
   });
-  assert.ok(hasSelector(result.css, "p") && !hasSelector(result.css, "dialog"));
+  assert.ok(hasSelector(result.css, "p") && !hasSelector(result.css, ".contrast"));
 });
 
 test("editing the theme file changes the output, with the same plugin instance", async () => {

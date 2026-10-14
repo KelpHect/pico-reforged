@@ -11,6 +11,8 @@ export type PurgeOptions = {
   index?: ContentIndex;
   /** Keep rules that only lack type selectors in the content. See ContentIndex.keepTypes. */
   keepTypes?: boolean;
+  /** Judge attributes by name only and keep run-time attribute names. See ContentIndex.conservative. */
+  conservative?: boolean;
   /** Names that are always kept: classes, ids, tags, attribute names or "name=value". */
   safelist?: (string | RegExp)[];
 };

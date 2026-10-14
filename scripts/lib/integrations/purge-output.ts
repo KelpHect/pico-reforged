@@ -21,6 +21,8 @@ export type PurgeOutputOptions = {
   /** More files to read for names, as globs relative to the working directory. */
   content?: string[];
   safelist?: (string | RegExp)[];
+  /** "safe" (default) never drops a rule for a missing tag or attribute value. "aggressive" does. */
+  mode?: "safe" | "aggressive";
   /** Keep every rule that only lacks type selectors (tags) in the content. */
   keepTypes?: boolean;
   /** Report what would change and write nothing. */
@@ -204,6 +206,7 @@ export async function purgeOutput(options: PurgeOutputOptions): Promise<PurgeOut
   }
   index.safelist = options.safelist ?? [];
   if (options.keepTypes) index.keepTypes = true;
+  if ((options.mode ?? "safe") === "safe") index.conservative = true;
   if (scan.skipped.length > 0) {
     notes.push(`${scan.skipped.length} file(s) over the size limit were not scanned`);
   }

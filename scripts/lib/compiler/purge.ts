@@ -26,6 +26,12 @@ export type ContentIndex = {
    * a database or Markdown, where the tags in use cannot be read from the sources.
    */
   keepTypes?: boolean;
+  /**
+   * true judges attributes by name only: a value that was not seen never drops a rule, and
+   * the names a framework or the browser can set at run time count as present. Implies
+   * keepTypes. This is the integrations' "safe" mode.
+   */
+  conservative?: boolean;
 };
 
 /**
@@ -78,6 +84,42 @@ const CASE_INSENSITIVE_ATTRS = new Set([
   "selected",
   "required",
   "multiple",
+]);
+/**
+ * Attribute names that scripts, routers and the browser set at run time (conservative mode).
+ * Any aria-* name counts too.
+ */
+const RUNTIME_ATTRS = new Set([
+  "role",
+  "type",
+  "disabled",
+  "hidden",
+  "open",
+  "readonly",
+  "required",
+  "checked",
+  "selected",
+  "multiple",
+  "size",
+  "popover",
+  "inert",
+  "dir",
+  "lang",
+  "tabindex",
+  "contenteditable",
+  "value",
+  "href",
+  "src",
+  "alt",
+  "title",
+  "name",
+  "id",
+  "for",
+  "rel",
+  "controls",
+  "class",
+  "style",
+  "data-theme",
 ]);
 const ALWAYS_PRESENT_TAGS = ["html", "body", "head"];
 /**
@@ -271,6 +313,7 @@ export function indexFingerprint(index: ContentIndex): string {
     ),
   );
   hash.update(index.keepTypes ? "keepTypes" : "");
+  hash.update(index.conservative ? "conservative" : "");
   return hash.digest("hex");
 }
 
@@ -284,6 +327,7 @@ export async function buildIndex(options: PurgeOptions): Promise<ContentIndex> {
       missed: [],
     };
     if (options.keepTypes) copy.keepTypes = true;
+    if (options.conservative) copy.conservative = true;
     return copy;
   }
   if (!Array.isArray(options.content)) {
@@ -291,6 +335,7 @@ export async function buildIndex(options: PurgeOptions): Promise<ContentIndex> {
   }
   const index = emptyIndex(options.safelist ?? []);
   if (options.keepTypes) index.keepTypes = true;
+  if (options.conservative) index.conservative = true;
   const files = new Set<string>();
   for (const pattern of options.content) {
     let matched = 0;
@@ -330,9 +375,10 @@ function attrMatches(
   const name = c.name.toLowerCase();
   const op = c.operation;
   if (safelisted(index, name)) return true;
+  if (index.conservative && (RUNTIME_ATTRS.has(name) || name.startsWith("aria-"))) return true;
   const have = index.attrs.get(name);
   if (!have) return !!op && safelisted(index, `${name}=${op.value}`);
-  if (!op || have === ANY) return true;
+  if (!op || have === ANY || index.conservative) return true;
   const fold =
     CASE_INSENSITIVE_ATTRS.has(name) ||
     (op as { caseSensitivity?: string }).caseSensitivity === "ascii-case-insensitive";
@@ -364,7 +410,7 @@ function compoundMayMatch(index: ContentIndex, compound: SelectorComponent[]): b
   for (const c of compound) {
     switch (c.type) {
       case "type":
-        if (index.keepTypes) break;
+        if (index.keepTypes || index.conservative) break;
         if (!index.tags.has(c.name.toLowerCase()) && !safelisted(index, c.name)) return false;
         break;
       case "class":
