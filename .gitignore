@@ -33,3 +33,9 @@ Thumbs.db
 
 # Claude Code
 CLAUDE.md
+
+# Dev build output
+/dist-dev/
+
+# Visual test report
+/test/visual/report/

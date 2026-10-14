@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" class="modal-is-open">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Modal</title>
+    <link rel="stylesheet" href="__CSS__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Page behind a modal</h1>
+      <p>The dialog below is open from the start, so it covers this content with its overlay.</p>
+      <button>A button on the page</button>
+    </main>
+
+    <dialog open>
+      <article>
+        <header>
+          <button aria-label="Close" rel="prev"></button>
+          <p><strong>Confirm your order</strong></p>
+        </header>
+        <p>
+          Your cart has three items and ships on Friday. You can still change the address until
+          then.
+        </p>
+        <footer>
+          <button class="secondary">Cancel</button>
+          <button>Confirm</button>
+        </footer>
+      </article>
+    </dialog>
+  </body>
+</html>

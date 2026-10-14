@@ -6,6 +6,7 @@
   "main": "css/pico.min.css",
   "homepage": "https://picocss.com",
   "license": "MIT",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/picocss/pico.git"
@@ -49,6 +50,8 @@
     "done": "echo '\\033[32m[@picocss/pico] ✨ Done\\033[0m'"
   },
   "devDependencies": {
+    "@types/culori": "^4.0.1",
+    "@types/node": "^26.6.5",
     "autoprefixer": "^10.4.21",
     "browserslist": "^4.29.3",
     "caniuse-lite": "1.0.30001704",
@@ -65,7 +68,8 @@
     "postcss-cli": "^11.0.1",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
-    "sass": "^1.85.1"
+    "sass": "^1.85.1",
+    "typescript": "^7.0.2"
   },
   "browserslist": [
     "defaults"

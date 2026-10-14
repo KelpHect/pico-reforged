@@ -1,0 +1,5 @@
+@import url("./layers.css");
+
+@import url("./tokens/palette.css") layer(pico.tokens);
+@import url("./colors/colors.css") layer(pico.utilities);
+@import url("./colors/backgrounds.css") layer(pico.utilities);
