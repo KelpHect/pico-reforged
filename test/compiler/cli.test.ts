@@ -83,7 +83,9 @@ test("matrix writes the v2.1.1 file names", () => {
   const res = run("scripts/cli.ts", ["matrix", out]);
   assert.equal(res.status, 0, res.stderr);
   const files = readdirSync(out);
-  assert.equal(files.length, 238);
+  // 238 v2.1.1 files, pico.extras(.min).css and the extras/ folder.
+  assert.equal(files.length, 238 + 2 + 1);
+  assert.equal(readdirSync(join(out, "extras")).length, 22);
   for (const name of [
     "pico.css",
     "pico.min.css",

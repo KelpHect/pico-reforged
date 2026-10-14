@@ -1,0 +1,149 @@
+/*
+  Badge: [data-badge] on data, span, a or button, value picks the color.
+  Gotcha: every direct child span of a badge is visually hidden, because that is
+  how screen reader context is written. Wrap icons or styled text in an inner
+  element other than a span (for example <i> or <b>), or nest them deeper.
+*/
+
+:root,
+:host,
+[data-theme] {
+  --pico-badge-background-color: var(--pico-primary-background);
+  --pico-badge-color: var(--pico-primary-inverse);
+  --pico-badge-success-background-color: light-dark(
+    oklch(0.4703 0.0817 170.23),
+    oklch(0.6981 0.0833 174.16)
+  );
+  --pico-badge-success-color: light-dark(oklch(1 0 0), oklch(0.2026 0.017 266.4));
+  --pico-badge-warning-background-color: oklch(0.7408 0.1521 83.91);
+  --pico-badge-warning-color: light-dark(oklch(0.2265 0.0186 266.15), oklch(0.2026 0.017 266.4));
+  --pico-badge-danger-background-color: light-dark(
+    oklch(0.4503 0.1099 25),
+    oklch(0.6766 0.0995 22.35)
+  );
+  --pico-badge-danger-color: light-dark(oklch(1 0 0), oklch(0.2026 0.017 266.4));
+}
+
+[data-badge] {
+  display: inline-block;
+  box-sizing: border-box;
+  min-inline-size: 1.6em;
+  margin-block: 0;
+  margin-inline-start: 0.35em;
+  padding-block: 0.3em;
+  padding-inline: 0.55em;
+  border: 0;
+  border-radius: 100vmax;
+  background-color: var(--pico-badge-background-color);
+  color: var(--pico-badge-color);
+  font-size: 0.75em;
+  font-style: normal;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+
+  &[hidden] {
+    display: none;
+  }
+
+  /* No text: a dot */
+  &:empty {
+    min-inline-size: 0;
+    inline-size: 0.65em;
+    block-size: 0.65em;
+    padding: 0;
+  }
+
+  &[data-badge="secondary"] {
+    --pico-badge-background-color: var(--pico-secondary-background);
+    --pico-badge-color: var(--pico-secondary-inverse);
+  }
+
+  &[data-badge="contrast"] {
+    --pico-badge-background-color: var(--pico-contrast-background);
+    --pico-badge-color: var(--pico-contrast-inverse);
+  }
+
+  &[data-badge="success"] {
+    --pico-badge-background-color: var(--pico-badge-success-background-color);
+    --pico-badge-color: var(--pico-badge-success-color);
+  }
+
+  &[data-badge="warning"] {
+    --pico-badge-background-color: var(--pico-badge-warning-background-color);
+    --pico-badge-color: var(--pico-badge-warning-color);
+  }
+
+  &[data-badge="danger"] {
+    --pico-badge-background-color: var(--pico-badge-danger-background-color);
+    --pico-badge-color: var(--pico-badge-danger-color);
+  }
+
+  /* Screen reader context, for example "unread messages: " before the count */
+  & > span {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/*
+  On a solid button the default fill would disappear, so it inverts with the
+  tokens of that button variant. Status colors keep their fill and gain a ring
+  in the button text color so the pill still reads as a shape. An outline
+  button has no fill, so its badges apply normally.
+*/
+:is(button, [role="button"], input[type="submit"], input[type="button"]):not(.outline) {
+  --pico-badge-ring-color: var(--pico-primary-inverse);
+
+  &.secondary {
+    --pico-badge-ring-color: var(--pico-secondary-inverse);
+  }
+
+  &.contrast {
+    --pico-badge-ring-color: var(--pico-contrast-inverse);
+  }
+
+  & > [data-badge]:not([data-badge="success"], [data-badge="warning"], [data-badge="danger"]) {
+    --pico-badge-background-color: var(--pico-badge-ring-color);
+    --pico-badge-color: var(--pico-primary-background);
+  }
+
+  &.secondary
+    > [data-badge]:not([data-badge="success"], [data-badge="warning"], [data-badge="danger"]) {
+    --pico-badge-color: var(--pico-secondary-background);
+  }
+
+  &.contrast
+    > [data-badge]:not([data-badge="success"], [data-badge="warning"], [data-badge="danger"]) {
+    --pico-badge-color: var(--pico-contrast-background);
+  }
+
+  & > [data-badge]:is([data-badge="success"], [data-badge="warning"], [data-badge="danger"]) {
+    box-shadow: 0 0 0 1px var(--pico-badge-ring-color);
+  }
+}
+
+/* The link underline belongs to the link, not to the pill */
+a[data-badge] {
+  &:hover,
+  &:focus-visible {
+    text-decoration: none;
+  }
+}
+
+@media (forced-colors: active) {
+  [data-badge] {
+    border: 1px solid;
+  }
+}

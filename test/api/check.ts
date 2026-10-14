@@ -6,6 +6,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { EXTRAS } from "../../scripts/lib/compiler/index.ts";
 import { extractApi } from "./extract.ts";
 import type { Api } from "./extract.ts";
 
@@ -75,6 +76,17 @@ for (const file of files) {
     if (skipped.length)
       lines.push(`  allowlisted ${kind} (${skipped.length}): ${skipped.join(" ")}`);
     if (added.length) lines.push(`  added ${kind} (${added.length}): ${added.join(" ")}`);
+  }
+  // Extras are opt-in. Their tokens and their layer must never reach the v2.1.1 files.
+  const leaks = [...new Set(built.properties)].filter((p) =>
+    EXTRAS.some((name) => p.startsWith(`--pico-${name}-`)),
+  );
+  const extrasLayer = /@layer\s+pico\.extras\s*\{/.test(readFileSync(path, "utf8"));
+  if (leaks.length || extrasLayer) {
+    fileFailed = true;
+    lines.push(
+      `  extras leaked into the default build: ${[...leaks, ...(extrasLayer ? ["@layer pico.extras"] : [])].join(" ")}`,
+    );
   }
   console.log(`${file}: ${fileFailed ? "FAIL" : "ok"}`);
   lines.forEach((l) => console.log(l));

@@ -18,6 +18,7 @@ export default defineConfig({
       "src/**",
       "test/reference/**",
       "test/visual/report*/**",
+      "test/visual/extras-report/**",
     ],
     options: {
       typeAware: true,
@@ -72,6 +73,7 @@ export default defineConfig({
       "dist-dev*/**",
       "test/reference/**",
       "test/visual/report*/**",
+      "test/visual/extras-report/**",
       "pnpm-lock.yaml",
       // Not part of the toolchain scope: the docs site, example pages and HTML fixtures.
       "site/**",

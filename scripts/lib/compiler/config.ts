@@ -72,6 +72,21 @@ export const MODULES: string[] = [
   "utilities/reduce-motion",
 ];
 
+/** Every opt-in extra, in import order. Names match the files under src/extras/. */
+export const EXTRAS: string[] = [
+  "tabs",
+  "alert",
+  "toast",
+  "badge",
+  "avatar",
+  "skeleton",
+  "app-shell",
+  "data-table",
+  "pagination",
+  "stepper",
+  "empty-state",
+];
+
 /** Modules that are off unless asked for. The classless entry turns on the semantic container. */
 const OFF_BY_DEFAULT = new Set(["layout/semantic-container", "layout/responsive-spacings"]);
 
@@ -80,6 +95,9 @@ export type ResolvedOptions = {
   /** Final on/off state of every module. */
   modules: Record<string, boolean>;
   theme: ThemeOption;
+  /** Extras to include, in EXTRAS order. */
+  extras: string[];
+  extrasDir: string;
   classes: boolean;
   fluid: boolean;
   scope: string;
@@ -100,6 +118,8 @@ const KNOWN_KEYS = new Set([
   "modules",
   "exclude",
   "theme",
+  "extras",
+  "extrasDir",
   "classes",
   "semanticContainer",
   "fluid",
@@ -133,6 +153,23 @@ function excludeList(exclude: CompileOptions["exclude"]): string[] {
   return list.map((name) => name.trim()).filter(Boolean);
 }
 
+/** `extras` takes true, "all", a list or a comma separated string. Returns names in EXTRAS order. */
+function extrasList(extras: CompileOptions["extras"], fallback: boolean): string[] {
+  if (extras === undefined) return fallback ? [...EXTRAS] : [];
+  if (extras === true) return [...EXTRAS];
+  if (extras === false) return [];
+  const list = (typeof extras === "string" ? extras.split(",") : extras)
+    .map((name) => name.trim())
+    .filter(Boolean);
+  if (list.includes("all")) return [...EXTRAS];
+  for (const name of list) {
+    if (!EXTRAS.includes(name)) {
+      throw new Error(`Unknown extra "${name}". Valid extras: ${EXTRAS.join(", ")}`);
+    }
+  }
+  return EXTRAS.filter((name) => list.includes(name));
+}
+
 export function resolveOptions(input: CompileOptions = {}): ResolvedOptions {
   const warnings: string[] = [];
   for (const key of Object.keys(input)) {
@@ -143,8 +180,8 @@ export function resolveOptions(input: CompileOptions = {}): ResolvedOptions {
     }
   }
   const entry = input.entry ?? "pico";
-  if (entry !== "pico" && entry !== "classless" && entry !== "colors") {
-    throw new Error(`Unknown entry "${String(entry)}". Use pico, classless or colors.`);
+  if (entry !== "pico" && entry !== "classless" && entry !== "colors" && entry !== "extras") {
+    throw new Error(`Unknown entry "${String(entry)}". Use pico, classless, colors or extras.`);
   }
   const classless = entry === "classless";
 
@@ -164,6 +201,11 @@ export function resolveOptions(input: CompileOptions = {}): ResolvedOptions {
     }
     modules[name] = false;
   }
+  const extras = extrasList(input.extras, entry === "extras");
+  if (entry === "colors" && extras.length) {
+    warnings.push('the "colors" entry takes no extras, so "extras" is ignored');
+    extras.length = 0;
+  }
   const important = input.important ?? true;
   const transitions = input.transitions ?? true;
   // v2.1.1 only built reduce-motion when transitions and !important were both on.
@@ -173,6 +215,8 @@ export function resolveOptions(input: CompileOptions = {}): ResolvedOptions {
     entry,
     modules,
     theme: normalizeTheme(input.theme ?? DEFAULT_THEME),
+    extras,
+    extrasDir: input.extrasDir ? resolve(input.extrasDir).replaceAll("\\", "/") : "",
     classes: input.classes ?? !classless,
     fluid: input.fluid ?? false,
     scope: (input.scope ?? "").trim(),

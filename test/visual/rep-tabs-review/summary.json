@@ -1,0 +1,24 @@
+{
+  "tabs": {
+    "blocking": 0,
+    "violations": 0,
+    "runs": [
+      {
+        "mode": "1280-light",
+        "violations": []
+      },
+      {
+        "mode": "1280-dark",
+        "violations": []
+      },
+      {
+        "mode": "375-light",
+        "violations": []
+      },
+      {
+        "mode": "1280-light-rtl",
+        "violations": []
+      }
+    ]
+  }
+}

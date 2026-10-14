@@ -413,7 +413,7 @@
   }
 }
 
-@layer pico.theme, pico.core;
+@layer pico.theme, pico.core, pico.extras;
 
 @layer pico.utilities {
   .pico-color-red-950 {

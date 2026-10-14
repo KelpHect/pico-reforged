@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Avatar</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+    <script>
+      // Optional polish. Without it a failed image still leaves the initials readable,
+      // but some browsers draw a broken-image icon over them. This removes the failed <img>.
+      // No script? Put onerror="this.remove()" on the <img> instead.
+      document.addEventListener(
+        "error",
+        (event) => {
+          const img = event.target;
+          if (img instanceof HTMLImageElement && img.closest("[data-avatar]")) img.remove();
+        },
+        true,
+      );
+    </script>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Avatar</h1>
+      <p>
+        A <code>&lt;span data-avatar&gt;</code> holds an image, initials, or both. The image sits
+        over the initials. If it fails, the initials show; a tiny script (below) removes the failed image so no broken icon is drawn. No class is needed.
+      </p>
+
+      <h2>Sizes</h2>
+      <p>
+        <span data-avatar="sm" role="img" aria-label="Ada Lovelace">AL</span>
+        <span data-avatar role="img" aria-label="Ada Lovelace">AL</span>
+        <span data-avatar="lg" role="img" aria-label="Ada Lovelace">AL</span>
+        <span data-avatar="xl" role="img" aria-label="Ada Lovelace">AL</span>
+      </p>
+
+      <h2>Image with initials fallback</h2>
+      <p>
+        <span data-avatar="lg" role="img" aria-label="Ada Lovelace"
+          ><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%23a14f2a'/%3E%3Ccircle cx='40' cy='32' r='14' fill='%23f3d3b8'/%3E%3Cellipse cx='40' cy='78' rx='26' ry='24' fill='%23f3d3b8'/%3E%3C/svg%3E" alt="" width="56" height="56" />AL</span
+        >
+        <span data-avatar="lg" role="img" aria-label="Grace Hopper"
+          ><img src="/missing/grace.webp" alt="" width="56" height="56" />GH</span
+        >
+      </p>
+      <p><small>The second image does not exist, so the initials show.</small></p>
+
+      <h2>Status</h2>
+      <p>
+        <span data-avatar data-status="online" role="img" aria-label="Ada Lovelace, online">AL</span>
+        <span data-avatar data-status="away" role="img" aria-label="Grace Hopper, away">GH</span>
+        <span data-avatar data-status="busy" role="img" aria-label="Alan Turing, busy">AT</span>
+        <span data-avatar data-status="offline" role="img" aria-label="Edsger Dijkstra, offline"
+          >ED</span
+        >
+        <span data-avatar="sm" data-status="online" role="img" aria-label="Small, online">SM</span>
+        <span data-avatar="xl" data-status="busy" role="img" aria-label="Extra large, busy">XL</span>
+      </p>
+
+      <h2>Next to a name</h2>
+      <p>
+        <span data-avatar data-status="online" role="img" aria-label="Online">AL</span>
+        <strong>Ada Lovelace</strong>, billing admin
+      </p>
+
+      <h2>Group</h2>
+      <div role="group" aria-label="Project members">
+        <span data-avatar role="img" aria-label="Ada Lovelace">AL</span>
+        <span data-avatar role="img" aria-label="Grace Hopper">GH</span>
+        <span data-avatar role="img" aria-label="Alan Turing">AT</span>
+        <span data-avatar role="img" aria-label="3 more people">+3</span>
+      </div>
+
+      <h2>Links</h2>
+      <div role="group" aria-label="Team">
+        <a href="#ada"
+          ><span data-avatar data-status="online" role="img" aria-label="AL, Ada Lovelace, online">AL</span></a
+        >
+        <a href="#grace"
+          ><span data-avatar role="img" aria-label="GH, Grace Hopper">GH</span></a
+        >
+        <a href="#alan"
+          ><span data-avatar role="img" aria-label="AT, Alan Turing">AT</span></a
+        >
+      </div>
+      <p>
+        <small
+          >Visible initials inside a link or button start the accessible name ("AL, Ada Lovelace"),
+          so speech input can say what it sees.</small
+        >
+      </p>
+
+      <h2>Menu triggers</h2>
+      <p>
+        <button type="button" aria-haspopup="menu" aria-expanded="false">
+          <span data-avatar data-status="busy" role="img" aria-label="AL, Ada Lovelace, busy">AL</span>
+        </button>
+      </p>
+      <details class="dropdown">
+        <summary aria-label="Account menu">
+          <span data-avatar role="img" aria-label="GH, Grace Hopper">GH</span>
+        </summary>
+        <ul>
+          <li><a href="#profile">Profile</a></li>
+          <li><a href="#out">Sign out</a></li>
+        </ul>
+      </details>
+
+      <h2>Inside a card</h2>
+      <article>
+        <header>
+          <div role="group" aria-label="Reviewers">
+            <span data-avatar="sm" role="img" aria-label="Ada Lovelace">AL</span>
+            <span data-avatar="sm" role="img" aria-label="Grace Hopper">GH</span>
+            <span data-avatar="sm" role="img" aria-label="1 more person">+1</span>
+          </div>
+        </header>
+        <span data-avatar="lg" data-status="away" role="img" aria-label="Alan Turing, away">AT</span>
+        <strong>Alan Turing</strong> asked for a review.
+        <footer>
+          <span data-avatar="sm" data-status="online" role="img" aria-label="Ada Lovelace, online"
+            >AL</span
+          >
+          Ada is online
+        </footer>
+      </article>
+    </main>
+
+  </body>
+</html>

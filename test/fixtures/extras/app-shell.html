@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>App shell</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body data-app-shell>
+    <a href="#main">Skip to content</a>
+
+    <header>
+      <button type="button" popovertarget="app-nav">
+        <svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span>Menu</span>
+      </button>
+      <strong>Acme Cloud</strong>
+      <nav aria-label="Account">
+        <ul>
+          <li><a href="#account">Account</a></li>
+          <li><a href="#signout">Sign out</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <aside id="app-nav" popover aria-label="Sidebar">
+      <nav aria-label="Main">
+        <small>Workspace</small>
+        <ul>
+          <li><a href="#home" aria-current="page"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Overview</a></li>
+          <li><a href="#folder"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h7l2 2h9v10H3z"/></svg>Projects</a></li>
+          <li><a href="#inbox"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h5l1 3h6l1-3h5M5 5h14l2 8v6H3v-6z"/></svg>Inbox<small>12</small></a></li>
+          <li><a href="#chart"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Reports</a></li>
+        </ul>
+        <small>Manage</small>
+        <ul>
+          <li><a href="#users"><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M9.5 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM21 20v-2a4 4 0 0 0-3-3.9"/></svg>Team</a></li>
+          <li>
+            <details open>
+              <summary><svg aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19 12h2M3 12h2M12 3v2M12 19v2"/></svg>Settings</summary>
+              <ul>
+                <li><a href="#general">General</a></li>
+                <li><a href="#billing">Billing</a></li>
+                <li><a href="#api-keys">API keys</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main id="main" tabindex="-1">
+      <header>
+        <hgroup>
+          <h1>Overview</h1>
+          <p>Usage for the last 7 days across all projects.</p>
+        </hgroup>
+        <button type="button">New project</button>
+      </header>
+
+      <section aria-labelledby="stats">
+        <h2 id="stats">This week</h2>
+        <article>
+          <p><small>Active users</small></p>
+          <strong>2,481</strong>
+        </article>
+        <article>
+          <p><small>Deployments</small></p>
+          <strong>96</strong>
+        </article>
+        <article>
+          <p><small>Error rate</small></p>
+          <strong>0.4%</strong>
+        </article>
+        <article>
+          <p><small>Monthly cost</small></p>
+          <strong>$1,240</strong>
+        </article>
+      </section>
+
+      <section aria-labelledby="recent">
+        <h2 id="recent">Recent deployments</h2>
+        <figure role="region" aria-label="Deployments table" tabindex="0">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Project</th>
+                <th scope="col">Branch</th>
+                <th scope="col">Status</th>
+                <th scope="col">Duration</th>
+                <th scope="col">Deployed by</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">billing-api</th><td>main</td><td>Ready</td><td>1m 42s</td><td>Maria Santos</td></tr>
+              <tr><th scope="row">web-app</th><td>feature/onboarding</td><td>Building</td><td>0m 58s</td><td>Joao Pereira</td></tr>
+              <tr><th scope="row">docs</th><td>main</td><td>Ready</td><td>0m 31s</td><td>Ana Costa</td></tr>
+              <tr><th scope="row">mobile-gateway</th><td>fix/token-refresh</td><td>Failed</td><td>2m 07s</td><td>Rui Almeida</td></tr>
+              <tr><th scope="row">analytics</th><td>main</td><td>Ready</td><td>3m 15s</td><td>Maria Santos</td></tr>
+            </tbody>
+          </table>
+        </figure>
+      </section>
+
+      <section aria-labelledby="activity">
+        <h2 id="activity">Activity</h2>
+        <p>Scroll this page: the header stays at the top and the sidebar stays in view from 1024px.</p>
+        <p>Deployments are grouped by project. Open a project from the sidebar to see its full history, environment variables and rollbacks. Linked anchors such as <a href="#activity">this heading</a> land below the sticky header.</p>
+        <p>Billing runs on the first day of each month. Usage above the plan limit is charged at the end of the cycle, and every invoice lists the projects that produced it.</p>
+      </section>
+    </main>
+
+    <footer>
+      <small>Acme Cloud v2.3.0</small>
+    </footer>
+
+    <script>
+      const drawer = document.querySelector("body[data-app-shell] > aside[popover]");
+      const toggle = document.querySelector("body[data-app-shell] > header > button[popovertarget]");
+      if (drawer && toggle) {
+        drawer.addEventListener("toggle", (e) => {
+          if (e.newState === "open") drawer.querySelector("a")?.focus();
+        });
+        // A tap on the scrim lands on the aside itself, which light dismiss ignores
+        drawer.addEventListener("click", (e) => {
+          if (e.target === drawer) drawer.hidePopover();
+        });
+      }
+    </script>
+    <!--
+      Markup contract
+      - Hook: data-app-shell on body. No class is needed, so it works in the classless build.
+      - Children of body, in order: a skip link to #main, header, aside (popover), main, footer.
+      - header: toggle button (popovertarget only, the browser exposes the expanded state; do not add a static aria-expanded), brand, nav aria-label="Account".
+        The toggle is only shown below 1024px, where the aside is a drawer.
+      - aside: popover, with an aria-label. Inside, nav aria-label="Main". A small before a ul
+        is a group label. aria-current="page" marks the current link. A svg with
+        aria-hidden="true" before the link text is the icon. A small inside a link is a count.
+        A details inside an li is a nested group.
+      - main: id="main" tabindex="-1". A header in main is the page title row. A section that
+        holds articles lays them out in a responsive grid. A figure around a table scrolls
+        sideways on narrow screens, give it role="region", an aria-label and tabindex="0".
+      - The header is at least --pico-app-shell-header-height tall. A long brand is truncated,
+        account links wrap, so nothing scrolls sideways at 320px.
+      - The drawer is a non-modal popover with a dimmed scrim. The page behind it
+        does not scroll, but its content stays reachable by Tab. Escape closes the drawer.
+
+      JavaScript (recommended): moves focus into the drawer and closes it on a tap of the scrim.
+      The scrim is a layer on the aside that swallows the tap, so the control under it is not
+      activated, but light dismiss ignores it. Without the script the drawer still opens and
+      closes with the toggle and Escape, and returns focus.
+        drawer.addEventListener("toggle", (e) => {
+          if (e.newState === "open") drawer.querySelector("a")?.focus();
+        });
+        drawer.addEventListener("click", (e) => {
+          if (e.target === drawer) drawer.hidePopover();
+        });
+      For a single page app, close the drawer after in-app navigation:
+        drawer.addEventListener("click", (e) => {
+          if (e.target.closest("a[href]")) drawer.hidePopover();
+        });
+      Without the snippet below, a drawer left open while the window grows past 1024px is pinned
+      over the sidebar column. Close it when the window grows past 1024px:
+        matchMedia("(width >= 1024px)").addEventListener("change", (e) => {
+          if (e.matches) drawer.hidePopover();
+        });
+
+      Known gaps: the drawer is non-modal (Tab leaves it into the page without closing it), the
+      scrim tap needs the script above, and a header that wraps to several lines is not tracked by
+      the sticky offsets (set --pico-app-shell-header-height to the real height).
+
+      Tokens: --pico-app-shell-nav-width, --pico-app-shell-header-height,
+      --pico-app-shell-background-color (skip link fill),
+      --pico-app-shell-border-color, --pico-app-shell-nav-background-color,
+      --pico-app-shell-nav-hover-background-color, --pico-app-shell-nav-current-background-color,
+      --pico-app-shell-nav-current-color, --pico-app-shell-scrim-color.
+    -->
+  </body>
+</html>

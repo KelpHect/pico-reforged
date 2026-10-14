@@ -20,9 +20,10 @@ test("the default targets are the Tailwind v4 floor", () => {
 
 test("the default build keeps @layer and never ships an unlayered build", async () => {
   const { css } = await compile();
-  // Lightning CSS folds the order statement into the first block of each layer.
-  const order = ["tokens", "theme", "core", "utilities"].map((l) =>
-    css.indexOf(`@layer pico.${l}`),
+  // Lightning CSS folds the order statement into the first block of each layer, and keeps the
+  // names of the layers that are still empty (extras, utilities) in a short statement at the end.
+  const order = ["tokens", "theme", "core", "extras", "utilities"].map((l) =>
+    css.search(new RegExp(String.raw`@layer[^{;]*pico\.${l}`)),
   );
   assert.ok(order.every((at) => at > -1));
   assert.deepEqual(

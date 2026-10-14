@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Toast</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+    <style>
+      /* Page author CSS. Pico ships no tone attribute: set the accent token on the toast you want. */
+      #toaster > [data-tone="success"] {
+        --pico-toast-accent: var(--pico-form-element-valid-border-color);
+      }
+      #toaster > [data-tone="danger"] {
+        --pico-toast-accent: var(--pico-form-element-invalid-border-color);
+      }
+
+      /* Fixture only: a framed viewport so every placement can be shown at once */
+      .frame {
+        position: relative;
+        contain: layout;
+        min-height: 13rem;
+        margin-bottom: var(--pico-spacing);
+        border: var(--pico-border-width) dashed var(--pico-muted-border-color);
+        border-radius: var(--pico-border-radius);
+      }
+      .frame > small {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline: 0;
+        text-align: center;
+        color: var(--pico-muted-color);
+      }
+      .frame [popover] {
+        --pico-toast-width: min(15rem, 100% - 2 * var(--pico-toast-inset));
+      }
+      .live {
+        min-height: 90vh;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <section class="live">
+        <h1>Toast</h1>
+        <p>
+          Notifications for apps. One <code>&lt;section popover="manual" role="status"&gt;</code> is
+          open at page load and holds one <code>&lt;article&gt;</code> per toast. The stack in the
+          bottom corner is the live one.
+        </p>
+
+        <h2>Billing</h2>
+        <form>
+          <label>
+            Billing email
+            <input type="email" name="email" value="billing@acme.example" />
+          </label>
+          <label>
+            Plan
+            <select name="plan">
+              <option>Team, 10 seats</option>
+              <option>Business, 50 seats</option>
+            </select>
+          </label>
+          <button type="button">Save changes</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Placement</h2>
+        <p>
+          <code>data-placement</code> takes <code>top</code> or <code>bottom</code>, then
+          <code>start</code>, <code>center</code> or <code>end</code>. The default is
+          <code>bottom-end</code>. Each frame below holds a stack that was not opened with
+          <code>showPopover()</code>, which is also how it looks where popover is not supported.
+        </p>
+
+        <div class="grid">
+          <div class="frame">
+            <small>top-start</small>
+            <section
+              popover="manual"
+              role="status"
+              aria-label="Notifications, top start"
+              aria-atomic="false"
+              data-placement="top-start"
+            >
+              <article><p>Draft saved.</p></article>
+            </section>
+          </div>
+          <div class="frame">
+            <small>top-center</small>
+            <section
+              popover="manual"
+              role="status"
+              aria-label="Notifications, top center"
+              aria-atomic="false"
+              data-placement="top-center"
+            >
+              <article><p>Draft saved.</p></article>
+            </section>
+          </div>
+          <div class="frame">
+            <small>top-end</small>
+            <section
+              popover="manual"
+              role="status"
+              aria-label="Notifications, top end"
+              aria-atomic="false"
+              data-placement="top-end"
+            >
+              <article><p>Draft saved.</p></article>
+            </section>
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="frame">
+            <small>bottom-start</small>
+            <section
+              popover="manual"
+              role="status"
+              aria-label="Notifications, bottom start"
+              aria-atomic="false"
+              data-placement="bottom-start"
+            >
+              <article><p>Draft saved.</p></article>
+            </section>
+          </div>
+          <div class="frame">
+            <small>bottom-center</small>
+            <section
+              popover="manual"
+              role="status"
+              aria-label="Notifications, bottom center"
+              aria-atomic="false"
+              data-placement="bottom-center"
+            >
+              <article><p>Draft saved.</p></article>
+            </section>
+          </div>
+          <div class="frame">
+            <small>bottom-end (default)</small>
+            <section
+              popover="manual"
+              role="status"
+              aria-label="Notifications, bottom end"
+              aria-atomic="false"
+            >
+              <article><p>Draft saved.</p></article>
+            </section>
+          </div>
+        </div>
+
+        <h2>Long content</h2>
+        <p>Long messages wrap, and a long unbroken word does not push the dismiss button out.</p>
+        <div class="frame" style="min-height: 15rem">
+          <small>top-start, narrow stack</small>
+          <section
+            popover="manual"
+            role="status"
+            aria-label="Notifications, long content"
+            aria-atomic="false"
+            data-placement="top-start"
+          >
+            <article>
+              <p>
+                <strong>Import finished with warnings</strong>
+                214 of 220 contacts were imported. Six rows had no email address and were skipped,
+                see import-2024-06-contacts-with-missing-email-addresses.csv for the list.
+              </p>
+              <button type="button" aria-label="Dismiss notification">&times;</button>
+            </article>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <!-- Keep the stack last in body so its DOM order is its tab order -->
+    <section
+      id="toaster"
+      popover="manual"
+      role="status"
+      aria-label="Notifications"
+      aria-atomic="false"
+      data-placement="bottom-end"
+    >
+      <article>
+        <p>Draft saved.</p>
+        <button type="button" aria-label="Dismiss notification">&times;</button>
+      </article>
+      <article data-tone="success">
+        <p><strong>Invoice sent</strong> INV-1042 went to billing@acme.example.</p>
+        <button type="button" aria-label="Dismiss notification">&times;</button>
+      </article>
+      <article data-tone="danger">
+        <p><strong>Payment failed</strong> Your card ending 4242 was declined.</p>
+        <button type="button">Update card</button>
+        <button type="button" aria-label="Dismiss notification">&times;</button>
+      </article>
+      <article>
+        <p>Message archived.</p>
+        <button type="button">Undo</button>
+        <button type="button" aria-label="Dismiss notification">&times;</button>
+      </article>
+    </section>
+
+    <script>
+      document.getElementById("toaster").showPopover?.();
+    </script>
+
+    <!--
+      Adding toasts from script (about 30 lines). Styling needs no script at all.
+      Copy it and adjust MAX and the timings. Danger toasts and toasts with a button never time out.
+
+      (() => {
+        const stack = document.getElementById("toaster");
+        const MAX = 3;
+        const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+
+        // Open once at load: a live region must exist before its content changes.
+        try { stack.showPopover?.(); } catch {}
+
+        window.toast = (message, { tone, action } = {}) => {
+          const el = document.createElement("article");
+          const text = document.createElement("p");
+          text.textContent = message; // textContent, never innerHTML
+          el.append(text);
+          if (tone) el.dataset.tone = tone;
+          if (action) {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.textContent = action.label;
+            b.addEventListener("click", () => { action.run(); close(); });
+            el.append(b);
+          }
+          const x = document.createElement("button");
+          x.type = "button";
+          x.setAttribute("aria-label", "Dismiss notification");
+          x.textContent = "×";
+          x.addEventListener("click", () => close());
+          el.append(x);
+
+          const sticky = tone === "danger" || !!action;
+          while (stack.children.length >= MAX) stack.firstElementChild.remove();
+          stack.append(el);
+
+          let timer, left = 5000 + Math.ceil(message.length / 120) * 1000, since = 0, held = 0;
+          function close() {
+            clearTimeout(timer);
+            if (el.inert) return;
+            el.inert = true; // the CSS fades out an inert toast
+            el.addEventListener("transitionend", () => el.remove(), { once: true });
+            setTimeout(() => el.remove(), reduce.matches ? 0 : 300);
+          }
+          const hold = () => { if (held++ === 0) { clearTimeout(timer); left -= Date.now() - since; } };
+          const release = () => { if (--held === 0) { since = Date.now(); timer = setTimeout(close, Math.max(left, 0)); } };
+          if (!sticky) {
+            el.addEventListener("pointerenter", hold);
+            el.addEventListener("pointerleave", release);
+            el.addEventListener("focusin", hold);
+            el.addEventListener("focusout", release);
+            since = Date.now();
+            timer = setTimeout(close, left);
+          }
+          return el;
+        };
+      })();
+
+      toast("Draft saved.");
+      toast("Invoice sent", { tone: "success" });
+      toast("Payment failed. Update your card.", { tone: "danger" });
+      toast("Message archived.", { action: { label: "Undo", run: () => {} } });
+
+      Notes:
+      - A modal dialog opened after the stack sits above it in the top layer and makes the stack inert.
+        Fire toasts for actions inside a modal after it closes, or give the dialog its own stack.
+      - Where popover is not supported the stack is a plain fixed box with z-index 1000.
+      - Tone is yours to name. This page maps data-tone to --pico-toast-accent in its own style block.
+        role="alert" on a toast gives the danger accent with no extra CSS.
+    -->
+  </body>
+</html>

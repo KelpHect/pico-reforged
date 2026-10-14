@@ -17,6 +17,7 @@ const files: Record<string, CompileOptions> = {
   "pico.conditional.css": { scope: ".pico" },
   "pico.fluid.classless.css": { entry: "classless", fluid: true },
   "pico.colors.css": { entry: "colors" },
+  "pico.extras.css": { entry: "extras" },
 };
 
 for (const [name, options] of Object.entries(files)) {

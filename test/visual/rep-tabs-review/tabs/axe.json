@@ -1,0 +1,18 @@
+[
+  {
+    "mode": "1280-light",
+    "violations": []
+  },
+  {
+    "mode": "1280-dark",
+    "violations": []
+  },
+  {
+    "mode": "375-light",
+    "violations": []
+  },
+  {
+    "mode": "1280-light-rtl",
+    "violations": []
+  }
+]

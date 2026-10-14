@@ -1,0 +1,84 @@
+/* Skeleton: empty [data-skeleton] placeholders (line, avatar, block) inside an [aria-busy="true"] container */
+:root,
+:host,
+[data-theme] {
+  --pico-skeleton-color: var(--pico-muted-border-color);
+  --pico-skeleton-highlight-color: light-dark(
+    var(--pico-form-element-background-color),
+    var(--pico-form-element-selected-background-color)
+  );
+  --pico-skeleton-duration: 1.5s;
+  --pico-skeleton-line-height: 1em;
+  --pico-skeleton-avatar-size: 3rem;
+  --pico-skeleton-block-size: 8rem;
+}
+
+/* Skeleton containers have placeholders instead of a spinner */
+[aria-busy="true"]:has([data-skeleton]) {
+  white-space: normal;
+
+  &::before {
+    content: none;
+  }
+}
+
+[aria-busy="true"] [data-skeleton] {
+  display: block;
+  box-sizing: border-box;
+  margin-block: 0 calc(var(--pico-typography-spacing-vertical) * 0.75);
+  border-radius: var(--pico-border-radius);
+  background-color: var(--pico-skeleton-color);
+  color: transparent;
+  user-select: none;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &[data-skeleton="line"] {
+    inline-size: 100%;
+    block-size: var(--pico-skeleton-line-height);
+  }
+
+  &[data-skeleton="avatar"] {
+    flex-shrink: 0;
+    inline-size: var(--pico-skeleton-avatar-size);
+    block-size: var(--pico-skeleton-avatar-size);
+    margin-block: 0;
+    border-radius: 50%;
+  }
+
+  &[data-skeleton="block"] {
+    inline-size: 100%;
+    block-size: var(--pico-skeleton-block-size);
+  }
+}
+
+/* The sweep is for people who welcome motion, everyone else gets the flat color */
+@media (prefers-reduced-motion: no-preference) {
+  [aria-busy="true"] [data-skeleton] {
+    background-image: linear-gradient(
+      90deg,
+      transparent 30%,
+      var(--pico-skeleton-highlight-color) 50%,
+      transparent 70%
+    );
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+    animation: skeleton-shimmer var(--pico-skeleton-duration) ease-in-out infinite;
+  }
+
+  [dir="rtl"] [aria-busy="true"] [data-skeleton] {
+    animation-direction: reverse;
+  }
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 0 0;
+  }
+}

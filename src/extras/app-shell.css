@@ -1,0 +1,476 @@
+/* App shell: body[data-app-shell] with header, aside nav, main and footer */
+
+:root,
+:host,
+[data-theme] {
+  --pico-app-shell-nav-width: 16rem;
+  --pico-app-shell-header-height: 3.5rem;
+  /* Pico core sets --pico-background-color: transparent on every a, so the skip link needs an alias
+     that is resolved here, on the root, where the variable still holds the page background */
+  --pico-app-shell-background-color: var(--pico-background-color);
+  --pico-app-shell-border-color: var(--pico-muted-border-color);
+  --pico-app-shell-nav-background-color: var(--pico-card-sectioning-background-color);
+  --pico-app-shell-nav-muted-color: color-mix(
+    in srgb,
+    var(--pico-color) 72%,
+    var(--pico-app-shell-nav-background-color)
+  );
+  --pico-app-shell-nav-hover-background-color: var(--pico-secondary-focus);
+  --pico-app-shell-nav-current-background-color: var(--pico-form-element-selected-background-color);
+  --pico-app-shell-nav-current-color: var(--pico-contrast);
+  --pico-app-shell-scrim-color: var(--pico-modal-overlay-background-color);
+}
+
+/* Anchors and focus jumps land below the sticky header */
+:root:has(> body[data-app-shell]) {
+  scroll-padding-block-start: calc(var(--pico-app-shell-header-height) + var(--pico-spacing));
+}
+
+/* Page does not scroll behind an open drawer */
+@media (width < 1024px) {
+  :root:has(> body[data-app-shell] > aside[popover]:popover-open) {
+    overflow: hidden;
+  }
+}
+
+/* One column with the sidebar as a drawer, from 1024px the sidebar gets its own column */
+body[data-app-shell] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr auto;
+  grid-template-areas:
+    "header"
+    "nav"
+    "main"
+    "footer";
+  min-height: 100dvh;
+  margin: 0;
+
+  @media (width >= 1024px) {
+    grid-template-columns: var(--pico-app-shell-nav-width) minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header header"
+      "nav main"
+      "nav footer";
+  }
+
+  /* Also resets the semantic container of the classless build */
+  > :is(header, main, footer) {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding-block: 0;
+    padding-inline: var(--pico-block-spacing-horizontal);
+  }
+
+  > header {
+    grid-area: header;
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: var(--pico-grid-column-gap);
+    flex-wrap: wrap;
+    min-height: var(--pico-app-shell-header-height);
+    padding-block: calc(var(--pico-spacing) * 0.25);
+    border-block-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+    background-color: var(--pico-background-color);
+
+    /* Long brands are cut with an ellipsis, long account links wrap instead of widening the page */
+    > :is(strong, a, hgroup) {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    > nav {
+      min-width: 0;
+      max-width: 100%;
+      margin-inline-start: auto;
+
+      & ul {
+        margin-inline: 0;
+      }
+
+      & ul {
+        flex-wrap: wrap;
+        max-width: 100%;
+      }
+
+      & li {
+        min-width: 0;
+        padding-block: 0;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    /* Only visible when the sidebar is a drawer */
+    > button[popovertarget] {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--pico-spacing) * 0.5);
+      width: auto;
+      margin: 0;
+      padding-block: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width));
+      padding-inline: var(--pico-nav-link-spacing-horizontal);
+      border-color: var(--pico-app-shell-border-color);
+      background-color: transparent;
+      color: inherit;
+      /* Touch target */
+      min-block-size: 2.75rem;
+      min-inline-size: 2.75rem;
+      justify-content: center;
+
+      &:hover {
+        background-color: var(--pico-app-shell-nav-hover-background-color);
+      }
+
+      &:focus-visible {
+        box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+      }
+
+      & svg {
+        flex-shrink: 0;
+      }
+
+      /* Icon only on small screens, the label stays for assistive technology */
+      @media (width < 576px) {
+        & span {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          overflow: hidden;
+          clip-path: inset(50%);
+          white-space: nowrap;
+        }
+      }
+
+      @media (width >= 1024px) {
+        display: none;
+      }
+
+      @supports not selector(:popover-open) {
+        display: none;
+      }
+    }
+  }
+
+  > main {
+    grid-area: main;
+    min-width: 0;
+    padding-block: var(--pico-block-spacing-vertical);
+
+    /* Page title row: title and text on one side, actions on the other */
+    > header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--pico-spacing);
+      margin-bottom: var(--pico-block-spacing-vertical);
+
+      & :is(h1, hgroup, p) {
+        margin-bottom: 0;
+      }
+
+      & :is(button, [role="button"]) {
+        width: auto;
+        margin-bottom: 0;
+      }
+    }
+
+    /* Cards in a section share a responsive grid, other content spans the row */
+    > section:has(> article) {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+      gap: var(--pico-grid-row-gap) var(--pico-grid-column-gap);
+      margin-bottom: var(--pico-block-spacing-vertical);
+
+      > :not(article) {
+        grid-column: 1 / -1;
+        margin-bottom: 0;
+      }
+
+      > article {
+        margin: 0;
+      }
+    }
+
+    /* A wide table scrolls inside its figure instead of the page */
+    & figure:has(> table) {
+      overflow-x: auto;
+
+      &:focus-visible {
+        outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+      }
+    }
+  }
+
+  > footer {
+    grid-area: footer;
+    padding-block: var(--pico-block-spacing-vertical);
+    border-block-start: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+    color: var(--pico-muted-color);
+  }
+
+  > aside {
+    grid-area: nav;
+    min-width: 0;
+    background-color: var(--pico-app-shell-nav-background-color);
+    color: var(--pico-color);
+
+    > nav {
+      display: block;
+
+      /* Group label above a list */
+      > small {
+        display: block;
+        margin-block: var(--pico-spacing) calc(var(--pico-spacing) * 0.25);
+        padding-inline: var(--pico-nav-link-spacing-horizontal);
+        color: var(--pico-app-shell-nav-muted-color);
+        font-weight: 600;
+
+        &:first-child {
+          margin-block-start: 0;
+        }
+      }
+
+      & ul {
+        margin: 0;
+        padding: 0;
+      }
+
+      & li {
+        padding: calc(var(--pico-nav-element-spacing-vertical) * 0.125) 0;
+      }
+
+      /* Link rows, the icon is an inline svg before the text */
+      & li a:not([role="button"]),
+      & li summary {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--pico-spacing) * 0.75);
+        margin: 0;
+        padding: var(--pico-nav-link-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
+        border-radius: var(--pico-border-radius);
+        color: inherit;
+        font-weight: 500;
+        line-height: var(--pico-line-height);
+        text-decoration: none;
+        transition: background-color var(--pico-transition);
+
+        &:hover {
+          background-color: var(--pico-app-shell-nav-hover-background-color);
+        }
+
+        /* One ring, the accordion module's offset outline on summary is replaced */
+        &:focus-visible {
+          outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+          outline-offset: 0;
+          box-shadow: none;
+        }
+
+        & svg {
+          flex-shrink: 0;
+        }
+
+        /* Count or status next to a link */
+        & small {
+          margin-inline-start: auto;
+          padding: 0 calc(var(--pico-nav-link-spacing-horizontal) * 0.75);
+          border-radius: var(--pico-border-radius);
+          background-color: var(--pico-secondary-focus);
+          color: inherit;
+          font-weight: 600;
+        }
+      }
+
+      & li a[aria-current]:not([aria-current="false"]) {
+        background-color: var(--pico-app-shell-nav-current-background-color);
+        color: var(--pico-app-shell-nav-current-color);
+        font-weight: 600;
+      }
+
+      /* Nested group: a plain details, the chevron comes from the accordion module */
+      & details {
+        margin: 0;
+        border: 0;
+
+        & summary {
+          justify-content: space-between;
+          cursor: pointer;
+
+          &::after {
+            margin-inline-start: auto;
+          }
+        }
+
+        & ul {
+          margin-inline-start: calc(var(--pico-nav-link-spacing-horizontal) + 0.625rem);
+          padding-inline-start: var(--pico-nav-link-spacing-horizontal);
+          border-inline-start: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+        }
+      }
+    }
+
+    @media (width >= 1024px) {
+      display: block;
+      position: static;
+      inset: auto;
+      z-index: auto;
+      width: auto;
+      height: auto;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+      border: 0;
+      border-inline-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+      box-shadow: none;
+      /* The popover module fades a closed popover out, here it is a permanent column */
+      transform: none;
+      opacity: 1;
+      transition: none;
+
+      /* The nav sticks under the header while the aside stretches the full column */
+      > nav {
+        position: sticky;
+        inset-block-start: var(--pico-app-shell-header-height);
+        max-height: calc(100dvh - var(--pico-app-shell-header-height));
+        padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+        overflow-y: auto;
+      }
+
+      /* A drawer left open while the window grows stays in the top layer, where position:static
+         is not possible. Pin it over its own column so the layout still reads as a sidebar */
+      &[popover]:popover-open {
+        position: fixed;
+        inset-block: var(--pico-app-shell-header-height) 0;
+        inset-inline: 0 auto;
+        width: var(--pico-app-shell-nav-width);
+        height: auto;
+        overflow-y: auto;
+        background-color: var(--pico-app-shell-nav-background-color);
+
+        /* The fixed aside already sits under the header, so the nav must not offset itself again */
+        > nav {
+          position: static;
+          max-height: none;
+          overflow-y: visible;
+        }
+
+        &::before,
+        &::after {
+          display: none;
+        }
+      }
+    }
+
+    /* Drawer: a popover from the inline start edge. Where popover is unknown the aside stays in flow */
+    @media (width < 1024px) {
+      @supports selector(:popover-open) {
+        &[popover] {
+          position: fixed;
+          inset-block: 0;
+          inset-inline: 0 auto;
+          z-index: 30;
+          width: min(20rem, 85vw);
+          height: 100dvh;
+          max-width: none;
+          max-height: none;
+          margin: 0;
+          padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+          overflow-y: auto;
+          border: 0;
+          border-inline-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+          transform: none;
+
+          /* The scrim is a full-viewport layer on the aside. A ::backdrop is click-through in the
+             user agent sheet, so a tap on it would also activate the control underneath. The panel
+             paints its own background and edge in front of the scrim */
+          background-color: transparent;
+          border-inline-end: 0;
+
+          &::before,
+          &::after {
+            content: "";
+            position: fixed;
+            z-index: -1;
+            pointer-events: auto;
+          }
+
+          &::before {
+            inset: 0;
+            background-color: var(--pico-app-shell-scrim-color);
+          }
+
+          &::after {
+            inset-block: 0;
+            inset-inline: 0 auto;
+            width: min(20rem, 85vw);
+            border-inline-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+            background-color: var(--pico-app-shell-nav-background-color);
+          }
+
+          &:not(:popover-open) {
+            display: none;
+          }
+        }
+      }
+
+      @supports not selector(:popover-open) {
+        padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+        border-block-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+      }
+    }
+
+    @media (width < 1024px) and (prefers-reduced-motion: no-preference) {
+      @supports (transition-behavior: allow-discrete) {
+        &[popover] {
+          transition:
+            opacity var(--pico-transition),
+            display var(--pico-transition) allow-discrete,
+            overlay var(--pico-transition) allow-discrete;
+
+          &:not(:popover-open) {
+            opacity: 0;
+          }
+
+          @starting-style {
+            &:popover-open {
+              transform: none;
+              opacity: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* Skip link: off screen until it has focus */
+  > a[href="#main"] {
+    position: absolute;
+    inset-block-start: var(--pico-nav-link-spacing-vertical);
+    inset-inline-start: var(--pico-nav-link-spacing-horizontal);
+    z-index: 40;
+    padding: var(--pico-nav-link-spacing-vertical) var(--pico-spacing);
+    border-radius: var(--pico-border-radius);
+    background-color: var(--pico-app-shell-background-color);
+    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+
+    &:not(:focus) {
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+      box-shadow: none;
+    }
+  }
+}

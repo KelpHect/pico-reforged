@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Skeleton</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Skeleton</h1>
+      <p>
+        A container with <code>aria-busy="true"</code> shows its empty
+        <code>data-skeleton</code> children as placeholders. Values: <code>line</code>,
+        <code>avatar</code> and <code>block</code>. Set the width of a line with
+        <code>inline-size</code>. Set <code>aria-busy="false"</code> (or swap the content) when the
+        data arrives.
+      </p>
+
+      <h2>Card</h2>
+      <article aria-busy="true" aria-label="Loading invoice">
+        <header>
+          <div style="display: flex; align-items: center; gap: var(--pico-spacing)">
+            <div data-skeleton="avatar"></div>
+            <div style="flex: 1">
+              <p data-skeleton="line" style="inline-size: 40%"></p>
+              <p data-skeleton="line" style="inline-size: 25%"></p>
+            </div>
+          </div>
+        </header>
+        <p data-skeleton="line"></p>
+        <p data-skeleton="line" style="inline-size: 85%"></p>
+        <p data-skeleton="line" style="inline-size: 60%"></p>
+        <div data-skeleton="block"></div>
+        <footer>
+          <p data-skeleton="line" style="inline-size: 30%"></p>
+        </footer>
+      </article>
+
+      <h2>Same card, loaded</h2>
+      <article aria-busy="false">
+        <header>
+          <div style="display: flex; align-items: center; gap: var(--pico-spacing)">
+            <strong>Acme Cloud</strong>
+            <small>Invoice 2041, paid</small>
+          </div>
+        </header>
+        <p>Your team plan renewed on 1 October. The next invoice is due on 1 November.</p>
+        <footer><small>Billing contact: billing@acme.example</small></footer>
+      </article>
+
+      <h2>Text lines</h2>
+      <section role="status" aria-busy="true" aria-label="Loading comments">
+        <p data-skeleton="line"></p>
+        <p data-skeleton="line" style="inline-size: 90%"></p>
+        <p data-skeleton="line" style="inline-size: 70%"></p>
+      </section>
+
+      <h2>Avatar and lines</h2>
+      <div
+        role="status"
+        aria-busy="true"
+        aria-label="Loading profile"
+        style="display: flex; align-items: center; gap: var(--pico-spacing)"
+      >
+        <span data-skeleton="avatar"></span>
+        <div style="flex: 1">
+          <p data-skeleton="line" style="inline-size: 50%"></p>
+          <p data-skeleton="line" style="inline-size: 30%"></p>
+        </div>
+      </div>
+
+      <h2>Card grid</h2>
+      <div
+        role="status"
+        aria-busy="true"
+        aria-label="Loading products"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+          gap: var(--pico-grid-row-gap) var(--pico-grid-column-gap);
+        "
+      >
+        <article style="margin: 0">
+          <div data-skeleton="block"></div>
+          <p data-skeleton="line" style="inline-size: 70%"></p>
+          <p data-skeleton="line" style="inline-size: 40%"></p>
+        </article>
+        <article style="margin: 0">
+          <div data-skeleton="block"></div>
+          <p data-skeleton="line" style="inline-size: 60%"></p>
+          <p data-skeleton="line" style="inline-size: 35%"></p>
+        </article>
+        <article style="margin: 0">
+          <div data-skeleton="block"></div>
+          <p data-skeleton="line" style="inline-size: 80%"></p>
+          <p data-skeleton="line" style="inline-size: 45%"></p>
+        </article>
+      </div>
+
+      <h2>Results swapped by htmx</h2>
+      <input type="search" name="q" placeholder="Search customers" aria-label="Search customers" />
+      <section
+        id="results"
+        aria-busy="true"
+        aria-label="Search results"
+        hx-get="/customers"
+        hx-trigger="keyup changed delay:300ms from:input[name=q]"
+        hx-target="this"
+        hx-swap="innerHTML"
+      >
+        <p data-skeleton="line"></p>
+        <p data-skeleton="line" style="inline-size: 75%"></p>
+        <p data-skeleton="line" style="inline-size: 55%"></p>
+      </section>
+
+      <h2>Spinner without skeletons</h2>
+      <p aria-busy="true">Saving your changes</p>
+    </main>
+
+    <!--
+      Optional htmx glue. The element opts in by having an aria-busy attribute, so nothing else
+      is needed in the markup. Without JS, write aria-busy="true" in the server response.
+
+      <script>
+        const setBusy = (el, value) => {
+          if (el && el.hasAttribute("aria-busy")) el.setAttribute("aria-busy", value);
+        };
+        document.addEventListener("htmx:beforeRequest", (e) => setBusy(e.detail.target, "true"));
+        document.addEventListener("htmx:afterSettle", (e) => setBusy(e.detail.target, "false"));
+        for (const type of ["htmx:responseError", "htmx:sendError", "htmx:sendAbort"]) {
+          document.addEventListener(type, (e) => setBusy(e.detail.target, "false"));
+        }
+      </script>
+
+      On an error, put the message in the real content and set aria-busy="false". A container
+      left at "true" can keep assistive technology from announcing the new content.
+    -->
+  </body>
+</html>

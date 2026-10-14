@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tabs</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Tabs</h1>
+      <p>
+        Tabs follow the WAI-ARIA tabs pattern. The tab list, tabs and panels are plain elements
+        with ARIA roles, no class needed. A small script moves the selection (it is at the end of
+        this page). The radio variant needs no script.
+      </p>
+
+      <h2>Account settings</h2>
+      <div>
+        <div role="tablist" aria-label="Account settings">
+          <button type="button" role="tab" id="tab-profile" aria-selected="true" aria-controls="panel-profile">Profile</button>
+          <button type="button" role="tab" id="tab-billing" aria-selected="false" aria-controls="panel-billing" tabindex="-1">Billing</button>
+          <button type="button" role="tab" id="tab-team" aria-selected="false" aria-controls="panel-team" tabindex="-1">Team</button>
+          <button type="button" role="tab" id="tab-api" aria-selected="false" aria-controls="panel-api" tabindex="-1">API keys</button>
+        </div>
+
+        <section role="tabpanel" id="panel-profile" aria-labelledby="tab-profile">
+          <form>
+            <label>
+              Full name
+              <input name="name" autocomplete="name" value="Ana Ribeiro" />
+            </label>
+            <label>
+              Work email
+              <input type="email" name="email" autocomplete="email" value="ana@acme.example" />
+            </label>
+            <button type="submit">Save changes</button>
+          </form>
+        </section>
+        <section role="tabpanel" id="panel-billing" aria-labelledby="tab-billing" tabindex="0" hidden>
+          <p>You are on the <strong>Growth</strong> plan, billed monthly. The next invoice is on 1 November.</p>
+          <p><a href="#">Download invoices</a></p>
+        </section>
+        <section role="tabpanel" id="panel-team" aria-labelledby="tab-team" tabindex="0" hidden>
+          <p>Seven seats used out of ten. Invite people from the members page.</p>
+        </section>
+        <section role="tabpanel" id="panel-api" aria-labelledby="tab-api" tabindex="0" hidden>
+          <p>Keys are shown once, when you create them. Revoke any key you no longer use.</p>
+        </section>
+      </div>
+
+      <h2>Disabled tab</h2>
+      <p>Use <code>aria-disabled="true"</code>, not <code>disabled</code>, so the tab stays focusable.</p>
+      <div>
+        <div role="tablist" aria-label="Project">
+          <button type="button" role="tab" id="tab-overview" aria-selected="true" aria-controls="panel-overview">Overview</button>
+          <button type="button" role="tab" id="tab-activity" aria-selected="false" aria-controls="panel-activity" tabindex="-1">Activity</button>
+          <button type="button" role="tab" id="tab-audit" aria-selected="false" aria-controls="panel-audit" aria-disabled="true" tabindex="-1">Audit log</button>
+        </div>
+        <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" tabindex="0">
+          <p>Launch dashboard, 12 open tasks, next release on Friday.</p>
+        </section>
+        <section role="tabpanel" id="panel-activity" aria-labelledby="tab-activity" tabindex="0" hidden>
+          <p>Marta closed 3 tasks today. Rui commented on the release notes.</p>
+        </section>
+        <section role="tabpanel" id="panel-audit" aria-labelledby="tab-audit" tabindex="0" hidden>
+          <p>The audit log is part of the Scale plan.</p>
+        </section>
+      </div>
+
+      <h2>Vertical</h2>
+      <p>Add <code>aria-orientation="vertical"</code> to the tab list. Up and Down arrows move the selection.</p>
+      <div>
+        <div role="tablist" aria-label="Settings sections" aria-orientation="vertical">
+          <button type="button" role="tab" id="tab-general" aria-selected="true" aria-controls="panel-general">General</button>
+          <button type="button" role="tab" id="tab-security" aria-selected="false" aria-controls="panel-security" tabindex="-1">Security</button>
+          <button type="button" role="tab" id="tab-notify" aria-selected="false" aria-controls="panel-notify" tabindex="-1">Notifications</button>
+          <button type="button" role="tab" id="tab-danger" aria-selected="false" aria-controls="panel-danger" tabindex="-1">Danger zone</button>
+        </div>
+        <section role="tabpanel" id="panel-general" aria-labelledby="tab-general" tabindex="0">
+          <h3>General</h3>
+          <p>Workspace name, default language and time zone.</p>
+          <label>
+            Workspace name
+            <input name="workspace" value="Acme Labs" />
+          </label>
+        </section>
+        <section role="tabpanel" id="panel-security" aria-labelledby="tab-security" tabindex="0" hidden>
+          <h3>Security</h3>
+          <p>Require two-factor sign-in for every member of the workspace.</p>
+        </section>
+        <section role="tabpanel" id="panel-notify" aria-labelledby="tab-notify" tabindex="0" hidden>
+          <h3>Notifications</h3>
+          <p>Choose which events send you an email.</p>
+        </section>
+        <section role="tabpanel" id="panel-danger" aria-labelledby="tab-danger" tabindex="0" hidden>
+          <h3>Danger zone</h3>
+          <p>Deleting the workspace removes all projects and cannot be undone.</p>
+        </section>
+      </div>
+
+      <h2>Many tabs</h2>
+      <p>The list scrolls sideways when it does not fit. Arrow keys bring the focused tab into view.</p>
+      <div>
+        <div role="tablist" aria-label="Reports">
+          <button type="button" role="tab" id="tab-r1" aria-selected="true" aria-controls="panel-r1">Revenue</button>
+          <button type="button" role="tab" id="tab-r2" aria-selected="false" aria-controls="panel-r2" tabindex="-1">Subscriptions</button>
+          <button type="button" role="tab" id="tab-r3" aria-selected="false" aria-controls="panel-r3" tabindex="-1">Churn and retention</button>
+          <button type="button" role="tab" id="tab-r4" aria-selected="false" aria-controls="panel-r4" tabindex="-1">Acquisition channels</button>
+          <button type="button" role="tab" id="tab-r5" aria-selected="false" aria-controls="panel-r5" tabindex="-1">Support tickets</button>
+          <button type="button" role="tab" id="tab-r6" aria-selected="false" aria-controls="panel-r6" tabindex="-1">Usage by region</button>
+        </div>
+        <section role="tabpanel" id="panel-r1" aria-labelledby="tab-r1" tabindex="0">
+          <p>Monthly recurring revenue is up 4.2% since September.</p>
+        </section>
+        <section role="tabpanel" id="panel-r2" aria-labelledby="tab-r2" tabindex="0" hidden><p>1,284 active subscriptions.</p></section>
+        <section role="tabpanel" id="panel-r3" aria-labelledby="tab-r3" tabindex="0" hidden><p>Logo churn is 1.8% this month.</p></section>
+        <section role="tabpanel" id="panel-r4" aria-labelledby="tab-r4" tabindex="0" hidden><p>Organic search brings most new trials.</p></section>
+        <section role="tabpanel" id="panel-r5" aria-labelledby="tab-r5" tabindex="0" hidden><p>Median first reply time is 38 minutes.</p></section>
+        <section role="tabpanel" id="panel-r6" aria-labelledby="tab-r6" tabindex="0" hidden><p>Most traffic comes from Portugal and Brazil.</p></section>
+      </div>
+
+      <h2>Inside a card</h2>
+      <article>
+        <header>Invoice INV-2041</header>
+        <div role="tablist" aria-label="Invoice sections">
+          <button type="button" role="tab" id="tab-i1" aria-selected="true" aria-controls="panel-i1">Summary</button>
+          <button type="button" role="tab" id="tab-i2" aria-selected="false" aria-controls="panel-i2" tabindex="-1">Line items</button>
+          <button type="button" role="tab" id="tab-i3" aria-selected="false" aria-controls="panel-i3" tabindex="-1">History</button>
+        </div>
+        <section role="tabpanel" id="panel-i1" aria-labelledby="tab-i1" tabindex="0">
+          <p>Total due: EUR 249.00. Paid on 2 October by card.</p>
+        </section>
+        <section role="tabpanel" id="panel-i2" aria-labelledby="tab-i2" tabindex="0" hidden>
+          <p>10 seats, Growth plan, monthly.</p>
+        </section>
+        <section role="tabpanel" id="panel-i3" aria-labelledby="tab-i3" tabindex="0" hidden>
+          <p>Created 1 October, paid 2 October.</p>
+        </section>
+      </article>
+
+      <h2>Without JavaScript</h2>
+      <p>
+        Radios and labels in pairs, then one panel per pair, inside an element with
+        <code>data-tabs</code>. The browser handles selection and arrow keys. Up to ten tabs. Give
+        every group its own radio <code>name</code>.
+      </p>
+      <div data-tabs>
+        <input type="radio" name="plan-view" id="plan-monthly" checked />
+        <label for="plan-monthly">Monthly</label>
+        <input type="radio" name="plan-view" id="plan-yearly" />
+        <label for="plan-yearly">Yearly</label>
+        <input type="radio" name="plan-view" id="plan-compare" />
+        <label for="plan-compare">Compare plans</label>
+        <input type="radio" name="plan-view" id="plan-legacy" disabled />
+        <label for="plan-legacy">Legacy</label>
+
+        <section>
+          <p>Growth is EUR 24.90 per seat each month. Cancel any time.</p>
+        </section>
+        <section>
+          <p>Growth is EUR 249 per seat each year, two months free.</p>
+        </section>
+        <section>
+          <p>Starter has 3 seats, Growth has 10, Scale has no limit.</p>
+        </section>
+        <section>
+          <p>Legacy plans are not offered to new workspaces.</p>
+        </section>
+      </div>
+
+      <!--
+        Script for the ARIA variant. The markup must start with one aria-selected="true", its
+        tabindex 0 (the other tabs -1) and hidden on every other panel. Arrow keys follow the
+        layout direction, Home and End jump, and the selection follows focus. For manual
+        activation call target.focus() instead of select(target). Add tabindex="0" to a panel
+        only when its first content is not focusable.
+      -->
+      <script>
+        document.querySelectorAll('[role="tablist"]').forEach((list) => {
+          const tabs = [...list.querySelectorAll('[role="tab"]')];
+          const vertical = list.getAttribute("aria-orientation") === "vertical";
+
+          const select = (tab, { focus = true } = {}) => {
+            tabs.forEach((t) => {
+              const on = t === tab;
+              t.setAttribute("aria-selected", String(on));
+              t.tabIndex = on ? 0 : -1;
+              document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+            });
+            if (focus) tab.focus();
+            tab.scrollIntoView({ inline: "nearest", block: "nearest" });
+          };
+
+          tabs.forEach((tab, i) => {
+            tab.addEventListener("click", () => {
+              if (tab.getAttribute("aria-disabled") !== "true") select(tab, { focus: false });
+            });
+            tab.addEventListener("keydown", (e) => {
+              const rtl = getComputedStyle(list).direction === "rtl";
+              const prev = vertical ? "ArrowUp" : rtl ? "ArrowRight" : "ArrowLeft";
+              const next = vertical ? "ArrowDown" : rtl ? "ArrowLeft" : "ArrowRight";
+              let target = null;
+              if (e.key === next) target = tabs[(i + 1) % tabs.length];
+              else if (e.key === prev) target = tabs[(i - 1 + tabs.length) % tabs.length];
+              else if (e.key === "Home") target = tabs[0];
+              else if (e.key === "End") target = tabs[tabs.length - 1];
+              if (target) {
+                e.preventDefault();
+                if (target.getAttribute("aria-disabled") === "true") target.focus();
+                else select(target);
+              }
+            });
+          });
+        });
+      </script>
+    </main>
+  </body>
+</html>

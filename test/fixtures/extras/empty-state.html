@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Empty state</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Empty state</h1>
+      <p>
+        A <code>section[data-empty]</code> shown in place of a list, table or result set with no
+        rows. It is for "nothing here yet" and "nothing matches". Failed loads are errors, not empty
+        states.
+      </p>
+
+      <h2>Default</h2>
+      <section data-empty>
+        <figure aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+          >
+            <path
+              d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"
+            />
+          </svg>
+        </figure>
+        <h3>No projects yet</h3>
+        <p>Create a project to start tracking your work here.</p>
+        <footer>
+          <a href="/projects/new" role="button">Create project</a>
+        </footer>
+      </section>
+
+      <h2>Two actions</h2>
+      <section data-empty>
+        <figure aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+          >
+            <path d="M4 4h16v16H4z" />
+            <path d="M4 14h4l2 3h4l2-3h4" />
+          </svg>
+        </figure>
+        <h3>Your inbox is empty</h3>
+        <p>
+          Invite teammates to start a conversation, or import your existing threads from another
+          tool.
+        </p>
+        <footer>
+          <button type="button">Invite teammates</button>
+          <button type="button" class="secondary outline">Import threads</button>
+        </footer>
+      </section>
+
+      <h2>Text only</h2>
+      <section data-empty>
+        <h3>No activity this week</h3>
+        <p>Events from your workspace will show up here.</p>
+      </section>
+
+      <h2>Compact</h2>
+      <article>
+        <header><h3>Notifications</h3></header>
+        <section data-empty="compact">
+          <p>No notifications.</p>
+        </section>
+      </article>
+
+      <h2>No results after filtering</h2>
+      <form role="search" onsubmit="return false">
+        <input type="search" name="q" value="beta" aria-label="Search projects" />
+      </form>
+      <p role="status" id="results-count">0 projects match "beta"</p>
+      <section data-empty="compact" aria-labelledby="no-match-title">
+        <figure aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="m20 20-3.5-3.5" />
+          </svg>
+        </figure>
+        <h3 id="no-match-title">Nothing matches your search</h3>
+        <p>Check the spelling or try another term.</p>
+        <footer>
+          <button type="button" class="secondary">Clear search</button>
+        </footer>
+      </section>
+
+      <h2>Replacing a table</h2>
+      <section data-empty>
+        <h3>No invoices</h3>
+        <p>Invoices you send will appear here.</p>
+      </section>
+
+      <h2>Inside a table that keeps its header</h2>
+      <figure>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Invoice</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="3">
+                <section data-empty="compact">
+                  <p>No invoices yet.</p>
+                </section>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+
+      <h2>Hidden</h2>
+      <p>The empty state below carries <code>hidden</code> and must not show.</p>
+      <section data-empty hidden>
+        <h3>You should not see this</h3>
+      </section>
+      <p>End of page.</p>
+    </main>
+
+    <!--
+      Optional JS, only to toggle the state when a list becomes empty. Use the hidden attribute.
+      Keep the role="status" count element outside the hidden regions, and do not move focus.
+
+      const list = document.querySelector("#projects");
+      const empty = document.querySelector("#projects-empty");
+      function syncEmpty() {
+        const count = list.children.length;
+        list.hidden = count === 0;
+        empty.hidden = count > 0;
+      }
+      syncEmpty(); // call after every change to the list
+    -->
+  </body>
+</html>

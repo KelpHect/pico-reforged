@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pagination</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Pagination</h1>
+      <p>
+        A <code>nav</code> with an <code>ol</code> of links. The current page is
+        <code>aria-current="page"</code>, disabled edges are a <code>span</code> with
+        <code>role="link"</code> and <code>aria-disabled="true"</code>. No class and no JavaScript
+        needed.
+      </p>
+
+      <h2>Invoices</h2>
+      <section>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Invoice</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Status</th>
+              <th scope="col">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>INV-1041</td>
+              <td>Northwind Logistics</td>
+              <td>Paid</td>
+              <td>$1,240.00</td>
+            </tr>
+            <tr>
+              <td>INV-1042</td>
+              <td>Acme Robotics</td>
+              <td>Overdue</td>
+              <td>$860.50</td>
+            </tr>
+            <tr>
+              <td>INV-1043</td>
+              <td>Globex Studio</td>
+              <td>Draft</td>
+              <td>$412.00</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><small>Showing 11 to 20 of 96 invoices</small></p>
+        <nav aria-label="Pagination">
+          <ol>
+            <li><a href="?page=1" rel="prev">Previous</a></li>
+            <li><a href="?page=1" aria-label="Page 1">1</a></li>
+            <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+            <li><a href="?page=3" aria-label="Page 3">3</a></li>
+            <li aria-hidden="true">&hellip;</li>
+            <li><a href="?page=10" aria-label="Page 10">10</a></li>
+            <li><a href="?page=3" rel="next">Next</a></li>
+          </ol>
+        </nav>
+      </section>
+
+      <h2>First page, disabled previous</h2>
+      <nav aria-label="Team members pages" data-pagination>
+        <ol>
+          <li><span role="link" aria-disabled="true">Previous</span></li>
+          <li><a href="?page=1" aria-label="Page 1" aria-current="page">1</a></li>
+          <li><a href="?page=2" aria-label="Page 2">2</a></li>
+          <li><a href="?page=3" aria-label="Page 3">3</a></li>
+          <li aria-hidden="true">&hellip;</li>
+          <li><a href="?page=10" aria-label="Page 10">10</a></li>
+          <li><a href="?page=2" rel="next">Next</a></li>
+        </ol>
+      </nav>
+
+      <h2>Last page, disabled next</h2>
+      <nav aria-label="Audit log pages" data-pagination>
+        <ol>
+          <li><a href="?page=9" rel="prev">Previous</a></li>
+          <li><a href="?page=1" aria-label="Page 1">1</a></li>
+          <li aria-hidden="true">&hellip;</li>
+          <li><a href="?page=8" aria-label="Page 8">8</a></li>
+          <li><a href="?page=9" aria-label="Page 9">9</a></li>
+          <li><a href="?page=10" aria-label="Page 10" aria-current="page">10</a></li>
+          <li><span role="link" aria-disabled="true">Next</span></li>
+        </ol>
+      </nav>
+
+      <h2>Icon-only previous and next</h2>
+      <nav aria-label="Projects pages" data-pagination>
+        <ol>
+          <li>
+            <a href="?page=1" rel="prev" aria-label="Previous page"
+              ><span aria-hidden="true">&larr;</span></a
+            >
+          </li>
+          <li><a href="?page=1" aria-label="Page 1">1</a></li>
+          <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+          <li><a href="?page=3" aria-label="Page 3">3</a></li>
+          <li>
+            <a href="?page=3" rel="next" aria-label="Next page"
+              ><span aria-hidden="true">&rarr;</span></a
+            >
+          </li>
+        </ol>
+      </nav>
+
+      <h2>Three digit pages</h2>
+      <nav aria-label="Events pages" data-pagination>
+        <ol>
+          <li><a href="?page=119" rel="prev">Previous</a></li>
+          <li><a href="?page=1" aria-label="Page 1">1</a></li>
+          <li aria-hidden="true">&hellip;</li>
+          <li><a href="?page=119" aria-label="Page 119">119</a></li>
+          <li><a href="?page=120" aria-label="Page 120" aria-current="page">120</a></li>
+          <li><a href="?page=121" aria-label="Page 121">121</a></li>
+          <li aria-hidden="true">&hellip;</li>
+          <li><a href="?page=480" aria-label="Page 480">480</a></li>
+          <li><a href="?page=121" rel="next">Next</a></li>
+        </ol>
+      </nav>
+
+      <h2>Other label with data-pagination</h2>
+      <p>
+        The default hook is <code>aria-label="Pagination"</code>. When the label says something
+        else, add <code>data-pagination</code>. The navs on this page use it so each one has its
+        own label.
+      </p>
+
+      <h2>Compact and large</h2>
+      <p>Set <code>--pico-pagination-item-size</code> on the nav.</p>
+      <nav
+        aria-label="Compact pages"
+        data-pagination
+        style="--pico-pagination-item-size: 1.75rem"
+      >
+        <ol>
+          <li>
+            <a href="?page=1" rel="prev" aria-label="Previous page"
+              ><span aria-hidden="true">&larr;</span></a
+            >
+          </li>
+          <li><a href="?page=1" aria-label="Page 1">1</a></li>
+          <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+          <li><a href="?page=3" aria-label="Page 3">3</a></li>
+          <li>
+            <a href="?page=3" rel="next" aria-label="Next page"
+              ><span aria-hidden="true">&rarr;</span></a
+            >
+          </li>
+        </ol>
+      </nav>
+      <nav aria-label="Large pages" data-pagination style="--pico-pagination-item-size: 3rem">
+        <ol>
+          <li>
+            <a href="?page=1" rel="prev" aria-label="Previous page"
+              ><span aria-hidden="true">&larr;</span></a
+            >
+          </li>
+          <li><a href="?page=1" aria-label="Page 1">1</a></li>
+          <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+          <li><a href="?page=3" aria-label="Page 3">3</a></li>
+          <li>
+            <a href="?page=3" rel="next" aria-label="Next page"
+              ><span aria-hidden="true">&rarr;</span></a
+            >
+          </li>
+        </ol>
+      </nav>
+
+      <h2>Keyboard focus</h2>
+      <nav aria-label="Focus demo pages" data-pagination>
+        <ol>
+          <li><a href="?page=1" rel="prev">Previous</a></li>
+          <li><a id="focus-demo" href="?page=1" aria-label="Page 1">1</a></li>
+          <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+          <li><a href="?page=3" rel="next">Next</a></li>
+        </ol>
+      </nav>
+    </main>
+
+    <!--
+      Optional JavaScript, only when the list updates without navigation. The server normally
+      sets aria-current, so the markup above needs none of this.
+
+      const nav = document.querySelector('nav[aria-label="Pagination"]');
+      function setCurrent(page) {
+        nav.querySelectorAll('a[aria-current="page"]').forEach((a) => a.removeAttribute("aria-current"));
+        const next = nav.querySelector('a[aria-label="Page ' + page + '"]');
+        if (next) next.setAttribute("aria-current", "page");
+      }
+
+      Page numbers and ellipses (first, last, current and its neighbors) come from app logic.
+    -->
+  </body>
+</html>

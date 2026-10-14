@@ -22,6 +22,7 @@ export function formatStats(label: string, stats: CompileStats): string {
   ];
   if (stats.removedByClassless) parts.push(`${stats.removedByClassless} dropped by classless`);
   if (stats.removedByPurge) parts.push(`${stats.removedByPurge} dropped by purge`);
+  if (stats.extras.length) parts.push(`extras ${stats.extras.join(", ")}`);
   if (stats.excludedModules.length) parts.push(`excluded ${stats.excludedModules.join(", ")}`);
   parts.push(`${stats.durationMs} ms`);
   return parts.join(", ");

@@ -1,0 +1,13 @@
+@import url("./layers.css");
+
+@import url("./extras/tabs.css") layer(pico.extras);
+@import url("./extras/alert.css") layer(pico.extras);
+@import url("./extras/toast.css") layer(pico.extras);
+@import url("./extras/badge.css") layer(pico.extras);
+@import url("./extras/avatar.css") layer(pico.extras);
+@import url("./extras/skeleton.css") layer(pico.extras);
+@import url("./extras/app-shell.css") layer(pico.extras);
+@import url("./extras/data-table.css") layer(pico.extras);
+@import url("./extras/pagination.css") layer(pico.extras);
+@import url("./extras/stepper.css") layer(pico.extras);
+@import url("./extras/empty-state.css") layer(pico.extras);

@@ -37,6 +37,7 @@ async function build(input: CompileOptions): Promise<Built> {
       removedByClassless: done.counts.removedByClassless,
       removedByPurge: done.counts.removedByPurge,
       excludedModules: [...new Set(bundled.excluded)],
+      extras: options.extras,
       warnings: [...options.warnings, ...purgeWarnings(index)],
     },
   };

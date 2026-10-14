@@ -9,6 +9,7 @@ src/                     CSS source, plain CSS, loadable in a current browser wi
   pico.css               full entry
   pico.classless.css     classless entry
   pico.colors.css        color utility entry
+  pico.extras.css        opt-in extras entry, usable on its own after pico.css
   layers.css             layer order statement, imported first by every entry
   tokens/
     core.css             fonts, spacing, radius, sizes, icons, responsive root size, container widths
@@ -23,6 +24,7 @@ src/                     CSS source, plain CSS, loadable in a current browser wi
   forms/                 basics, checkbox-radio-switch, input-color, input-date, input-file, input-range, input-search
   components/            accordion, card, dropdown, group, loading, modal, nav, progress, tooltip, popover
   utilities/             accessibility, reduce-motion
+  extras/                opt-in extras: tabs, alert, toast, badge, avatar, skeleton, app-shell, data-table, pagination, stepper, empty-state
   colors/                color and background utility classes (generated)
 scripts/
   cli.ts                 CLI entry (`pico-reforged build`, `matrix`, `themes`, `modules`)
@@ -36,7 +38,8 @@ test/
   reference/v2.1.1/      frozen upstream build output
   api/                   baseline.json (v2.1.1 public surface) and the coverage check
   fixtures/              kitchen-sink.html and friends, used by examples and visual tests
-  visual/                Playwright screenshot and pixel diff harness
+  fixtures/extras/       one <name>.html per extra, used by the extras checker
+  visual/                Playwright screenshot and pixel diff harness, extras.ts for the extras checker
 docs/                    architecture, ADRs, customization, browser support, migration
 examples/                small pages that show usage (CDN, modular, custom theme, popover)
 site/                    documentation website, deployed to pico.rusticstack.com
@@ -49,7 +52,7 @@ Module file names match the v2.1.1 `$modules` keys, so `components/modal` in a c
 Every framework rule is inside the `pico` layer. `src/layers.css` declares the order once:
 
 ```css
-@layer pico.tokens, pico.theme, pico.core, pico.utilities;
+@layer pico.tokens, pico.theme, pico.core, pico.extras, pico.utilities;
 ```
 
 Rules:
@@ -58,10 +61,33 @@ Rules:
   `@import url("./content/link.css") layer(pico.core);`
 - `pico.tokens` holds `src/tokens/*`. `pico.theme` holds one theme file. Putting themes after tokens lets a theme override any neutral token.
 - `pico.core` holds every module, imported in the v2.1.1 order. Element-scoped token overrides that v2.1.1 kept in `themes/default/_styles.scss` (for example `h1 { --pico-font-size: 2rem }`) sit at the top of the module that owns them.
+- `pico.extras` holds `src/extras/*`, the opt-in components for apps (tabs, alert, toast and so on). It sits after `pico.core` on purpose. Extras restyle things that core already styles (a `table` becomes a data table, a `nav` becomes pagination, an `article` gets an alert role), and they must win over those rules by layer order, not by raising specificity. A later layer wins whatever the selector weight, so an extra can keep `:where()` selectors and still override core. It sits before `pico.utilities` so `.pico-color-*` and `.pico-background-*` can still recolor an extra. Core never needs to know about extras: the default `pico.css` only carries the name in the order statement, with no rules in it.
 - `pico.utilities` holds the `.pico-color-*` and `.pico-background-*` classes from `pico.colors.css`, so they win over any module rule.
 - Anything a user writes outside a layer beats all of Pico. A user can also slot their own layers before or after `pico`, or add rules to `pico.core` itself.
 
 The first design gave each module category its own sublayer (reset, layout, content, forms, components, utilities). That broke parity. v2.1.1 relies on specificity between modules, for example `[type=submit]` button rules beating the generic `input` rule from forms. A later layer wins regardless of specificity, so every one of those cases flipped. One ordered layer for all modules keeps the v2.1.1 cascade exactly, and users still get the main benefit, which is that unlayered CSS always wins.
+
+## Extras
+
+Extras are opt-in and never part of `pico.css` or `pico.classless.css`. Each one is a single file in `src/extras/<name>.css`, and `src/pico.extras.css` imports all of them into `layer(pico.extras)` after the order statement, so it also works on its own after `pico.css`:
+
+```html
+<link rel="stylesheet" href="pico.min.css" />
+<link rel="stylesheet" href="pico.extras.min.css" />
+```
+
+Rules for an extra:
+
+- Semantic HTML and ARIA first. At most one documented `data-*` hook where semantics cannot say it. No class is required, so the extra survives the classless build.
+- Tokens it needs are new `--pico-<extra>-*` custom properties at the top of its own file, declared on `:root, :host, [data-theme]` (same reason as `scheme.css`, see Light and dark). Everything else reuses the existing `--pico-*` tokens.
+- Logical properties for RTL, and motion that respects `prefers-reduced-motion`.
+- Newer features (popover, `@starting-style`, anchor positioning) only as progressive enhancement, with a usable fallback.
+
+Compiler: the `extras` option takes a list of names, a comma separated string, `"all"` or `true`, and appends those imports to a `pico` or `classless` build. Unknown names are an error. The CLI has `--extras tabs,badge` and `--extras all`, and `pico-reforged extras` lists the names. The `extras` entry (`--entry extras`) builds the extras alone, all of them unless `extras` narrows it. The classless filter, scope, purge and the other passes run over the extras like over any module. `extrasDir` reads the files from another folder, which the tests use.
+
+The matrix writes `pico.extras(.min).css` (all extras) and `extras/<name>(.min).css` (one each, layered, with the extra's own tokens). It adds 24 files to the 238 of v2.1.1. The layer order statement is the only thing the default builds gain, about a dozen bytes. `test/compiler/extras.test.ts` checks that a build without `extras` is byte-identical to one with an empty list, and `test/api/check.ts` fails if an extras token or an `@layer pico.extras` block shows up in a default file. `CompileStats.extras` and the CLI size line name the extras that went into a build.
+
+`pnpm test:extras` (`test/visual/extras.ts`) builds `pico.css` and each extra into a temp folder, loads `test/fixtures/extras/<name>.html` (`__CSS__` is `pico.css`, `__EXTRA__` the extra) in Chromium, saves screenshots at 1280 light, 1280 dark, 375 light and 1280 light with `dir="rtl"` to `test/visual/extras-report/<name>/`, and runs axe-core on each page. It exits 1 on serious or critical violations. `--only <name>` limits it to one extra.
 
 ## Color system
 
@@ -160,7 +186,7 @@ Breakpoints are literal media queries in source, written with range syntax (`(wi
 
 1. Read config (`pico.config.ts` or `pico.config.json`, CLI flags, or the built-in matrix).
 2. Pick the entry, then drop modules turned off in config.
-3. Pick or generate the theme.
+3. Pick or generate the theme, and add the chosen extras.
 4. Bundle with Lightning CSS (`bundleAsync`), which resolves `@import ... layer()`.
 5. Run selector passes with a Lightning CSS visitor: classless filter, scope prefix, purge.
 6. Lower and minify with Lightning CSS for the targets (`DEFAULT_TARGETS`, see Browser floor). This handles nesting and `light-dark()` lowering and the vendor prefixes the floor still needs.
@@ -245,11 +271,12 @@ One tool, [Vite+](https://viteplus.dev) 1.2.0 (`vite-plus`, command `vp`), runs 
 
 | Script             | Runs                                      | What it does                                                                                                                            |
 | ------------------ | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm build`       | `generate.ts`, then `cli.ts matrix css`   | regenerates tokens, themes and color classes, then writes the 238 files into `css/`                                                     |
+| `pnpm build`       | `generate.ts`, then `cli.ts matrix css`   | regenerates tokens, themes and color classes, then writes the 262 files into `css/` (238 from v2.1.1 plus the extras)                   |
 | `pnpm dev`         | `dev-build.ts` under `node --watch-path`  | rebuilds `dist-dev/` on change                                                                                                          |
 | `pnpm test`        | `vp test`                                 | Vitest over `test/**/*.test.ts`                                                                                                         |
 | `pnpm test:api`    | `dev-build.ts`, then `test/api/check.ts`  | v2.1.1 API coverage check                                                                                                               |
 | `pnpm test:visual` | `dev-build.ts`, then `test/visual/run.ts` | Playwright pixel diff against v2.1.1                                                                                                    |
+| `pnpm test:extras` | `test/visual/extras.ts`                   | screenshots and axe-core checks for each extra fixture                                                                                  |
 | `pnpm lint`        | `vp lint`                                 | Oxlint, type-aware, over `scripts/`, `test/` and `vite.config.ts`                                                                       |
 | `pnpm fmt`         | `vp fmt`                                  | Oxfmt for TS, JSON, Markdown, YAML and `src/**/*.css`                                                                                   |
 | `pnpm check`       | `vp check`                                | format check, lint and type check together                                                                                              |
@@ -266,7 +293,7 @@ Notes on the setup:
 
 ## Testing
 
-- `pnpm test` runs the Vitest suites in `test/compiler/`: classless, purge, scope, options, CLI, the review regressions and the browser floor leftovers.
+- `pnpm test` runs the Vitest suites in `test/compiler/`: classless, purge, scope, options, extras, CLI, the review regressions and the browser floor leftovers.
 - `test/api/check.ts` compares the built `css/pico.css`, `pico.classless.css`, `pico.conditional.css` and `pico.colors.css` against `test/api/baseline.json`. Every class, attribute hook, `--pico-*` variable and keyframe name from v2.1.1 must exist, unless it is listed as removed in `docs/migration.md`.
 - `test/visual/run.ts` loads each fixture with the v2.1.1 CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. Differences are reviewed by hand. The goal is near-identical output, except where a change is a deliberate improvement listed in the migration guide.
 

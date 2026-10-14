@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Alert</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Alert</h1>
+      <p>
+        A message with <code>role="status"</code> or <code>role="alert"</code> (or an
+        <code>&lt;output&gt;</code>) becomes an alert when it has a
+        <code>data-variant</code>: <code>info</code>, <code>success</code>, <code>warning</code> or
+        <code>danger</code>. No class is needed.
+      </p>
+
+      <section>
+        <h2>Variants</h2>
+
+        <div role="status" data-variant="info">
+          <strong>Tip.</strong> You can drag files onto the table to upload them.
+        </div>
+
+        <div role="status" data-variant="success">
+          <strong>Saved.</strong> Your changes are live.
+        </div>
+
+        <div role="status" data-variant="warning">
+          <strong>Heads up.</strong> Your trial ends in 3 days.
+          <a href="#billing">Choose a plan</a>.
+        </div>
+
+        <div role="alert" data-variant="danger">
+          <strong>Payment failed.</strong> Your card was declined. Try another payment method.
+        </div>
+      </section>
+
+      <section>
+        <h2>Dismissible</h2>
+        <p>
+          A native button with <code>data-dismiss</code> as a direct child, named with
+          <code>aria-label</code>. It needs the script at the end of this file to do anything. Any
+          other button in an alert is an ordinary button.
+        </p>
+
+        <div role="status" data-variant="warning">
+          <strong>Heads up.</strong> Your export will take a few minutes to finish.
+          <button type="button" data-dismiss aria-label="Dismiss: export notice"></button>
+        </div>
+
+        <div role="status" data-variant="success">
+          <strong>Invite sent.</strong> Maya Okafor will get an email with a link to join your
+          workspace.
+          <button type="button" data-dismiss aria-label="Dismiss: invite notice"></button>
+        </div>
+
+        <div role="alert" data-variant="danger">
+          <strong>Sync failed.</strong> We could not reach your Stripe account. Check your API key
+          in <a href="#integrations">Integrations</a> and try again.
+          <button type="button" data-dismiss aria-label="Dismiss: sync failure"></button>
+        </div>
+
+        <div role="alert" data-variant="danger">
+          <strong>Upload failed.</strong> The connection dropped.
+          <button type="button">Retry upload</button>
+        </div>
+
+        <div role="status" data-variant="info">
+          <strong>New.</strong> One line, dismissible.
+          <button type="button" data-dismiss aria-label="Dismiss: new notice"></button>
+        </div>
+      </section>
+
+      <section>
+        <h2>With a heading and a list</h2>
+
+        <div role="alert" data-variant="danger">
+          <h3>We could not save the invoice</h3>
+          <p>Fix these fields and submit again:</p>
+          <ul>
+            <li><a href="#vat">VAT number</a> is not valid for the selected country.</li>
+            <li><a href="#due">Due date</a> must be after the issue date.</li>
+          </ul>
+          <button type="button" data-dismiss aria-label="Dismiss: invoice errors"></button>
+        </div>
+
+        <div role="status" data-variant="info">
+          <h3>Scheduled maintenance</h3>
+          <p>
+            Saturday 02:00 to 03:00 UTC. The dashboard stays read-only during that hour, and API
+            requests keep working.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Output</h2>
+        <p>
+          <code>&lt;output&gt;</code> has an implicit <code>role="status"</code>, so it reads as a
+          result computed from input. Keep controls out of it.
+        </p>
+
+        <form oninput="seats.value = Number(plan.value) * 12" onsubmit="return false">
+          <label for="plan">Seats</label>
+          <input id="plan" name="plan" type="number" value="4" min="1" />
+          <output name="seats" for="plan" data-variant="success"
+            ><strong>Total:</strong> 48 seats per year</output
+          >
+        </form>
+      </section>
+
+      <section>
+        <h2>In context</h2>
+
+        <article>
+          <header>
+            <h3>Billing</h3>
+          </header>
+          <div role="status" data-variant="warning">
+            <strong>Card expiring.</strong> The Visa ending 4242 expires next month.
+            <button type="button" data-dismiss aria-label="Dismiss: card expiring"></button>
+          </div>
+          <form>
+            <label>
+              Card number
+              <input type="text" value="4242 4242 4242 4242" aria-invalid="true" />
+            </label>
+            <div role="alert" data-variant="danger">
+              <strong>Invalid card.</strong> Check the number and try again.
+            </div>
+            <button type="submit">Update card</button>
+          </form>
+        </article>
+      </section>
+
+      <section>
+        <h2>Long content</h2>
+
+        <div role="status" data-variant="info">
+          <strong>Webhook URL.</strong> Send events to
+          https://api.example.com/v1/webhooks/receive/2f1b8c1e-6c0d-4d4e-9f6b-3f1a2d9c7e55/with/a/very/long/path/that/cannot/wrap
+          and keep the signing secret private.
+          <button type="button" data-dismiss aria-label="Dismiss: webhook notice"></button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Hidden</h2>
+        <p>The next alert has <code>hidden</code>, so there is nothing between this and the end.</p>
+        <div role="status" data-variant="info" hidden>
+          <strong>You should not see this.</strong>
+        </div>
+      </section>
+
+      <section>
+        <h2>Not an alert</h2>
+        <p>Without a <code>data-variant</code> the element keeps its default look.</p>
+        <div role="status">Autosaved at 14:32</div>
+      </section>
+    </main>
+
+    <!--
+      Dismissing needs a few lines of script. Styling needs none.
+
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-variant] > button[data-dismiss]");
+        if (!button) return;
+        const alert = button.parentElement;
+        const heading = alert.closest("section, article, main")?.querySelector("h1, h2, h3");
+        alert.hidden = true;
+        if (heading) {
+          heading.tabIndex = -1;
+          heading.focus();
+        }
+      });
+
+      Use hidden and not remove(), so the alert can be shown again with hidden = false.
+      Do not move focus into an alert when it appears, and do not auto-dismiss it.
+      An alert that exists on page load is not announced. To announce a message, keep an empty
+      container with its role and data-variant on the page and fill in the text later.
+    -->
+  </body>
+</html>

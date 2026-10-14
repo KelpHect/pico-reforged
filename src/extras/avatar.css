@@ -1,0 +1,180 @@
+/* Avatar: user images and initials, <span data-avatar> */
+:root,
+:host,
+[data-theme] {
+  --pico-avatar-size: 2.5rem;
+  --pico-avatar-overlap: 0.375rem;
+  --pico-avatar-background-color: var(--pico-secondary-background);
+  --pico-avatar-color: var(--pico-secondary-inverse);
+  --pico-avatar-ring-color: var(--pico-background-color);
+  --pico-avatar-status-online-color: var(--pico-ins-color);
+  --pico-avatar-status-offline-color: var(--pico-muted-color);
+  --pico-avatar-status-away-color: light-dark(oklch(0.62 0.15 75), oklch(0.8 0.15 75));
+  --pico-avatar-status-busy-color: var(--pico-del-color);
+}
+
+/* Dropdown menus paint their own surface too */
+details.dropdown > summary + ul {
+  --pico-avatar-ring-color: var(--pico-dropdown-background-color);
+}
+
+/* Cards paint their own surface, so the ring has to match it */
+article {
+  --pico-avatar-ring-color: var(--pico-card-background-color);
+
+  & > :is(header, footer) {
+    --pico-avatar-ring-color: var(--pico-card-sectioning-background-color);
+  }
+}
+
+:where([data-avatar]) {
+  position: relative;
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  inline-size: var(--pico-avatar-size);
+  block-size: var(--pico-avatar-size);
+  border-radius: 50%;
+  background-color: var(--pico-avatar-background-color);
+  color: var(--pico-avatar-color);
+  font-size: calc(var(--pico-avatar-size) * 0.4);
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  vertical-align: middle;
+  user-select: none;
+
+  /* Isolate the text from the page direction so "+3" stays "+3" in RTL */
+  unicode-bidi: plaintext;
+
+  /* The image covers the initials under it. If it fails to load, they show. */
+  & > img {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+  }
+
+  /* Status dot, drawn by the wrapper so no extra element is needed.
+     Shape carries the state as well as color: solid = online, bar = busy,
+     half = away, hollow = offline. */
+  &[data-status]::after {
+    content: "";
+    position: absolute;
+    inset-block-end: calc(var(--pico-avatar-size) * -0.02);
+    inset-inline-end: calc(var(--pico-avatar-size) * -0.02);
+    box-sizing: border-box;
+    inline-size: max(0.625rem, calc(var(--pico-avatar-size) * 0.26));
+    block-size: max(0.625rem, calc(var(--pico-avatar-size) * 0.26));
+    border: max(0.125rem, calc(var(--pico-avatar-size) * 0.04)) solid
+      var(--_status, var(--pico-avatar-status-offline-color));
+    border-radius: 50%;
+    background: var(--pico-avatar-ring-color);
+    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color);
+  }
+
+  &[data-status="online"] {
+    --_status: var(--pico-avatar-status-online-color);
+
+    &::after {
+      background: var(--_status);
+    }
+  }
+
+  &[data-status="away"] {
+    --_status: var(--pico-avatar-status-away-color);
+
+    &::after {
+      background: linear-gradient(to top, var(--_status) 50%, var(--pico-avatar-ring-color) 50%);
+    }
+  }
+
+  &[data-status="busy"] {
+    --_status: var(--pico-avatar-status-busy-color);
+
+    &::after {
+      background:
+        linear-gradient(var(--pico-avatar-ring-color), var(--pico-avatar-ring-color)) center / 60%
+          20% no-repeat,
+        var(--_status);
+    }
+  }
+}
+
+:where([data-avatar="sm"]) {
+  --pico-avatar-size: 2rem;
+}
+
+:where([data-avatar="lg"]) {
+  --pico-avatar-size: 3.5rem;
+}
+
+:where([data-avatar="xl"]) {
+  --pico-avatar-size: 5rem;
+}
+
+/* An avatar that is a link or a menu trigger (a, button, summary) */
+:is(a, button, summary):has(> [data-avatar]:only-child) {
+  display: inline-flex;
+  inline-size: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  line-height: 1;
+  list-style: none;
+  text-decoration: none;
+  vertical-align: middle;
+  position: relative;
+  cursor: pointer;
+
+  &::-webkit-details-marker,
+  &::after {
+    display: none;
+  }
+
+  &::marker {
+    content: "";
+  }
+
+  &:is(:hover, :active, :focus, :focus-visible) {
+    background: none;
+    box-shadow: none;
+  }
+
+  /* The avatar paints over the link ring, so a solid 3:1 ring is drawn on the avatar */
+  &:focus-visible {
+    z-index: 1;
+
+    & > [data-avatar] {
+      outline: var(--pico-outline-width) solid var(--pico-primary);
+      outline-offset: 0.125rem;
+    }
+  }
+}
+
+/* Group: a labelled role=group whose children are avatars, so form groups are left alone */
+:where([role="group"]):has(> [data-avatar], > :is(a, button) > [data-avatar]:only-child) {
+  inline-size: auto;
+  margin-block-end: 0;
+  box-shadow: none;
+  align-items: center;
+
+  & > * {
+    flex: none;
+    border-radius: 50%;
+  }
+
+  & > * + * {
+    margin-inline-start: calc(var(--pico-avatar-overlap) * -1);
+  }
+
+  & [data-avatar] {
+    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color);
+  }
+}

@@ -1,0 +1,153 @@
+/* Toast: <section popover="manual" role="status"> stack with one <article> per notification */
+
+:root,
+:host,
+[data-theme] {
+  --pico-toast-accent: var(--pico-primary-background);
+}
+
+:root,
+:host {
+  --pico-toast-inset: var(--pico-spacing);
+  --pico-toast-gap: calc(var(--pico-spacing) * 0.5);
+  --pico-toast-width: min(22rem, 100% - 2 * var(--pico-toast-inset));
+}
+
+/* The stack never hides, so it sets display itself and also works before showPopover() runs */
+[popover][role="status"] {
+  display: flex;
+  z-index: 1000;
+  position: fixed;
+  inset: auto;
+  inset-block-end: max(var(--pico-toast-inset), env(safe-area-inset-bottom, 0px));
+  inset-inline-end: var(--pico-toast-inset);
+  flex-direction: column;
+  gap: var(--pico-toast-gap);
+  width: var(--pico-toast-width);
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  opacity: 1;
+  transform: none;
+  transition: none;
+  /* Only the toasts take clicks, the page stays usable around them */
+  pointer-events: none;
+
+  &[data-placement^="top"] {
+    inset-block: max(var(--pico-toast-inset), env(safe-area-inset-top, 0px)) auto;
+  }
+
+  &[data-placement$="start"] {
+    inset-inline: var(--pico-toast-inset) auto;
+  }
+
+  &[data-placement$="center"] {
+    inset-inline: 0;
+    margin-inline: auto;
+  }
+
+  > article {
+    display: flex;
+    align-items: flex-start;
+    gap: calc(var(--pico-spacing) * 0.5);
+    margin: 0;
+    padding: calc(var(--pico-spacing) * 0.75) var(--pico-spacing);
+    border: var(--pico-border-width) solid var(--pico-card-border-color);
+    border-inline-start: 0.25rem solid var(--pico-toast-accent);
+    border-radius: var(--pico-border-radius);
+    background-color: var(--pico-card-background-color);
+    box-shadow: var(--pico-card-box-shadow);
+    color: var(--pico-color);
+    font-size: 0.875rem;
+    pointer-events: auto;
+
+    /* role="alert" is the semantic way to ask for the danger look */
+    &[role="alert"] {
+      --pico-toast-accent: var(--pico-form-element-invalid-border-color);
+    }
+
+    > p {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    > p > strong:first-child {
+      display: block;
+    }
+  }
+}
+
+/* Action: a text button next to the message */
+[popover][role="status"] > article > :is(button, [role="button"]) {
+  flex: none;
+  width: auto;
+  margin: 0;
+  padding: 0 calc(var(--pico-spacing) * 0.25);
+  border: 0;
+  border-radius: var(--pico-border-radius);
+  background: none;
+  box-shadow: none;
+  color: var(--pico-primary);
+  font-size: inherit;
+  font-weight: 600;
+  line-height: var(--pico-line-height);
+  text-decoration: none;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--pico-primary-hover);
+    text-decoration: underline;
+    text-decoration-color: var(--pico-primary-underline);
+  }
+
+  &:focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: 0;
+  }
+}
+
+/* Icon only, named by aria-label: the dismiss button */
+[popover][role="status"] > article > :is(button, [role="button"])[aria-label] {
+  display: grid;
+  place-items: center;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  margin-block: -0.125rem;
+  padding: 0;
+  color: var(--pico-muted-color);
+  font-size: 1.25rem;
+  font-weight: var(--pico-font-weight);
+  line-height: 1;
+
+  &:hover {
+    color: var(--pico-color);
+    text-decoration: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [popover][role="status"] > article {
+    transition:
+      opacity var(--pico-transition),
+      scale var(--pico-transition);
+  }
+
+  /* inert marks a toast that is leaving, the script removes it after the transition */
+  [popover][role="status"] > article[inert] {
+    opacity: 0;
+    scale: 0.96;
+  }
+
+  @starting-style {
+    [popover][role="status"] > article {
+      opacity: 0;
+      scale: 0.96;
+    }
+  }
+}

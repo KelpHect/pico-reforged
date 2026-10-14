@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { DEFAULT_THEME, THEMES, packageInfo } from "./config.ts";
+import { DEFAULT_THEME, EXTRAS, THEMES, packageInfo } from "./config.ts";
 import { compileBoth } from "./compile.ts";
 import type { CompileOptions, CompileStats } from "./types.ts";
 
@@ -51,10 +51,16 @@ export function matrixNames(): string[] {
     }
   }
   names.push("pico.colors.css", "pico.colors.min.css");
+  names.push("pico.extras.css", "pico.extras.min.css");
+  for (const extra of EXTRAS) names.push(`extras/${extra}.css`, `extras/${extra}.min.css`);
   return names;
 }
 
-/** Writes the whole v2.1.1 file set into outDir. Returns the stats of each file. */
+/**
+ * Writes the whole v2.1.1 file set into outDir, plus the opt-in extras: pico.extras(.min).css
+ * with all of them and extras/<name>(.min).css for each one. Extras files are layered and carry
+ * their own tokens, so they load on their own after pico.css. Returns the stats of each file.
+ */
 export async function buildMatrix(
   outDir: string,
 ): Promise<{ name: string; stats: CompileStats }[]> {
@@ -74,6 +80,11 @@ export async function buildMatrix(
     }
   }
   jobs.push({ stem: "pico.colors", options: { entry: "colors" } });
+  jobs.push({ stem: "pico.extras", options: { entry: "extras", extras: true } });
+  for (const extra of EXTRAS) {
+    jobs.push({ stem: `extras/${extra}`, options: { entry: "extras", extras: [extra] } });
+  }
+  await mkdir(join(outDir, "extras"), { recursive: true });
 
   for (const job of jobs) {
     const { plain, min } = await compileBoth({ ...job.options, banner: header });

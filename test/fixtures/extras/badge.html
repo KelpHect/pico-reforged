@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Badge</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <header class="container">
+      <nav aria-label="Main">
+        <ul>
+          <li><strong>Acme Cloud</strong></li>
+        </ul>
+        <ul>
+          <li><a href="#overview" aria-current="page">Overview</a></li>
+          <li>
+            <a href="#inbox">Inbox <data value="12" data-badge><span>unread messages: </span>12</data></a>
+          </li>
+          <li><a href="#alerts">Alerts <data value="3" data-badge="danger"><span>open incidents: </span>3</data></a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Badge</h1>
+      <p>
+        Inline labels, counters and status tags. One hook, <code>data-badge</code>, and its value
+        picks the color. The badge scales with the font size of its parent.
+      </p>
+
+      <section id="variants">
+        <h2>Variants</h2>
+        <p>
+          <span data-badge>Default</span>
+          <span data-badge="secondary">Secondary</span>
+          <span data-badge="contrast">Contrast</span>
+          <span data-badge="success">Active</span>
+          <span data-badge="warning">Pending</span>
+          <span data-badge="danger">Failed</span>
+        </p>
+      </section>
+
+      <section id="counters">
+        <h2>Counters</h2>
+        <p>
+          <data value="1" data-badge>1</data>
+          <data value="9" data-badge="secondary">9</data>
+          <data value="42" data-badge="danger">42</data>
+          <data value="1280" data-badge="contrast">1280</data>
+          <data value="99" data-badge="success">99+</data>
+        </p>
+        <p>
+          A count of zero is hidden with the <code>hidden</code> attribute (nothing between the
+          brackets): [<data value="0" data-badge hidden>0</data>]
+        </p>
+      </section>
+
+      <section id="dots">
+        <h2>Dots</h2>
+        <p>
+          A badge with no text is a dot. It is decorative, so it is hidden from assistive
+          technology and the text next to it carries the meaning.
+        </p>
+        <ul>
+          <li><span data-badge="success" aria-hidden="true"></span> API operational</li>
+          <li><span data-badge="warning" aria-hidden="true"></span> Webhooks degraded</li>
+          <li><span data-badge="danger" aria-hidden="true"></span> Billing sync offline</li>
+        </ul>
+      </section>
+
+      <section id="in-buttons">
+        <h2>In buttons and links</h2>
+        <p>
+          The default, secondary and contrast fills invert on a solid button so they stay visible.
+          Status colors keep their own fill.
+        </p>
+        <p>
+          <button type="button">
+            Inbox
+            <data value="4" data-badge><span>unread messages: </span>4</data>
+          </button>
+          <button type="button" class="secondary">
+            Drafts
+            <data value="2" data-badge="secondary"><span>drafts: </span>2</data>
+          </button>
+          <button type="button" class="contrast">
+            Approvals
+            <data value="7" data-badge="contrast"><span>pending: </span>7</data>
+          </button>
+          <button type="button">
+            Failed jobs
+            <data value="3" data-badge="danger"><span>failed: </span>3</data>
+          </button>
+          <button type="button" class="outline">
+            Notifications
+            <data value="5" data-badge><span>new: </span>5</data>
+          </button>
+        </p>
+        <p>
+          <button type="button" class="outline">
+            Jobs
+            <data value="1" data-badge="success" id="o-succ"><span>ok: </span>1</data>
+            <data value="2" data-badge="danger" id="o-dan"><span>failed: </span>2</data>
+            <data value="3" data-badge="secondary" id="o-sec"><span>queued: </span>3</data>
+          </button>
+          <button type="button" class="secondary">
+            Failed jobs
+            <data value="3" data-badge="danger" id="bs"><span>failed: </span>3</data>
+            <data value="1" data-badge id="bsd"><span>new: </span>1</data>
+          </button>
+          <button type="button" class="contrast">
+            Jobs
+            <data value="3" data-badge="success"><span>ok: </span>3</data>
+            <data value="1" data-badge><span>new: </span>1</data>
+          </button>
+        </p>
+        <p>
+          Badge as the control itself:
+          <button type="button" data-badge id="bbtn">Filter</button>
+          <a href="#tag" data-badge="secondary" id="abtn">Tag</a>
+        </p>
+        <p>
+          Icon inside a badge, wrapped in <code>&lt;i&gt;</code> because direct child spans are
+          screen reader text: <span data-badge="contrast" id="icoin"><i>&#9679;</i> Live</span>
+        </p>
+        <p><a href="#releases" role="button">Releases <span data-badge="success">New</span></a></p>
+        <p>
+          <a href="#changelog">Changelog <span data-badge>v2.4</span></a>
+        </p>
+        <p>
+          <button type="button" id="mark-read">Mark all as read</button>
+          <button type="button" id="inc">
+            Notifications
+            <data value="2" data-badge id="live" aria-live="polite"><span>unread: </span>2</data>
+          </button>
+        </p>
+      </section>
+
+      <section id="in-text">
+        <h2>Deploy <span data-badge="success">Live</span></h2>
+        <h3>Billing webhooks <span data-badge="warning">Beta</span></h3>
+        <h4>Legacy export <span data-badge="secondary">Deprecated</span></h4>
+        <p>
+          Plan: Team <span data-badge="contrast">Trial, 9 days left</span>. Invoice #2043
+          <span data-badge="danger">Overdue</span>.
+        </p>
+        <small>Small text <span data-badge>scales</span> with its parent.</small>
+      </section>
+
+      <section id="in-tables">
+        <h2>In a table</h2>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Customer</th>
+              <th scope="col">Plan</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Northwind Traders</th>
+              <td>Business</td>
+              <td><span data-badge="success">Active</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Globex Corporation</th>
+              <td>Team</td>
+              <td><span data-badge="warning">Payment pending</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Initech</th>
+              <td>Starter</td>
+              <td><span data-badge="danger">Suspended</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="overflow">
+        <h2>Long content</h2>
+        <p>
+          <span data-badge="secondary">Region: eu-west-1, availability zone b</span>
+          <span data-badge>Enterprise SSO</span>
+          <span data-badge="contrast">Audit log retention 365 days</span>
+          <span data-badge="success">SOC 2 Type II</span>
+          <span data-badge="warning">Migration scheduled</span>
+        </p>
+      </section>
+    </main>
+
+    <!--
+      Updating a counter needs a few lines of script. Styling needs none.
+
+      function setBadge(el, n) {
+        el.value = String(n);
+        el.lastChild.textContent = String(n);
+        el.hidden = n === 0;
+      }
+
+      The text node after the hidden context span is the visible count, so only
+      that node changes. Without the context span, set el.textContent instead.
+      Set data-badge at render time, do not switch the color from script for a
+      static state. For a count that screen reader users should hear, put
+      aria-live="polite" on the data element only, never on the button.
+    -->
+  </body>
+</html>

@@ -38,8 +38,21 @@ const INSERT_AFTER: Record<string, string> = {
 const importLine = (module: string): RegExp =>
   new RegExp(String.raw`^[^\r\n]*@import url\("\./${module}\.css"\)[^\r\n]*$`, "m");
 
+const extraImport = (name: string): string =>
+  `@import url("./extras/${name}.css") layer(pico.extras);`;
+
 function entryText(source: string, options: ResolvedOptions): string {
   let text = source;
+  if (options.entry === "extras") {
+    // pico.extras.css imports every extra; keep the chosen ones.
+    return text
+      .split("\n")
+      .filter((line) => {
+        const name = /\/extras\/([\w-]+)\.css/.exec(line)?.[1];
+        return !name || options.extras.includes(name);
+      })
+      .join("\n");
+  }
   if (options.entry !== "colors") {
     for (const [module, anchor] of Object.entries(INSERT_AFTER)) {
       if (!options.modules[module] || importLine(module).test(text)) continue;
@@ -48,6 +61,8 @@ function entryText(source: string, options: ResolvedOptions): string {
         (line) => `${line}\n@import url("./${module}.css") layer(pico.core);`,
       );
     }
+    // Imports must stay ahead of the override rules. Layer order comes from layers.css.
+    if (options.extras.length) text += `\n${options.extras.map(extraImport).join("\n")}\n`;
     text += overrideCss({
       transitions: options.transitions,
       fluid: options.fluid,
@@ -65,12 +80,13 @@ export type Bundled = { css: string; map?: string; excluded: string[] };
  */
 export async function bundleSource(options: ResolvedOptions): Promise<Bundled> {
   const entryName =
-    options.entry === "colors"
-      ? "pico.colors.css"
+    options.entry === "colors" || options.entry === "extras"
+      ? `pico.${options.entry}.css`
       : `pico.${options.entry === "classless" ? "classless." : ""}css`;
   const entryPath = norm(`${SRC}/${entryName}`);
   const excluded: string[] = [];
-  const theme = options.entry === "colors" ? "" : themeSource(options.theme);
+  const hasTheme = options.entry === "pico" || options.entry === "classless";
+  const theme = hasTheme ? themeSource(options.theme) : "";
 
   const result = await bundleAsync({
     filename: entryPath,
@@ -90,6 +106,9 @@ export async function bundleSource(options: ResolvedOptions): Promise<Bundled> {
           ? path.slice(SRC.length + 1).replace(/\.css$/, "")
           : "";
         if (name.startsWith("themes/")) return theme;
+        if (name.startsWith("extras/") && options.extrasDir) {
+          return readFile(`${options.extrasDir}/${name.slice(7)}.css`, "utf8");
+        }
         if (name in options.modules && options.modules[name] === false) {
           excluded.push(name);
           return "";

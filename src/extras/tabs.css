@@ -1,0 +1,204 @@
+/* Tabs: [role=tablist] with [role=tab] and [role=tabpanel], or [data-tabs] with radios and labels */
+
+:root,
+:host,
+[data-theme] {
+  --pico-tabs-tab-color: var(--pico-muted-color);
+  --pico-tabs-tab-hover-color: var(--pico-color);
+  --pico-tabs-active-color: var(--pico-primary);
+  --pico-tabs-indicator-color: var(--pico-primary-background);
+  --pico-tabs-border-color: var(--pico-muted-border-color);
+  --pico-tabs-indicator-width: var(--pico-outline-width);
+}
+
+/* ARIA tabs (a script moves the selection, see the fixture) */
+[role="tablist"] {
+  display: flex;
+  margin-bottom: 0;
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scroll-padding-inline: var(--pico-nav-link-spacing-horizontal);
+  scrollbar-width: thin;
+  border-block-end: var(--pico-border-width) solid var(--pico-tabs-border-color);
+  list-style: none;
+
+  &[aria-orientation="vertical"] {
+    flex-direction: column;
+    overflow: visible;
+    border-block-end: 0;
+    border-inline-end: var(--pico-border-width) solid var(--pico-tabs-border-color);
+  }
+}
+
+[role="tab"],
+[data-tabs] > input[type="radio"] + label {
+  display: block;
+  flex: none;
+  inline-size: auto;
+  margin: 0;
+  padding: var(--pico-nav-link-spacing-vertical) calc(var(--pico-nav-link-spacing-horizontal) * 2);
+  border: 0;
+  border-block-end: var(--pico-tabs-indicator-width) solid transparent;
+  border-start-start-radius: var(--pico-border-radius);
+  border-start-end-radius: var(--pico-border-radius);
+  border-end-start-radius: 0;
+  border-end-end-radius: 0;
+  background: none;
+  box-shadow: none;
+  color: var(--pico-tabs-tab-color);
+  font-size: 1rem;
+  font-weight: var(--pico-font-weight);
+  line-height: var(--pico-line-height);
+  text-align: start;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+
+  [role="tablist"][aria-orientation="vertical"] > & {
+    border-block-end: 0;
+    border-inline-end: var(--pico-tabs-indicator-width) solid transparent;
+    border-start-end-radius: 0;
+    border-end-start-radius: var(--pico-border-radius);
+  }
+
+  &:focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: calc(var(--pico-outline-width) * -1);
+  }
+}
+
+[role="tab"][aria-selected="true"],
+[data-tabs] > input[type="radio"]:checked + label {
+  border-color: var(--pico-tabs-indicator-color);
+  color: var(--pico-tabs-active-color);
+}
+
+[role="tab"][aria-disabled="true"],
+[data-tabs] > input[type="radio"]:disabled + label {
+  border-color: transparent;
+  color: var(--pico-tabs-tab-color);
+  opacity: var(--pico-form-element-disabled-opacity);
+  cursor: not-allowed;
+}
+
+@media (hover: hover) {
+  [role="tab"]:not([aria-selected="true"], [aria-disabled="true"]):hover,
+  [data-tabs] > input[type="radio"]:not(:checked, :disabled) + label:hover {
+    color: var(--pico-tabs-tab-hover-color);
+  }
+}
+
+[role="tabpanel"],
+[data-tabs] > section {
+  margin: 0;
+  padding-block-start: var(--pico-spacing);
+
+  &[hidden] {
+    display: none;
+  }
+
+  &:focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: calc(var(--pico-outline-width) * -1);
+  }
+}
+
+/* Vertical list beside its panel. :has() is at the floor, without it the panel stacks below */
+:has(> [role="tablist"][aria-orientation="vertical"]) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--pico-spacing);
+
+  & > [role="tablist"] {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+  }
+
+  & > [role="tabpanel"] {
+    grid-column: 2;
+    grid-row: 1;
+    padding-block-start: 0;
+  }
+}
+
+/* Radio tabs (no script). The radios are hidden, the label after each one is the tab */
+[data-tabs] {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: var(--pico-spacing);
+
+  & > input[type="radio"] {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    clip-path: inset(50%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  & > input[type="radio"] + label {
+    position: relative;
+    margin-block-end: calc(var(--pico-border-width) * -1);
+  }
+
+  & > input[type="radio"]:focus-visible + label {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: calc(var(--pico-outline-width) * -1);
+  }
+
+  & > section {
+    display: none;
+    flex: 0 0 100%;
+    border-block-start: var(--pico-border-width) solid var(--pico-tabs-border-color);
+  }
+
+  /* Panel n shows when radio n is checked, up to ten tabs per group */
+  & > input:nth-of-type(1):checked ~ section:nth-of-type(1),
+  & > input:nth-of-type(2):checked ~ section:nth-of-type(2),
+  & > input:nth-of-type(3):checked ~ section:nth-of-type(3),
+  & > input:nth-of-type(4):checked ~ section:nth-of-type(4),
+  & > input:nth-of-type(5):checked ~ section:nth-of-type(5),
+  & > input:nth-of-type(6):checked ~ section:nth-of-type(6),
+  & > input:nth-of-type(7):checked ~ section:nth-of-type(7),
+  & > input:nth-of-type(8):checked ~ section:nth-of-type(8),
+  & > input:nth-of-type(9):checked ~ section:nth-of-type(9),
+  & > input:nth-of-type(10):checked ~ section:nth-of-type(10) {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  [role="tab"],
+  [data-tabs] > input[type="radio"] + label {
+    transition:
+      color var(--pico-transition),
+      border-color var(--pico-transition);
+  }
+
+  [role="tabpanel"]:not([hidden]),
+  [data-tabs] > section {
+    transition:
+      opacity var(--pico-transition),
+      translate var(--pico-transition);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 0.25rem;
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  [role="tab"][aria-selected="true"],
+  [data-tabs] > input[type="radio"]:checked + label {
+    border-color: Highlight;
+  }
+}

@@ -1,4 +1,4 @@
-export type EntryName = "pico" | "classless" | "colors";
+export type EntryName = "pico" | "classless" | "colors" | "extras";
 
 export type ThemeOption = string | { color: string } | { hue: number; chroma: number };
 
@@ -24,6 +24,13 @@ export type CompileOptions = {
   semanticContainer?: boolean;
   /** Fluid semantic container: no max width. */
   fluid?: boolean;
+  /**
+   * Opt-in extras to append to a pico or classless build: a list of names (see EXTRAS), a comma
+   * separated string, "all" or true. Default none. For the "extras" entry the default is all.
+   */
+  extras?: string[] | string | boolean;
+  /** Folder to read the extras from instead of src/extras. For tests and custom extras. */
+  extrasDir?: string;
   /** Selector that prefixes every rule, "" for none. */
   scope?: string;
   /** false keeps the root font size fixed. Default true. */
@@ -53,6 +60,8 @@ export type CompileStats = {
   removedByClassless: number;
   removedByPurge: number;
   excludedModules: string[];
+  /** Extras that went into the output. */
+  extras: string[];
   durationMs: number;
   warnings: string[];
 };

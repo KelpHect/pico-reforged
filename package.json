@@ -50,6 +50,7 @@
     "test": "vp test",
     "test:api": "node scripts/dev-build.ts && node test/api/check.ts dist-dev",
     "test:visual": "node scripts/dev-build.ts && node test/visual/run.ts",
+    "test:extras": "node test/visual/extras.ts",
     "lint": "vp lint",
     "fmt": "vp fmt",
     "check": "vp check",
@@ -74,6 +75,7 @@
     "lightningcss": "^1.33.0"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@types/culori": "^4.0.1",
     "@types/node": "^26.6.5",
     "pixelmatch": "^8.0.0",

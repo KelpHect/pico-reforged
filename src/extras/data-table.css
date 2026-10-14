@@ -1,0 +1,160 @@
+/* Data table: opt in with data-table on the table. Sortable (aria-sort), selectable (checkbox,
+   aria-selected as styling hook) tables, optionally in a scroll region. Without data-table the
+   only rules that apply are the aria-sort button, data-type and data-density hooks. */
+
+:root,
+:host,
+[data-theme] {
+  --pico-data-table-head-background-color: var(--pico-card-sectioning-background-color);
+  --pico-data-table-row-hover-background-color: var(--pico-dropdown-hover-background-color);
+  --pico-data-table-row-selected-background-color: color-mix(
+    in oklab,
+    var(--pico-primary-background) 20%,
+    var(--pico-background-color)
+  );
+  --pico-data-table-scroll-max-block-size: none;
+  --pico-data-table-scroll-padding-block-start: 0;
+  --pico-data-table-compact-padding-block: calc(var(--pico-spacing) / 4);
+  --pico-data-table-compact-padding-inline: calc(var(--pico-spacing) / 2);
+  --pico-data-table-sort-idle-opacity: 0.6;
+}
+
+/* Scroll region. Needs a name and tabindex="0" so keyboard users can scroll it. */
+:where(div[role="region"]:has(> table)) {
+  overflow: auto;
+  max-block-size: var(--pico-data-table-scroll-max-block-size);
+  margin-bottom: var(--pico-typography-spacing-vertical);
+  scroll-padding-block-start: var(--pico-data-table-scroll-padding-block-start);
+
+  &:focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: 0;
+  }
+
+  /* Sticky cells lose their border with border-collapse: collapse. */
+  & > table {
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    & > thead th {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 1;
+      background-color: var(--pico-data-table-head-background-color);
+    }
+  }
+}
+
+:where(th, td)[data-type="numeric"] {
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+table[data-table] {
+  /* A cell that only holds a row checkbox shrinks to the checkbox. */
+  & :where(th, td):has(> input[type="checkbox"]:only-child) {
+    inline-size: 1%;
+    white-space: nowrap;
+
+    & > input[type="checkbox"] {
+      margin: 0;
+      vertical-align: middle;
+    }
+  }
+
+  & > caption {
+    padding: 0 var(--pico-spacing) calc(var(--pico-spacing) / 2);
+    color: var(--pico-color);
+    font-weight: 600;
+    text-align: start;
+  }
+
+  /* Style the cells: core paints a background on every th and td, so a row background is hidden. */
+  & > tbody > tr:not([aria-selected="true"]):hover > * {
+    background-color: var(--pico-data-table-row-hover-background-color);
+  }
+
+  /* aria-selected on a row is the styling hook; the row checkbox is the accessible control. */
+  & > tbody > tr[aria-selected="true"] > * {
+    background-color: var(--pico-data-table-row-selected-background-color);
+  }
+}
+
+th[aria-sort] > button {
+  display: inline-flex;
+  gap: 0.375em;
+  align-items: center;
+  inline-size: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pico-border-radius);
+  background: none;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+
+  /* Text glyphs, not background images: they survive forced-colors mode. The empty
+     alternative keeps screen readers from reading the arrow, aria-sort already says it. */
+  &::after {
+    content: "\2195";
+    content: "\2195" / "";
+    flex: none;
+    opacity: var(--pico-data-table-sort-idle-opacity);
+    font-size: 0.875em;
+    line-height: 1;
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    background: none;
+    box-shadow: none;
+    color: var(--pico-primary-hover);
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+
+  &:focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: 0.25rem;
+  }
+}
+
+/* The arrow goes first so the label stays flush with the numbers below it. */
+th[data-type="numeric"][aria-sort] > button {
+  flex-direction: row-reverse;
+}
+
+th[aria-sort="ascending"] > button::after {
+  content: "\2191";
+  content: "\2191" / "";
+  opacity: 1;
+}
+
+th[aria-sort="descending"] > button::after {
+  content: "\2193";
+  content: "\2193" / "";
+  opacity: 1;
+}
+
+table[data-density="compact"] :is(th, td) {
+  padding-block: var(--pico-data-table-compact-padding-block);
+  padding-inline: var(--pico-data-table-compact-padding-inline);
+  font-size: 0.875em;
+}
+
+@media (forced-colors: active) {
+  table[data-table] > tbody > tr[aria-selected="true"] > * {
+    box-shadow:
+      inset 0 0.125rem 0 CanvasText,
+      inset 0 -0.125rem 0 CanvasText;
+  }
+}

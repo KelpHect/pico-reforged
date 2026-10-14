@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Data table</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Data table</h1>
+      <p>
+        Opt in with <code>data-table</code> on the table. Sort state lives in <code>aria-sort</code>
+        on the <code>th</code>. Row selection: the row checkbox is the accessible control and
+        <code>aria-selected</code> on the <code>tr</code> is only the styling hook (assistive tech
+        mostly ignores it on a plain table). Other hooks: <code>data-type="numeric"</code>
+        on a cell and <code>data-density="compact"</code> on the table. No classes.
+      </p>
+
+      <h2>Scroll region with sticky header and selection</h2>
+      <p>
+        The wrapper needs <code>role="region"</code>, a name and <code>tabindex="0"</code>. Set
+        <code>--pico-data-table-scroll-max-block-size</code> to make it scroll vertically and pin
+        the header. Each row has a checkbox. The Status column is not sortable, so it has no
+        button and no <code>aria-sort</code>.
+      </p>
+      <div role="region" aria-labelledby="orders-caption" tabindex="0" style="--pico-data-table-scroll-max-block-size: 22rem; --pico-data-table-scroll-padding-block-start: 3rem">
+        <table data-table style="min-inline-size: 44rem">
+          <caption id="orders-caption">Orders, last 30 days</caption>
+          <thead>
+            <tr>
+              <th scope="col"><input type="checkbox" aria-label="Select all orders" /></th>
+              <th scope="col" aria-sort="ascending"><button type="button">Order</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Customer</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Plan</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Date</button></th>
+              <th scope="col">Status</th>
+              <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Total</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1048" /></td>
+              <th scope="row">#1048</th>
+              <td>Marta Cunha</td>
+              <td>Pro, annual</td>
+              <td>2026-10-12</td>
+              <td>Paid</td>
+              <td data-type="numeric">2,340.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1047" /></td>
+              <th scope="row">#1047</th>
+              <td>Tiago Neves</td>
+              <td>Team, monthly</td>
+              <td>2026-10-11</td>
+              <td>Pending</td>
+              <td data-type="numeric">189.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1046" /></td>
+              <th scope="row">#1046</th>
+              <td>Helena Duarte</td>
+              <td>Starter</td>
+              <td>2026-10-11</td>
+              <td>Paid</td>
+              <td data-type="numeric">29.00</td>
+            </tr>
+            <tr aria-selected="true">
+              <td><input type="checkbox" aria-label="Select order #1045" checked /></td>
+              <th scope="row">#1045</th>
+              <td>Bruno Lacerda</td>
+              <td>Pro, monthly</td>
+              <td>2026-10-09</td>
+              <td>Failed</td>
+              <td data-type="numeric">79.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1044" /></td>
+              <th scope="row">#1044</th>
+              <td>Sofia Barros</td>
+              <td>Enterprise</td>
+              <td>2026-10-08</td>
+              <td>Paid</td>
+              <td data-type="numeric">12,800.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1043" /></td>
+              <th scope="row">#1043</th>
+              <td>Diogo Pires</td>
+              <td>Team, annual</td>
+              <td>2026-10-06</td>
+              <td>Refunded</td>
+              <td data-type="numeric">1,890.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1042" /></td>
+              <th scope="row">#1042</th>
+              <td>Inês Moreira</td>
+              <td>Pro, annual</td>
+              <td>2026-10-05</td>
+              <td>Paid</td>
+              <td data-type="numeric">612.10</td>
+            </tr>
+            <tr aria-selected="true">
+              <td><input type="checkbox" aria-label="Select order #1041" checked /></td>
+              <th scope="row">#1041</th>
+              <td>Rui Tavares</td>
+              <td>Starter</td>
+              <td>2026-10-03</td>
+              <td>Pending</td>
+              <td data-type="numeric">94.50</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1040" /></td>
+              <th scope="row">#1040</th>
+              <td>Ana Ferreira</td>
+              <td>Enterprise</td>
+              <td>2026-10-02</td>
+              <td>Paid</td>
+              <td data-type="numeric">1,280.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1039" /></td>
+              <th scope="row">#1039</th>
+              <td>Carlos Matos</td>
+              <td>Team, monthly</td>
+              <td>2026-09-30</td>
+              <td>Paid</td>
+              <td data-type="numeric">189.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1038" /></td>
+              <th scope="row">#1038</th>
+              <td>Joana Reis</td>
+              <td>Pro, monthly</td>
+              <td>2026-09-28</td>
+              <td>Failed</td>
+              <td data-type="numeric">79.00</td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" aria-label="Select order #1037" /></td>
+              <th scope="row">#1037</th>
+              <td>Pedro Lopes</td>
+              <td>Starter</td>
+              <td>2026-09-27</td>
+              <td>Paid</td>
+              <td data-type="numeric">29.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Plain table, no wrapper</h2>
+      <p>No <code>data-table</code>, no wrapper: this table keeps core styling, with no row hover or caption restyle.</p>
+        <table>
+          <caption id="recent-caption">Recent orders</caption>
+          <thead>
+            <tr>
+              <th scope="col">Order</th>
+              <th scope="col">Customer</th>
+              <th scope="col">Plan</th>
+              <th scope="col">Date</th>
+              <th scope="col">Status</th>
+              <th scope="col" data-type="numeric">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">#1048</th>
+              <td>Marta Cunha</td>
+              <td>Pro, annual</td>
+              <td>2026-10-12</td>
+              <td>Paid</td>
+              <td data-type="numeric">2,340.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1047</th>
+              <td>Tiago Neves</td>
+              <td>Team, monthly</td>
+              <td>2026-10-11</td>
+              <td>Pending</td>
+              <td data-type="numeric">189.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1046</th>
+              <td>Helena Duarte</td>
+              <td>Starter</td>
+              <td>2026-10-11</td>
+              <td>Paid</td>
+              <td data-type="numeric">29.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1045</th>
+              <td>Bruno Lacerda</td>
+              <td>Pro, monthly</td>
+              <td>2026-10-09</td>
+              <td>Failed</td>
+              <td data-type="numeric">79.00</td>
+            </tr>
+          </tbody>
+        </table>
+
+      <h2>Compact density</h2>
+      <div role="region" aria-labelledby="compact-caption" tabindex="0">
+        <table data-table data-density="compact" style="min-inline-size: 40rem">
+          <caption id="compact-caption">Orders, compact</caption>
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="ascending"><button type="button">Order</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Customer</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Plan</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Date</button></th>
+              <th scope="col">Status</th>
+              <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Total</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">#1048</th>
+              <td>Marta Cunha</td>
+              <td>Pro, annual</td>
+              <td>2026-10-12</td>
+              <td>Paid</td>
+              <td data-type="numeric">2,340.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1047</th>
+              <td>Tiago Neves</td>
+              <td>Team, monthly</td>
+              <td>2026-10-11</td>
+              <td>Pending</td>
+              <td data-type="numeric">189.00</td>
+            </tr>
+            <tr aria-selected="true">
+              <th scope="row">#1046</th>
+              <td>Helena Duarte</td>
+              <td>Starter</td>
+              <td>2026-10-11</td>
+              <td>Paid</td>
+              <td data-type="numeric">29.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1045</th>
+              <td>Bruno Lacerda</td>
+              <td>Pro, monthly</td>
+              <td>2026-10-09</td>
+              <td>Failed</td>
+              <td data-type="numeric">79.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1044</th>
+              <td>Sofia Barros</td>
+              <td>Enterprise</td>
+              <td>2026-10-08</td>
+              <td>Paid</td>
+              <td data-type="numeric">12,800.00</td>
+            </tr>
+            <tr>
+              <th scope="row">#1043</th>
+              <td>Diogo Pires</td>
+              <td>Team, annual</td>
+              <td>2026-10-06</td>
+              <td>Refunded</td>
+              <td data-type="numeric">1,890.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Footer row, descending sort</h2>
+      <div role="region" aria-labelledby="total-caption" tabindex="0">
+        <table data-table style="min-inline-size: 40rem">
+          <caption id="total-caption">Orders with a total</caption>
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="descending"><button type="button">Order</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Customer</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Plan</button></th>
+              <th scope="col" aria-sort="none"><button type="button">Date</button></th>
+              <th scope="col">Status</th>
+              <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Total</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">#1042</th>
+              <td>Inês Moreira</td>
+              <td>Pro, annual</td>
+              <td>2026-10-05</td>
+              <td>Paid</td>
+              <td data-type="numeric">612.10</td>
+            </tr>
+            <tr>
+              <th scope="row">#1041</th>
+              <td>Rui Tavares</td>
+              <td>Starter</td>
+              <td>2026-10-03</td>
+              <td>Pending</td>
+              <td data-type="numeric">94.50</td>
+            </tr>
+            <tr>
+              <th scope="row">#1040</th>
+              <td>Ana Ferreira</td>
+              <td>Enterprise</td>
+              <td>2026-10-02</td>
+              <td>Paid</td>
+              <td data-type="numeric">1,280.00</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="5">Total</th>
+              <td data-type="numeric">2,186.60</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <h2>Long content</h2>
+      <div role="region" aria-labelledby="notes-caption" tabindex="0">
+        <table data-table>
+          <caption id="notes-caption">Customer notes</caption>
+          <thead>
+            <tr>
+              <th scope="col" aria-sort="none"><button type="button">Customer</button></th>
+              <th scope="col">Note</th>
+              <th scope="col" aria-sort="none" data-type="numeric"><button type="button">Seats</button></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">Sofia Barros</th>
+              <td>Asked for a custom invoice with the purchase order number and a split between two cost centres.</td>
+              <td data-type="numeric">250</td>
+            </tr>
+            <tr>
+              <th scope="row">Tiago Neves</th>
+              <td>Moving from monthly to annual billing next quarter.</td>
+              <td data-type="numeric">12</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!--
+      Sorting needs a little script, because aria-sort only describes the state. No dependencies.
+      It does not support colspan in a sortable header row. For locale formatted numbers, put the
+      raw value in a data-value attribute on the td and read that instead. aria-sort is read when
+      focus lands on the header; for a live announcement, update a role="status" element with
+      text such as "Sorted by Total, descending" after each sort.
+
+      document.querySelectorAll("th[aria-sort] > button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const th = btn.parentElement;
+          const table = th.closest("table");
+          const next = th.getAttribute("aria-sort") === "ascending" ? "descending" : "ascending";
+          const numeric = th.dataset.type === "numeric";
+          const col = th.cellIndex;
+          table
+            .querySelectorAll(":scope > thead th[aria-sort]")
+            .forEach((h) => h.setAttribute("aria-sort", "none"));
+          th.setAttribute("aria-sort", next);
+          const tbody = table.tBodies[0];
+          const value = (row) => {
+            const text = row.cells[col].textContent.trim();
+            return numeric ? parseFloat(text.replace(/[^\d.-]/g, "")) : text;
+          };
+          const sign = next === "ascending" ? 1 : -1;
+          const rows = [...tbody.rows].sort((a, b) => {
+            const x = value(a);
+            const y = value(b);
+            const c = numeric ? x - y : String(x).localeCompare(String(y), undefined, { numeric: true });
+            return c * sign;
+          });
+          tbody.append(...rows);
+        });
+      });
+
+      Selection: toggle aria-selected on the tr and the row checkbox together. The attribute is the
+      source of truth, so CSS and assistive tech agree.
+    -->
+  </body>
+</html>

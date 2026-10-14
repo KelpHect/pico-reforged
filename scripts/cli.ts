@@ -11,6 +11,7 @@ import {
   formatTable,
   loadConfigFile,
   packageInfo,
+  EXTRAS,
   MODULES,
   THEMES,
 } from "./lib/compiler/index.ts";
@@ -23,11 +24,13 @@ Usage
   pico-reforged matrix [outDir]    write the full file set (default outDir: css)
   pico-reforged themes             list the built-in themes
   pico-reforged modules            list the modules that can be excluded
+  pico-reforged extras             list the opt-in extras
 
 Build options
   --config <file>        pico.config.json, .ts or .mjs (found in the working directory if omitted)
-  --entry <name>         pico, classless or colors
+  --entry <name>         pico, classless, colors or extras
   --theme <value>        theme name, a color such as "#e5484d", or the path of a CSS file
+  --extras <list>        comma separated extras to add, or "all", for example tabs,badge
   --no-classes           drop every selector that needs a class
   --semantic-container   style body > header, main and footer as containers
   --fluid                no max width on the semantic container
@@ -59,6 +62,7 @@ const fromFlags = (values: Record<string, unknown>): CompileOptions => {
   const o: CompileOptions = {};
   if (values["entry"]) o.entry = values["entry"] as EntryName;
   if (values["theme"]) o.theme = parseTheme(values["theme"] as string);
+  if (values["extras"]) o.extras = values["extras"] as string;
   if (values["no-classes"]) o.classes = false;
   if (values["semantic-container"]) o.semanticContainer = true;
   if (values["fluid"]) o.fluid = true;
@@ -91,6 +95,7 @@ async function build(argv: string[]): Promise<void> {
       config: { type: "string" },
       entry: { type: "string" },
       theme: { type: "string" },
+      extras: { type: "string" },
       "no-classes": { type: "boolean" },
       "semantic-container": { type: "boolean" },
       fluid: { type: "boolean" },
@@ -156,6 +161,9 @@ async function main(): Promise<void> {
       return;
     case "modules":
       console.log(MODULES.join("\n"));
+      return;
+    case "extras":
+      console.log(EXTRAS.join("\n"));
       return;
     case "--version":
     case "-v":

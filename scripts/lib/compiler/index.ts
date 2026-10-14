@@ -1,6 +1,7 @@
 export { compile, compileBoth } from "./compile.ts";
 export { buildMatrix, matrixNames, MATRIX_VARIANTS } from "./matrix.ts";
 export {
+  EXTRAS,
   MODULES,
   THEMES,
   DEFAULT_TARGETS,

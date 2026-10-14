@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stepper</title>
+    <link rel="stylesheet" href="__CSS__" />
+    <link rel="stylesheet" href="__EXTRA__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Stepper</h1>
+      <p>
+        An <code>ol</code> with one hook, <code>data-stepper</code>. The current step is
+        <code>aria-current="step"</code>. Steps before it read as completed, steps after it as
+        upcoming. No classes.
+      </p>
+
+      <h2>Horizontal (default)</h2>
+      <p>Checkout progress, no navigation. Put the status in the label text for screen readers.</p>
+      <ol data-stepper="horizontal" aria-label="Checkout progress">
+        <li><span aria-hidden="true">1</span>Cart</li>
+        <li><span aria-hidden="true">2</span>Shipping</li>
+        <li aria-current="step"><span aria-hidden="true">3</span>Payment</li>
+        <li><span aria-hidden="true">4</span>Review</li>
+      </ol>
+
+      <h2>Navigable steps</h2>
+      <p>
+        When steps are links, wrap the list in a <code>nav</code> and put
+        <code>aria-current</code> on the link. A step the user cannot reach yet is a link without
+        <code>href</code> or with <code>aria-disabled="true"</code>.
+      </p>
+      <nav aria-label="Onboarding">
+        <ol data-stepper>
+          <li>
+            <a href="#account"><span aria-hidden="true">1</span>Account</a>
+          </li>
+          <li>
+            <a href="#workspace"><span aria-hidden="true">2</span>Workspace</a>
+          </li>
+          <li>
+            <a href="#team" aria-current="step"><span aria-hidden="true">3</span>Invite team</a>
+          </li>
+          <li>
+            <a aria-disabled="true"><span aria-hidden="true">4</span>Billing</a>
+          </li>
+        </ol>
+      </nav>
+
+      <h2>First step and last step</h2>
+      <ol data-stepper aria-label="Import progress">
+        <li aria-current="step"><span aria-hidden="true">1</span>Upload CSV</li>
+        <li><span aria-hidden="true">2</span>Map columns</li>
+        <li><span aria-hidden="true">3</span>Confirm</li>
+      </ol>
+      <ol data-stepper aria-label="Deploy progress">
+        <li><span aria-hidden="true">1</span>Build, completed</li>
+        <li><span aria-hidden="true">2</span>Test, completed</li>
+        <li aria-current="step"><span aria-hidden="true">3</span>Deploy</li>
+      </ol>
+
+      <h2>Vertical</h2>
+      <ol data-stepper="vertical" aria-label="Order status">
+        <li><span aria-hidden="true">1</span>Order placed</li>
+        <li><span aria-hidden="true">2</span>Payment confirmed</li>
+        <li aria-current="step"><span aria-hidden="true">3</span>Packed and ready to ship</li>
+        <li><span aria-hidden="true">4</span>Out for delivery</li>
+        <li><span aria-hidden="true">5</span>Delivered</li>
+      </ol>
+
+      <h2>Responsive</h2>
+      <p>Horizontal from 576px, vertical below. Resize the window to see it.</p>
+      <ol data-stepper="responsive" aria-label="Plan setup">
+        <li><span aria-hidden="true">1</span>Choose plan</li>
+        <li><span aria-hidden="true">2</span>Billing details</li>
+        <li aria-current="step"><span aria-hidden="true">3</span>Add seats</li>
+        <li><span aria-hidden="true">4</span>Confirm and pay</li>
+      </ol>
+
+      <h2>In a card</h2>
+      <article>
+        <header>
+          <ol data-stepper aria-label="Setup" style="margin-bottom: 0">
+            <li><span aria-hidden="true">1</span>Connect</li>
+            <li aria-current="step"><span aria-hidden="true">2</span>Configure</li>
+            <li><span aria-hidden="true">3</span>Launch</li>
+          </ol>
+        </header>
+        <p>Choose the region and the retention period for your logs.</p>
+        <footer>
+          <button class="secondary">Back</button>
+          <button>Continue</button>
+        </footer>
+      </article>
+
+      <h2>Keyboard focus</h2>
+      <nav aria-label="Focus demo">
+        <ol data-stepper>
+          <li>
+            <a id="focus-me" href="#a"><span aria-hidden="true">1</span>Details</a>
+          </li>
+          <li>
+            <a href="#b" aria-current="step"><span aria-hidden="true">2</span>Review</a>
+          </li>
+          <li>
+            <a href="#c"><span aria-hidden="true">3</span>Publish</a>
+          </li>
+        </ol>
+      </nav>
+    </main>
+
+    <!--
+      Optional behavior, not shipped. Move the current step when the user advances:
+
+      function setStep(list, index) {
+        list.querySelectorAll(":scope > li").forEach((li, i) => {
+          const el = li.querySelector("a") ?? li;
+          if (i === index) el.setAttribute("aria-current", "step");
+          else el.removeAttribute("aria-current");
+        });
+      }
+    -->
+  </body>
+</html>
