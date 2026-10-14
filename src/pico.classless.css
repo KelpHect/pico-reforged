@@ -5,42 +5,44 @@
 @import url("./tokens/scheme-images.css") layer(pico.tokens);
 @import url("./themes/azure.css") layer(pico.theme);
 
-@import url("./reset/document.css") layer(pico.reset);
+@import url("./reset/document.css") layer(pico.core);
 
-@import url("./layout/landmarks.css") layer(pico.layout);
-@import url("./layout/section.css") layer(pico.layout);
-@import url("./layout/container.css") layer(pico.layout);
-@import url("./layout/semantic-container.css") layer(pico.layout);
-@import url("./layout/grid.css") layer(pico.layout);
-@import url("./layout/overflow-auto.css") layer(pico.layout);
+@import url("./layout/landmarks.css") layer(pico.core);
+@import url("./layout/section.css") layer(pico.core);
+@import url("./layout/container.css") layer(pico.core);
+@import url("./layout/semantic-container.css") layer(pico.core);
+@import url("./layout/grid.css") layer(pico.core);
+@import url("./layout/overflow-auto.css") layer(pico.core);
 
-@import url("./content/typography.css") layer(pico.content);
-@import url("./content/link.css") layer(pico.content);
-@import url("./content/button.css") layer(pico.content);
-@import url("./content/table.css") layer(pico.content);
-@import url("./content/embedded.css") layer(pico.content);
-@import url("./content/code.css") layer(pico.content);
-@import url("./content/figure.css") layer(pico.content);
-@import url("./content/misc.css") layer(pico.content);
+@import url("./content/typography.css") layer(pico.core);
+@import url("./content/link.css") layer(pico.core);
+@import url("./content/button.css") layer(pico.core);
+@import url("./content/table.css") layer(pico.core);
+@import url("./content/embedded.css") layer(pico.core);
+@import url("./content/code.css") layer(pico.core);
+@import url("./content/figure.css") layer(pico.core);
+@import url("./content/misc.css") layer(pico.core);
 
-@import url("./forms/basics.css") layer(pico.forms);
-@import url("./forms/checkbox-radio-switch.css") layer(pico.forms);
-@import url("./forms/input-color.css") layer(pico.forms);
-@import url("./forms/input-date.css") layer(pico.forms);
-@import url("./forms/input-file.css") layer(pico.forms);
-@import url("./forms/input-range.css") layer(pico.forms);
-@import url("./forms/input-search.css") layer(pico.forms);
 
-@import url("./components/accordion.css") layer(pico.components);
-@import url("./components/card.css") layer(pico.components);
-@import url("./components/dropdown.css") layer(pico.components);
-@import url("./components/group.css") layer(pico.components);
-@import url("./components/loading.css") layer(pico.components);
-@import url("./components/modal.css") layer(pico.components);
-@import url("./components/nav.css") layer(pico.components);
-@import url("./components/progress.css") layer(pico.components);
-@import url("./components/tooltip.css") layer(pico.components);
-@import url("./components/popover.css") layer(pico.components);
 
-@import url("./utilities/accessibility.css") layer(pico.utilities);
-@import url("./utilities/reduce-motion.css") layer(pico.utilities);
+@import url("./forms/basics.css") layer(pico.core);
+@import url("./forms/checkbox-radio-switch.css") layer(pico.core);
+@import url("./forms/input-color.css") layer(pico.core);
+@import url("./forms/input-date.css") layer(pico.core);
+@import url("./forms/input-file.css") layer(pico.core);
+@import url("./forms/input-range.css") layer(pico.core);
+@import url("./forms/input-search.css") layer(pico.core);
+
+@import url("./components/accordion.css") layer(pico.core);
+@import url("./components/card.css") layer(pico.core);
+@import url("./components/dropdown.css") layer(pico.core);
+@import url("./components/group.css") layer(pico.core);
+@import url("./components/loading.css") layer(pico.core);
+@import url("./components/modal.css") layer(pico.core);
+@import url("./components/nav.css") layer(pico.core);
+@import url("./components/progress.css") layer(pico.core);
+@import url("./components/tooltip.css") layer(pico.core);
+@import url("./components/popover.css") layer(pico.core);
+
+@import url("./utilities/accessibility.css") layer(pico.core);
+@import url("./utilities/reduce-motion.css") layer(pico.core);

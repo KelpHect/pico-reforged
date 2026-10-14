@@ -1,1 +1,141 @@
-/* Nav: nav */
+/* Nav: nav, aside nav, nav[aria-label=breadcrumb] */
+
+/* Zero-width space so VoiceOver keeps list semantics on list-style: none */
+:where(nav li)::before {
+  float: left;
+  content: "\200B";
+}
+
+nav,
+nav ul {
+  display: flex;
+}
+
+nav {
+  justify-content: space-between;
+  overflow: visible;
+
+  & ol,
+  & ul {
+    align-items: center;
+    margin-bottom: 0;
+    padding: 0;
+    list-style: none;
+
+    &:first-of-type {
+      margin-inline-start: calc(var(--pico-nav-element-spacing-horizontal) * -1);
+    }
+
+    &:last-of-type {
+      margin-inline-end: calc(var(--pico-nav-element-spacing-horizontal) * -1);
+    }
+  }
+
+  & li {
+    display: inline-block;
+    margin: 0;
+    padding: var(--pico-nav-element-spacing-vertical) var(--pico-nav-element-spacing-horizontal);
+  }
+
+  & li :where(a, [role="link"]) {
+    display: inline-block;
+    margin: calc(var(--pico-nav-link-spacing-vertical) * -1) calc(var(--pico-nav-link-spacing-horizontal) * -1);
+
+    &:not(:hover) {
+      text-decoration: none;
+    }
+  }
+
+  /* Button anchors keep the padding and radius of the button module (earlier layer) */
+  & li :where(a:not([role="button"]), [role="link"]) {
+    padding: var(--pico-nav-link-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
+    border-radius: var(--pico-border-radius);
+  }
+
+  & li button,
+  & li [role="button"],
+  & li [type="button"],
+  & li input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]),
+  & li select {
+    height: auto;
+    margin-inline: inherit;
+    margin-bottom: 0;
+    padding-block: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2);
+  }
+
+  /* Inline padding is split by control so the icon room that the forms module
+     adds (select chevron, search icon, date picker) is kept, as in v2.1.1 */
+  & li button,
+  & li [role="button"],
+  & li [type="button"],
+  & li input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="search"], [type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+    padding-inline: var(--pico-nav-link-spacing-horizontal);
+  }
+
+  & li input[type="search"] {
+    padding-inline-end: var(--pico-nav-link-spacing-horizontal);
+  }
+
+  & li input:is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+    padding-left: var(--pico-nav-link-spacing-horizontal);
+  }
+}
+
+/* Breadcrumb */
+nav[aria-label="breadcrumb"] {
+  align-items: center;
+  justify-content: start;
+
+  & ul li:not(:first-child) {
+    margin-inline-start: var(--pico-nav-link-spacing-horizontal);
+  }
+
+  & ul li a {
+    margin: calc(var(--pico-nav-link-spacing-vertical) * -1) 0;
+    margin-inline-start: calc(var(--pico-nav-link-spacing-horizontal) * -1);
+  }
+
+  & ul li:not(:last-child)::after {
+    display: inline-block;
+    position: absolute;
+    width: calc(var(--pico-nav-link-spacing-horizontal) * 4);
+    margin: 0 calc(var(--pico-nav-link-spacing-horizontal) * -1);
+    content: var(--pico-nav-breadcrumb-divider);
+    color: var(--pico-muted-color);
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  & a[aria-current]:not([aria-current="false"]) {
+    background-color: transparent;
+    color: inherit;
+    text-decoration: none;
+    pointer-events: none;
+  }
+}
+
+/* Vertical nav inside an aside */
+aside nav,
+aside ol,
+aside ul,
+aside li {
+  display: block;
+}
+
+aside li {
+  padding: calc(var(--pico-nav-element-spacing-vertical) * 0.5) var(--pico-nav-element-spacing-horizontal);
+
+  & a:not([role="button"]) {
+    display: block;
+  }
+
+  & [role="button"] {
+    margin: inherit;
+  }
+}
+
+/* Kept from v2.1.1 for parity: the space before ::after targets the link's pseudo-element, so RTL shows both "\" and the li divider */
+[dir="rtl"] nav[aria-label="breadcrumb"] ul li:not(:last-child) ::after {
+  content: "\\";
+}

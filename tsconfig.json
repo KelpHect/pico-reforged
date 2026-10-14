@@ -14,5 +14,5 @@
     "types": ["node"]
   },
   "include": ["scripts", "test"],
-  "exclude": ["**/*.mjs", "**/*.js", "node_modules"]
+  "exclude": ["node_modules"]
 }

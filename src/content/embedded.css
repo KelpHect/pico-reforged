@@ -1,1 +1,35 @@
 /* Embedded content: audio, canvas, iframe, img, svg, video */
+
+:where(audio, canvas, iframe, img, svg, video) {
+  vertical-align: middle;
+}
+
+audio,
+video {
+  display: inline-block;
+}
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+:where(iframe) {
+  border-style: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-style: none;
+}
+
+:where(svg:not([fill])) {
+  fill: currentColor;
+}
+
+/* The second selector covers svg inside a shadow root */
+svg:not(:root),
+svg:not(:host) {
+  overflow: hidden;
+}

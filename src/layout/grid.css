@@ -1,1 +1,15 @@
-/* Grid: .grid */
+/* Grid: .grid, minimal auto-layout columns */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--pico-grid-row-gap) var(--pico-grid-column-gap);
+
+  @media (width >= 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+  }
+
+  > * {
+    min-width: 0; /* lets children shrink instead of overflowing */
+  }
+}

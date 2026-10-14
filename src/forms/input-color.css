@@ -1,1 +1,21 @@
-/* Color input: [type=color] */
+/* Color input swatch: [type=color] */
+
+[type="color"] {
+  &::-webkit-color-swatch-wrapper {
+    padding: 0;
+  }
+
+  &::-moz-focus-inner {
+    padding: 0;
+  }
+
+  &::-webkit-color-swatch {
+    border: 0;
+    border-radius: calc(var(--pico-border-radius) * 0.5);
+  }
+
+  &::-moz-color-swatch {
+    border: 0;
+    border-radius: calc(var(--pico-border-radius) * 0.5);
+  }
+}

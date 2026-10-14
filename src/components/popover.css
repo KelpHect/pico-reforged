@@ -1,1 +1,161 @@
-/* Popover: [popover], :popover-open */
+/* Popover: [popover] menus, tooltips and cards, opt-in and not part of v2.1.1 */
+
+/* Bare popover: drop the browser frame so an article inside is the card */
+:where([popover]) {
+  max-width: calc(100vw - var(--pico-spacing) * 2);
+  max-height: calc(100vh - var(--pico-spacing) * 2);
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: none;
+  color: inherit;
+
+  > article {
+    margin: 0;
+  }
+}
+
+/* Popover with no article inside gets the card surface itself */
+:where([popover]:not(:has(> article))) {
+  padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
+  overflow: auto;
+  border: var(--pico-border-width) solid var(--pico-card-border-color);
+  border-radius: var(--pico-border-radius);
+  background-color: var(--pico-card-background-color);
+  box-shadow: var(--pico-card-box-shadow);
+  color: var(--pico-color);
+}
+
+/* Dropdown menu: <button popovertarget="m"> and <ul popover id="m"> */
+:is(ul, menu)[popover] {
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
+  border-radius: var(--pico-border-radius);
+  background-color: var(--pico-dropdown-background-color);
+  box-shadow: var(--pico-dropdown-box-shadow);
+  color: var(--pico-dropdown-color);
+  list-style: none;
+  white-space: nowrap;
+  min-width: 10rem;
+
+  &:popover-open {
+    display: flex;
+    flex-direction: column;
+  }
+
+  li {
+    width: 100%;
+    margin-bottom: 0;
+    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+    list-style: none;
+
+    &:first-of-type {
+      margin-top: calc(var(--pico-form-element-spacing-vertical) * 0.5);
+    }
+
+    &:last-of-type {
+      margin-bottom: calc(var(--pico-form-element-spacing-vertical) * 0.5);
+    }
+
+    a {
+      display: block;
+      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5) calc(var(--pico-form-element-spacing-horizontal) * -1);
+      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) var(--pico-form-element-spacing-horizontal);
+      overflow: hidden;
+      border-radius: 0;
+      color: var(--pico-dropdown-color);
+      text-decoration: none;
+      text-overflow: ellipsis;
+
+      &:hover,
+      &:focus,
+      &:active,
+      &:focus-visible,
+      &[aria-current]:not([aria-current="false"]) {
+        background-color: var(--pico-dropdown-hover-background-color);
+      }
+    }
+
+    label {
+      width: 100%;
+    }
+
+    &:has(label):hover {
+      background-color: var(--pico-dropdown-hover-background-color);
+    }
+  }
+}
+
+/* Tooltip: [popover="hint"] or [popover][role="tooltip"], same bubble as [data-tooltip] */
+:is([popover="hint"], [popover][role="tooltip"]) {
+  width: max-content;
+  max-width: min(20rem, calc(100vw - var(--pico-spacing) * 2));
+  padding: 0.25rem 0.5rem;
+  overflow: visible;
+  border: 0;
+  border-radius: var(--pico-border-radius);
+  background: var(--pico-tooltip-background-color);
+  box-shadow: none;
+  color: var(--pico-tooltip-color);
+  font-style: normal;
+  font-weight: var(--pico-font-weight);
+  font-size: 0.875rem;
+  line-height: var(--pico-line-height);
+  pointer-events: none;
+}
+
+/* Anchored placement, otherwise the browser centers the popover */
+@supports (anchor-name: --a) and (position-area: top) {
+  :is(ul, menu)[popover] {
+    position-anchor: auto;
+    inset: auto;
+    margin-block: var(--pico-outline-width);
+    min-inline-size: max(anchor-size(inline), 10rem);
+    position-area: block-end span-inline-end;
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+  }
+
+  :is([popover="hint"], [popover][role="tooltip"]) {
+    position-anchor: auto;
+    inset: auto;
+    margin-block: 0.375rem;
+    position-area: block-start;
+    position-try-fallbacks: flip-block;
+  }
+}
+
+/* Fade in and out, the exit needs allow-discrete to keep the popover rendered */
+@supports (transition-behavior: allow-discrete) {
+  @media (prefers-reduced-motion: no-preference) {
+    [popover] {
+      transition:
+        opacity 0.2s ease-in-out,
+        transform 0.2s ease-in-out,
+        overlay 0.2s allow-discrete,
+        display 0.2s allow-discrete;
+    }
+
+    /* :not(:popover-open) keeps the content visible where popover is unsupported */
+    [popover]:not(:popover-open) {
+      transform: translateY(-0.25rem);
+      opacity: 0;
+    }
+
+    :is([popover="hint"], [popover][role="tooltip"]):not(:popover-open) {
+      transform: none;
+    }
+
+    @starting-style {
+      [popover]:popover-open {
+        transform: translateY(-0.25rem);
+        opacity: 0;
+      }
+
+      :is([popover="hint"], [popover][role="tooltip"]):popover-open {
+        transform: none;
+      }
+    }
+  }
+}

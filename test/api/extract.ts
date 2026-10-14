@@ -1,23 +1,38 @@
 // Builds test/api/baseline.json from the frozen v2.1.1 reference CSS.
 import { transform } from 'lightningcss';
+import type { SelectorComponent } from 'lightningcss';
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const here = dirname(fileURLToPath(import.meta.url));
 
-// Returns sorted lists of names used by a stylesheet (Buffer or string).
-export function extractApi(code, filename = 'x.css') {
-  const classes = new Set();
-  const attributes = new Set();
-  const properties = new Set();
-  const keyframes = new Set();
-  const elements = new Set();
+export interface Api {
+  classes: string[];
+  attributes: string[];
+  properties: string[];
+  keyframes: string[];
+  elements: string[];
+}
 
-  const walk = (selector) => {
+type Selector = SelectorComponent[];
+
+// Returns sorted lists of names used by a stylesheet (Buffer or string).
+export function extractApi(code: Buffer | string, filename = 'x.css'): Api {
+  const classes = new Set<string>();
+  const attributes = new Set<string>();
+  const properties = new Set<string>();
+  const keyframes = new Set<string>();
+  const elements = new Set<string>();
+
+  const walk = (selector: Selector | Selector[]): void => {
     if (!Array.isArray(selector)) return;
-    if (selector.length && Array.isArray(selector[0])) return selector.forEach(walk);
-    for (const c of selector) {
+    const first = selector[0];
+    if (Array.isArray(first)) {
+      (selector as Selector[]).forEach(walk);
+      return;
+    }
+    for (const c of selector as Selector) {
       switch (c.type) {
         case 'class':
           classes.add(c.name);
@@ -30,12 +45,16 @@ export function extractApi(code, filename = 'x.css') {
         case 'type':
           elements.add(c.name);
           break;
-        case 'pseudo-class':
-          if (Array.isArray(c.selectors)) c.selectors.forEach(walk);
+        case 'pseudo-class': {
+          const sels = (c as { selectors?: Selector[] }).selectors;
+          if (Array.isArray(sels)) sels.forEach(walk);
           break;
-        case 'pseudo-element':
-          if (c.selector) walk(c.selector);
+        }
+        case 'pseudo-element': {
+          const sel = (c as { selector?: Selector }).selector;
+          if (sel) walk(sel);
           break;
+        }
       }
     }
   };
@@ -51,7 +70,10 @@ export function extractApi(code, filename = 'x.css') {
       },
       Rule: {
         keyframes(rule) {
-          keyframes.add(rule.value.name.value ?? rule.value.name);
+          const name = rule.value.name as unknown;
+          keyframes.add(
+            typeof name === 'string' ? name : ((name as { value?: string }).value ?? String(name)),
+          );
         },
       },
       Declaration: {
@@ -62,7 +84,7 @@ export function extractApi(code, filename = 'x.css') {
     },
   });
 
-  const out = (s) => [...s].sort();
+  const out = (s: Set<string>): string[] => [...s].sort();
   return {
     classes: out(classes),
     attributes: out(attributes),
@@ -72,22 +94,22 @@ export function extractApi(code, filename = 'x.css') {
   };
 }
 
-function opSymbol(op) {
-  return (
-    {
-      equal: '=',
-      includes: '~=',
-      'dash-match': '|=',
-      prefix: '^=',
-      substring: '*=',
-      suffix: '$=',
-    }[op] ?? `?${op}`
-  );
+const symbols: Record<string, string> = {
+  equal: '=',
+  includes: '~=',
+  'dash-match': '|=',
+  prefix: '^=',
+  substring: '*=',
+  suffix: '$=',
+};
+
+function opSymbol(op: string): string {
+  return symbols[op] ?? `?${op}`;
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const dir = join(here, '..', 'reference', 'v2.1.1');
-  const baseline = {};
+  const baseline: Record<string, Api> = {};
   for (const f of readdirSync(dir).filter((n) => n.endsWith('.css')).sort()) {
     baseline[f] = extractApi(readFileSync(join(dir, f)), f);
   }

@@ -1,1 +1,33 @@
 /* Loading: [aria-busy=true] */
+[aria-busy="true"]:not(input, select, textarea, html, form) {
+  white-space: nowrap;
+
+  &::before {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-image: var(--pico-icon-loading);
+    background-size: 1em auto;
+    background-repeat: no-repeat;
+    content: "";
+    vertical-align: -0.125em;
+  }
+
+  &:not(:empty)::before {
+    margin-inline-end: calc(var(--pico-spacing) * 0.5);
+  }
+
+  &:empty {
+    text-align: center;
+  }
+}
+
+/* The white or black spinner on filled buttons is in tokens/scheme-images.css */
+button[aria-busy="true"],
+[type="submit"][aria-busy="true"],
+[type="button"][aria-busy="true"],
+[type="reset"][aria-busy="true"],
+[role="button"][aria-busy="true"],
+a[aria-busy="true"] {
+  pointer-events: none;
+}

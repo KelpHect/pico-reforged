@@ -1,1 +1,42 @@
 /* Date and time inputs: [type=date], [type=datetime-local], [type=month], [type=time], [type=week] */
+
+input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]) {
+  &:is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+    --pico-icon-position: 0.75rem;
+    --pico-icon-width: 1rem;
+    padding-inline-end: calc(var(--pico-icon-width) + var(--pico-icon-position));
+    background-image: var(--pico-icon-date);
+    background-position: center right var(--pico-icon-position);
+    background-size: var(--pico-icon-width) auto;
+    background-repeat: no-repeat;
+  }
+
+  &[type="time"] {
+    background-image: var(--pico-icon-time);
+  }
+}
+
+/* The native picker button sits invisibly on top of the drawn icon */
+:is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"])::-webkit-calendar-picker-indicator {
+  inline-size: var(--pico-icon-width);
+  margin-inline-end: calc(var(--pico-icon-width) * -1);
+  margin-inline-start: var(--pico-icon-position);
+  opacity: 0;
+}
+
+/* Firefox draws its own picker icon, so the drawn one is removed */
+@supports (-moz-appearance: none) {
+  :is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+    padding-inline-end: var(--pico-form-element-spacing-horizontal) !important;
+    background-image: none !important;
+  }
+}
+
+[dir="rtl"] :is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+  text-align: right;
+}
+
+/* Drawn icon moves to the inline-end side in RTL */
+[dir="rtl"] input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]):is([type="date"], [type="datetime-local"], [type="month"], [type="time"], [type="week"]) {
+  background-position: center left var(--pico-icon-position);
+}

@@ -1,1 +1,36 @@
 /* Search input: [type=search] */
+
+[type="search"] {
+  --pico-border-radius: 5rem;
+}
+
+input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"])[type="search"] {
+  padding-inline-start: calc(var(--pico-form-element-spacing-horizontal) + 1.75rem);
+  background-image: var(--pico-icon-search);
+  background-position: center left calc(var(--pico-form-element-spacing-horizontal) + 0.125rem);
+  background-size: 1rem auto;
+  background-repeat: no-repeat;
+
+  /* Search icon plus the valid or invalid icon on the other side */
+  &[aria-invalid] {
+    padding-inline-start: calc(var(--pico-form-element-spacing-horizontal) + 1.75rem) !important;
+    background-position: center left 1.125rem, center right 0.75rem;
+  }
+
+  &[aria-invalid="false"] {
+    background-image: var(--pico-icon-search), var(--pico-icon-valid);
+  }
+
+  &[aria-invalid="true"] {
+    background-image: var(--pico-icon-search), var(--pico-icon-invalid);
+  }
+}
+
+/* background-position has no logical form, so RTL is mirrored by hand */
+[dir="rtl"] :where(input):not([type="checkbox"], [type="radio"], [type="range"], [type="file"])[type="search"] {
+  background-position: center right 1.125rem;
+
+  &[aria-invalid] {
+    background-position: center right 1.125rem, center left 0.75rem;
+  }
+}

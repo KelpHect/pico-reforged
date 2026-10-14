@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Popover</title>
+    <link rel="stylesheet" href="__CSS__" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Popover patterns</h1>
+      <p>Every popover below is opened on load, so a screenshot shows it.</p>
+
+      <h2>Dropdown menu</h2>
+      <button id="menu-invoker" popovertarget="menu">Actions</button>
+      <ul popover id="menu">
+        <li><a href="#">Edit</a></li>
+        <li><a href="#" aria-current="page">Duplicate</a></li>
+        <li><a href="#">Archive</a></li>
+      </ul>
+
+      <h2 style="margin-top: 14rem">Tooltip popover (hint)</h2>
+      <button id="hint-invoker" popovertarget="hint-tip" class="secondary">Hint tooltip</button>
+      <div popover="hint" id="hint-tip">Saved to your account</div>
+
+      <h2 style="margin-top: 5rem">Tooltip popover (role tooltip)</h2>
+      <button id="role-invoker" popovertarget="role-tip" class="contrast">Role tooltip</button>
+      <div popover="manual" role="tooltip" id="role-tip">Opens the settings</div>
+
+      <h2 style="margin-top: 5rem">Bare popover with an article</h2>
+      <button id="card-invoker" popovertarget="card">Card popover</button>
+      <div popover="manual" id="card" style="inset: auto 1rem 1rem auto; margin: 0">
+        <article>
+          <header><strong>Heads up</strong></header>
+          <p>A bare popover with an article inside looks like a card.</p>
+          <footer><button popovertarget="card" popovertargetaction="hide">Got it</button></footer>
+        </article>
+      </div>
+    </main>
+
+    <script>
+      // Click the invokers so each popover gets its implicit anchor
+      if (HTMLElement.prototype.hasOwnProperty("popover")) {
+        ["menu-invoker", "hint-invoker", "role-invoker", "card-invoker"].forEach(function (id) {
+          var button = document.getElementById(id);
+          var target = document.getElementById(button.getAttribute("popovertarget"));
+          try {
+            target.showPopover({ source: button });
+          } catch (error) {
+            target.showPopover();
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

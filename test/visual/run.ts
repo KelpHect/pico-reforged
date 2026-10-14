@@ -1,10 +1,12 @@
-// Usage: node test/visual/run.mjs [--new dist-dev] [--ref test/reference/v2.1.1] [--only kitchen-sink]
+// Usage: node test/visual/run.ts [--new dist-dev] [--ref test/reference/v2.1.1] [--only kitchen-sink] [--suffix name]
 // Renders each fixture with the reference CSS and the new CSS, diffs the screenshots and
-// writes test/visual/report/index.html and report.json.
+// writes test/visual/report[-suffix]/index.html and report.json.
 import { chromium } from 'playwright';
+import type { Browser } from 'playwright';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 import http from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, extname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,25 +14,48 @@ import { fileURLToPath } from 'node:url';
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, '..', '..');
 const fixturesDir = join(root, 'test', 'fixtures');
-const reportDir = join(here, 'report');
 
 const args = process.argv.slice(2);
-const opt = (name, fallback) => {
+const opt = (name: string, fallback: string | null): string | null => {
   const i = args.indexOf(`--${name}`);
-  return i >= 0 && args[i + 1] ? args[i + 1] : fallback;
+  return i >= 0 && args[i + 1] ? (args[i + 1] as string) : fallback;
 };
-const refDir = resolve(root, opt('ref', 'test/reference/v2.1.1'));
-const newDir = resolve(root, opt('new', 'dist-dev'));
+const refDir = resolve(root, opt('ref', 'test/reference/v2.1.1') as string);
+const newDir = resolve(root, opt('new', 'dist-dev') as string);
 const only = opt('only', null);
+const suffix = opt('suffix', null);
+const reportDir = join(here, suffix ? `report-${suffix}` : 'report');
 
-const sheets = {
+interface Mode {
+  name: string;
+  width: number;
+  scheme: 'light' | 'dark';
+}
+
+interface Result {
+  id: string;
+  fixture: string;
+  mode: string;
+  noReference?: boolean;
+  error?: string;
+  mismatch?: number;
+  diffPixels?: number;
+  refHeight?: number;
+  newHeight?: number;
+}
+
+// Fixtures whose markup the v2.1.1 reference cannot style. Their diff is informational.
+const noReference = new Set(['popover']);
+
+const sheets: Record<string, Record<string, string>> = {
   'kitchen-sink': { __CSS__: 'pico.css' },
   modal: { __CSS__: 'pico.css' },
   classless: { __CSS__: 'pico.classless.css' },
   colors: { __CSS__: 'pico.css', __COLORS__: 'pico.colors.css' },
+  popover: { __CSS__: 'pico.css' },
 };
 
-const modes = [
+const modes: Mode[] = [
   { name: '1280-light', width: 1280, scheme: 'light' },
   { name: '1280-dark', width: 1280, scheme: 'dark' },
   { name: '375-light', width: 375, scheme: 'light' },
@@ -45,14 +70,14 @@ const injected = `
   }
 `;
 
-const types = { '.css': 'text/css', '.html': 'text/html; charset=utf-8' };
+const types: Record<string, string> = { '.css': 'text/css', '.html': 'text/html; charset=utf-8' };
 
-function startServer() {
+function startServer(): Promise<http.Server> {
   const server = http.createServer((req, res) => {
-    const url = new URL(req.url, 'http://localhost');
+    const url = new URL(req.url ?? '/', 'http://localhost');
     const parts = url.pathname.split('/').filter(Boolean);
     const [kind, name] = parts;
-    const send = (code, body, type = 'text/plain') => {
+    const send = (code: number, body: string | Buffer, type = 'text/plain') => {
       res.writeHead(code, { 'content-type': type, 'cache-control': 'no-store' });
       res.end(body);
     };
@@ -73,19 +98,25 @@ function startServer() {
     }
     send(404, 'not found');
   });
-  return new Promise((ok) => server.listen(0, '127.0.0.1', () => ok(server)));
+  return new Promise<http.Server>((ok) => server.listen(0, '127.0.0.1', () => ok(server)));
 }
 
 async function launch() {
   try {
     return await chromium.launch();
   } catch (err) {
-    console.warn(`Bundled Chromium failed (${err.message.split('\n')[0]}), trying system Chrome`);
+    console.warn(`Bundled Chromium failed (${(err instanceof Error ? err.message : String(err)).split('\n')[0]}), trying system Chrome`);
     return chromium.launch({ channel: 'chrome' });
   }
 }
 
-async function shot(browser, base, fixture, side, mode) {
+async function shot(
+  browser: Browser,
+  base: string,
+  fixture: string,
+  side: 'ref' | 'new',
+  mode: Mode,
+): Promise<PNG> {
   const context = await browser.newContext({
     viewport: { width: mode.width, height: 800 },
     colorScheme: mode.scheme,
@@ -96,13 +127,13 @@ async function shot(browser, base, fixture, side, mode) {
   await page.goto(`${base}/page/${fixture}?side=${side}`, { waitUntil: 'load' });
   await page.addStyleTag({ content: injected });
   await page.evaluate(() => document.fonts.ready);
-  await page.evaluate(() => document.activeElement?.blur?.());
+  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur?.());
   const buf = await page.screenshot({ fullPage: true, animations: 'disabled' });
   await context.close();
   return PNG.sync.read(buf);
 }
 
-function pad(png, width, height) {
+function pad(png: PNG, width: number, height: number): PNG {
   if (png.width === width && png.height === height) return png;
   const out = new PNG({ width, height });
   for (let i = 0; i < out.data.length; i += 4) {
@@ -115,17 +146,17 @@ function pad(png, width, height) {
   return out;
 }
 
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const esc = (s: unknown): string => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
-function writeReport(results) {
+function writeReport(results: Result[]): void {
   const rows = [...results].sort((a, b) => (b.mismatch ?? 101) - (a.mismatch ?? 101));
   const body = rows
     .map((r) => {
       if (r.error) {
         return `<section><h2>${esc(r.fixture)} <small>${esc(r.mode)}</small></h2><p class="err">${esc(r.error)}</p></section>`;
       }
-      const img = (k) => `<figure><figcaption>${k}</figcaption><a href="img/${r.id}-${k}.png"><img loading="lazy" src="img/${r.id}-${k}.png"></a></figure>`;
-      return `<section><h2>${esc(r.fixture)} <small>${esc(r.mode)}</small> <b>${r.mismatch.toFixed(3)}%</b> <small>${r.diffPixels} px, ref ${r.refHeight}px, new ${r.newHeight}px</small></h2><div class="row">${img('ref')}${img('new')}${img('diff')}</div></section>`;
+      const img = (k: string) => `<figure><figcaption>${k}</figcaption><a href="img/${r.id}-${k}.png"><img loading="lazy" src="img/${r.id}-${k}.png"></a></figure>`;
+      return `<section><h2>${esc(r.fixture)} <small>${esc(r.mode)}</small> <b>${(r.mismatch ?? 0).toFixed(3)}%</b>${r.noReference ? ' <em>no reference (v2.1.1 cannot style this fixture)</em>' : ''} <small>${r.diffPixels} px, ref ${r.refHeight}px, new ${r.newHeight}px</small></h2><div class="row">${img('ref')}${img('new')}${img('diff')}</div></section>`;
     })
     .join('\n');
   const html = `<!doctype html>
@@ -160,9 +191,9 @@ async function main() {
   if (!fixtures.length) throw new Error(`no fixtures matched ${only ?? ''}`);
 
   const server = await startServer();
-  const base = `http://127.0.0.1:${server.address().port}`;
+  const base = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   const browser = await launch();
-  const results = [];
+  const results: Result[] = [];
 
   try {
     for (const fixture of fixtures) {
@@ -183,7 +214,7 @@ async function main() {
         const diff = new PNG({ width, height });
         const diffPixels = pixelmatch(pa.data, pb.data, diff.data, width, height, { threshold: 0.1 });
         const mismatch = (diffPixels / (width * height)) * 100;
-        for (const [k, png] of [['ref', pa], ['new', pb], ['diff', diff]]) {
+        for (const [k, png] of [['ref', pa], ['new', pb], ['diff', diff]] as const) {
           writeFileSync(join(reportDir, 'img', `${id}-${k}.png`), PNG.sync.write(png));
         }
         results.push({
@@ -191,11 +222,14 @@ async function main() {
           fixture,
           mode: mode.name,
           mismatch,
+          noReference: noReference.has(fixture) || undefined,
           diffPixels,
           refHeight: a.height,
           newHeight: b.height,
         });
-        console.log(`${id}: ${mismatch.toFixed(3)}% (${diffPixels} px, heights ${a.height}/${b.height})`);
+        console.log(
+          `${id}: ${mismatch.toFixed(3)}% (${diffPixels} px, heights ${a.height}/${b.height})${noReference.has(fixture) ? ' [no reference]' : ''}`,
+        );
       }
     }
   } finally {

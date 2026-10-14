@@ -1,1 +1,17 @@
 /* Container: .container, .container-fluid */
+
+.container,
+.container-fluid {
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--pico-spacing);
+}
+
+/* The width token is 100% below 576px, so no query is needed for it */
+.container {
+  max-width: var(--pico-container-max-width);
+
+  @media (width >= 576px) {
+    padding-inline: 0;
+  }
+}

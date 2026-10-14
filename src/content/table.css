@@ -1,1 +1,42 @@
-/* Tables: table, thead, tbody, tfoot, tr, th, td */
+/* Tables: table, thead, tbody, tfoot, tr, th, td, table.striped */
+
+thead,
+tfoot {
+  & th,
+  & td {
+    --pico-font-weight: 600;
+    --pico-border-width: 0.1875rem;
+  }
+}
+
+:where(table) {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  text-indent: 0;
+}
+
+th,
+td {
+  padding: calc(var(--pico-spacing) / 2) var(--pico-spacing);
+  border-bottom: var(--pico-border-width) solid var(--pico-table-border-color);
+  background-color: var(--pico-background-color);
+  color: var(--pico-color);
+  font-weight: var(--pico-font-weight);
+  text-align: start;
+}
+
+tfoot th,
+tfoot td {
+  border-top: var(--pico-border-width) solid var(--pico-table-border-color);
+  border-bottom: 0;
+}
+
+table.striped {
+  & tbody tr:nth-child(odd) {
+    & th,
+    & td {
+      background-color: var(--pico-table-row-stripped-background-color);
+    }
+  }
+}

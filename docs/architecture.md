@@ -25,10 +25,10 @@ src/                     CSS source, plain CSS, loadable in a current browser wi
   utilities/             accessibility, reduce-motion
   colors/                color and background utility classes (generated)
 scripts/
-  build.js               CLI entry (`pico-reforged build`)
+  build.ts               CLI entry (`pico-reforged build`)
   lib/                   compiler pieces (bundle, classless filter, scope, purge, themes)
-  data/                  palette.json, themes.js, scheme.js (the inputs to generation)
-  generate.js            writes src/tokens/palette.css, scheme.css, src/themes/*.css, src/colors/*.css
+  data/                  palette.json, themes.ts, scheme.ts (the inputs to generation)
+  generate.ts            writes src/tokens/palette.css, scheme.css, src/themes/*.css, src/colors/*.css
 css/                     build output, same file names as v2.1.1 so CDN paths keep working
 test/
   reference/v2.1.1/      frozen upstream build output
@@ -47,17 +47,19 @@ Module file names match the v2.1.1 `$modules` keys, so `components/modal` in a c
 Every framework rule is inside the `pico` layer. `src/layers.css` declares the order once:
 
 ```css
-@layer pico.reset, pico.tokens, pico.theme, pico.base, pico.layout, pico.content, pico.forms, pico.components, pico.utilities;
+@layer pico.tokens, pico.theme, pico.core, pico.utilities;
 ```
 
 Rules:
 
 - Module files contain no `@layer` blocks. Entry files assign layers when importing:
-  `@import url("./content/link.css") layer(pico.content);`
+  `@import url("./content/link.css") layer(pico.core);`
 - `pico.tokens` holds `src/tokens/*`. `pico.theme` holds one theme file. Putting themes after tokens lets a theme override any neutral token.
-- `pico.base` is for element-scoped token overrides that v2.1.1 kept in `themes/default/_styles.scss` (for example `h1 { --pico-font-size: 2rem }`). Each module may instead put these at the top of its own file if they only matter to that module. Prefer the module file.
-- `pico.utilities` is last, so `.pico-color-*`, `[hidden]` and reduced motion win over components. Utility rules that used `!important` in v2.1.1 keep it.
-- Anything a user writes outside a layer beats all of Pico. A user can also add `@layer pico.overrides` after loading Pico, or slot their own layers around `pico`.
+- `pico.core` holds every module, imported in the v2.1.1 order. Element-scoped token overrides that v2.1.1 kept in `themes/default/_styles.scss` (for example `h1 { --pico-font-size: 2rem }`) sit at the top of the module that owns them.
+- `pico.utilities` holds the `.pico-color-*` and `.pico-background-*` classes from `pico.colors.css`, so they win over any module rule.
+- Anything a user writes outside a layer beats all of Pico. A user can also slot their own layers before or after `pico`, or add rules to `pico.core` itself.
+
+The first design gave each module category its own sublayer (reset, layout, content, forms, components, utilities). That broke parity. v2.1.1 relies on specificity between modules, for example `[type=submit]` button rules beating the generic `input` rule from forms. A later layer wins regardless of specificity, so every one of those cases flipped. One ordered layer for all modules keeps the v2.1.1 cascade exactly, and users still get the main benefit, which is that unlayered CSS always wins.
 
 ## Color system
 
@@ -77,7 +79,7 @@ Every semantic color token from v2.1.1 keeps its name (`--pico-background-color`
 }
 ```
 
-- Values are inlined OKLCH literals, not `var(--pico-color-slate-500)`. That keeps the default build from shipping the whole palette. The generator writes the literals from palette references in `scripts/data/scheme.js` and `scripts/data/themes.js`, so nothing is copied by hand.
+- Values are inlined OKLCH literals, not `var(--pico-color-slate-500)`. That keeps the default build from shipping the whole palette. The generator writes the literals from palette references in `scripts/data/scheme.ts` and `scripts/data/themes.ts`, so nothing is copied by hand.
 - Alpha uses the slash syntax: `oklch(0.5517 0.0283 264.36 / 0.5)`.
 - Colors that v2.1.1 built with `mix()` are converted from the computed v2.1.1 value.
 - Aliases stay aliases (`--pico-primary-border: var(--pico-primary-background)`).
@@ -103,7 +105,7 @@ Shadows with colors inside (`--pico-box-shadow`, `--pico-switch-thumb-box-shadow
 
 ### Themes
 
-`scripts/data/themes.js` maps each of the 20 themes to palette steps for light and dark, taken from `scss/themes/default/_theme-colors.scss`. The generator writes `src/themes/<name>.css` with the primary tokens:
+`scripts/data/themes.ts` maps each of the 20 themes to palette steps for light and dark, taken from `scss/themes/default/_theme-colors.scss`. The generator writes `src/themes/<name>.css` with the primary tokens:
 
 ```
 --pico-text-selection-color  --pico-primary  --pico-primary-background  --pico-primary-underline
@@ -154,7 +156,7 @@ Breakpoints are literal media queries in source, written with range syntax (`(wi
 
 ### Compiler pipeline
 
-1. Read config (`pico.config.js`, CLI flags, or the built-in matrix).
+1. Read config (`pico.config.ts` or `pico.config.json`, CLI flags, or the built-in matrix).
 2. Pick the entry, then drop modules turned off in config.
 3. Pick or generate the theme.
 4. Bundle with Lightning CSS (`bundleAsync`), which resolves `@import ... layer()`.
@@ -201,8 +203,8 @@ Target support for the default build is browserslist `defaults` plus `@layer` (C
 
 ## Testing
 
-- `test/api/check.js` compares the built `css/pico.css`, `pico.classless.css`, `pico.conditional.css` and `pico.colors.css` against `test/api/baseline.json`. Every class, attribute hook, `--pico-*` variable and keyframe name from v2.1.1 must exist, unless it is listed as removed in `docs/migration.md`.
-- `test/visual/run.js` loads each fixture with the v2.1.1 CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. Differences are reviewed by hand. The goal is near-identical output, except where a change is a deliberate improvement listed in the migration guide.
+- `test/api/check.ts` compares the built `css/pico.css`, `pico.classless.css`, `pico.conditional.css` and `pico.colors.css` against `test/api/baseline.json`. Every class, attribute hook, `--pico-*` variable and keyframe name from v2.1.1 must exist, unless it is listed as removed in `docs/migration.md`.
+- `test/visual/run.ts` loads each fixture with the v2.1.1 CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. Differences are reviewed by hand. The goal is near-identical output, except where a change is a deliberate improvement listed in the migration guide.
 
 ## Conventions for source files
 

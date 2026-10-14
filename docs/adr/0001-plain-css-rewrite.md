@@ -39,3 +39,7 @@ Pico Reforged is a fork published as `@rusticstack/pico-reforged`. It does not u
 - `light-dark()` and OKLCH in custom properties need the compiler's lowering to work in older browsers. The unminified source CSS in `src/` targets current browsers only.
 - The old `.modal-is-open` / `.modal-is-opening` / `.modal-is-closing` JS classes keep their styles, but the recommended path is `@starting-style` transitions that need no JS beyond `showModal()`.
 - The upstream Sass source is removed from the tree. It stays in git history and the v2.1.1 build output is frozen in `test/reference/v2.1.1/` for visual comparison.
+
+## Amendment, 2026-10-14
+
+Item 3 originally meant one sublayer per module category. In practice that inverted the v2.1.1 cascade wherever a later module relied on specificity to beat an earlier one. The layers are now `pico.tokens`, `pico.theme`, `pico.core` (every module, in v2.1.1 order) and `pico.utilities` (color classes). See the cascade layers section of `docs/architecture.md`.

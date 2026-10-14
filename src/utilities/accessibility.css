@@ -1,1 +1,35 @@
-/* Accessibility: [aria-*], [disabled], [tabindex] */
+/* Accessibility: [aria-*], [disabled], [tabindex], touch-action */
+
+[aria-controls] {
+  cursor: pointer;
+}
+
+[aria-disabled="true"],
+[disabled] {
+  cursor: not-allowed;
+}
+
+[aria-hidden="false"][hidden] {
+  display: initial;
+
+  &:not(:focus) {
+    clip: rect(0, 0, 0, 0);
+    position: absolute;
+  }
+}
+
+a,
+area,
+button,
+input,
+label,
+select,
+summary,
+textarea,
+[tabindex] {
+  touch-action: manipulation;
+}
+
+[dir="rtl"] {
+  direction: rtl;
+}
