@@ -1,5 +1,5 @@
 /*!
- * Pico Reforged v1.0.0-alpha.0 (https://pico.rusticstack.com)
+ * Pico Reforged v1.0.0 (https://pico.rusticstack.com)
  * Copyright 2019-2024 Lucas Larroche and the Pico CSS authors
  * Copyright 2026 rusticstack
  * Licensed under MIT
@@ -390,7 +390,6 @@
   [popover][role="status"] > article > :is(button, [role="button"]):hover {
     color: var(--pico-primary-hover);
     text-decoration: underline;
-    -webkit-text-decoration-color: var(--pico-primary-underline);
     -webkit-text-decoration-color: var(--pico-primary-underline);
     text-decoration-color: var(--pico-primary-underline);
   }
@@ -1145,7 +1144,11 @@
       overflow-y: visible;
     }
 
-    :is(body[data-app-shell] > aside[popover]:popover-open:before, body[data-app-shell] > aside[popover]:popover-open:after) {
+    body[data-app-shell] > aside[popover]:popover-open:before {
+      display: none;
+    }
+
+    body[data-app-shell] > aside[popover]:popover-open:after {
       display: none;
     }
   }

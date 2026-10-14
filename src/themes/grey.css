@@ -3,13 +3,13 @@
 :root,
 :host,
 [data-theme] {
-  --pico-text-selection-color: light-dark(oklch(0.6567 0 0 / 0.25), oklch(0.6993 0 0 / 0.1875));
-  --pico-primary: light-dark(oklch(0.5243 0 0), oklch(0.6993 0 0));
-  --pico-primary-background: oklch(0.7412 0 0);
-  --pico-primary-underline: light-dark(oklch(0.5243 0 0 / 0.5), oklch(0.6993 0 0 / 0.5));
-  --pico-primary-hover: light-dark(oklch(0.4386 0 0), oklch(0.7858 0 0));
-  --pico-primary-hover-background: light-dark(oklch(0.6993 0 0), oklch(0.7858 0 0));
-  --pico-primary-focus: light-dark(oklch(0.6567 0 0 / 0.5), oklch(0.6993 0 0 / 0.375));
+  --pico-text-selection-color: light-dark(oklch(0.657 0 0 / 0.25), oklch(0.7 0 0 / 0.1875));
+  --pico-primary: light-dark(oklch(0.524 0 0), oklch(0.7 0 0));
+  --pico-primary-background: oklch(0.74 0 0);
+  --pico-primary-underline: light-dark(oklch(0.524 0 0 / 0.5), oklch(0.7 0 0 / 0.5));
+  --pico-primary-hover: light-dark(oklch(0.44 0 0), oklch(0.786 0 0));
+  --pico-primary-hover-background: light-dark(oklch(0.7 0 0), oklch(0.786 0 0));
+  --pico-primary-focus: light-dark(oklch(0.657 0 0 / 0.5), oklch(0.7 0 0 / 0.375));
   --pico-primary-inverse: oklch(0 0 0);
   --pico-switch-thumb-box-shadow: 0 0 0.5rem oklch(0 0 0 / 0.25);
 }

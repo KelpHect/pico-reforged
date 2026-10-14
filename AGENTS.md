@@ -15,13 +15,24 @@ Pico Reforged (`@rusticstack/pico-reforged`) is a fork of Pico CSS v2.1.1 by Luc
 
 pnpm is the package manager and Vite+ (`vp`) runs tests, lint and format from `vite.config.ts`.
 
-- `pnpm build`: generate tokens, themes and the AI files, then write the whole file matrix into `css/`.
+- `pnpm build`: generate tokens, themes and the AI files, then write the whole file matrix into `css/`. It is slow (several minutes).
 - `pnpm generate` and `pnpm generate:ai`: only the generated sources.
 - `pnpm test`: Vitest. `pnpm test:api`: coverage of the v2.1.1 public surface. `pnpm test:visual`: pixel diff against v2.1.1. `pnpm test:extras`: screenshots and axe-core for each extra.
+- The visual and extras harnesses build unminified CSS by default. Selector factoring only runs on minified output, so after compiler changes also run `node scripts/dev-build.ts --minify --out dist-dev-min` with `node test/visual/run.ts --new dist-dev-min`, and `node test/visual/extras.ts --minify`. Both also take `--targets modern`.
 - `pnpm check`: format, lint and types. `pnpm fmt`, `pnpm lint`, `pnpm typecheck` run one part. Oxfmt uses `printWidth: 100`.
 - `pnpm run pack`: build `dist/` with tsdown. Plain `pnpm pack` is pnpm's own command.
 
-Browser floor: Chrome and Edge 111, Firefox 128, Safari and iOS 16.4. No legacy builds.
+Browser floor: Chrome and Edge 111, Firefox 128, Safari and iOS 16.4. No legacy builds. `targets: "modern"` (Chrome and Edge 123, Firefox 128, Safari 17.5) is an opt-in preset that keeps native nesting and `light-dark()`. The files in `css/` always use the default floor.
+
+## Compiler pipeline
+
+`docs/architecture.md` has the details. The parts that are easy to break:
+
+- Lowering for the targets runs once, in the last pass. Earlier passes get no targets, otherwise prefixed declarations and the `--lightningcss-*` toggles are written more than once.
+- Purge runs before minify. Selector factoring (`scripts/lib/compiler/factor.ts`) runs in the minify pass and only merges selectors of the same specificity tier, with pseudo-classes from a floor-safe allowlist.
+- `pico-reforged purge` on built files judges each `:is()` branch on its own and flattens native nesting first.
+- Colors are written with the shortest OKLCH digits that keep the same 8-bit sRGB value (`scripts/lib/color.ts`).
+- Minified files get a one-line banner. Keep the MIT notice and both copyright holders in it.
 
 ## Generated and hand-written files
 

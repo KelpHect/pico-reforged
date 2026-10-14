@@ -137,7 +137,7 @@ pico-reforged build \
 | `--responsive-spacings`              | scale spacings with the viewport                               |
 | `--no-responsive-typography`         | keep the root font size fixed                                  |
 | `--no-transitions`, `--no-important` | remove motion, strip `!important`                              |
-| `--targets <query>`                  | browserslist query, default is the browser floor               |
+| `--targets <query>`                  | browserslist query or `modern`, default is the browser floor   |
 
 Put the same options in `pico.config.json`, or a `pico.config.ts` that exports them, and run `pico-reforged build`. The compiler is also a function: `import { compile } from "@rusticstack/pico-reforged/compiler"`.
 

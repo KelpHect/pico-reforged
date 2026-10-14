@@ -29,3 +29,11 @@ These are additive. Where a floor browser does not support one, the page still w
 The ready-made files are compiled for the floor. Your own stylesheet is not, unless a bundler or an integration does it. Relative color syntax needs Chrome and Edge 119, so it is not available at the floor. `light-dark()` written in your own CSS is native from Chrome 123, Firefox 120 and Safari 17.5, so below that, use a CLI theme or write the two values yourself under `prefers-color-scheme` and `data-theme`.
 
 The unminified files in `src/` are the plain source. They still hold nesting and `light-dark()`, so load them directly only in current browsers.
+
+## Modern preset
+
+`--targets modern` (or `targets: "modern"`) is an optional higher floor: Chrome and Edge 123, Firefox 128, Safari and iOS Safari 17.5. The compiler then keeps native nesting and `light-dark()` instead of lowering them. `pico.min.css` goes from 77,168 to 69,163 bytes raw and from 10,212 to 9,981 bytes with brotli. The ready-made files in `css/` use the default floor. `pico-reforged purge` flattens the nesting of a modern file before it judges selectors.
+
+## Serving the files
+
+Precompress with brotli at quality 11 when you serve the files yourself, which is about 1 KB smaller than q5. If your server supports compression dictionaries (RFC 9842), use `pico.min.css` as the dictionary for the theme variants. In a test, `pico.jade.min.css` went from 10,438 to 120 bytes.

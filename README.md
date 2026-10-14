@@ -15,14 +15,16 @@ The classes, attributes and `--pico-*` variables of v2.1.1 are kept, and the CDN
 - Popover and anchor positioning patterns, animated dialogs and accordions. The old markup still works.
 - A compiler and CLI for custom bundles, scoping, classless builds and purging unused CSS.
 - Vite and PostCSS integrations that purge unused rules in production, safely by default.
-- Size: the minified `pico.min.css` is about 80 kB, 12 kB gzipped, about the same as v2.1.1 minified.
+- An opt-in `modern` target (Chrome and Edge 123, Firefox 128, Safari 17.5) that ships native nesting and `light-dark()` for a smaller file.
+- Files for AI agents: `llms.txt` on the site, an agent skill, `AGENTS.md`, a component manifest and DTCG design tokens.
+- Size: the minified `pico.min.css` is 77 kB raw, 11.6 kB gzipped and 10.2 kB with brotli. v2.1.1 minified is 83 kB, 11.7 kB and 10.1 kB, so the raw file is 7% smaller and the compressed sizes are about the same, even though this one also carries the popover and anchor positioning patterns. The classless file is 66.7 kB raw against 71 kB, but 4% larger with brotli (9.3 kB against 9.0 kB). Details are in [docs/architecture.md](docs/architecture.md#file-size).
 
 ## Install
 
 ```sh
-npm install @rusticstack/pico-reforged@next
+npm install @rusticstack/pico-reforged
 # or
-pnpm add @rusticstack/pico-reforged@next
+pnpm add @rusticstack/pico-reforged
 ```
 
 Link a built file from `node_modules/@rusticstack/pico-reforged/css/` or use the CDN:
@@ -30,7 +32,7 @@ Link a built file from `node_modules/@rusticstack/pico-reforged/css/` or use the
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0-alpha.0/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css"
 />
 ```
 
@@ -161,6 +163,15 @@ Next.js uses the PostCSS plugin, `@rusticstack/pico-reforged/postcss`. Purging i
 
 Setup for Vite, Astro, SvelteKit, Nuxt, Next.js and static generators is in [docs/integrations.md](docs/integrations.md). Working configs are in [`examples/vite`](examples/vite) and [`examples/next`](examples/next).
 
+## File size
+
+The ready-made files are already small, and a build can make yours smaller:
+
+- The minified files merge sibling selectors into `:is()` (only when specificity stays the same) and write each OKLCH color with the shortest digits that give the same 8-bit sRGB value.
+- With the Vite or PostCSS plugin, unused rules are dropped. On the example Vite app the default safe purge saves about 9% and `purge: aggressive` about 22%. A page that uses less drops more.
+- `--targets modern` (or `targets: "modern"` in the config) skips the lowering for older browsers: `pico.min.css` drops to 69 kB raw and 10 kB with brotli, classless to 60 kB and 9.1 kB.
+- When you host the files yourself, precompress them with brotli at quality 11. Most CDNs compress on the fly at a lower level, which costs about 1 kB more.
+
 ## Browser support
 
 Chrome and Edge 111, Firefox 128 and Safari and iOS Safari 16.4, the same floor as Tailwind CSS v4. There is no legacy build. Newer features (popover, anchor positioning, `@starting-style`) are additive and degrade to a working page. Details are in [docs/browser-support.md](docs/browser-support.md).
@@ -168,6 +179,10 @@ Chrome and Edge 111, Firefox 128 and Safari and iOS Safari 16.4, the same floor 
 ## Coming from Pico CSS
 
 Most pages work by swapping the CDN URL. The changes that matter (the browser floor, Sass settings, a few visual differences) are in [docs/migration.md](docs/migration.md).
+
+## For AI agents
+
+`AGENTS.md` is the guide for coding agents working on this repository. Agents writing pages that use Pico Reforged should read [`skills/pico-reforged/SKILL.md`](skills/pico-reforged/SKILL.md), which also ships in the npm package. [`ai/`](ai/) holds the component manifest and the design tokens as JSON, and the site serves `llms.txt` and `llms-full.txt`.
 
 ## Links
 

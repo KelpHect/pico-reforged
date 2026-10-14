@@ -148,3 +148,23 @@ test("transitions: false leaves no hard-coded animation or transition duration",
     /animation-(duration|name|delay)|@keyframes modal|transition: margin|overlay [0-9.]+s/,
   );
 });
+
+test("targets modern keeps native nesting and light-dark()", async () => {
+  const floor = await compile({ minify: true });
+  const modern = await compile({ targets: "modern", minify: true });
+  assert.doesNotMatch(floor.css, /light-dark\(|&/);
+  assert.match(modern.css, /light-dark\(/);
+  assert.match(modern.css, /&/);
+  assert.ok(modern.css.length < floor.css.length);
+});
+
+test("targets modern flattens nesting when scope needs whole selectors", async () => {
+  const { css } = await compile({ targets: "modern", scope: ".pico", minify: true });
+  assert.doesNotMatch(css, /&/);
+  assert.match(css, /\.pico :where\(input,select,textarea,fieldset,\.grid\)\+small/);
+});
+
+test("targets modern gives the classless filter the same class rules as the floor", async () => {
+  const modern = await compile({ entry: "classless", targets: "modern" });
+  assert.doesNotMatch(modern.css, /\.secondary|\.contrast|\.outline\b(?!\))/);
+});

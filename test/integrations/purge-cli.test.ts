@@ -153,3 +153,48 @@ test("pico layers are found at the top level and inside wrapper layers", () => {
   assert.ok(out.css.includes("a{color:red}") && !out.css.includes("b{"), out.css);
   assert.ok(out.css.includes("c{color:red}"), "outside the pico layers");
 });
+
+const SCAN =
+  '<main class="container"><button class="secondary">Save</button><table><tr><td>1</td></tr></table></main>';
+
+async function purged(options: Parameters<typeof compile>[0]) {
+  const index = emptyIndex();
+  scanText(index, SCAN);
+  index.conservative = true;
+  return purgeStylesheet((await compile({ minify: true, ...options })).css, index);
+}
+
+test("purge of a modern build flattens the nesting and keeps the rules the floor build keeps", async () => {
+  const floor = await purged({});
+  const modern = await purged({ targets: "modern" });
+  assert.ok((await compile({ minify: true, targets: "modern" })).css.includes("&"), "input nests");
+  assert.ok(!modern.css.includes("&"), "output is flat");
+  assert.equal(modern.rules, floor.rules);
+  assert.equal(modern.removed, floor.removed);
+  assert.ok(modern.removed > 0);
+  const kept = (css: string) => css.match(/\.secondary/g)?.length;
+  assert.equal(kept(modern.css), kept(floor.css));
+  assert.ok(hasSelector(modern.css, "td") || modern.css.includes("td"), "table cells stay");
+});
+
+test("purge does not repeat the declarations a lowered file already has", async () => {
+  const out = await purged({});
+  assert.equal(out.css.match(/-webkit-text-decoration:inherit/g)?.length, 1);
+  assert.equal(out.css.match(/--lightningcss-light:initial;--lightningcss-dark: ;/g)?.length, 2);
+});
+
+test("purge judges the branches of a factored :is() list", async () => {
+  const out = await purged({});
+  // factored by the minify pass, kept because one branch (button) is on the page
+  assert.match(out.css, /:is\(button,\[type=submit\]/);
+  const index = emptyIndex();
+  scanText(index, "<p>x</p>");
+  index.conservative = false;
+  const css = "@layer pico.core{:is(.a,.b):hover{color:red}:is(.c,.d){color:blue}}";
+  const none = purgeStylesheet(css, index);
+  assert.equal(none.removed, 2);
+  scanText(index, '<i class="b"></i>');
+  const some = purgeStylesheet(css, index);
+  assert.equal(some.removed, 1);
+  assert.ok(some.css.includes(":hover"));
+});

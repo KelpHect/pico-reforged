@@ -51,7 +51,11 @@ export type CompileOptions = {
   important?: boolean;
   /** Remove rules that cannot match the given content. Default false. */
   purge?: PurgeOptions | false;
-  /** Browserslist query. Default DEFAULT_TARGETS (Chrome and Edge 111, Firefox 128, Safari and iOS 16.4). */
+  /**
+   * Browserslist query. Default DEFAULT_TARGETS (Chrome and Edge 111, Firefox 128, Safari and
+   * iOS 16.4). "modern" is MODERN_TARGETS (Chrome and Edge 123, Firefox 128, Safari and iOS
+   * 17.5), which keeps native nesting and light-dark() in the output.
+   */
   targets?: string | string[];
   minify?: boolean;
   sourceMap?: boolean;

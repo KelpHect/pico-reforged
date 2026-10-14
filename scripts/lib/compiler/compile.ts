@@ -1,4 +1,4 @@
-import { bundleSource, finalize, minifyStage } from "./bundle.ts";
+import { bundleSource, finalize, lowerStage, minifyStage } from "./bundle.ts";
 import { resolveOptions } from "./config.ts";
 import type { ResolvedOptions } from "./config.ts";
 import { buildIndex } from "./purge.ts";
@@ -22,7 +22,7 @@ function purgeWarnings(index: ContentIndex | undefined): string[] {
   return warnings;
 }
 
-/** Everything up to, but not including, the minify pass. */
+/** Everything up to, but not including, the lowering and minify pass. */
 async function build(input: CompileOptions): Promise<Built> {
   const options = resolveOptions(input);
   const index = options.purge ? await buildIndex(options.purge) : undefined;
@@ -45,9 +45,14 @@ async function build(input: CompileOptions): Promise<Built> {
   return built;
 }
 
-function finish(built: Built, minify: boolean, started: number): CompileResult {
-  const stage = minify ? minifyStage(built, built.options) : built;
-  const css = built.options.banner ? `${built.options.banner}\n${stage.css}` : stage.css;
+function finish(
+  built: Built,
+  minify: boolean,
+  started: number,
+  banner = built.options.banner,
+): CompileResult {
+  const stage = minify ? minifyStage(built, built.options) : lowerStage(built, built.options);
+  const css = banner ? `${banner}\n${stage.css}` : stage.css;
   const result: CompileResult = {
     css,
     stats: { ...built.stats, ...sizes(css), durationMs: Math.round(performance.now() - started) },
@@ -68,11 +73,18 @@ export async function compile(input: CompileOptions = {}): Promise<CompileResult
   return finish(built, built.options.minify, started);
 }
 
-/** One bundle, both the readable and the minified output. Used by the matrix. */
+/**
+ * One bundle, both the readable and the minified output. Used by the matrix. The minified file
+ * can take a shorter banner than the readable one.
+ */
 export async function compileBoth(
   input: CompileOptions = {},
+  minBanner?: string,
 ): Promise<{ plain: CompileResult; min: CompileResult }> {
   const started = performance.now();
   const built = await build({ ...input, sourceMap: false });
-  return { plain: finish(built, false, started), min: finish(built, true, started) };
+  return {
+    plain: finish(built, false, started),
+    min: finish(built, true, started, minBanner ?? built.options.banner),
+  };
 }

@@ -3,13 +3,13 @@
 :root,
 :host,
 [data-theme] {
-  --pico-text-selection-color: light-dark(oklch(0.67 0.1272 304.57 / 0.25), oklch(0.7115 0.1098 305.13 / 0.1875));
-  --pico-primary: light-dark(oklch(0.5487 0.1735 300.42), oklch(0.7115 0.1098 305.13));
-  --pico-primary-background: oklch(0.5036 0.1892 298.49);
-  --pico-primary-underline: light-dark(oklch(0.5487 0.1735 300.42 / 0.5), oklch(0.7115 0.1098 305.13 / 0.5));
-  --pico-primary-hover: light-dark(oklch(0.4666 0.1879 297.45), oklch(0.7941 0.0787 306.94));
-  --pico-primary-hover-background: light-dark(oklch(0.4666 0.1879 297.45), oklch(0.5487 0.1735 300.42));
-  --pico-primary-focus: light-dark(oklch(0.67 0.1272 304.57 / 0.5), oklch(0.7115 0.1098 305.13 / 0.375));
+  --pico-text-selection-color: light-dark(oklch(0.67 0.127 304.6 / 0.25), oklch(0.712 0.11 305 / 0.1875));
+  --pico-primary: light-dark(oklch(0.549 0.174 300.4), oklch(0.712 0.11 305));
+  --pico-primary-background: oklch(0.504 0.189 298.5);
+  --pico-primary-underline: light-dark(oklch(0.549 0.174 300.4 / 0.5), oklch(0.712 0.11 305 / 0.5));
+  --pico-primary-hover: light-dark(oklch(0.467 0.188 297.5), oklch(0.794 0.079 307));
+  --pico-primary-hover-background: light-dark(oklch(0.467 0.188 297.5), oklch(0.549 0.174 300.4));
+  --pico-primary-focus: light-dark(oklch(0.67 0.127 304.6 / 0.5), oklch(0.712 0.11 305 / 0.375));
   --pico-primary-inverse: oklch(1 0 0);
   --pico-switch-thumb-box-shadow: 0 0 0 oklch(0 0 0 / 0);
 }

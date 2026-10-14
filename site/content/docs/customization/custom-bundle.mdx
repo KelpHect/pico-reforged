@@ -8,7 +8,7 @@ The ready-made files in `css/` cover the common cases. When you want another the
 You need Node 22.18 or newer.
 
 ```shell
-npm install @rusticstack/pico-reforged@next
+npm install @rusticstack/pico-reforged
 ```
 
 ## The CLI
@@ -51,7 +51,7 @@ Each option has a name in a config file or in `compile()`, and a flag on the CLI
 | `important` | `--no-important` | `true` | `false` strips `!important`. |
 | `purge` | `--purge <glob>` | off | Remove rules that cannot match these files. Repeatable. |
 | `purge.safelist` | `--safelist <name>` | none | Keep a class, id, tag or attribute when purging. Repeatable. |
-| `targets` | `--targets <query>` | the browser floor | A browserslist query. |
+| `targets` | `--targets <query>` | the browser floor | A browserslist query, or `modern` (Chrome and Edge 123, Firefox 128, Safari 17.5) for smaller files. |
 | `minify` | `--minify` | `false` | Minify the output. |
 | `sourceMap` | `--source-map` | `false` | Write a source map. |
 | `banner` | none | none | Text put at the top of the output. |

@@ -39,7 +39,7 @@ test("build writes a file and prints a size line", () => {
   assert.equal(res.status, 0, res.stderr);
   const css = readFileSync(out, "utf8");
   assert.match(css, /@layer/);
-  assert.match(css, /\.pico body ?> ?main/);
+  assert.match(css, /\.pico body ?> ?(main|:is\([^)]*\bmain\b)/);
   assert.doesNotMatch(css, /dialog>article/);
   assert.match(res.stderr, /excluded/);
 });
@@ -101,10 +101,14 @@ test("matrix writes the v2.1.1 file names", () => {
   }
   assert.ok(!files.includes("pico.azure.css"));
   const text = readFileSync(join(out, "pico.min.css"), "utf8");
-  assert.match(text, /^\/\*!\n \* Pico Reforged v\d/);
-  assert.match(text, /Lucas Larroche/);
-  assert.match(text, /2026 rusticstack/);
-  assert.match(text, /https:\/\/pico\.rusticstack\.com/);
+  const firstLine = text.split("\n")[0] as string;
+  assert.match(firstLine, /^\/\*! Pico Reforged v\d\S* \| MIT \| Copyright 2026 rusticstack \| /);
+  assert.ok(firstLine.endsWith("| Copyright 2019-2024 Lucas Larroche and the Pico CSS authors */"));
+  const plain = readFileSync(join(out, "pico.css"), "utf8");
+  assert.match(plain, /^\/\*!\n \* Pico Reforged v\d/);
+  assert.match(plain, /Lucas Larroche/);
+  assert.match(plain, /2026 rusticstack/);
+  assert.match(plain, /https:\/\/pico\.rusticstack\.com/);
 }, 300_000);
 
 test("unknown commands and themes fail", () => {

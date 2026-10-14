@@ -12,7 +12,7 @@ No build step. Link the file in the `<head>`. The file names are the same as in 
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/pico.min.css"
 />
 ```
 
@@ -21,22 +21,22 @@ unpkg serves the same files:
 ```html
 <link
   rel="stylesheet"
-  href="https://unpkg.com/@rusticstack/pico-reforged@next/css/pico.min.css"
+  href="https://unpkg.com/@rusticstack/pico-reforged@1/css/pico.min.css"
 />
 ```
 
-Pin an exact version in production, for example `@rusticstack/pico-reforged@1.0.0-alpha.0`, so a new release never changes your pages. `@next` follows the newest pre-release.
+Pin an exact version in production, for example `@rusticstack/pico-reforged@1.0.0`, so a new release never changes your pages. `@1` follows the newest 1.x release.
 
 Other builds and themes are other file names, see the [version picker](/docs/getting-started/version-picker). The opt-in extras are separate files. Load them after the main file:
 
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/pico.min.css"
 />
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.extras.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/pico.extras.min.css"
 />
 ```
 
@@ -45,10 +45,10 @@ To take a single extra, use `css/extras/tabs.min.css` or another name from `pico
 ## npm
 
 ```shell
-npm install @rusticstack/pico-reforged@next
+npm install @rusticstack/pico-reforged
 ```
 
-pnpm, Yarn and Bun work the same way, for example `pnpm add @rusticstack/pico-reforged@next`.
+pnpm, Yarn and Bun work the same way, for example `pnpm add @rusticstack/pico-reforged`.
 
 The built files are in `node_modules/@rusticstack/pico-reforged/css/`. Link one from your HTML, or copy it into your public folder. In a bundler the package root resolves to `css/pico.min.css`:
 
@@ -145,7 +145,7 @@ Run `pico-reforged --help` for every flag. A theme can also be one color, for ex
 For a plain file, take it from the npm package. Its `css/` folder holds every build.
 
 ```shell
-npm pack @rusticstack/pico-reforged@next
+npm pack @rusticstack/pico-reforged
 tar -xzf rusticstack-pico-reforged-*.tgz package/css
 ```
 

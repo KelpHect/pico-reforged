@@ -80,7 +80,7 @@ export default function Home() {
           </div>
           <div>
             <h3>npm</h3>
-            <CodeBlock lang="shellscript" code={`npm install ${PACKAGE_NAME}@next`} />
+            <CodeBlock lang="shellscript" code={`npm install ${PACKAGE_NAME}`} />
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-// Usage: node test/visual/extras.ts [--only <name>] [--fixtures <dir>] [--report <dir>]
+// Usage: node test/visual/extras.ts [--only <name>] [--fixtures <dir>] [--report <dir>] [--targets <query|modern>] [--minify]
 // For each test/fixtures/extras/<name>.html: builds pico.css and the extra into a temp folder,
 // loads the page (__CSS__ is pico.css, __EXTRA__ is the extra) in Chromium, saves screenshots at
 // 1280 light, 1280 dark, 375 light and 1280 light with dir=rtl, and runs axe-core on each.
@@ -34,6 +34,11 @@ const opt = (name: string): string | undefined => {
 const only = opt("only");
 const fixturesDir = resolve(root, opt("fixtures") ?? "test/fixtures/extras");
 const reportDir = resolve(root, opt("report") ?? "test/visual/extras-report");
+const targets = opt("targets");
+const targetOption = {
+  ...(targets ? { targets } : {}),
+  ...(args.includes("--minify") ? { minify: true } : {}),
+};
 
 type Mode = { name: string; width: number; scheme: "light" | "dark"; rtl?: boolean };
 
@@ -128,9 +133,9 @@ async function main(): Promise<void> {
   // Build once into a temp folder: the base stylesheet and each extra on its own.
   const tmp = mkdtempSync(join(tmpdir(), "pico-extras-check-"));
   mkdirSync(join(tmp, "extras"), { recursive: true });
-  writeFileSync(join(tmp, "pico.css"), (await compile()).css);
+  writeFileSync(join(tmp, "pico.css"), (await compile(targetOption)).css);
   for (const name of names) {
-    const { css } = await compile({ entry: "extras", extras: [name] });
+    const { css } = await compile({ entry: "extras", extras: [name], ...targetOption });
     writeFileSync(join(tmp, "extras", `${name}.css`), css);
   }
 

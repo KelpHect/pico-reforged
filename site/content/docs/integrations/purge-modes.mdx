@@ -52,16 +52,16 @@ Before you ship it:
 
 ## Measured numbers
 
-Sizes are for `css/pico.min.css`, which is 80,106 bytes (12,075 gzipped), run through `pico-reforged purge` against one page. The numbers depend on the page, because the root variables, the base reset and the color scheme tokens always stay.
+Sizes are for `css/pico.min.css`, which is 77,168 bytes (11,598 gzipped), run through `pico-reforged purge` against one page. The numbers depend on the page, because the root variables, the base reset and the color scheme tokens always stay.
 
 | Page                                              | Mode       | Rules removed | Size                     |
 | ------------------------------------------------- | ---------- | ------------- | ------------------------ |
-| Small page (heading, paragraph, code, two buttons) | safe       | 71 of 396     | 66,420 bytes (10,528 gz) |
-| Small page                                        | aggressive | 344 of 396    | 24,253 bytes (4,586 gz)  |
-| Dashboard example                                 | safe       | 77 of 396     | 65,239 bytes (10,398 gz) |
-| Dashboard example                                 | aggressive | 257 of 396    | 36,352 bytes (6,710 gz)  |
-| Kitchen sink test page                            | safe       | 6 of 396      | 79,487 bytes (11,952 gz) |
-| Kitchen sink test page                            | aggressive | 32 of 396     | 75,085 bytes (11,370 gz) |
+| Small page (heading, paragraph, code, two buttons) | safe       | 71 of 396     | 63,832 bytes (10,081 gz) |
+| Small page                                        | aggressive | 344 of 396    | 23,430 bytes (4,337 gz)  |
+| Dashboard example                                 | safe       | 77 of 396     | 62,651 bytes (9,952 gz)  |
+| Dashboard example                                 | aggressive | 257 of 396    | 35,217 bytes (6,440 gz)  |
+| Kitchen sink test page                            | safe       | 6 of 396      | 76,306 bytes (11,459 gz) |
+| Kitchen sink test page                            | aggressive | 32 of 396     | 71,977 bytes (10,886 gz) |
 
 The small page is `examples/vite/index.html`, the dashboard is `examples/dashboard.html` and the kitchen sink is `test/fixtures/kitchen-sink.html`, all in the repository. The kitchen sink uses nearly every component, so there is little to remove. On the kitchen sink `safe` saves under 1% and `aggressive` about 6%. On the small page `safe` saves about 17% and `aggressive` about 70%.
 

@@ -96,6 +96,21 @@ function targetsFor(query: string | string[] | undefined) {
   return browserslistToTargets(browserslist(query ?? DEFAULT_TARGETS));
 }
 
+/**
+ * Native nesting (the `modern` targets keep it) is flattened first. The purge judges whole
+ * selectors, and a nested child only has `&` for its parent, so judging it in place could
+ * keep or drop the wrong rules. Flattening needs no targets: only nesting is rewritten.
+ */
+function flatten(body: string): string {
+  const result = transform({
+    filename: "pico-layer.css",
+    code: Buffer.from(body),
+    minify: false,
+    include: Features.Nesting,
+  });
+  return new TextDecoder().decode(result.code);
+}
+
 /** Purges one block body with the index. Returns the new body and how many rules went. */
 function purgeBody(
   body: string,
@@ -110,10 +125,12 @@ function purgeBody(
   const minified = !/\n\s/.test(body);
   const result = transform({
     filename: "pico-layer.css",
-    code: Buffer.from(body),
+    code: Buffer.from(flatten(body)),
     minify: minified,
     targets,
-    include: Features.Nesting,
+    // The file is already lowered, so lowering again would repeat the prefixed declarations and
+    // the light-dark() toggles it carries.
+    exclude: Features.VendorPrefixes | Features.LightDark,
     visitor: {
       Rule: {
         style(rule: { value: { selectors: Selector[] } }) {

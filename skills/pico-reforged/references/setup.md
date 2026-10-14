@@ -7,7 +7,7 @@ Four ways to get Pico Reforged into a page. The full guide with every framework 
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0-alpha.0/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css"
 />
 ```
 
@@ -33,7 +33,7 @@ Load an extras file after the core file:
 ## npm with Vite
 
 ```shell
-npm install @rusticstack/pico-reforged@next
+npm install @rusticstack/pico-reforged
 ```
 
 ```ts

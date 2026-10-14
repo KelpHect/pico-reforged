@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import browserslist from "browserslist";
 import { bundleAsync, browserslistToTargets, Features, transform } from "lightningcss";
 import type { Targets } from "lightningcss";
-import { ROOT, SRC } from "./config.ts";
+import { MODERN_TARGETS, ROOT, SRC } from "./config.ts";
 import type { ResolvedOptions } from "./config.ts";
 import { filterClassless } from "./classless.ts";
 import {
@@ -16,6 +16,7 @@ import {
 import { purgeSelectors } from "./purge.ts";
 import type { ContentIndex } from "./purge.ts";
 import { orphanCandidates, orphanVisitor } from "./module-tokens.ts";
+import { factorSelectors } from "./factor.ts";
 import { hasEmptyList } from "./selector.ts";
 import type { Selector } from "./selector.ts";
 import { parseScope, scopeSelector } from "./scope.ts";
@@ -26,7 +27,7 @@ const norm = (path: string): string => path.replaceAll("\\", "/");
 const decode = (bytes: Uint8Array | void): string => (bytes ? new TextDecoder().decode(bytes) : "");
 
 export function toTargets(query: string | string[]): Targets {
-  return browserslistToTargets(browserslist(query));
+  return browserslistToTargets(browserslist(query === "modern" ? MODERN_TARGETS : query));
 }
 
 /** Where a module goes when the entry does not import it. */
@@ -74,9 +75,38 @@ function entryText(source: string, options: ResolvedOptions): string {
 
 export type Bundled = { css: string; map?: string; excluded: string[] };
 
+const nativeNesting = new Map<string, boolean>();
+
+/** True when the targets keep native nesting, which is what Lightning CSS does for them. */
+function keepsNesting(query: string | string[]): boolean {
+  const key = JSON.stringify(query);
+  let kept = nativeNesting.get(key);
+  if (kept === undefined) {
+    const probe = transform({
+      filename: "probe.css",
+      code: Buffer.from("a{b{color:red}}"),
+      targets: toTargets(query),
+    });
+    kept = decode(probe.code).includes("&");
+    nativeNesting.set(key, kept);
+  }
+  return kept;
+}
+
 /**
- * Step 1: bundle the entry with the module switches and the theme applied at import time,
- * and lower nesting so the selector passes see complete selectors.
+ * Scope and purge judge a selector as a whole (the scope skips selectors that start with a
+ * global such as :where(input), purge reads every compound), so they need nesting resolved
+ * first. So do builds for targets that lack native nesting: the selector passes then see the
+ * same flat selectors whatever the targets. The classless filter works on a selector at a time
+ * and gives the same result nested, so a build for targets with native nesting (the modern
+ * preset) that needs neither keeps its nesting.
+ */
+const needsFlatSelectors = (options: ResolvedOptions): boolean =>
+  options.scope !== "" || options.purge !== false || !keepsNesting(options.targets);
+
+/**
+ * Step 1: bundle the entry with the module switches and the theme applied at import time.
+ * Nesting is lowered here when the selector passes need complete selectors.
  */
 export async function bundleSource(options: ResolvedOptions): Promise<Bundled> {
   const entryName =
@@ -93,8 +123,7 @@ export async function bundleSource(options: ResolvedOptions): Promise<Bundled> {
     minify: false,
     sourceMap: options.sourceMap,
     projectRoot: ROOT,
-    targets: toTargets(options.targets),
-    include: Features.Nesting,
+    ...(needsFlatSelectors(options) ? { include: Features.Nesting } : {}),
     resolver: {
       resolve(specifier, from) {
         return norm(resolve(dirname(from), specifier));
@@ -126,15 +155,22 @@ export type PassCounts = { rules: number; removedByClassless: number; removedByP
 
 type Stage = { css: string; map?: string };
 
-function runPass(stage: Stage, options: ResolvedOptions, visitor: object, minify: boolean): Stage {
+function runPass(
+  stage: Stage,
+  options: ResolvedOptions,
+  visitor: object,
+  minify: boolean,
+  { exclude = 0, lower = false } = {},
+): Stage {
   const result = transform({
     filename: "pico.css",
     code: Buffer.from(stage.css),
     minify,
+    exclude,
     sourceMap: options.sourceMap,
     projectRoot: ROOT,
     ...(stage.map ? { inputSourceMap: stage.map } : {}),
-    targets: toTargets(options.targets),
+    ...(lower ? { targets: toTargets(options.targets) } : {}),
     visitor,
   });
   const next: Stage = { css: decode(result.code) };
@@ -182,12 +218,46 @@ function dropOrphanTokens(stage: Stage, options: ResolvedOptions, excluded: stri
   return current;
 }
 
-/** Final lowering and minify, its own pass so it also covers what the visitor passes changed. */
+/**
+ * Lowering for the targets runs once, here, after every other pass. Each pass that lowered would
+ * add its own copy of the declarations it generates (the prefixed ones, the light-dark toggles).
+ */
+export function lowerStage(
+  stage: { css: string; map?: string },
+  options: ResolvedOptions,
+): { css: string; map?: string } {
+  return runPass(stage, options, {}, false, { lower: true });
+}
+
+/**
+ * Final lowering and minify, its own pass so it also covers what the visitor passes changed.
+ * A second pass then factors the selector lists that nesting lowering wrote out in full. It
+ * needs its own pass because the visitor runs before lowering, so in the first pass it would
+ * only see the nested rules.
+ */
 export function minifyStage(
   stage: { css: string; map?: string },
   options: ResolvedOptions,
 ): { css: string; map?: string } {
-  return runPass(stage, options, {}, true);
+  const lowered = runPass(stage, options, {}, true, { lower: true });
+  return runPass(
+    lowered,
+    options,
+    {
+      Rule: {
+        style(rule: { value: { selectors: Selector[] } }) {
+          const factored = factorSelectors(rule.value.selectors);
+          if (factored === rule.value.selectors) return;
+          rule.value.selectors = factored;
+          return clean(rule);
+        },
+      },
+    },
+    true,
+    // The rules the visitor hands back are already lowered. Lowering them again would repeat
+    // the generated declarations.
+    { lower: true, exclude: Features.VendorPrefixes | Features.LightDark },
+  );
 }
 
 /**

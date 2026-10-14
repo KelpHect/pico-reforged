@@ -13,7 +13,7 @@ Change the package and the path:
 <!-- after -->
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0-alpha.0/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css"
 />
 ```
 
@@ -31,7 +31,7 @@ The build only adds names: the `popover`, `popover=hint` and `role=tooltip` attr
 
 `pnpm test:visual` renders the same fixtures with the v2.1.1 CSS and the new CSS in Chromium and diffs the screenshots. At 1280px and 375px, light and dark, the kitchen sink and its classless version differ by 0.001% to 0.003% of the pixels, the colors, modal and fluid classless fixtures by 0.000%, and the scoped `.pico` fixture by about 0.005%. Page heights are identical. What remains is rounding in the colors.
 
-- Colors. The hex palette was converted once to OKLCH and rounded to four decimals, so a computed color can differ slightly from v2.1.1. Semantic tokens that v2.1.1 built with Sass `mix()` were converted from the computed result.
+- Colors. The hex palette was converted once to OKLCH. Each value is written as the shortest literal that still converts back to the same 8-bit sRGB color (every channel within 0.4 of an 8-bit step), usually two or three decimals for lightness and chroma and none or one for the hue. Palette colors keep their v2.1.1 hex value, and the extra digits would only be below what an 8-bit display can show. Semantic tokens that v2.1.1 built with Sass `mix()` were converted from the computed result. Browsers composite some colors (alpha, interpolation) in OKLCH, so a computed color can still differ slightly from v2.1.1.
 - Muted text in dark mode. `--pico-muted-color` in the dark scheme moved one palette step lighter (zinc 450 to zinc 400) so muted text on the dark background passes WCAG AA (4.5:1). v2.1.1 fell just short. Light mode is unchanged.
 - Right to left. With `dir="rtl"` the v2.1.1 CSS used physical properties in a few places, and they now use logical ones. In a kitchen sink page set to `dir="rtl"` the differences are the nav spacing, the gap before the file input button, the date input icon (it moves to the inline end) and the rounded corners of `role="group"` (the first and last control round on the correct sides). The first three are visible fixes, not regressions. Pages in `ltr` are unaffected.
 - Modal. `.modal-is-open`, `.modal-is-opening` and `.modal-is-closing` still work as before. A `<dialog>` opened with `showModal()` and no classes now animates in and out on its own, using `@starting-style` and `transition-behavior: allow-discrete`. Where those are not supported it opens without animation.

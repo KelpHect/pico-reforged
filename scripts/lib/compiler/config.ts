@@ -30,6 +30,14 @@ export const SRC = `${ROOT}src`;
 export const DEFAULT_TARGETS =
   "chrome >= 111, edge >= 111, firefox >= 128, safari >= 16.4, ios_saf >= 16.4";
 
+/**
+ * Optional higher floor, Baseline 2024 (Chrome and Edge 123, Firefox 128, Safari and iOS 17.5).
+ * Native nesting, light-dark() and OKLCH stay in the output instead of being lowered, which
+ * makes the files smaller. Select it with `targets: "modern"` or `--targets modern`.
+ */
+export const MODERN_TARGETS =
+  "chrome >= 123, edge >= 123, firefox >= 128, safari >= 17.5, ios_saf >= 17.5";
+
 export const THEMES: string[] = Object.keys(themes);
 export const DEFAULT_THEME = "azure";
 

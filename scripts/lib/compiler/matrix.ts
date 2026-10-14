@@ -29,8 +29,11 @@ export const MATRIX_VARIANTS: Variant[] = [
   },
 ];
 
-export function banner(): string {
+export function banner(minified = false): string {
   const { version } = packageInfo();
+  if (minified) {
+    return `/*! Pico Reforged v${version} | MIT | Copyright 2026 rusticstack | Copyright 2019-2024 Lucas Larroche and the Pico CSS authors */`;
+  }
   return `/*!
  * Pico Reforged v${version} (https://pico.rusticstack.com)
  * Copyright 2019-2024 Lucas Larroche and the Pico CSS authors
@@ -81,6 +84,7 @@ export async function buildMatrix(
 ): Promise<{ name: string; stats: CompileStats }[]> {
   await mkdir(outDir, { recursive: true });
   const header = banner();
+  const minHeader = banner(true);
   const written: { name: string; stats: CompileStats }[] = [];
 
   const jobs: { stem: string; options: CompileOptions }[] = [];
@@ -102,7 +106,7 @@ export async function buildMatrix(
   await mkdir(join(outDir, "extras"), { recursive: true });
 
   for (const job of jobs) {
-    const { plain, min } = await compileBoth({ ...job.options, banner: header });
+    const { plain, min } = await compileBoth({ ...job.options, banner: header }, minHeader);
     await writeRetry(join(outDir, `${job.stem}.css`), plain.css);
     await writeRetry(join(outDir, `${job.stem}.min.css`), min.css);
     written.push(

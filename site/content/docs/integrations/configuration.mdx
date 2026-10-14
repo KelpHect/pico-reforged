@@ -40,7 +40,7 @@ Configuration sits in the stylesheet that imports Pico Reforged, next to the imp
     { name: "important", type: "true | false", description: "Keep or drop the !important declarations." },
     { name: "scope", type: "selector | none", default: "none", description: "Prefix every rule with a selector such as .pico." },
     { name: "exclude", type: "modules", description: "Modules to leave out, for example components/modal forms/input-range." },
-    { name: "targets", type: "browserslist query", description: "Browsers to compile for. The default is the browser floor." },
+    { name: "targets", type: "browserslist query", description: "Browsers to compile for. The default is the browser floor. `modern` selects Chrome and Edge 123, Firefox 128 and Safari 17.5." },
     { name: "minify", type: "true | false", description: "Minify the output. Vite and Next.js minify CSS themselves, so leave it off there." },
     { name: "purge", type: "safe | aggressive | off", default: "safe", description: "How unused rules are removed. auto still works as an alias for safe." },
     { name: "safelist", type: "names", description: "Names to always keep: classes, ids, tags, attribute names, name=value or /regex/." },

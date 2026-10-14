@@ -1,6 +1,6 @@
 {
   "name": "@rusticstack/pico-reforged",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0",
   "description": "Pico CSS rewritten in plain modern CSS: minimal styles for semantic HTML, with a small compiler for themes, scoping and purging",
   "author": "rusticstack",
   "license": "MIT",
@@ -68,8 +68,7 @@
     "./package.json": "./package.json"
   },
   "publishConfig": {
-    "access": "public",
-    "tag": "next"
+    "access": "public"
   },
   "engines": {
     "node": ">=22.18"

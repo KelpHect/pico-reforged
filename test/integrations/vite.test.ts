@@ -57,7 +57,7 @@ test("vite build: Pico is compiled and purged against the project", async () => 
   );
   assert.ok(hasSelector(css, "dialog"), "safe mode keeps unseen tags");
   assert.ok(!hasSelector(css, ".contrast"), "unused rules are gone");
-  assert.match(css, /oklch\(51\.16% \.1145 160\.67\)/, "jade theme");
+  assert.match(css, /oklch\(51.2% .1145 160.7\)/, "jade theme");
 });
 
 test("vite build: the output folder is not scanned", async () => {

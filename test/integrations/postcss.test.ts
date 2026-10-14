@@ -46,7 +46,7 @@ test("production: the import becomes Pico, purged against the project", async ()
   assert.ok(!hasSelector(css, "[data-tooltip"), "unused data hook is gone");
   assert.ok(hasSelector(css, "[role=switch]") || hasSelector(css, '[role="switch"]'));
   // the theme from @pico is the jade one
-  assert.match(css, /--pico-primary-background:\s*oklch\(51\.16% \.1145 160\.67\)/);
+  assert.match(css, /--pico-primary-background:\s*oklch\(51.2% .1145 160.7\)/);
   assert.equal(result.warnings().length, 0, result.warnings().map(String).join("\n"));
 });
 

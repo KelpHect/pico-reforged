@@ -56,7 +56,8 @@ Build options
   --no-responsive-typography
   --no-transitions
   --no-important
-  --targets <query>      browserslist query, default "${DEFAULT_TARGETS}"
+  --targets <query>      browserslist query, default "${DEFAULT_TARGETS}", or "modern" for a
+                         smaller build that keeps native nesting and light-dark()
   --minify
   --source-map
   --out <file>           write to a file instead of stdout

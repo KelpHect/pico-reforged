@@ -5,6 +5,7 @@ export {
   MODULES,
   THEMES,
   DEFAULT_TARGETS,
+  MODERN_TARGETS,
   DEFAULT_THEME,
   findConfigFile,
   loadConfigFile,

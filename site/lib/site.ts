@@ -6,4 +6,4 @@ export const NPM_URL = "https://www.npmjs.com/package/@rusticstack/pico-reforged
 export const PICO_URL = "https://picocss.com";
 export const PACKAGE_NAME = "@rusticstack/pico-reforged";
 export const CDN_URL =
-  "https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@next/css/pico.min.css";
+  "https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/pico.min.css";
