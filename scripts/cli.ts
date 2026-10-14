@@ -15,6 +15,8 @@ import {
   MODULES,
   THEMES,
 } from "./lib/compiler/index.ts";
+import { purgeOutput } from "./lib/integrations/purge-output.ts";
+import type { PurgeOutputOptions } from "./lib/integrations/purge-output.ts";
 import type { CompileOptions, EntryName, ThemeOption } from "./lib/compiler/index.ts";
 
 const HELP = `pico-reforged
@@ -22,9 +24,19 @@ const HELP = `pico-reforged
 Usage
   pico-reforged build [options]    compile one stylesheet
   pico-reforged matrix [outDir]    write the full file set (default outDir: css)
+  pico-reforged purge <outDir>     remove unused Pico rules from a built site
   pico-reforged themes             list the built-in themes
   pico-reforged modules            list the modules that can be excluded
   pico-reforged extras             list the opt-in extras
+
+Purge options (pico-reforged purge <outDir>)
+  --css <glob>           stylesheets to rewrite, relative to outDir (default **/*.css, repeatable)
+  --content <glob>       more files to read names from, relative to the working directory (repeatable)
+  --safelist <name>      keep this class, id, tag or attribute (repeatable). /regex/ is accepted
+  --keep-types           keep rules that only lack tags in the content (CMS or Markdown output)
+  --dry-run              report and write nothing
+
+Only rules inside @layer pico.* change. Other CSS in the files is left as it is.
 
 Build options
   --config <file>        pico.config.json, .ts or .mjs (found in the working directory if omitted)
@@ -139,6 +151,49 @@ async function build(argv: string[]): Promise<void> {
   }
 }
 
+async function purgeSite(argv: string[]): Promise<void> {
+  const { values, positionals } = parseArgs({
+    args: argv,
+    allowPositionals: true,
+    options: {
+      css: { type: "string", multiple: true },
+      content: { type: "string", multiple: true },
+      safelist: { type: "string", multiple: true },
+      "keep-types": { type: "boolean" },
+      "dry-run": { type: "boolean" },
+      targets: { type: "string" },
+    },
+  });
+  const dir = positionals[0];
+  if (!dir) {
+    console.error("purge needs the folder of the built site: pico-reforged purge <outDir>");
+    process.exitCode = 2;
+    return;
+  }
+  const safelist = (values.safelist ?? []).map((entry) => {
+    const m = /^\/(.+)\/([a-z]*)$/.exec(entry);
+    return m ? new RegExp(m[1] as string, m[2]) : entry;
+  });
+  const options: PurgeOutputOptions = { dir, safelist };
+  if (values.css) options.css = values.css;
+  if (values.content) options.content = values.content;
+  if (values["keep-types"]) options.keepTypes = true;
+  if (values["dry-run"]) options.dryRun = true;
+  if (values.targets) options.targets = values.targets;
+  const result = await purgeOutput(options);
+  for (const file of result.files) {
+    console.error(
+      file.skipped
+        ? `${file.file}: no @layer pico.* block, left alone`
+        : `${file.file}: ${file.removed} of ${file.rules} rules removed (${file.before} to ${file.after} bytes)`,
+    );
+  }
+  for (const note of result.notes) console.error(`note: ${note}`);
+  console.error(
+    `scanned ${result.scanned} files${options.dryRun ? " (dry run, nothing written)" : ""}`,
+  );
+}
+
 async function matrix(argv: string[]): Promise<void> {
   const outDir = resolve(argv[0] ?? "css");
   const started = performance.now();
@@ -156,6 +211,8 @@ async function main(): Promise<void> {
       return build(rest);
     case "matrix":
       return matrix(rest);
+    case "purge":
+      return purgeSite(rest);
     case "themes":
       console.log(THEMES.join("\n"));
       return;

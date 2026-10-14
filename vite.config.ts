@@ -90,8 +90,14 @@ export default defineConfig({
     ],
   },
   pack: {
-    // dist/cli.js is the `pico-reforged` binary, dist/compiler.js the library entry.
-    entry: { cli: "scripts/cli.ts", compiler: "scripts/lib/compiler/index.ts" },
+    // dist/cli.js is the `pico-reforged` binary, dist/compiler.js the library entry, dist/vite.js
+    // and dist/postcss.js the bundler integrations.
+    entry: {
+      cli: "scripts/cli.ts",
+      compiler: "scripts/lib/compiler/index.ts",
+      vite: "scripts/integrations/vite.ts",
+      postcss: "scripts/integrations/postcss.ts",
+    },
     format: "esm",
     platform: "node",
     target: "node22.18",

@@ -103,6 +103,19 @@ Then, import Pico into your SCSS file with [@use](https://sass-lang.com/document
 @use "pico";
 ```
 
+### Use it with a bundler
+
+`@rusticstack/pico-reforged` ships a Vite plugin, a PostCSS plugin (Next.js) and a `purge` command for static output. Import it once and the production CSS only holds what your app uses:
+
+```css
+@import "@rusticstack/pico-reforged";
+@pico {
+  theme: jade;
+}
+```
+
+Setup for Vite, Astro, Next.js, SvelteKit, Nuxt and static generators is in [docs/integrations.md](docs/integrations.md).
+
 ### Install with Composer
 
 ```shell

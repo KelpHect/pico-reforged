@@ -4,4 +4,152 @@
  * Copyright 2026 rusticstack
  * Licensed under MIT
  */
-@layer pico.tokens, pico.theme, pico.core, pico.extras, pico.utilities;
+@layer pico.tokens, pico.theme, pico.core;
+
+@layer pico.extras {
+  :root, :host, [data-theme] {
+    --pico-toast-accent: var(--pico-primary-background);
+  }
+
+  :root, :host {
+    --pico-toast-inset: var(--pico-spacing);
+    --pico-toast-gap: calc(var(--pico-spacing) * .5);
+    --pico-toast-width: min(22rem, 100% - 2 * var(--pico-toast-inset));
+  }
+
+  [popover][role="status"] {
+    z-index: 1000;
+    gap: var(--pico-toast-gap);
+    width: var(--pico-toast-width);
+    box-shadow: none;
+    color: inherit;
+    opacity: 1;
+    pointer-events: none;
+    inset: auto;
+    background: none;
+    border: 0;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    transition: none;
+    display: flex;
+    position: fixed;
+    inset-block-end: max(var(--pico-toast-inset), env(safe-area-inset-bottom, 0px));
+    inset-inline-end: var(--pico-toast-inset);
+    overflow: visible;
+    transform: none;
+  }
+
+  [popover][role="status"][data-placement^="top"] {
+    inset-block: max(var(--pico-toast-inset), env(safe-area-inset-top, 0px)) auto;
+  }
+
+  [popover][role="status"][data-placement$="start"] {
+    inset-inline: var(--pico-toast-inset) auto;
+  }
+
+  [popover][role="status"][data-placement$="center"] {
+    margin-inline: auto;
+    inset-inline: 0;
+  }
+
+  [popover][role="status"] > article {
+    align-items: flex-start;
+    gap: calc(var(--pico-spacing) * .5);
+    padding: calc(var(--pico-spacing) * .75) var(--pico-spacing);
+    border: var(--pico-border-width) solid var(--pico-card-border-color);
+    border-inline-start: .25rem solid var(--pico-toast-accent);
+    border-radius: var(--pico-border-radius);
+    background-color: var(--pico-card-background-color);
+    box-shadow: var(--pico-card-box-shadow);
+    color: var(--pico-color);
+    pointer-events: auto;
+    margin: 0;
+    font-size: .875rem;
+    display: flex;
+  }
+
+  [popover][role="status"] > article[role="alert"] {
+    --pico-toast-accent: var(--pico-form-element-invalid-border-color);
+  }
+
+  [popover][role="status"] > article > p {
+    overflow-wrap: anywhere;
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+  }
+
+  [popover][role="status"] > article > p > strong:first-child {
+    display: block;
+  }
+
+  [popover][role="status"] > article > :is(button, [role="button"]) {
+    width: auto;
+    padding: 0 calc(var(--pico-spacing) * .25);
+    border-radius: var(--pico-border-radius);
+    box-shadow: none;
+    color: var(--pico-primary);
+    font-size: inherit;
+    font-weight: 600;
+    line-height: var(--pico-line-height);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    flex: none;
+    margin: 0;
+    text-decoration: none;
+  }
+
+  [popover][role="status"] > article > :is(button, [role="button"]):hover {
+    color: var(--pico-primary-hover);
+    text-decoration: underline;
+    -webkit-text-decoration-color: var(--pico-primary-underline);
+    -webkit-text-decoration-color: var(--pico-primary-underline);
+    text-decoration-color: var(--pico-primary-underline);
+  }
+
+  [popover][role="status"] > article > :is(button, [role="button"]):focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: 0;
+  }
+
+  [popover][role="status"] > article > :is(button, [role="button"])[aria-label] {
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    color: var(--pico-muted-color);
+    font-size: 1.25rem;
+    font-weight: var(--pico-font-weight);
+    place-items: center;
+    margin-block: -.125rem;
+    padding: 0;
+    line-height: 1;
+    display: grid;
+  }
+
+  [popover][role="status"] > article > :is(button, [role="button"])[aria-label]:hover {
+    color: var(--pico-color);
+    text-decoration: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [popover][role="status"] > article {
+      transition: opacity var(--pico-transition),
+      scale var(--pico-transition);
+    }
+
+    [popover][role="status"] > article[inert] {
+      opacity: 0;
+      scale: .96;
+    }
+
+    @starting-style {
+      [popover][role="status"] > article {
+        opacity: 0;
+        scale: .96;
+      }
+    }
+  }
+}
+
+@layer pico.utilities;

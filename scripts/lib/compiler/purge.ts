@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, statSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { glob } from "node:fs/promises";
@@ -7,7 +8,7 @@ import type { Selector, SelectorComponent } from "./selector.ts";
 import type { PurgeOptions } from "./types.ts";
 
 /** Marker for an attribute whose values are not known (set from script, or a boolean attribute). */
-const ANY = Symbol("any");
+export const ANY = Symbol("any");
 
 export type ContentIndex = {
   tags: Set<string>;
@@ -19,16 +20,46 @@ export type ContentIndex = {
   missed: string[];
   /** Number of files scanned, filled by buildIndex. */
   files: number;
+  /**
+   * true keeps every rule whose type selectors are the only thing missing from the content.
+   * Class, id and attribute parts are still checked. For sites whose HTML comes from a CMS,
+   * a database or Markdown, where the tags in use cannot be read from the sources.
+   */
+  keepTypes?: boolean;
 };
 
 /**
  * Attributes the framework itself reads at runtime: theme switching and text direction.
  * They count as present, with any value, in every scan. "open" is toggled by the browser
- * (a click on summary, showModal()), so it cannot be read from markup.
+ * (a click on summary, showModal()), so it cannot be read from markup. Vue Router, Nuxt, React
+ * Router and TanStack Router set aria-current themselves.
  */
-const ALWAYS_PRESENT_ATTRS = ["data-theme", "dir", "open"];
+const ALWAYS_PRESENT_ATTRS = [
+  "data-theme",
+  "dir",
+  "open",
+  // routers and UI libraries write these on the active, selected or disabled item
+  "aria-current",
+  "aria-selected",
+  "aria-disabled",
+];
 /** Attribute name prefixes that bind the attribute to an expression (Vue, Alpine, Angular). */
 const BOUND_PREFIX = /^(?:v-bind:|x-bind:|:)/;
+/** Angular property bindings: [type]="kind", [attr.role]="r". */
+const ANGULAR_BINDING = /^\[(?:attr\.)?([\w-]+)\]$/;
+/**
+ * Known HTML tag names. A bare identifier that is one of them counts as a tag, which covers
+ * template languages without angle brackets (Pug, Slim, Haml), helper builders (van.tags) and
+ * names inside nested quotes (:is="'dialog'").
+ */
+const HTML_TAGS = new Set(
+  `a abbr address article aside audio b blockquote body br button canvas caption cite code col
+   colgroup data datalist dd del details dfn dialog div dl dt em fieldset figcaption figure
+   footer form h1 h2 h3 h4 h5 h6 head header hgroup hr html i iframe img input ins kbd label
+   legend li main mark menu meter nav noscript object ol optgroup option output p picture pre
+   progress q s samp search section select slot small source span strong sub summary sup table
+   tbody td template textarea tfoot th thead time tr u ul var video`.split(/\s+/),
+);
 /** html and body always exist. */
 /** Identifier-like tokens, with hyphens for class names. */
 const IDENT = /[A-Za-z_][\w-]*/g;
@@ -49,6 +80,32 @@ const CASE_INSENSITIVE_ATTRS = new Set([
   "multiple",
 ]);
 const ALWAYS_PRESENT_TAGS = ["html", "body", "head"];
+/**
+ * Properties that reflect to an attribute: btn.disabled = true sets [disabled]. A script sets
+ * them without ever writing the attribute, so the name alone counts as a use, with any value.
+ */
+const REFLECTED_PROPS = new Map(
+  [
+    "disabled",
+    "readOnly",
+    "hidden",
+    "popover",
+    "required",
+    "checked",
+    "selected",
+    "multiple",
+    "inert",
+    "open",
+    "indeterminate",
+    "autofocus",
+  ].map((name) => [name, name.toLowerCase()]),
+);
+/** `type: "date"`, `.type = "range"`, `"role": "switch"`: a name assigned a quoted value. */
+const ASSIGNED_VALUE =
+  /(?<![\w-])["']?([A-Za-z_][\w-]*)["']?\s*(?::|=(?!=))\s*(["'`])([^"'`\\\n]{1,80})\2/g;
+
+/** camelCase to kebab-case: ariaBusy gives aria-busy. */
+const kebab = (name: string): string => name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
 
 export function emptyIndex(safelist: (string | RegExp)[] = []): ContentIndex {
   const index: ContentIndex = {
@@ -82,14 +139,46 @@ function addAttr(index: ContentIndex, name: string, value: string | typeof ANY):
  * classList.add("modal-is-open") or "aria-busy" in setAttribute("aria-busy", "true").
  */
 export function scanText(index: ContentIndex, text: string): void {
+  scanPlain(index, text);
+  // Markup inside JSON or a JS string has escaped quotes (role=\"button\"), which hides the
+  // attribute values. The unescaped copy is read as well.
+  if (ESCAPED.test(text)) {
+    let copy = text;
+    for (let pass = 0; pass < 2 && ESCAPED.test(copy); pass++) {
+      copy = unescape(copy);
+      scanPlain(index, copy);
+    }
+  }
+}
+
+/** Backslash-escaped quotes and slashes, < style escapes and HTML entities for markup. */
+const ESCAPED = /\\["'/]|\\u00(?:3c|3e|22|27|26)|&(?:lt|gt|quot|#39);/i;
+
+function unescape(text: string): string {
+  return text
+    .replace(/\\u00(3c|3e|22|27|26)/gi, (_, hex: string) =>
+      String.fromCharCode(Number.parseInt(hex, 16)),
+    )
+    .replace(/\\(["'/])/g, "$1")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'");
+}
+
+function scanPlain(index: ContentIndex, text: string): void {
   for (let at = text.indexOf("<"); at !== -1; at = text.indexOf("<", at + 1)) {
     const tag = readTag(text, at);
     if (!tag) continue;
     index.tags.add(tag.name.toLowerCase());
     for (const attr of tag.attrs) {
       // Vue, Alpine and Angular bind an attribute to an expression: :aria-busy, v-bind:aria-busy
-      const bound = BOUND_PREFIX.exec(attr.name);
-      const name = (bound ? attr.name.slice(bound[0].length) : attr.name).toLowerCase();
+      const angular = ANGULAR_BINDING.exec(attr.name);
+      const prefix = angular ? undefined : BOUND_PREFIX.exec(attr.name);
+      const bound = !!angular || !!prefix;
+      const name = (
+        angular ? (angular[1] as string) : prefix ? attr.name.slice(prefix[0].length) : attr.name
+      ).toLowerCase();
       if (!name || name.startsWith("@") || name.startsWith("v-on:")) continue;
       if (attr.value === undefined || attr.dynamic || bound) {
         addAttr(index, name, ANY);
@@ -122,7 +211,29 @@ export function scanText(index: ContentIndex, text: string): void {
   // apostrophe in prose pairs up wrongly. Wide on purpose, a false keep only costs bytes.
   for (const token of text.match(IDENT) ?? []) {
     index.classes.add(token);
+    if (HTML_TAGS.has(token)) index.tags.add(token);
     if (/^(aria|data)-[\w-]+$/.test(token)) addAttr(index, token, ANY);
+    // Script properties: el.ariaBusy = "true" sets aria-busy
+    if (/^aria[A-Z]/.test(token)) addAttr(index, kebab(token), ANY);
+  }
+  for (const token of text.match(IDENT) ?? []) {
+    const reflected = REFLECTED_PROPS.get(token);
+    if (reflected) addAttr(index, reflected, ANY);
+  }
+  for (const m of text.matchAll(ASSIGNED_VALUE)) {
+    const value = (m[3] as string).trim();
+    if (value && !/[{}$]/.test(value)) addAttr(index, m[1] as string, value);
+  }
+  // el.type = kind, el.setAttribute("role", r): the value is not a literal
+  for (const m of text.matchAll(/\.(type|role|dir|method|rel|popover)\s*=(?!=)\s*[^\s"'`=]/g)) {
+    addAttr(index, m[1] as string, ANY);
+  }
+  for (const m of text.matchAll(/setAttribute\(\s*["'`]([\w-]+)["'`]\s*,\s*[^\s"'`]/g)) {
+    addAttr(index, m[1] as string, ANY);
+  }
+  // el.dataset.tooltip and el.dataset["tooltip"] set data-tooltip
+  for (const m of text.matchAll(/\bdataset\s*(?:\.|\[\s*["'`])([A-Za-z_$][\w$]*)/g)) {
+    addAttr(index, `data-${kebab(m[1] as string)}`, ANY);
   }
   // Template and JSX tags that the markup pattern misses are covered by the string scan above
   // and by this unquoted class attribute form.
@@ -130,11 +241,56 @@ export function scanText(index: ContentIndex, text: string): void {
     index.classes.add(m[1] as string);
 }
 
+/** Adds everything `from` knows to `into`. Both keep working afterwards. */
+export function mergeIndex(into: ContentIndex, from: ContentIndex): void {
+  for (const tag of from.tags) into.tags.add(tag);
+  for (const name of from.classes) into.classes.add(name);
+  for (const id of from.ids) into.ids.add(id);
+  for (const [name, values] of from.attrs) {
+    if (values === ANY) into.attrs.set(name, ANY);
+    else for (const value of values) addAttr(into, name, value);
+  }
+  into.files += from.files;
+}
+
+/** A short stable hash of what the index can answer, for cache keys. */
+export function indexFingerprint(index: ContentIndex): string {
+  const hash = createHash("sha1");
+  // Tokens never hold whitespace, so a newline keeps neighbours apart.
+  const feed = (label: string, values: Iterable<string>): void => {
+    hash.update(`\n#${label}\n`);
+    for (const value of [...values].toSorted()) hash.update(`${value}\n`);
+  };
+  feed("tags", index.tags);
+  feed("classes", index.classes);
+  feed("ids", index.ids);
+  feed(
+    "attrs",
+    [...index.attrs].map(([name, values]) =>
+      values === ANY ? `${name}=*` : `${name}=${[...values].toSorted().join(",")}`,
+    ),
+  );
+  hash.update(index.keepTypes ? "keepTypes" : "");
+  return hash.digest("hex");
+}
+
 export async function buildIndex(options: PurgeOptions): Promise<ContentIndex> {
+  if (options.index) {
+    // A ready-made index (the integrations scan once and reuse it). Safelist and flags are
+    // set on a copy so the shared one stays untouched.
+    const copy: ContentIndex = {
+      ...options.index,
+      safelist: [...options.index.safelist, ...(options.safelist ?? [])],
+      missed: [],
+    };
+    if (options.keepTypes) copy.keepTypes = true;
+    return copy;
+  }
   if (!Array.isArray(options.content)) {
-    throw new Error("purge.content must be an array of file paths or globs");
+    throw new Error("purge needs content globs or an index");
   }
   const index = emptyIndex(options.safelist ?? []);
+  if (options.keepTypes) index.keepTypes = true;
   const files = new Set<string>();
   for (const pattern of options.content) {
     let matched = 0;
@@ -208,6 +364,7 @@ function compoundMayMatch(index: ContentIndex, compound: SelectorComponent[]): b
   for (const c of compound) {
     switch (c.type) {
       case "type":
+        if (index.keepTypes) break;
         if (!index.tags.has(c.name.toLowerCase()) && !safelisted(index, c.name)) return false;
         break;
       case "class":

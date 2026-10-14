@@ -1,10 +1,16 @@
+import type { ContentIndex } from "./purge.ts";
+
 export type EntryName = "pico" | "classless" | "colors" | "extras";
 
 export type ThemeOption = string | { color: string } | { hue: number; chroma: number };
 
 export type PurgeOptions = {
-  /** Globs of files to scan (HTML, templates, JS). */
-  content: string[];
+  /** Globs of files to scan (HTML, templates, JS). Not needed when `index` is given. */
+  content?: string[];
+  /** A ready-made content index, for callers that scan on their own (the integrations). */
+  index?: ContentIndex;
+  /** Keep rules that only lack type selectors in the content. See ContentIndex.keepTypes. */
+  keepTypes?: boolean;
   /** Names that are always kept: classes, ids, tags, attribute names or "name=value". */
   safelist?: (string | RegExp)[];
 };

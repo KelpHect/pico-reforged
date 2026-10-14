@@ -1,3 +1,4 @@
+autoInstallPeers: false
 minimumReleaseAgeExclude:
   - "@voidzero-dev/vite-plus-core@1.2.0"
   - "@voidzero-dev/vite-plus-darwin-arm64@1.2.0"

@@ -56,6 +56,21 @@ export function matrixNames(): string[] {
   return names;
 }
 
+/** On Windows a scanner or an editor can hold a file for a moment, so a write is tried again. */
+async function writeRetry(file: string, data: string): Promise<void> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      await writeFile(file, data);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException).code;
+      if (attempt >= 4 || !["UNKNOWN", "EBUSY", "EPERM", "EMFILE"].includes(code ?? ""))
+        throw error;
+      await new Promise((done) => setTimeout(done, 100 * (attempt + 1)));
+    }
+  }
+}
+
 /**
  * Writes the whole v2.1.1 file set into outDir, plus the opt-in extras: pico.extras(.min).css
  * with all of them and extras/<name>(.min).css for each one. Extras files are layered and carry
@@ -88,8 +103,8 @@ export async function buildMatrix(
 
   for (const job of jobs) {
     const { plain, min } = await compileBoth({ ...job.options, banner: header });
-    await writeFile(join(outDir, `${job.stem}.css`), plain.css);
-    await writeFile(join(outDir, `${job.stem}.min.css`), min.css);
+    await writeRetry(join(outDir, `${job.stem}.css`), plain.css);
+    await writeRetry(join(outDir, `${job.stem}.min.css`), min.css);
     written.push(
       { name: `${job.stem}.css`, stats: plain.stats },
       { name: `${job.stem}.min.css`, stats: min.stats },

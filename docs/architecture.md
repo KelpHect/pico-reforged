@@ -31,6 +31,8 @@ scripts/
   dev-build.ts           quick azure build into dist-dev/, used by `pnpm test:api`, `pnpm test:visual` and `pnpm dev`
   lib/compiler/          the compiler: config, bundle, transforms, module-tokens, classless, scope, purge, theme, matrix, report
   data/                  palette.json, themes.ts, scheme.ts (the inputs to generation)
+  lib/integrations/      root detector, @pico config, project scanner, Engine, post-build purge (see Integrations)
+  integrations/          the Vite and PostCSS plugins
   generate.ts            writes src/tokens/palette.css, scheme.css, src/themes/*.css, src/colors/*.css
 vite.config.ts          Vite+ config: test, lint, fmt and pack in one file
 css/                     build output, same file names as v2.1.1 so CDN paths keep working
@@ -220,6 +222,74 @@ How the pieces behave where the plan left room:
 - The matrix writes the same names as v2.1.1, which has no plain `pico.classless.conditional.css` and no plain `pico.fluid.classless.conditional.css`, and no `pico.azure.css` (azure is the plain file).
 - `pnpm pack` and `npm publish` ship `dist/`, built by `vp pack` (tsdown): `dist/cli.js` (the `pico-reforged` binary), `dist/compiler.js` and `dist/compiler.d.ts` (the `./compiler` export) and one shared chunk. Node does not strip types inside `node_modules`, so the packed files are plain JavaScript and the CLI runs on Node 22.18+ and 24 with `--no-experimental-strip-types`. The compiler reads `src/` at run time, so `src/` is in the package too, and finds the package root by walking up from its own file, so the same code works from `scripts/lib/compiler/` and from `dist/`.
 
+## Integrations
+
+The package works like `@import "tailwindcss"`: a user imports it once and the production CSS holds only what the app uses. Setup per framework is in [integrations.md](integrations.md). This section is the design.
+
+### Parts
+
+```
+scripts/lib/integrations/
+  css-scan.ts       top-level statement scanner for CSS (comments, strings and url() safe)
+  glob.ts           brace expansion, glob to RegExp, .gitignore parser
+  pico-config.ts    the @pico block and the @source rules
+  detect.ts         root detection: which stylesheets import the package, what to cut out
+  scanner.ts        project walk, ignore rules, per-file cache, content index
+  process.ts        Engine: detect, scan, compile, cache, assemble; also the package-file roots
+  purge-output.ts   post-build purge of a built folder (the CLI command)
+scripts/integrations/
+  vite.ts           "@rusticstack/pico-reforged/vite"
+  postcss.ts        "@rusticstack/pico-reforged/postcss"
+```
+
+The two plugins are thin. Both hand the stylesheet text and its path to `Engine.process()` and put the result back.
+
+### Root detector
+
+A root is a stylesheet with a top-level `@import` of the package: `@rusticstack/pico-reforged`, `/classless`, `/colors`, `/extras` or `/extras/<name>`, with a string or `url()` specifier and an optional `layer()`, `supports()` or media suffix. `detect.ts` bails on a plain `includes()` check before it parses anything, so other stylesheets cost nothing. Unknown subpaths and unknown extra names are errors.
+
+The compiled CSS goes after the leading `@charset`, `@import` and layer-order statements of the file, and the Pico imports, `@pico` blocks and `@source` rules are cut out. The other imports of the file stay where they were and the bundler handles them. A file that also imports Tailwind keeps its `@source` rules, since Tailwind reads them.
+
+A script that imports the package gets the pre-built `css/pico*.css` file. Both plugins recognise the package's own `css/` and `src/` stylesheets and treat them as a root with a synthetic `@import` line, so `import "@rusticstack/pico-reforged"` in a JS entry is purged too.
+
+### Configuration syntax
+
+The config lives in the stylesheet, as CSS that stays valid without the plugin. Tailwind v4 puts options after the specifier (`@import "tailwindcss" theme(static)`), but `theme(jade)` is not a valid import condition, so the file would be invalid CSS for every tool that does not run the plugin. Unknown at-rules are valid CSS, so the choice is:
+
+- `@pico { name: value; }` for compiler options. The names are the compiler options in kebab-case (`theme`, `extras`, `classless`, `scope`, `fluid`, `exclude`, `targets`, `minify` and so on) plus `purge: auto | safe | off`, `safelist` and `source`. Values are the CSS form of the option: `extras: tabs badge;`, `scope: none;`, a theme name, a color or a quoted path to a CSS file. Unknown names warn, bad values throw with the list of valid ones.
+- `@source "path-or-glob";`, `@source not "path-or-glob";` and `@source inline("a b {c,d}");` with Tailwind v4's meaning. Paths are relative to the stylesheet. Inline names are added to the safelist, so a name that a script adds at run time keeps every rule that mentions it.
+
+### Scanner
+
+With no `@source`, the scan walks the project folder: the nearest `package.json` folder above the stylesheet, the integration's `root` option or the Vite or PostCSS root, or the folder named by `@pico { source: "..." }`. `source: none` turns the automatic walk off.
+
+- `.gitignore` files are read as the walk meets them, nested ones included. Ancestors are read up to the repository root when a `.git` folder exists. Deeper files win over shallower ones, `!` re-includes, and an ignored folder is not entered.
+- Folder names skipped at any depth: `node_modules`, `.git`, `dist`, `build`, `out`, `coverage`, `.next`, `.astro`, `.svelte-kit`, `.nuxt`, `.output` and a few cache folders. Lock files, style sheets (`css`, `scss`, `sass`, `less`, `styl`, `pcss`), binary extensions, files over 1 MB and files with a NUL byte are skipped. Everything else is read as text. Symlinked folders are skipped, since they loop.
+- `@source` entries are scanned without `.gitignore` and extension rules, and a folder named in the path is entered even when its name is on the skip list, so `@source "node_modules/ui-lib"` works. `@source not` prunes the walk.
+- Each file is parsed once with the purge content extractor (`scanText`). The scanner keeps the parsed entry per path, keyed by size and mtime, and builds a fresh index from the current entries on every scan. Nothing is accumulated: a class that leaves the sources leaves the index on the next scan. The compile cache is keyed by the options and by a hash of the index, so unchanged content reuses the compiled output.
+- Markdown files, and code that writes HTML from a string (`innerHTML`, `dangerouslySetInnerHTML`, `v-html`, `{@html}`, `set:html`, `| safe`, `DOMParser`), add the content tag set (`p`, `a`, `ul`, `table`, `blockquote`, `code`, headings, sectioning tags and so on) to the index, because those tags exist at run time without being in the sources. `purge: safe` goes further and keeps every rule that lacks only tags.
+- Script property forms are understood: `el.ariaBusy` counts as `aria-busy`, `el.dataset.fooBar` as `data-foo-bar`.
+
+If the scan reads no file the purge is skipped with a warning, so a wrong root never turns into an empty stylesheet.
+
+### Dependencies
+
+The Engine returns `config` (a theme file), `files` (every scanned file) and `dirs` (every folder that holds a scanned file). Vite registers the theme file with `addWatchFile` in dev and build, and the scanned files only when `build.watch` is set, because the dev server does not scan. PostCSS pushes `dependency` messages for files and `dir-dependency` messages with a `*` glob for folders, and skips the project folder itself (Next.js recursed on that when `distDir` was not the default; Tailwind skips it too).
+
+### Plugins
+
+- Vite: one plugin, `enforce: "pre"`, a `transform` with an id filter like `@tailwindcss/vite` (`.css`, `&lang.css`, minus worker, raw, url, commonjs-proxy and `.vite`). `serve` compiles the full stylesheet, `build` compiles with the scanner. The build output folder and the cache folder are added to the ignore list. `configResolved` clears the caches.
+- PostCSS: `Once(root)` with a quick bail on `@import` params, `root.toString()` into the Engine, then the result is parsed and appended after `root.removeAll()`. It purges when `NODE_ENV` is `production` unless `purge` says otherwise. `module.exports` is also exported so `require()` of the ESM file returns the plugin, which is how Next.js loads plugin names.
+- Package: `exports` has `style` conditions (`.`, `./classless`, `./colors`, `./extras`, `./extras/*`) that resolve to the source CSS in bundlers and `default` conditions that resolve to `css/*.min.css`. `vite` and `postcss` are optional peer dependencies, and both plugin files only import types from them, so they never load at run time. `autoInstallPeers: false` in `pnpm-workspace.yaml` keeps pnpm from installing a real `vite` next to Vite+, which breaks `vp pack`.
+
+### Post-build purge
+
+`pico-reforged purge <outDir>` is for outputs without a bundler plugin (Hugo, Jekyll, Eleventy, Bun). It scans the folder (all text files up to 32 MB, no `.gitignore`, only `node_modules` and `.git` skipped), then rewrites the built CSS. Only the bodies of `@layer pico` and `@layer pico.*` blocks are rewritten, at the top level or inside wrapper layers, `@media` or `@supports` blocks. Each body goes through Lightning CSS with the same purge visitor as the compiler, so a rule is judged the same way in both places. Keyframes that nothing uses any more go with their rules. The text outside those bodies is copied byte for byte. This is why the framework keeps every rule inside `pico.*` layers: the layer name is the mark that says a rule came from Pico.
+
+### Differences from Tailwind
+
+Tailwind generates utilities from candidates. Pico ships fixed CSS and removes what the content cannot match, which is the riskier direction, so the defaults lean to keeping: a rule is judged on its type, class, id and attribute parts only, all identifiers in scripts count as classes, bound attributes count as any value, and an empty scan never purges. The Tailwind candidate set is never cleared while a dev server runs. Here the index is rebuilt on every scan.
+
 ## Popover and anchor positioning
 
 All of these are additive. The v2.1.1 markup keeps working in every browser.
@@ -269,19 +339,19 @@ Most of the saving is the dropped OKLCH to `lab()` fallbacks and prefixes. The s
 
 One tool, [Vite+](https://viteplus.dev) 1.2.0 (`vite-plus`, command `vp`), runs everything. It bundles Vitest 5, Oxlint with tsgolint, Oxfmt and tsdown, and reads one `vite.config.ts`. There is no Vite build: the CSS in `src/` is plain and the compiler is the build. The package manager is pnpm (`packageManager` in `package.json`), the runtime is Node 22.18+ (24 recommended), and TypeScript 7 (`tsc`) does the standalone type check.
 
-| Script             | Runs                                      | What it does                                                                                                                            |
-| ------------------ | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm build`       | `generate.ts`, then `cli.ts matrix css`   | regenerates tokens, themes and color classes, then writes the 262 files into `css/` (238 from v2.1.1 plus the extras)                   |
-| `pnpm dev`         | `dev-build.ts` under `node --watch-path`  | rebuilds `dist-dev/` on change                                                                                                          |
-| `pnpm test`        | `vp test`                                 | Vitest over `test/**/*.test.ts`                                                                                                         |
-| `pnpm test:api`    | `dev-build.ts`, then `test/api/check.ts`  | v2.1.1 API coverage check                                                                                                               |
-| `pnpm test:visual` | `dev-build.ts`, then `test/visual/run.ts` | Playwright pixel diff against v2.1.1                                                                                                    |
-| `pnpm test:extras` | `test/visual/extras.ts`                   | screenshots and axe-core checks for each extra fixture                                                                                  |
-| `pnpm lint`        | `vp lint`                                 | Oxlint, type-aware, over `scripts/`, `test/` and `vite.config.ts`                                                                       |
-| `pnpm fmt`         | `vp fmt`                                  | Oxfmt for TS, JSON, Markdown, YAML and `src/**/*.css`                                                                                   |
-| `pnpm check`       | `vp check`                                | format check, lint and type check together                                                                                              |
-| `pnpm typecheck`   | `tsc -p .`                                | TypeScript 7 type check                                                                                                                 |
-| `pnpm run pack`    | `vp pack`                                 | tsdown build of `dist/cli.js` and `dist/compiler.js` plus `.d.ts`. Use `pnpm run pack`: plain `pnpm pack` is pnpm's own tarball command |
+| Script             | Runs                                      | What it does                                                                                                                                                               |
+| ------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm build`       | `generate.ts`, then `cli.ts matrix css`   | regenerates tokens, themes and color classes, then writes the 262 files into `css/` (238 from v2.1.1 plus the extras)                                                      |
+| `pnpm dev`         | `dev-build.ts` under `node --watch-path`  | rebuilds `dist-dev/` on change                                                                                                                                             |
+| `pnpm test`        | `vp test`                                 | Vitest over `test/**/*.test.ts`                                                                                                                                            |
+| `pnpm test:api`    | `dev-build.ts`, then `test/api/check.ts`  | v2.1.1 API coverage check                                                                                                                                                  |
+| `pnpm test:visual` | `dev-build.ts`, then `test/visual/run.ts` | Playwright pixel diff against v2.1.1                                                                                                                                       |
+| `pnpm test:extras` | `test/visual/extras.ts`                   | screenshots and axe-core checks for each extra fixture                                                                                                                     |
+| `pnpm lint`        | `vp lint`                                 | Oxlint, type-aware, over `scripts/`, `test/` and `vite.config.ts`                                                                                                          |
+| `pnpm fmt`         | `vp fmt`                                  | Oxfmt for TS, JSON, Markdown, YAML and `src/**/*.css`                                                                                                                      |
+| `pnpm check`       | `vp check`                                | format check, lint and type check together                                                                                                                                 |
+| `pnpm typecheck`   | `tsc -p .`                                | TypeScript 7 type check                                                                                                                                                    |
+| `pnpm run pack`    | `vp pack`                                 | tsdown build of `dist/cli.js`, `dist/compiler.js`, `dist/vite.js` and `dist/postcss.js` plus `.d.ts`. Use `pnpm run pack`: plain `pnpm pack` is pnpm's own tarball command |
 
 Notes on the setup:
 
@@ -289,11 +359,12 @@ Notes on the setup:
 - Oxfmt formats `src/**/*.css` except the files `scripts/generate.ts` writes (`tokens/palette.css`, `tokens/scheme.css`, `themes/`, `colors/`). It only changes whitespace: with the formatted sources, the minified output of ten build variants is byte-identical to the output of the unformatted sources, and the readable output differs only in whitespace inside custom property values. Markdown code samples are left as written.
 - Tests moved from `node:test` to Vitest. The assertions still use `node:assert/strict`. The CLI test builds `dist/` with `vp pack` and runs it with `--no-experimental-strip-types`.
 - `pnpm-workspace.yaml` holds `minimumReleaseAgeExclude` entries for Vite+ 1.2.0 and Playwright, which pnpm added because those versions are newer than its release age gate. Remove them once the versions are old enough. No dependency needs a build script: Lightning CSS ships prebuilt binaries as optional packages, so nothing needs approving.
+- `pnpm-workspace.yaml` sets `autoInstallPeers: false`. The package has optional peers (`vite`, `postcss`), and with auto install pnpm adds a real `vite` that conflicts with the Vite+ alias.
 - `.gitattributes` forces LF (`* text=auto eol=lf`) and `.editorconfig` sets the same for editors.
 
 ## Testing
 
-- `pnpm test` runs the Vitest suites in `test/compiler/`: classless, purge, scope, options, extras, CLI, the review regressions and the browser floor leftovers.
+- `pnpm test` runs the Vitest suites in `test/integrations/` (root detection, `@pico` and `@source` parsing, the scanner on a fixture tree with `.gitignore` files, the PostCSS plugin, the Vite plugin through `vite build` and `createServer`, the purge command on a fixture folder) and in `test/compiler/`: classless, purge, scope, options, extras, CLI, the review regressions and the browser floor leftovers.
 - `test/api/check.ts` compares the built `css/pico.css`, `pico.classless.css`, `pico.conditional.css` and `pico.colors.css` against `test/api/baseline.json`. Every class, attribute hook, `--pico-*` variable and keyframe name from v2.1.1 must exist, unless it is listed as removed in `docs/migration.md`.
 - `test/visual/run.ts` loads each fixture with the v2.1.1 CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. Differences are reviewed by hand. The goal is near-identical output, except where a change is a deliberate improvement listed in the migration guide.
 

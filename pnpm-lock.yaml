@@ -159,7 +159,7 @@ snapshots:
 lockfileVersion: '9.0'
 
 settings:
-  autoInstallPeers: true
+  autoInstallPeers: false
   excludeLinksFromLockfile: false
 
 importers:
@@ -194,6 +194,9 @@ importers:
       pngjs:
         specifier: ^7.0.0
         version: 7.0.0
+      postcss:
+        specifier: ^8.5.30
+        version: 8.5.30
       typescript:
         specifier: ^7.0.2
         version: 7.0.2

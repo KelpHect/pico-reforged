@@ -4,4 +4,103 @@
  * Copyright 2026 rusticstack
  * Licensed under MIT
  */
-@layer pico.tokens, pico.theme, pico.core, pico.extras, pico.utilities;
+@layer pico.tokens, pico.theme, pico.core;
+
+@layer pico.extras {
+  :root, :host, [data-theme] {
+    --pico-empty-state-max-inline-size: 28rem;
+    --pico-empty-state-padding-block: calc(var(--pico-block-spacing-vertical) * 2);
+    --pico-empty-state-icon-size: 1.5rem;
+    --pico-empty-state-icon-color: var(--pico-muted-color);
+    --pico-empty-state-icon-background: var(--pico-card-sectioning-background-color);
+    --pico-empty-state-border-color: var(--pico-form-element-border-color);
+  }
+
+  :where([data-empty]) {
+    justify-items: center;
+    gap: calc(var(--pico-spacing) * .5);
+    box-sizing: border-box;
+    max-inline-size: var(--pico-empty-state-max-inline-size);
+    margin-block: 0 var(--pico-block-spacing-vertical);
+    padding-block: var(--pico-empty-state-padding-block);
+    padding-inline: var(--pico-block-spacing-horizontal);
+    border: var(--pico-border-width) dashed var(--pico-empty-state-border-color);
+    border-radius: var(--pico-border-radius);
+    text-align: center;
+    margin-inline: auto;
+    display: grid;
+  }
+
+  :where([data-empty])[hidden] {
+    display: none;
+  }
+
+  :where([data-empty]) > figure {
+    margin: 0 0 calc(var(--pico-spacing) * .25);
+    padding: calc(var(--pico-spacing) * .75);
+    background-color: var(--pico-empty-state-icon-background);
+    color: var(--pico-empty-state-icon-color);
+    border-radius: 50%;
+    place-items: center;
+    display: grid;
+  }
+
+  :where([data-empty]) > figure > svg {
+    inline-size: var(--pico-empty-state-icon-size);
+    block-size: var(--pico-empty-state-icon-size);
+    display: block;
+  }
+
+  :where([data-empty]) > :is(h2, h3, h4, h5, h6) {
+    margin: 0;
+  }
+
+  :where([data-empty]) > p {
+    color: var(--pico-muted-color);
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  :where([data-empty]) > footer {
+    justify-content: center;
+    gap: calc(var(--pico-spacing) * .5);
+    margin: calc(var(--pico-spacing) * .5) 0 0;
+    background: none;
+    border: 0;
+    flex-wrap: wrap;
+    padding: 0;
+    display: flex;
+  }
+
+  :where([data-empty]) > footer > :is(a, button, [role="button"]) {
+    margin: 0;
+  }
+
+  :where([data-empty="compact"]) {
+    --pico-empty-state-padding-block: var(--pico-spacing);
+    --pico-empty-state-icon-size: 1.25rem;
+    gap: calc(var(--pico-spacing) * .25);
+  }
+
+  :where([data-empty="compact"]) > figure {
+    padding: calc(var(--pico-spacing) * .5);
+    margin: 0;
+  }
+
+  :where([data-empty="compact"]) > footer {
+    margin-block-start: calc(var(--pico-spacing) * .25);
+  }
+
+  :where(td):has( > [data-empty]) {
+    padding: 0;
+  }
+
+  :where(td):has( > [data-empty]) > [data-empty] {
+    border: 0;
+    border-radius: 0;
+    max-inline-size: none;
+    margin: 0;
+  }
+}
+
+@layer pico.utilities;

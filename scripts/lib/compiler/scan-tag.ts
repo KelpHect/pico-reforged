@@ -7,6 +7,11 @@ export type TagMatch = {
 
 const isSpace = (ch: string | undefined): boolean =>
   ch === " " || ch === "\n" || ch === "\t" || ch === "\r" || ch === "\f";
+/**
+ * A value that a template fills in: ${x}, {{ x }}, {% x %}, {x} (Svelte), #{x} (Pug, Ruby),
+ * @x (Razor), <?= x ?>, <%= x %>.
+ */
+const DYNAMIC_VALUE = /\{|<\?|<%|(?:^|[^\w@.])@[\w(]/;
 const NAME_END = /[\s=<>"'/]/;
 
 /** Skips a { ... } expression with nested braces and strings. Returns the index after the closing brace, or -1. */
@@ -42,7 +47,16 @@ export function readTag(text: string, start: number): TagMatch | undefined {
   while (i < text.length) {
     const ch = text[i] as string;
     if (ch === ">") return { name, attrs, end: i + 1 };
-    if (ch === "<") return undefined;
+    if (ch === "<") {
+      // server code inside the tag: <?= $x ?>, <% if (x) { %>. Its output is unknown, so the
+      // attributes it may add are read from the strings in the text around it.
+      const close = text[i + 1] === "?" ? "?>" : text[i + 1] === "%" ? "%>" : "";
+      if (!close) return undefined;
+      const end = text.indexOf(close, i + 2);
+      if (end === -1) return undefined;
+      i = end + 2;
+      continue;
+    }
     if (isSpace(ch) || ch === "/") {
       i++;
       continue;
@@ -81,7 +95,7 @@ export function readTag(text: string, start: number): TagMatch | undefined {
       const close = text.indexOf(q, j + 1);
       if (close === -1) return undefined;
       const value = text.slice(j + 1, close);
-      attrs.push({ name: attrName, value, dynamic: /\$\{|\{\{|\{%/.test(value) });
+      attrs.push({ name: attrName, value, dynamic: DYNAMIC_VALUE.test(value) });
       i = close + 1;
     } else if (q === "{") {
       const next = skipBraces(text, j);
@@ -92,7 +106,7 @@ export function readTag(text: string, start: number): TagMatch | undefined {
       const valueStart = j;
       while (j < text.length && !isSpace(text[j]) && text[j] !== ">") j++;
       const value = text.slice(valueStart, j);
-      attrs.push({ name: attrName, value, dynamic: /\$\{|\{\{/.test(value) });
+      attrs.push({ name: attrName, value, dynamic: DYNAMIC_VALUE.test(value) });
       i = j;
     }
   }
