@@ -63,5 +63,5 @@ Vercel issues the certificate once the record resolves. Pushes to `main` deploy 
 
 - Next.js prefetches route segment files (`__next.*.txt`) for client navigation. On a host that does not map them, those requests 404 and the router falls back to a normal page load. Nothing breaks.
 - Search is static: the index is exported to `/api/search` and downloaded on first use. That is fine for this size of site.
-- Examples run in `sandbox="allow-scripts"` iframes with no same-origin access. The theme and color scheme reach them through `postMessage`.
+- Examples run in `sandbox="allow-scripts allow-same-origin"` iframes. Same-origin access lets their CSS requests carry cookies on protected preview deployments. The theme and color scheme reach them through `postMessage`, and a theme file that fails to load falls back to the base stylesheet.
 - The footer and the migration page credit Pico CSS by Lucas Larroche (MIT). Pico Reforged is not the official Pico CSS and does not use its logo.

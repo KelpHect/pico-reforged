@@ -43,6 +43,11 @@ const FRAME_SCRIPT = (stem: string, fallback: string) => `
     var href = "/css/" + ${JSON.stringify(stem)} + theme + ".min.css";
     if (link.getAttribute("href") !== href) {
       link.onload = report;
+      // A theme sheet that cannot load must not leave the frame without any styles
+      link.onerror = function () {
+        var fallback = "/css/" + ${JSON.stringify(stem)} + ".min.css";
+        if (link.getAttribute("href") !== fallback) link.setAttribute("href", fallback);
+      };
       link.setAttribute("href", href);
     }
     if (state.scheme === "light" || state.scheme === "dark") root.setAttribute("data-theme", state.scheme);

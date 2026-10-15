@@ -1,8 +1,15 @@
+import { THEMES } from "./themes";
+
 export type Scheme = "auto" | "light" | "dark";
 export type ThemeState = { theme: string; scheme: Scheme };
 
 export const STORAGE_KEY = "pico-reforged-site";
 export const DEFAULT_STATE: ThemeState = { theme: "azure", scheme: "auto" };
+
+// A stored value that is not a current theme would point the previews at a stylesheet that does not exist
+function isTheme(value: unknown): value is string {
+  return typeof value === "string" && THEMES.some((theme) => theme.name === value);
+}
 
 export function readState(): ThemeState {
   try {
@@ -10,7 +17,7 @@ export function readState(): ThemeState {
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<ThemeState>;
       return {
-        theme: typeof parsed.theme === "string" ? parsed.theme : DEFAULT_STATE.theme,
+        theme: isTheme(parsed.theme) ? parsed.theme : DEFAULT_STATE.theme,
         scheme:
           parsed.scheme === "light" || parsed.scheme === "dark" ? parsed.scheme : "auto",
       };

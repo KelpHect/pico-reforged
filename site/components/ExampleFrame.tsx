@@ -62,7 +62,9 @@ export function ExampleFrame({ title, height, overlay, eager, width, scheme, cod
     return () => window.removeEventListener("message", onMessage);
   }, []);
 
-  // The sandbox has no same-origin access, so the theme travels as a message. The frame can
+  // The frame keeps its own origin (allow-same-origin) so its stylesheet requests carry the
+  // visitor cookies, which a protected Vercel deployment needs to serve /css. The demo code is
+  // written by us, not by visitors. The theme still travels as a message. The frame can
   // finish loading before React hydrates, so send on mount, on load and when it says it is
   // ready, and ask it to measure again each time.
   const send = useCallback(() => {
@@ -84,7 +86,7 @@ export function ExampleFrame({ title, height, overlay, eager, width, scheme, cod
         ref={frame}
         className="example-frame"
         title={`Live example: ${title}`}
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
         loading={eager ? "eager" : "lazy"}
         srcDoc={srcDoc}
         onLoad={send}
