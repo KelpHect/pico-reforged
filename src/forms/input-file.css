@@ -2,17 +2,16 @@
 
 [type="file"] {
   --pico-color: var(--pico-muted-color);
-  margin-inline-start: calc(var(--pico-outline-width) * -1);
-  padding: calc(var(--pico-form-element-spacing-vertical) * 0.5) 0;
-  padding-inline-start: var(--pico-outline-width);
+  padding: 0;
   border: 0;
   border-radius: 0;
   background: none;
 
+  /* Tonal secondary button, as tall as the other controls */
   &::file-selector-button {
-    margin-inline-end: calc(var(--pico-spacing) / 2);
-    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
-      var(--pico-form-element-spacing-horizontal);
+    margin-block: 0;
+    margin-inline: 0 0.75rem;
+    padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
   }
 
   &:is(:hover, :active, :focus)::file-selector-button {
@@ -20,9 +19,8 @@
     --pico-border-color: var(--pico-secondary-hover-border);
   }
 
-  &:focus::file-selector-button {
-    --pico-box-shadow:
-      var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-      0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+  &:focus-visible::file-selector-button {
+    outline: var(--pico-outline-width) solid var(--pico-secondary-focus);
+    outline-offset: var(--pico-outline-width);
   }
 }

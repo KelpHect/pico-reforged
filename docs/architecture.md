@@ -12,7 +12,7 @@ src/                     CSS source, plain CSS, loadable in a current browser wi
   pico.extras.css        opt-in extras entry, usable on its own after pico.css
   layers.css             layer order statement, imported first by every entry
   tokens/
-    core.css             fonts, spacing, radius, sizes, icons, responsive root size, container widths
+    core.css             fonts, spacing, radius (controls and --pico-card-border-radius), sizes, icons, root size, container widths
     scheme.css           neutral semantic colors (generated, light-dark())
     scheme-images.css    the few non-color values that differ between light and dark
     palette.css          full OKLCH palette (generated, used by pico.colors.css only)
@@ -38,6 +38,7 @@ vite.config.ts          Vite+ config: test, lint, fmt and pack in one file
 css/                     build output, same file names as v2.1.1 so CDN paths keep working
 test/
   reference/v2.1.1/      frozen upstream build output
+  reference/current/     frozen output of this project, the baseline `pnpm test:visual` gates against
   api/                   baseline.json (v2.1.1 public surface) and the coverage check
   fixtures/              kitchen-sink.html and friends, used by examples and visual tests
   fixtures/extras/       one <name>.html per extra, used by the extras checker
@@ -131,7 +132,7 @@ Natively, `light-dark()` inside a custom property resolves against the `color-sc
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }
 ```
 
-Shadows with colors inside (`--pico-box-shadow`, `--pico-switch-thumb-box-shadow`) put `light-dark()` on the color part, so they stay in `scheme.css`.
+Shadows with colors inside (`--pico-box-shadow`, `--pico-dropdown-box-shadow`) put `light-dark()` on the color of each layer, so they stay in `scheme.css`. The `stack()` helper in `scripts/data/scheme.ts` takes one row per layer: x, y, blur and spread shared by both schemes, then a light and a dark color. A dark layer that should not show uses alpha 0, so the geometry never differs between schemes. `--pico-box-shadow` is a 1px ring, a short drop and a soft drop. The ring outlines cards in both schemes, so cards draw no CSS border. `--pico-dropdown-box-shadow` has the same ring and a deeper drop for menus, dialogs, toasts and tooltips. `--pico-switch-thumb-box-shadow` comes from the theme generator and is the same in both schemes.
 
 ### Themes
 
@@ -176,13 +177,13 @@ The v2.1.1 Sass switches become compiler options:
 | `$enable-semantic-container`    | `semanticContainer`    | adds `layout/semantic-container.css`                                                                                                                                                               |
 | `$enable-viewport: false`       | `fluid: true`          | sets `--pico-container-max-width: 100%` after the breakpoint values                                                                                                                                |
 | `$parent-selector: ".pico"`     | `scope: ".pico"`       | prefixes selectors, leaves `:root`, `:host` and `html` rules on the root                                                                                                                           |
-| `$enable-responsive-typography` | `responsiveTypography` | drops the root font size breakpoints                                                                                                                                                               |
+| `$enable-responsive-typography` | `responsiveTypography` | drops the root font size step at 1536px                                                                                                                                                            |
 | `$enable-responsive-spacings`   | `responsiveSpacings`   | adds `layout/responsive-spacings.css`                                                                                                                                                              |
 | `$enable-transitions: false`    | `transitions: false`   | sets `--pico-transition: 0s`, removes every `transition-*` and `animation-*` declaration (the indeterminate progress bar keeps its animation, as in v2.1.1) and drops the `@starting-style` blocks |
 | `$enable-important: false`      | `important: false`     | strips `!important` from utilities                                                                                                                                                                 |
 | `$css-var-prefix`               | not kept               | the prefix is part of the public API                                                                                                                                                               |
 
-Breakpoints are literal media queries in source, written with range syntax (`(width >= 768px)`): 576, 768, 1024, 1280 and 1536 px, with container widths of 510, 700, 950, 1200 and 1450 px and root sizes of 106.25%, 112.5%, 118.75%, 125% and 131.25%. Container widths are exposed as `--pico-container-max-width`, set in `tokens/core.css` per breakpoint, so `.container`, the semantic container and the modal all read one variable.
+Breakpoints are literal media queries in source, written with range syntax (`(width >= 768px)`): 576, 768, 1024, 1280 and 1536 px, with container widths of 510, 700, 950, 1200 and 1450 px and one root size step: 100% up to 1535px, 106.25% from 1536px (v2.1.1 grew the root at every breakpoint, up to 131.25%). Container widths are exposed as `--pico-container-max-width`, set in `tokens/core.css` per breakpoint, so `.container`, the semantic container and the modal all read one variable.
 
 ### Compiler pipeline
 
@@ -345,12 +346,14 @@ Sizes of the shipped minified files, banner included (raw / gzip -9 / brotli q11
 
 | File                       | v2.1.1                   | Before the size work     | Now                      | Now, `targets: "modern"` |
 | -------------------------- | ------------------------ | ------------------------ | ------------------------ | ------------------------ |
-| `pico.min.css`             | 83,319 / 11,654 / 10,097 | 80,106 / 12,013 / 10,533 | 77,969 / 11,663 / 10,281 | 69,917 / 11,275 / 9,957  |
-| `pico.classless.min.css`   | 71,040 / 10,323 / 8,964  | 69,625 / 10,962 / 9,635  | 67,467 / 10,609 / 9,396  | 60,484 / 10,274 / 9,105  |
-| `pico.conditional.min.css` | none                     | 83,580 / 12,250 / 10,688 | 80,881 / 11,837 / 10,379 | 78,110 / 11,652 / 10,228 |
-| `pico.extras.min.css`      | none                     | 44,846 / 7,385 / 6,560   | 44,864 / 7,348 / 6,527   | 37,391 / 6,927 / 6,180   |
+| `pico.min.css`             | 83,319 / 11,654 / 10,097 | 80,106 / 12,013 / 10,533 | 80,995 / 12,152 / 10,695 | 72,759 / 11,852 / 10,462 |
+| `pico.classless.min.css`   | 71,040 / 10,323 / 8,964  | 69,625 / 10,962 / 9,635  | 70,681 / 11,090 / 9,792  | 63,395 / 10,856 / 9,597  |
+| `pico.conditional.min.css` | none                     | 83,580 / 12,250 / 10,688 | 83,961 / 12,322 / 10,809 | 81,125 / 12,220 / 10,727 |
+| `pico.extras.min.css`      | none                     | 44,846 / 7,385 / 6,560   | 47,062 / 7,657 / 6,809   | 39,259 / 7,330 / 6,546   |
 
-The v2.1.1 files are the ones published on npm (`@picocss/pico@2.1.1`). Against them the raw file is 6% smaller (classless 5%). Compressed it is about even for `pico` (gzip 0.1% larger, brotli 1.8% larger) and a little larger for classless (gzip 3%, brotli 5%). Pico Reforged also ships things v2.1.1 does not have: the popover module (about 400 bytes in brotli), anchor positioning, `interpolate-size`, `::details-content` and `@starting-style` blocks. The modern file is smaller because the compiler no longer lowers nesting and `light-dark()`. `pico.conditional` gains less from it because scope flattens nesting.
+"Now" includes the modern default look ([ADR 0002](adr/0002-modern-default-look.md)), which added about 4% gzipped to each file (`pico.min.css` was 77,969 / 11,663 / 10,281 before it). The budget for that change was 5%.
+
+The v2.1.1 files are the ones published on npm (`@picocss/pico@2.1.1`). Against them the raw file is 3% smaller (classless 0.5%). Compressed it is larger: `pico` by 4% gzipped and 6% with brotli, classless by 7% and 9%. Pico Reforged also ships things v2.1.1 does not have: the popover module (about 400 bytes in brotli), anchor positioning, `interpolate-size`, `::details-content` and `@starting-style` blocks. The modern file is smaller because the compiler no longer lowers nesting and `light-dark()`. `pico.conditional` gains less from it because scope flattens nesting.
 
 What the size work changed:
 
@@ -378,19 +381,20 @@ Compression dictionaries (RFC 9842, `Content-Encoding: dcb` or `dcz`) pay off wh
 
 One tool, [Vite+](https://viteplus.dev) 1.2.0 (`vite-plus`, command `vp`), runs everything. It bundles Vitest 5, Oxlint with tsgolint, Oxfmt and tsdown, and reads one `vite.config.ts`. There is no Vite build: the CSS in `src/` is plain and the compiler is the build. The package manager is pnpm (`packageManager` in `package.json`), the runtime is Node 22.18+ (24 recommended), and TypeScript 7 (`tsc`) does the standalone type check.
 
-| Script             | Runs                                      | What it does                                                                                                                                                               |
-| ------------------ | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `pnpm build`       | `generate.ts`, then `cli.ts matrix css`   | regenerates tokens, themes and color classes, then writes the 262 files into `css/` (238 from v2.1.1 plus the extras)                                                      |
-| `pnpm dev`         | `dev-build.ts` under `node --watch-path`  | rebuilds `dist-dev/` on change                                                                                                                                             |
-| `pnpm test`        | `vp test`                                 | Vitest over `test/**/*.test.ts`                                                                                                                                            |
-| `pnpm test:api`    | `dev-build.ts`, then `test/api/check.ts`  | v2.1.1 API coverage check                                                                                                                                                  |
-| `pnpm test:visual` | `dev-build.ts`, then `test/visual/run.ts` | Playwright pixel diff against v2.1.1                                                                                                                                       |
-| `pnpm test:extras` | `test/visual/extras.ts`                   | screenshots and axe-core checks for each extra fixture                                                                                                                     |
-| `pnpm lint`        | `vp lint`                                 | Oxlint, type-aware, over `scripts/`, `test/` and `vite.config.ts`                                                                                                          |
-| `pnpm fmt`         | `vp fmt`                                  | Oxfmt for TS, JSON, Markdown, YAML and `src/**/*.css`                                                                                                                      |
-| `pnpm check`       | `vp check`                                | format check, lint and type check together                                                                                                                                 |
-| `pnpm typecheck`   | `tsc -p .`                                | TypeScript 7 type check                                                                                                                                                    |
-| `pnpm run pack`    | `vp pack`                                 | tsdown build of `dist/cli.js`, `dist/compiler.js`, `dist/vite.js` and `dist/postcss.js` plus `.d.ts`. Use `pnpm run pack`: plain `pnpm pack` is pnpm's own tarball command |
+| Script                    | Runs                                                                  | What it does                                                                                                                                                               |
+| ------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm build`              | `generate.ts`, then `cli.ts matrix css`                               | regenerates tokens, themes and color classes, then writes the 262 files into `css/` (238 from v2.1.1 plus the extras)                                                      |
+| `pnpm dev`                | `dev-build.ts` under `node --watch-path`                              | rebuilds `dist-dev/` on change                                                                                                                                             |
+| `pnpm test`               | `vp test`                                                             | Vitest over `test/**/*.test.ts`                                                                                                                                            |
+| `pnpm test:api`           | `dev-build.ts`, then `test/api/check.ts`                              | v2.1.1 API coverage check                                                                                                                                                  |
+| `pnpm test:visual`        | `dev-build.ts`, then `test/visual/run.ts`                             | Playwright pixel diff against `test/reference/current`, fails above 0.05% of pixels or 2px of height                                                                       |
+| `pnpm test:visual:parity` | `dev-build.ts`, then `test/visual/run.ts --ref test/reference/v2.1.1` | informational pixel diff against v2.1.1, never gated                                                                                                                       |
+| `pnpm test:extras`        | `test/visual/extras.ts`                                               | screenshots and axe-core checks for each extra fixture                                                                                                                     |
+| `pnpm lint`               | `vp lint`                                                             | Oxlint, type-aware, over `scripts/`, `test/` and `vite.config.ts`                                                                                                          |
+| `pnpm fmt`                | `vp fmt`                                                              | Oxfmt for TS, JSON, Markdown, YAML and `src/**/*.css`                                                                                                                      |
+| `pnpm check`              | `vp check`                                                            | format check, lint and type check together                                                                                                                                 |
+| `pnpm typecheck`          | `tsc -p .`                                                            | TypeScript 7 type check                                                                                                                                                    |
+| `pnpm run pack`           | `vp pack`                                                             | tsdown build of `dist/cli.js`, `dist/compiler.js`, `dist/vite.js` and `dist/postcss.js` plus `.d.ts`. Use `pnpm run pack`: plain `pnpm pack` is pnpm's own tarball command |
 
 Notes on the setup:
 
@@ -405,7 +409,8 @@ Notes on the setup:
 
 - `pnpm test` runs the Vitest suites in `test/integrations/` (root detection, `@pico` and `@source` parsing, the scanner on a fixture tree with `.gitignore` files, the PostCSS plugin, the Vite plugin through `vite build` and `createServer`, the purge command on a fixture folder) and in `test/compiler/`: classless, purge, scope, options, extras, CLI, the review regressions and the browser floor leftovers.
 - `test/api/check.ts` compares the built `css/pico.css`, `pico.classless.css`, `pico.conditional.css` and `pico.colors.css` against `test/api/baseline.json`. Every class, attribute hook, `--pico-*` variable and keyframe name from v2.1.1 must exist, unless it is listed as removed in `docs/migration.md`.
-- `test/visual/run.ts` loads each fixture with the v2.1.1 CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. Differences are reviewed by hand. The goal is near-identical output, except where a change is a deliberate improvement listed in the migration guide.
+- `test/visual/run.ts` loads each fixture with a reference CSS and the new CSS in Chromium at 1280px light, 1280px dark and 375px light, and writes a pixel diff report to `test/visual/report/`. `pnpm test:visual` compares against `test/reference/current`, the reviewed output of this project, with `--gate`: more than 0.05% of differing pixels, or a page height that moved by more than 2px, fails the run. After a deliberate visual change, review the report, then run `node test/visual/freeze.ts` to copy the new `dist-dev` CSS into the baseline. `pnpm test:visual:parity` still compares against v2.1.1, as a report only: since the modern default look ([ADR 0002](adr/0002-modern-default-look.md)) the two differ on purpose.
+- `node test/visual/contrast-probe.ts css/pico.*.css` prints the contrast of the key pairs for every theme file in both schemes (buttons, links, muted text on the page, on cards and on menus, secondary text on its fill, the field border and the focus color) and exits 1 when a text pair is under 4.5:1 or a border or focus pair under 3:1.
 - The visual harnesses build readable CSS by default, and selector factoring only runs on minified output. To test the shipped form, build with `node scripts/dev-build.ts --minify --out dist-dev-min` and run `node test/visual/run.ts --new dist-dev-min --suffix min`, or run `node test/visual/extras.ts --minify`. Both builds also take `--targets modern`.
 
 ## Conventions for source files

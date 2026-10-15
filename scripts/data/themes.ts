@@ -10,9 +10,10 @@
 //   --pico-primary-underline     hue-<primary> at 0.5
 //   --pico-primary-hover         hue-<hover>
 //   --pico-primary-hover-background  hue-<hoverBackground>
-//   --pico-primary-focus         hue-<focus> at focusAlpha
+//   --pico-primary-focus         hue-<focus> at focusAlpha, a darker (light) or lighter (dark)
+//                                step where needed so focus rings reach 3:1 on the page
 //   --pico-primary-inverse       white or black
-//   --pico-switch-thumb-box-shadow  soft shadow when the inverse is black, none otherwise
+//   --pico-switch-thumb-box-shadow  soft shadow under the thumb, a little stronger on light fills
 
 export const defaultTheme = "azure";
 
@@ -24,8 +25,8 @@ export const steps = {
     primary: 550,
     underlineAlpha: 0.5,
     hover: 650,
-    focus: 400,
-    focusAlpha: 0.5,
+    focus: 500,
+    focusAlpha: 1,
   },
   dark: {
     selection: 350,
@@ -34,7 +35,7 @@ export const steps = {
     underlineAlpha: 0.5,
     hover: 250,
     focus: 350,
-    focusAlpha: 0.375,
+    focusAlpha: 1,
   },
 };
 

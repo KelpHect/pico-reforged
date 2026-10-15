@@ -1,5 +1,7 @@
 # ADR 0001: Rewrite Pico as plain modern CSS
 
+Amended by [ADR 0002](0002-modern-default-look.md): the default look no longer matches v2.1.1.
+
 Status: accepted
 Date: 2026-10-14
 

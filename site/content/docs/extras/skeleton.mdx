@@ -11,22 +11,15 @@ A container that holds skeletons does not show the core `aria-busy` spinner. A c
 
 ## Card
 
-<Example title="Loading card" css={["pico.extras"]} height={400}>
+Give the skeleton the shape of the content it stands in for: one line per line of text, an avatar only where the loaded card has an image. When the two match, the swap does not move the page.
+
+<Example title="Loading card" css={["pico.extras"]} height={220}>
 ```html
 <article aria-busy="true" aria-label="Loading invoice">
   <header>
-    <div style="display: flex; align-items: center; gap: var(--pico-spacing)">
-      <div data-skeleton="avatar"></div>
-      <div style="flex: 1">
-        <p data-skeleton="line" style="inline-size: 40%"></p>
-        <p data-skeleton="line" style="inline-size: 25%"></p>
-      </div>
-    </div>
+    <p data-skeleton="line" style="inline-size: 40%"></p>
   </header>
   <p data-skeleton="line"></p>
-  <p data-skeleton="line" style="inline-size: 85%"></p>
-  <p data-skeleton="line" style="inline-size: 60%"></p>
-  <div data-skeleton="block"></div>
   <footer>
     <p data-skeleton="line" style="inline-size: 30%"></p>
   </footer>

@@ -27,6 +27,27 @@ The hook is `aria-label="Pagination"` on the `nav` (the match ignores case). Pag
 ```
 </Example>
 
+## With a results summary
+
+Put the summary and the `nav` in one flex row, summary at the start and pages at the end. The row wraps on a narrow screen.
+
+<Example title="Pagination with a summary" css={["pico.extras"]} height={110}>
+```html
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--pico-spacing)">
+  <p style="margin: 0; color: var(--pico-muted-color)">Showing 11 to 20 of 96 invoices</p>
+  <nav aria-label="Pagination" style="margin: 0">
+    <ol>
+      <li><a href="?page=1" rel="prev">Previous</a></li>
+      <li><a href="?page=1" aria-label="Page 1">1</a></li>
+      <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+      <li><a href="?page=3" aria-label="Page 3">3</a></li>
+      <li><a href="?page=3" rel="next">Next</a></li>
+    </ol>
+  </nav>
+</div>
+```
+</Example>
+
 ## Disabled edges
 
 On the first page, the previous item is not a link, because there is nowhere to go. Use a `span` with `role="link"` and `aria-disabled="true"`. It stays in the reading order, dimmed and unclickable.

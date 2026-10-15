@@ -1,8 +1,11 @@
 // Usage: node test/visual/contrast-probe.ts <css> ... prints WCAG contrast of key theme pairs in both schemes.
+// Text pairs need 4.5:1. focusRing (the input's focus border and the button's focus outline),
+// fieldBorder need 3:1. Lines below the minimum are printed with LOW and the exit code is 1.
 import { chromium } from "playwright";
 import { readFileSync } from "node:fs";
 const files = process.argv.slice(2);
-const browser = await chromium.launch();
+const browser = await chromium.launch().catch(() => chromium.launch({ channel: "chrome" }));
+let low = 0;
 for (const f of files) {
   for (const scheme of ["light", "dark"] as const) {
     const ctx = await browser.newContext({ colorScheme: scheme });
@@ -35,29 +38,45 @@ for (const f of files) {
         return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
       };
       const cs = (id: string) => getComputedStyle(document.getElementById(id)!);
+      const tok = (name: string) =>
+        getComputedStyle(document.documentElement).getPropertyValue(name).trim();
       const bgColor = getComputedStyle(document.documentElement).backgroundColor;
       const o: Record<string, string> = {};
       for (const id of ["b", "s", "c"])
         o[`btn-${id}`] = ratio(cs(id).color, cs(id).backgroundColor).toFixed(2);
       o.link = ratio(cs("l").color, bgColor).toFixed(2);
-      // focus ring: box-shadow color blended over page (approx alpha composite)
-      const sh = cs("i").boxShadow;
-      const m = sh.match(/rgba?\([^)]*\)|lab\([^)]*\)|oklch\([^)]*\)|color\([^)]*\)/);
-      if (m) {
-        const fg = rgb(m[0]),
-          p = rgb(bgColor);
-        const a = fg[3]! / 255;
-        const mix = `rgb(${[0, 1, 2].map((i) => Math.round(fg[i]! * a + p[i]! * (1 - a))).join(",")})`;
-        o.focusRing = ratio(mix, bgColor).toFixed(2);
-      }
-      o.shadow = sh.slice(0, 90);
-      o.bg = bgColor;
-      o.primaryBg = cs("b").backgroundColor;
-      o.linkColor = cs("l").color;
+      o.mutedOnPage = ratio(tok("--pico-muted-color"), bgColor).toFixed(2);
+      o.mutedOnCard = ratio(tok("--pico-muted-color"), tok("--pico-card-background-color")).toFixed(
+        2,
+      );
+      o.mutedOnDropdown = ratio(
+        tok("--pico-muted-color"),
+        tok("--pico-dropdown-background-color"),
+      ).toFixed(2);
+      o.secondaryOnFill = ratio(
+        tok("--pico-secondary-inverse"),
+        tok("--pico-secondary-background"),
+      ).toFixed(2);
+      o.fieldBorder = ratio(tok("--pico-form-element-border-color"), bgColor).toFixed(2);
+      // The focus signal that has to reach 3:1: the input's border and the button's focus outline color.
+      // The soft ring around the input is decoration on top of the border.
+      o.focusRing = Math.min(
+        ratio(cs("i").borderTopColor, bgColor),
+        ratio(tok("--pico-primary-focus"), bgColor),
+      ).toFixed(2);
       return o;
     });
-    console.log(f.split("/").slice(-2).join("/"), scheme, JSON.stringify(out));
+    const nonText = new Set(["focusRing", "fieldBorder"]);
+    const lows = Object.entries(out).filter(([k, v]) => Number(v) < (nonText.has(k) ? 3 : 4.5));
+    low += lows.length;
+    console.log(
+      f.split("/").slice(-2).join("/"),
+      scheme,
+      JSON.stringify(out),
+      lows.length ? `LOW ${lows.map(([k]) => k).join(" ")}` : "",
+    );
     await ctx.close();
   }
 }
 await browser.close();
+if (low) process.exit(1);

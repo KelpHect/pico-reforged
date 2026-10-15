@@ -4,10 +4,11 @@ Minimal CSS for semantic HTML, rewritten in plain modern CSS.
 
 Pico Reforged continues [Pico CSS](https://github.com/picocss/pico) v2.1.1, the final upstream release, which is MIT licensed and archived. Pico CSS and its original design are the work of Lucas Larroche and the Pico contributors. This project is a fork with its own name. It is not the official Pico CSS and is not affiliated with it. The Pico CSS name and logo belong to the original project.
 
-The classes, attributes and `--pico-*` variables of v2.1.1 are kept, and the CDN file names in `css/` are the same, so most pages work by changing one URL.
+It is a drop-in for v2.1.1 markup with a modern default look. The classes, attributes and `--pico-*` variables of v2.1.1 are kept, and the CDN file names in `css/` are the same, so most pages work by changing one URL.
 
 ## What's new
 
+- A modern default look: a 16px root, 42px controls, 8px corners, a 1px ring instead of heavy shadows, a near-neutral dark scheme, tonal secondary buttons and solid focus outlines. Field borders and focus rings reach 3:1 in every theme. See [ADR 0002](docs/adr/0002-modern-default-look.md).
 - Plain CSS source in `src/`, no Sass. Cascade layers (`pico.tokens`, `pico.theme`, `pico.core`, `pico.extras`, `pico.utilities`), so your own CSS wins without `!important`.
 - OKLCH colors and `light-dark()`. Light and dark are written once.
 - The same 20 themes, plus custom themes from a single color.
@@ -17,7 +18,7 @@ The classes, attributes and `--pico-*` variables of v2.1.1 are kept, and the CDN
 - Vite and PostCSS integrations that purge unused rules in production, safely by default.
 - An opt-in `modern` target (Chrome and Edge 123, Firefox 128, Safari 17.5) that ships native nesting and `light-dark()` for a smaller file.
 - Files for AI agents: `llms.txt` on the site, an agent skill, `AGENTS.md`, a component manifest and DTCG design tokens.
-- Size: the minified `pico.min.css` is 78 kB raw, 11.7 kB gzipped and 10.3 kB with brotli. v2.1.1 minified is 83 kB, 11.7 kB and 10.1 kB, so the raw file is 6% smaller and the compressed sizes are about the same, even though this one also carries the popover and anchor positioning patterns. The classless file is 67.5 kB raw against 71 kB, but 5% larger with brotli (9.4 kB against 9.0 kB). Details are in [docs/architecture.md](docs/architecture.md#file-size).
+- Size: the minified `pico.min.css` is 81 kB raw, 12.2 kB gzipped and 10.7 kB with brotli. v2.1.1 minified is 83 kB, 11.7 kB and 10.1 kB, so the raw file is 3% smaller and the compressed file 4% to 6% larger, with the popover and anchor positioning patterns and the new look included. The classless file is 70.7 kB raw against 71 kB, 11.1 kB gzipped against 10.3 kB. Details are in [docs/architecture.md](docs/architecture.md#file-size).
 
 ## Install
 
@@ -178,7 +179,7 @@ Chrome and Edge 111, Firefox 128 and Safari and iOS Safari 16.4, the same floor 
 
 ## Coming from Pico CSS
 
-Most pages work by swapping the CDN URL. The changes that matter (the browser floor, Sass settings, a few visual differences) are in [docs/migration.md](docs/migration.md).
+Most pages work by swapping the CDN URL. The changes that matter (the browser floor, Sass settings and the new default look, with a block of variables that brings most of the v2.1.1 look back) are in [docs/migration.md](docs/migration.md).
 
 ## For AI agents
 

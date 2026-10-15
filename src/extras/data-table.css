@@ -7,16 +7,12 @@
 [data-theme] {
   --pico-data-table-head-background-color: var(--pico-card-sectioning-background-color);
   --pico-data-table-row-hover-background-color: var(--pico-dropdown-hover-background-color);
-  --pico-data-table-row-selected-background-color: color-mix(
-    in oklab,
-    var(--pico-primary-background) 20%,
-    var(--pico-background-color)
-  );
+  --pico-data-table-row-selected-background-color: var(--pico-primary-subtle-background);
   --pico-data-table-scroll-max-block-size: none;
   --pico-data-table-scroll-padding-block-start: 0;
   --pico-data-table-compact-padding-block: calc(var(--pico-spacing) / 4);
   --pico-data-table-compact-padding-inline: calc(var(--pico-spacing) / 2);
-  --pico-data-table-sort-idle-opacity: 0.6;
+  --pico-data-table-sort-idle-opacity: 0.75;
 }
 
 /* Scroll region. Needs a name and tabindex="0" so keyboard users can scroll it. */
@@ -24,6 +20,8 @@
   overflow: auto;
   max-block-size: var(--pico-data-table-scroll-max-block-size);
   margin-bottom: var(--pico-typography-spacing-vertical);
+  border: var(--pico-border-width) solid var(--pico-muted-border-color);
+  border-radius: var(--pico-card-border-radius);
   scroll-padding-block-start: var(--pico-data-table-scroll-padding-block-start);
 
   &:focus-visible {
@@ -65,6 +63,11 @@ table[data-table] {
 
   & > caption {
     padding: 0 var(--pico-spacing) calc(var(--pico-spacing) / 2);
+
+    /* Inside the framed region the caption sits under the frame's top edge */
+    :where(div[role="region"]) > & {
+      padding-block-start: calc(var(--pico-spacing) * 0.75);
+    }
     color: var(--pico-color);
     font-weight: 600;
     text-align: start;
@@ -78,6 +81,20 @@ table[data-table] {
   /* aria-selected on a row is the styling hook; the row checkbox is the accessible control. */
   & > tbody > tr[aria-selected="true"] > * {
     background-color: var(--pico-data-table-row-selected-background-color);
+  }
+
+  /* A bar at the inline start of a selected row */
+  & > tbody > tr[aria-selected="true"] > :first-child {
+    position: relative;
+
+    &::before {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      inline-size: 0.125rem;
+      background-color: var(--pico-primary-background);
+      content: "";
+    }
   }
 }
 
@@ -106,7 +123,8 @@ th[aria-sort] > button {
     content: "\2195" / "";
     flex: none;
     opacity: var(--pico-data-table-sort-idle-opacity);
-    font-size: 0.875em;
+    font-size: 1em;
+    font-weight: 400;
     line-height: 1;
   }
 
@@ -126,6 +144,11 @@ th[aria-sort] > button {
     outline: var(--pico-outline-width) solid var(--pico-primary-focus);
     outline-offset: 0.25rem;
   }
+}
+
+/* The last row's rule would double the frame of the scroll region */
+:where(div[role="region"]) > table > :last-child > tr:last-child > * {
+  border-bottom: 0;
 }
 
 /* The arrow goes first so the label stays flush with the numbers below it. */

@@ -11,12 +11,16 @@ nav ul {
   display: flex;
 }
 
+/* Lists wrap instead of running off a narrow screen */
 nav {
+  flex-wrap: wrap;
   justify-content: space-between;
+  row-gap: calc(var(--pico-spacing) / 2);
   overflow: visible;
 
   & ol,
   & ul {
+    flex-wrap: wrap;
     align-items: center;
     margin-bottom: 0;
     padding: 0;
@@ -32,6 +36,8 @@ nav {
   }
 
   & li {
+    /* The text color of the nav, for the current link (links set their own --pico-color) */
+    --_nav-color: var(--pico-color);
     display: inline-block;
     margin: 0;
     padding: var(--pico-nav-element-spacing-vertical) var(--pico-nav-element-spacing-horizontal);
@@ -51,6 +57,15 @@ nav {
   & li :where(a:not([role="button"]), [role="link"]) {
     padding: var(--pico-nav-link-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
     border-radius: var(--pico-border-radius);
+
+    &:hover {
+      background-color: color-mix(in oklab, var(--pico-color) 6%, transparent);
+    }
+
+    &[aria-current]:not([aria-current="false"]) {
+      color: var(--_nav-color);
+      font-weight: 500;
+    }
   }
 
   & li button,
@@ -61,7 +76,7 @@ nav {
     height: auto;
     margin-inline: inherit;
     margin-bottom: 0;
-    padding-block: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2);
+    padding-block: var(--pico-form-element-spacing-vertical);
   }
 
   /* Inline padding is split by control so the icon room that the forms module

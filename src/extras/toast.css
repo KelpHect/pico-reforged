@@ -55,15 +55,26 @@
     align-items: flex-start;
     gap: calc(var(--pico-spacing) * 0.5);
     margin: 0;
-    padding: calc(var(--pico-spacing) * 0.75) var(--pico-spacing);
-    border: var(--pico-border-width) solid var(--pico-card-border-color);
-    border-inline-start: 0.25rem solid var(--pico-toast-accent);
-    border-radius: var(--pico-border-radius);
-    background-color: var(--pico-card-background-color);
-    box-shadow: var(--pico-card-box-shadow);
+    padding: 0.75rem 0.875rem;
+    border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
+    border-radius: var(--pico-card-border-radius);
+    background-color: var(--pico-dropdown-background-color);
+    box-shadow: var(--pico-dropdown-box-shadow);
     color: var(--pico-color);
     font-size: 0.875rem;
     pointer-events: auto;
+
+    /* Status dot, centered on the first line */
+    &::before {
+      flex: none;
+      inline-size: 0.5rem;
+      block-size: 0.5rem;
+      margin-block-start: calc(0.5lh - 0.25rem);
+      margin-inline: 0.125rem;
+      border-radius: 50%;
+      background-color: var(--pico-toast-accent);
+      content: "";
+    }
 
     /* role="alert" is the semantic way to ask for the danger look */
     &[role="alert"] {
@@ -87,23 +98,22 @@
 [popover][role="status"] > article > :is(button, [role="button"]) {
   flex: none;
   width: auto;
-  margin: 0;
-  padding: 0 calc(var(--pico-spacing) * 0.25);
+  margin: -0.25rem 0;
+  padding: 0.25rem 0.5rem;
   border: 0;
   border-radius: var(--pico-border-radius);
   background: none;
   box-shadow: none;
   color: var(--pico-primary);
   font-size: inherit;
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--pico-line-height);
   text-decoration: none;
   cursor: pointer;
 
   &:hover {
+    background-color: color-mix(in oklab, var(--pico-primary) 10%, transparent);
     color: var(--pico-primary-hover);
-    text-decoration: underline;
-    text-decoration-color: var(--pico-primary-underline);
   }
 
   &:focus-visible {
@@ -116,9 +126,9 @@
 [popover][role="status"] > article > :is(button, [role="button"])[aria-label] {
   display: grid;
   place-items: center;
-  min-width: 1.5rem;
-  min-height: 1.5rem;
-  margin-block: -0.125rem;
+  min-width: 1.75rem;
+  min-height: 1.75rem;
+  margin-block: -0.25rem;
   padding: 0;
   color: var(--pico-muted-color);
   font-size: 1.25rem;
@@ -126,8 +136,8 @@
   line-height: 1;
 
   &:hover {
+    background-color: color-mix(in oklab, var(--pico-color) 8%, transparent);
     color: var(--pico-color);
-    text-decoration: none;
   }
 }
 

@@ -6,6 +6,7 @@ details {
   & summary {
     line-height: 1rem;
     list-style-type: none;
+    font-weight: 500;
     cursor: pointer;
     transition: color var(--pico-transition);
 
@@ -27,7 +28,7 @@ details {
       height: 1rem;
       margin-inline-start: calc(var(--pico-spacing, 1rem) * 0.5);
       float: right;
-      transform: rotate(-90deg);
+      transform: rotate(0);
       background-image: var(--pico-icon-chevron);
       background-position: right center;
       background-size: 1rem auto;
@@ -40,14 +41,10 @@ details {
       outline: none;
     }
 
-    &:focus:not([role]) {
-      color: var(--pico-accordion-active-summary-color);
-    }
-
     &:focus-visible:not([role]) {
       outline: var(--pico-outline-width) solid var(--pico-primary-focus);
       outline-offset: calc(var(--pico-spacing, 1rem) * 0.5);
-      color: var(--pico-primary);
+      color: var(--pico-accordion-active-summary-color);
     }
 
     &[role="button"] {
@@ -68,9 +65,15 @@ details {
     }
 
     &::after {
-      transform: rotate(0);
+      transform: rotate(180deg);
     }
   }
+}
+
+/* A plain accordion item is a row with a divider under it */
+:where(details:not(.dropdown):has(> summary:not([role]))) {
+  padding-block-end: var(--pico-spacing);
+  border-block-end: var(--pico-border-width) solid var(--pico-accordion-border-color);
 }
 
 /* Float and background position have no logical keyword */

@@ -5,7 +5,7 @@
   --pico-skeleton-color: var(--pico-muted-border-color);
   --pico-skeleton-highlight-color: light-dark(
     var(--pico-form-element-background-color),
-    var(--pico-form-element-selected-background-color)
+    oklch(0.32 0.008 265)
   );
   --pico-skeleton-duration: 1.5s;
   --pico-skeleton-line-height: 1em;
@@ -51,6 +51,7 @@
   &[data-skeleton="block"] {
     inline-size: 100%;
     block-size: var(--pico-skeleton-block-size);
+    border-radius: var(--pico-card-border-radius);
   }
 }
 

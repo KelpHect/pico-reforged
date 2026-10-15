@@ -7,43 +7,45 @@
 @layer pico.tokens {
   :root, :host {
     --pico-font-family-emoji: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --pico-font-family-sans-serif: system-ui, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, Helvetica, Arial, "Helvetica Neue",
-    sans-serif, var(--pico-font-family-emoji);
-    --pico-font-family-monospace: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace,
-    var(--pico-font-family-emoji);
+    --pico-font-family-sans-serif: "Inter Variable", Inter, "Segoe UI Variable Text", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif, var(--pico-font-family-emoji);
+    --pico-font-family-monospace: ui-monospace, "Cascadia Code", "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono",
+    monospace, var(--pico-font-family-emoji);
     --pico-font-family: var(--pico-font-family-sans-serif);
     --pico-line-height: 1.5;
     --pico-font-weight: 400;
     --pico-font-size: 100%;
-    --pico-text-underline-offset: .1rem;
-    --pico-border-radius: .25rem;
+    --pico-text-underline-offset: .2em;
+    --pico-border-radius: .5rem;
     --pico-border-width: .0625rem;
     --pico-outline-width: .125rem;
-    --pico-transition: .2s ease-in-out;
+    --pico-card-border-radius: calc(var(--pico-border-radius) * 1.5);
+    --pico-transition: .15s cubic-bezier(.2, 0, 0, 1);
     --pico-spacing: 1rem;
     --pico-typography-spacing-vertical: 1rem;
-    --pico-block-spacing-vertical: var(--pico-spacing);
-    --pico-block-spacing-horizontal: var(--pico-spacing);
+    --pico-block-spacing-vertical: calc(var(--pico-spacing) * 1.25);
+    --pico-block-spacing-horizontal: calc(var(--pico-spacing) * 1.25);
     --pico-grid-column-gap: var(--pico-spacing);
     --pico-grid-row-gap: var(--pico-spacing);
-    --pico-form-element-spacing-vertical: .75rem;
-    --pico-form-element-spacing-horizontal: 1rem;
+    --pico-form-element-spacing-vertical: .5rem;
+    --pico-form-element-spacing-horizontal: .75rem;
     --pico-container-max-width: 100%;
-    --pico-button-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
-    --pico-button-hover-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
+    --pico-button-box-shadow: 0 .0625rem .125rem oklch(0% 0 0 / .08), inset 0 .0625rem 0 oklch(100% 0 0 / .12);
+    --pico-button-hover-box-shadow: 0 .125rem .375rem -.0625rem oklch(0% 0 0 / .14), inset 0 .0625rem 0 oklch(100% 0 0 / .12);
     --pico-group-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
-    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width)
-    var(--pico-primary-focus);
-    --pico-group-box-shadow-focus-with-input: 0 0 0 .0625rem var(--pico-form-element-border-color);
+    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-background-color),
+    0 0 0 calc(var(--pico-outline-width) * 2) var(--pico-primary-focus);
+    --pico-group-box-shadow-focus-with-input: 0 0 0 .1875rem
+    color-mix(in oklab, var(--pico-form-element-focus-color) 25%, transparent);
     --pico-form-element-disabled-opacity: .5;
     --pico-loading-spinner-opacity: .5;
     --pico-modal-overlay-backdrop-filter: blur(.375rem);
     --pico-scrollbar-width: 0px;
-    --pico-nav-element-spacing-vertical: 1rem;
+    --pico-nav-element-spacing-vertical: .75rem;
     --pico-nav-element-spacing-horizontal: .5rem;
-    --pico-nav-link-spacing-vertical: .5rem;
-    --pico-nav-link-spacing-horizontal: .5rem;
-    --pico-nav-breadcrumb-divider: ">";
+    --pico-nav-link-spacing-vertical: .375rem;
+    --pico-nav-link-spacing-horizontal: .625rem;
+    --pico-nav-breadcrumb-divider: "/";
     --pico-icon-checkbox: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(255,255,255)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
     --pico-icon-minus: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(255,255,255)' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='5' y1='12' x2='19' y2='12'%3E%3C/line%3E%3C/svg%3E");
     --pico-icon-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='rgb(136,145,164)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
@@ -56,35 +58,31 @@
 
   @media (width >= 576px) {
     :root, :host {
-      --pico-font-size: 106.25%;
       --pico-container-max-width: 510px;
     }
   }
 
   @media (width >= 768px) {
     :root, :host {
-      --pico-font-size: 112.5%;
       --pico-container-max-width: 700px;
     }
   }
 
   @media (width >= 1024px) {
     :root, :host {
-      --pico-font-size: 118.75%;
       --pico-container-max-width: 950px;
     }
   }
 
   @media (width >= 1280px) {
     :root, :host {
-      --pico-font-size: 125%;
       --pico-container-max-width: 1200px;
     }
   }
 
   @media (width >= 1536px) {
     :root, :host {
-      --pico-font-size: 131.25%;
+      --pico-font-size: 106.25%;
       --pico-container-max-width: 1450px;
     }
   }
@@ -115,40 +113,42 @@
   }
 
   :root, :host, [data-theme] {
-    --pico-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(20.3% .017 266));
-    --pico-color: var(--lightningcss-light, oklch(35.5% .016 260)) var(--lightningcss-dark, oklch(82.9% .014 262));
-    --pico-muted-color: var(--lightningcss-light, oklch(52.7% .024 264)) var(--lightningcss-dark, oklch(65.6% .03 265));
-    --pico-muted-border-color: var(--lightningcss-light, oklch(93.6% .008 263)) var(--lightningcss-dark, oklch(26.8% .024 264));
+    --pico-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(16.5% .006 265));
+    --pico-color: var(--lightningcss-light, oklch(27% .012 265)) var(--lightningcss-dark, oklch(92% .005 265));
+    --pico-muted-color: var(--lightningcss-light, oklch(50% .016 265)) var(--lightningcss-dark, oklch(71% .012 265));
+    --pico-muted-border-color: var(--lightningcss-light, oklch(92.5% .005 265)) var(--lightningcss-dark, oklch(29% .008 265));
     --pico-primary-border: var(--pico-primary-background);
     --pico-primary-hover-border: var(--pico-primary-hover-background);
     --pico-primary-hover-underline: var(--pico-primary-hover);
+    --pico-primary-subtle-background: var(--lightningcss-light, color-mix(in oklab, var(--pico-primary) 10%, transparent)) var(--lightningcss-dark, color-mix(in oklab, var(--pico-primary) 20%, transparent));
+    --pico-primary-subtle-border: var(--lightningcss-light, color-mix(in oklab, var(--pico-primary) 28%, transparent)) var(--lightningcss-dark, color-mix(in oklab, var(--pico-primary) 40%, transparent));
     --pico-secondary: var(--lightningcss-light, oklch(52.8% .05 265)) var(--lightningcss-dark, oklch(69.8% .027 266));
-    --pico-secondary-background: oklch(48.5% .047 265);
-    --pico-secondary-border: var(--pico-secondary-background);
+    --pico-secondary-background: var(--lightningcss-light, oklch(95.5% .004 265)) var(--lightningcss-dark, oklch(27% .008 265));
+    --pico-secondary-border: var(--lightningcss-light, oklch(88% .006 265)) var(--lightningcss-dark, oklch(34% .008 265));
     --pico-secondary-underline: var(--lightningcss-light, oklch(52.8% .05 265 / .5)) var(--lightningcss-dark, oklch(69.8% .027 266 / .5));
     --pico-secondary-hover: var(--lightningcss-light, oklch(44.2% .042 266)) var(--lightningcss-dark, oklch(78.5% .018 264));
-    --pico-secondary-hover-background: var(--lightningcss-light, oklch(44.2% .042 266)) var(--lightningcss-dark, oklch(52.8% .05 265));
-    --pico-secondary-hover-border: var(--pico-secondary-hover-background);
+    --pico-secondary-hover-background: var(--lightningcss-light, oklch(92.5% .005 265)) var(--lightningcss-dark, oklch(31% .008 265));
+    --pico-secondary-hover-border: var(--lightningcss-light, oklch(84% .008 265)) var(--lightningcss-dark, oklch(38% .008 265));
     --pico-secondary-hover-underline: var(--pico-secondary-hover);
-    --pico-secondary-focus: var(--lightningcss-light, oklch(52.8% .05 265 / .25)) var(--lightningcss-dark, oklch(69.9% .05 267 / .25));
-    --pico-secondary-inverse: oklch(100% 0 0);
+    --pico-secondary-focus: var(--lightningcss-light, oklch(57% .025 265)) var(--lightningcss-dark, oklch(74% .02 265));
+    --pico-secondary-inverse: var(--lightningcss-light, oklch(24% .012 265)) var(--lightningcss-dark, oklch(95% .004 265));
     --pico-contrast: var(--lightningcss-light, oklch(22.7% .019 266)) var(--lightningcss-dark, oklch(91.5% .012 265));
-    --pico-contrast-background: var(--lightningcss-light, oklch(22.7% .019 266)) var(--lightningcss-dark, oklch(95.8% .0046 258));
+    --pico-contrast-background: var(--lightningcss-light, oklch(22% .012 265)) var(--lightningcss-dark, oklch(93% .005 265));
     --pico-contrast-border: var(--pico-contrast-background);
     --pico-contrast-underline: var(--lightningcss-light, oklch(22.7% .019 266 / .5)) var(--lightningcss-dark, oklch(91.5% .012 265 / .5));
     --pico-contrast-hover: var(--lightningcss-light, oklch(0% 0 0)) var(--lightningcss-dark, oklch(100% 0 0));
-    --pico-contrast-hover-background: var(--lightningcss-light, oklch(0% 0 0)) var(--lightningcss-dark, oklch(100% 0 0));
+    --pico-contrast-hover-background: var(--lightningcss-light, oklch(30% .012 265)) var(--lightningcss-dark, oklch(100% 0 0));
     --pico-contrast-hover-border: var(--pico-contrast-hover-background);
     --pico-contrast-hover-underline: var(--lightningcss-light, var(--pico-secondary-hover)) var(--lightningcss-dark, var(--pico-contrast-hover));
-    --pico-contrast-focus: var(--lightningcss-light, oklch(52.8% .05 265 / .25)) var(--lightningcss-dark, oklch(87.2% .019 266 / .25));
-    --pico-contrast-inverse: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(0% 0 0));
-    --pico-box-shadow: .0145rem .029rem .174rem var(--lightningcss-light, oklch(65.7% .057 266 / .01698)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .01698)), .0335rem .067rem .402rem var(--lightningcss-light, oklch(65.7% .057 266 / .024)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .024)), .0625rem .125rem .75rem var(--lightningcss-light, oklch(65.7% .057 266 / .03)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .03)), .1125rem .225rem 1.35rem var(--lightningcss-light, oklch(65.7% .057 266 / .036)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .036)), .2085rem .417rem 2.502rem var(--lightningcss-light, oklch(65.7% .057 266 / .04302)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .04302)), .5rem 1rem 6rem var(--lightningcss-light, oklch(65.7% .057 266 / .06)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .06)), 0 0 0 .0625rem var(--lightningcss-light, oklch(65.7% .057 266 / .015)) var(--lightningcss-dark, oklch(13.69% .0084 264.67 / .015));
-    --pico-h1-color: var(--lightningcss-light, oklch(31.2% .014 262)) var(--lightningcss-dark, oklch(95.8% .003 265));
-    --pico-h2-color: var(--lightningcss-light, oklch(35.5% .016 260)) var(--lightningcss-dark, oklch(91.5% .006 255));
-    --pico-h3-color: var(--lightningcss-light, oklch(39.7% .018 264)) var(--lightningcss-dark, oklch(82.9% .014 262));
-    --pico-h4-color: var(--lightningcss-light, oklch(44% .02 263)) var(--lightningcss-dark, oklch(78.5% .018 264));
-    --pico-h5-color: var(--lightningcss-light, oklch(49.8% .023 263)) var(--lightningcss-dark, oklch(74.3% .022 262));
-    --pico-h6-color: var(--lightningcss-light, oklch(52.7% .024 264)) var(--lightningcss-dark, oklch(65.6% .03 265));
+    --pico-contrast-focus: var(--lightningcss-light, oklch(22% .012 265)) var(--lightningcss-dark, oklch(93% .005 265));
+    --pico-contrast-inverse: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(16.5% .006 265));
+    --pico-box-shadow: 0 0 0 .0625rem var(--lightningcss-light, oklch(20% .02 265 / .07)) var(--lightningcss-dark, oklch(100% 0 0 / .1)), 0 .0625rem .125rem 0 var(--lightningcss-light, oklch(20% .02 265 / .05)) var(--lightningcss-dark, oklch(0% 0 0 / .3)), 0 .25rem .75rem -.25rem var(--lightningcss-light, oklch(20% .02 265 / .08)) var(--lightningcss-dark, oklch(0% 0 0 / .35));
+    --pico-h1-color: var(--lightningcss-light, oklch(20% .012 265)) var(--lightningcss-dark, oklch(97% .004 265));
+    --pico-h2-color: var(--lightningcss-light, oklch(20% .012 265)) var(--lightningcss-dark, oklch(97% .004 265));
+    --pico-h3-color: var(--lightningcss-light, oklch(20% .012 265)) var(--lightningcss-dark, oklch(97% .004 265));
+    --pico-h4-color: var(--lightningcss-light, oklch(20% .012 265)) var(--lightningcss-dark, oklch(97% .004 265));
+    --pico-h5-color: var(--lightningcss-light, oklch(27% .012 265)) var(--lightningcss-dark, oklch(92% .005 265));
+    --pico-h6-color: var(--lightningcss-light, oklch(40% .014 265)) var(--lightningcss-dark, oklch(80% .008 265));
     --pico-mark-background-color: var(--lightningcss-light, oklch(93.45% .0562 81.9)) var(--lightningcss-dark, oklch(35.6% .083 241.5));
     --pico-mark-color: var(--lightningcss-light, oklch(17.7% .007 258)) var(--lightningcss-dark, oklch(100% 0 0));
     --pico-ins-color: var(--lightningcss-light, oklch(47.03% .0817 170.23)) var(--lightningcss-dark, oklch(69.8% .083 174));
@@ -156,51 +156,51 @@
     --pico-blockquote-border-color: var(--pico-muted-border-color);
     --pico-blockquote-footer-color: var(--pico-muted-color);
     --pico-table-border-color: var(--pico-muted-border-color);
-    --pico-table-row-stripped-background-color: oklch(57% .026 261 / .0375);
-    --pico-code-background-color: var(--lightningcss-light, oklch(96.81% .0034 258.32)) var(--lightningcss-dark, oklch(23.71% .02 265.5));
-    --pico-code-color: var(--lightningcss-light, oklch(52.7% .024 264)) var(--lightningcss-dark, oklch(65.6% .03 265));
+    --pico-table-row-stripped-background-color: var(--lightningcss-light, oklch(50% .01 265 / .035)) var(--lightningcss-dark, oklch(100% 0 0 / .05));
+    --pico-code-background-color: var(--lightningcss-light, oklch(96.7% .003 265)) var(--lightningcss-dark, oklch(21.5% .007 265));
+    --pico-code-color: var(--lightningcss-light, oklch(36% .014 265)) var(--lightningcss-dark, oklch(80% .01 265));
     --pico-code-kbd-background-color: var(--pico-color);
     --pico-code-kbd-color: var(--pico-background-color);
-    --pico-form-element-background-color: var(--lightningcss-light, oklch(98.9% .001 258)) var(--lightningcss-dark, oklch(24.8% .0214 265));
-    --pico-form-element-selected-background-color: var(--lightningcss-light, oklch(91.5% .012 265)) var(--lightningcss-dark, oklch(31.3% .029 265));
-    --pico-form-element-border-color: var(--lightningcss-light, oklch(87.2% .019 266)) var(--lightningcss-dark, oklch(31.3% .029 265));
-    --pico-form-element-color: var(--lightningcss-light, oklch(26.8% .012 264)) var(--lightningcss-dark, oklch(91.5% .006 255));
-    --pico-form-element-placeholder-color: var(--lightningcss-light, var(--pico-muted-color)) var(--lightningcss-dark, oklch(65.6% .03 265));
-    --pico-form-element-active-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(23.71% .02 265.5));
-    --pico-form-element-active-border-color: var(--pico-primary-border);
-    --pico-form-element-focus-color: var(--pico-primary-border);
+    --pico-form-element-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(19.5% .007 265));
+    --pico-form-element-selected-background-color: var(--lightningcss-light, oklch(95.5% .004 265)) var(--lightningcss-dark, oklch(27% .008 265));
+    --pico-form-element-border-color: var(--lightningcss-light, oklch(66% .012 265)) var(--lightningcss-dark, oklch(52% .01 265));
+    --pico-form-element-color: var(--lightningcss-light, oklch(20% .012 265)) var(--lightningcss-dark, oklch(95% .004 265));
+    --pico-form-element-placeholder-color: var(--pico-muted-color);
+    --pico-form-element-active-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(21% .007 265));
+    --pico-form-element-active-border-color: var(--pico-primary-focus);
+    --pico-form-element-focus-color: var(--pico-primary-focus);
     --pico-form-element-invalid-border-color: var(--lightningcss-light, oklch(61% .1 19.58)) var(--lightningcss-dark, oklch(50.45% .1014 16.42));
     --pico-form-element-invalid-active-border-color: var(--lightningcss-light, oklch(58.7% .156 26.3)) var(--lightningcss-dark, oklch(53.8% .1559 25.93));
     --pico-form-element-invalid-focus-color: var(--pico-form-element-invalid-active-border-color);
     --pico-form-element-valid-border-color: var(--lightningcss-light, oklch(63.3% .0822 177.5)) var(--lightningcss-dark, oklch(53% .0798 181.5));
     --pico-form-element-valid-active-border-color: var(--lightningcss-light, oklch(61.1% .112 168.13)) var(--lightningcss-dark, oklch(56.24% .1078 168.51));
     --pico-form-element-valid-focus-color: var(--pico-form-element-valid-active-border-color);
-    --pico-switch-background-color: var(--lightningcss-light, oklch(82.9% .027 267)) var(--lightningcss-dark, oklch(35.6% .034 264));
+    --pico-switch-background-color: var(--lightningcss-light, oklch(66% .012 265)) var(--lightningcss-dark, oklch(52% .01 265));
     --pico-switch-checked-background-color: var(--pico-primary-background);
     --pico-switch-color: oklch(100% 0 0);
-    --pico-range-border-color: var(--lightningcss-light, oklch(91.5% .012 265)) var(--lightningcss-dark, oklch(26.8% .024 264));
-    --pico-range-active-border-color: var(--lightningcss-light, oklch(82.9% .027 267)) var(--lightningcss-dark, oklch(31.3% .029 265));
+    --pico-range-border-color: var(--lightningcss-light, oklch(90% .006 265)) var(--lightningcss-dark, oklch(38% .008 265));
+    --pico-range-active-border-color: var(--lightningcss-light, oklch(85% .008 265)) var(--lightningcss-dark, oklch(44% .008 265));
     --pico-range-thumb-border-color: var(--pico-background-color);
-    --pico-range-thumb-color: var(--pico-secondary-background);
+    --pico-range-thumb-color: var(--pico-primary-background);
     --pico-range-thumb-active-color: var(--pico-primary-background);
     --pico-accordion-border-color: var(--pico-muted-border-color);
     --pico-accordion-active-summary-color: var(--pico-primary-hover);
     --pico-accordion-close-summary-color: var(--pico-color);
-    --pico-accordion-open-summary-color: var(--pico-muted-color);
-    --pico-card-background-color: var(--lightningcss-light, var(--pico-background-color)) var(--lightningcss-dark, oklch(22.7% .019 266));
-    --pico-card-border-color: var(--lightningcss-light, var(--pico-muted-border-color)) var(--lightningcss-dark, var(--pico-card-background-color));
+    --pico-accordion-open-summary-color: var(--pico-color);
+    --pico-card-background-color: var(--lightningcss-light, var(--pico-background-color)) var(--lightningcss-dark, oklch(21.5% .007 265));
+    --pico-card-border-color: var(--lightningcss-light, var(--pico-muted-border-color)) var(--lightningcss-dark, oklch(32% .008 265));
     --pico-card-box-shadow: var(--pico-box-shadow);
-    --pico-card-sectioning-background-color: var(--lightningcss-light, oklch(98.9% .001 258)) var(--lightningcss-dark, oklch(23.71% .02 265.5));
-    --pico-dropdown-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(22.7% .019 266));
-    --pico-dropdown-border-color: var(--lightningcss-light, oklch(95.8% .0046 258)) var(--lightningcss-dark, oklch(26.8% .024 264));
-    --pico-dropdown-box-shadow: var(--pico-box-shadow);
+    --pico-card-sectioning-background-color: var(--lightningcss-light, oklch(98.5% .002 265)) var(--lightningcss-dark, oklch(24% .008 265));
+    --pico-dropdown-background-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(23.5% .008 265));
+    --pico-dropdown-border-color: var(--lightningcss-light, oklch(92% .005 265)) var(--lightningcss-dark, oklch(32% .008 265));
+    --pico-dropdown-box-shadow: 0 0 0 .0625rem var(--lightningcss-light, oklch(20% .02 265 / .07)) var(--lightningcss-dark, oklch(100% 0 0 / .1)), 0 .125rem .25rem -.0625rem var(--lightningcss-light, oklch(20% .02 265 / .06)) var(--lightningcss-dark, oklch(0% 0 0 / .3)), 0 .75rem 2rem -.5rem var(--lightningcss-light, oklch(20% .02 265 / .18)) var(--lightningcss-dark, oklch(0% 0 0 / .5));
     --pico-dropdown-color: var(--pico-color);
-    --pico-dropdown-hover-background-color: var(--lightningcss-light, oklch(95.8% .0046 258)) var(--lightningcss-dark, oklch(26.8% .024 264));
-    --pico-modal-overlay-background-color: var(--lightningcss-light, oklch(93.6% .005 258 / .75)) var(--lightningcss-dark, oklch(13.65% .004 256.38 / .75));
-    --pico-progress-background-color: var(--lightningcss-light, oklch(91.5% .012 265)) var(--lightningcss-dark, oklch(26.8% .024 264));
+    --pico-dropdown-hover-background-color: var(--lightningcss-light, oklch(96.5% .004 265)) var(--lightningcss-dark, oklch(29% .008 265));
+    --pico-modal-overlay-background-color: var(--lightningcss-light, oklch(20% .02 265 / .4)) var(--lightningcss-dark, oklch(0% 0 0 / .6));
+    --pico-progress-background-color: var(--lightningcss-light, oklch(92.5% .005 265)) var(--lightningcss-dark, oklch(27% .008 265));
     --pico-progress-color: var(--pico-primary-background);
-    --pico-tooltip-background-color: var(--pico-contrast-background);
-    --pico-tooltip-color: var(--pico-contrast-inverse);
+    --pico-tooltip-background-color: var(--lightningcss-light, oklch(24% .012 265)) var(--lightningcss-dark, oklch(30% .01 265));
+    --pico-tooltip-color: var(--lightningcss-light, oklch(100% 0 0)) var(--lightningcss-dark, oklch(95% .004 265));
   }
 
   :root, :host, [data-theme="light"] {
@@ -220,18 +220,33 @@
     }
   }
 
+  :root, :host, [data-theme="light"] {
+    --_pico-secondary-icon-filter: brightness(0);
+    --_pico-contrast-icon-filter: brightness(0) invert(1);
+  }
+
+  [data-theme="dark"] {
+    --_pico-secondary-icon-filter: brightness(0) invert(1);
+    --_pico-contrast-icon-filter: brightness(0);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]), :host(:not([data-theme="light"])) {
+      --_pico-secondary-icon-filter: brightness(0) invert(1);
+      --_pico-contrast-icon-filter: brightness(0);
+    }
+  }
+
   details summary[role="button"]:not(.outline):after, [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]):not(.outline):before {
     filter: brightness(0) invert();
   }
 
-  [data-theme="dark"] details summary[role="button"].contrast:not(.outline):after, [data-theme="dark"] [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]).contrast:not(.outline):before {
-    filter: brightness(0);
+  details summary[role="button"].secondary:not(.outline):after, [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]).secondary:not(.outline):before {
+    filter: var(--_pico-secondary-icon-filter);
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) details summary[role="button"].contrast:not(.outline):after, :root:not([data-theme="light"]) [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]).contrast:not(.outline):before {
-      filter: brightness(0);
-    }
+  details summary[role="button"].contrast:not(.outline):after, [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]).contrast:not(.outline):before {
+    filter: var(--_pico-contrast-icon-filter);
   }
 }
 
@@ -243,9 +258,9 @@
     --pico-primary-underline: var(--lightningcss-light, oklch(53% .1254 242 / .5)) var(--lightningcss-dark, oklch(70.7% .1679 242.1 / .5));
     --pico-primary-hover: var(--lightningcss-light, oklch(44.12% .1044 242)) var(--lightningcss-dark, oklch(78.6% .115 246.66));
     --pico-primary-hover-background: var(--lightningcss-light, oklch(48.6% .115 242.2)) var(--lightningcss-dark, oklch(57.2% .1355 242));
-    --pico-primary-focus: var(--lightningcss-light, oklch(65.8% .1564 242.2 / .5)) var(--lightningcss-dark, oklch(70.7% .1679 242.1 / .375));
+    --pico-primary-focus: var(--lightningcss-light, oklch(57.2% .1355 242)) var(--lightningcss-dark, oklch(70.7% .1679 242.1));
     --pico-primary-inverse: oklch(100% 0 0);
-    --pico-switch-thumb-box-shadow: 0 0 0 oklch(0% 0 0 / 0);
+    --pico-switch-thumb-box-shadow: 0 .0625rem .125rem 0 oklch(0% 0 0 / .2);
   }
 }
 
@@ -276,6 +291,10 @@
     text-rendering: optimizelegibility;
     overflow-wrap: break-word;
     tab-size: 4;
+  }
+
+  :where([data-theme]) {
+    color: var(--pico-color);
   }
 
   body {
@@ -336,47 +355,51 @@
   }
 
   h1, h2, h3, h4, h5, h6 {
-    --pico-font-weight: 700;
+    --pico-font-weight: 600;
   }
 
   h1 {
-    --pico-font-size: 2rem;
-    --pico-line-height: 1.125;
+    --pico-font-size: 2.25rem;
+    --pico-line-height: 1.15;
+    letter-spacing: -.025em;
     --pico-typography-spacing-top: 3rem;
     --pico-color: var(--pico-h1-color);
   }
 
   h2 {
     --pico-font-size: 1.75rem;
-    --pico-line-height: 1.15;
+    --pico-line-height: 1.2;
+    letter-spacing: -.02em;
     --pico-typography-spacing-top: 2.625rem;
     --pico-color: var(--pico-h2-color);
   }
 
   h3 {
-    --pico-font-size: 1.5rem;
-    --pico-line-height: 1.175;
+    --pico-font-size: 1.375rem;
+    --pico-line-height: 1.3;
+    letter-spacing: -.015em;
     --pico-typography-spacing-top: 2.25rem;
     --pico-color: var(--pico-h3-color);
   }
 
   h4 {
-    --pico-font-size: 1.25rem;
-    --pico-line-height: 1.2;
+    --pico-font-size: 1.125rem;
+    --pico-line-height: 1.4;
+    letter-spacing: -.01em;
     --pico-typography-spacing-top: 1.874rem;
     --pico-color: var(--pico-h4-color);
   }
 
   h5 {
-    --pico-font-size: 1.125rem;
-    --pico-line-height: 1.225;
+    --pico-font-size: 1rem;
+    --pico-line-height: 1.5;
     --pico-typography-spacing-top: 1.6875rem;
     --pico-color: var(--pico-h5-color);
   }
 
   h6 {
-    --pico-font-size: 1rem;
-    --pico-line-height: 1.25;
+    --pico-font-size: .875rem;
+    --pico-line-height: 1.5;
     --pico-typography-spacing-top: 1.5rem;
     --pico-color: var(--pico-h6-color);
   }
@@ -416,6 +439,11 @@
     font-size: var(--pico-font-size);
     line-height: var(--pico-line-height);
     font-family: var(--pico-font-family);
+    text-wrap: balance;
+  }
+
+  :where(p, li, figcaption, blockquote) {
+    text-wrap: pretty;
   }
 
   :where(article, address, blockquote, dl, figure, form, ol, p, pre, table, ul) ~ :is(h1, h2, h3, h4, h5, h6) {
@@ -447,7 +475,11 @@
   }
 
   ul li {
-    list-style: square;
+    list-style: outside;
+  }
+
+  :where(ul, ol) li::marker {
+    color: var(--pico-muted-color);
   }
 
   mark {
@@ -503,12 +535,13 @@
     text-decoration: var(--pico-text-decoration);
     -webkit-text-decoration-color: var(--pico-underline);
     text-decoration-color: var(--pico-underline);
-    text-underline-offset: .125em;
+    text-underline-offset: var(--pico-text-underline-offset);
     transition: background-color var(--pico-transition),
     color var(--pico-transition),
     text-decoration var(--pico-transition),
     box-shadow var(--pico-transition);
     outline: none;
+    text-decoration-thickness: .0625rem;
   }
 
   :where(a:not([role="button"])):is([aria-current]:not([aria-current="false"]), :hover, :active, :focus), [role="link"]:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
@@ -518,7 +551,8 @@
   }
 
   :where(a:not([role="button"])):focus-visible, [role="link"]:focus-visible {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: var(--pico-outline-width);
   }
 
   :where(a:not([role="button"])).secondary, [role="link"].secondary {
@@ -561,6 +595,7 @@
     --pico-border-color: var(--pico-primary-border);
     --pico-color: var(--pico-primary-inverse);
     --pico-box-shadow: var(--pico-button-box-shadow, 0 0 0 transparent);
+    --pico-font-weight: 500;
     padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
     border: var(--pico-border-width) solid var(--pico-border-color);
     border-radius: var(--pico-border-radius);
@@ -577,7 +612,8 @@
     transition: background-color var(--pico-transition),
     border-color var(--pico-transition),
     color var(--pico-transition),
-    box-shadow var(--pico-transition);
+    box-shadow var(--pico-transition),
+    transform var(--pico-transition);
     outline: none;
     text-decoration: none;
   }
@@ -587,6 +623,7 @@
     --pico-border-color: var(--pico-primary-border);
     --pico-color: var(--pico-primary-inverse);
     --pico-box-shadow: var(--pico-button-box-shadow, 0 0 0 transparent);
+    --pico-font-weight: 500;
     padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
     border: var(--pico-border-width) solid var(--pico-border-color);
     border-radius: var(--pico-border-radius);
@@ -603,7 +640,8 @@
     transition: background-color var(--pico-transition),
     border-color var(--pico-transition),
     color var(--pico-transition),
-    box-shadow var(--pico-transition);
+    box-shadow var(--pico-transition),
+    transform var(--pico-transition);
     outline: none;
     text-decoration: none;
   }
@@ -622,9 +660,19 @@
     --pico-color: var(--pico-primary-inverse);
   }
 
-  button:focus, button[aria-current]:not([aria-current="false"]):focus, [type="submit"]:focus, [type="submit"][aria-current]:not([aria-current="false"]):focus, [type="reset"]:focus, [type="reset"][aria-current]:not([aria-current="false"]):focus, [type="button"]:focus, [type="button"][aria-current]:not([aria-current="false"]):focus, [role="button"]:focus, [role="button"][aria-current]:not([aria-current="false"]):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-    0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+  button:focus-visible, [type="submit"]:focus-visible, [type="reset"]:focus-visible, [type="button"]:focus-visible, [role="button"]:focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: var(--pico-outline-width);
+  }
+
+  button:active, [type="submit"]:active, [type="reset"]:active, [type="button"]:active, [role="button"]:active {
+    box-shadow: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    button:active, [type="submit"]:active, [type="reset"]:active, [type="button"]:active, [role="button"]:active {
+      transform: scale(.98);
+    }
   }
 
   [type="submit"], [type="reset"], [type="button"] {
@@ -657,14 +705,8 @@
     --pico-color: var(--pico-secondary-inverse);
   }
 
-  :is(button, [type="submit"], [type="button"], [role="button"]).secondary:focus, :is(button, [type="submit"], [type="button"], [role="button"]).secondary[aria-current]:not([aria-current="false"]):focus, [type="reset"]:focus, [type="reset"][aria-current]:not([aria-current="false"]):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-    0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
-  }
-
-  [type="file"]::file-selector-button:focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-    0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+  :is(button, [type="submit"], [type="button"], [role="button"]).secondary:focus-visible, [type="reset"]:focus-visible {
+    outline-color: var(--pico-secondary-focus);
   }
 
   :is(button, [type="submit"], [type="button"], [role="button"]).contrast {
@@ -679,19 +721,20 @@
     --pico-color: var(--pico-contrast-inverse);
   }
 
-  :is(button, [type="submit"], [type="button"], [role="button"]).contrast:focus, :is(button, [type="submit"], [type="button"], [role="button"]).contrast[aria-current]:not([aria-current="false"]):focus {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-      0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
+  :is(button, [type="submit"], [type="button"], [role="button"]).contrast:focus-visible {
+    outline-color: var(--pico-contrast-focus);
   }
 
   :is(button, [type="submit"], [type="button"], [role="button"]).outline, [type="reset"].outline {
     --pico-background-color: transparent;
+    --pico-box-shadow: none;
     --pico-color: var(--pico-primary);
     --pico-border-color: var(--pico-primary);
   }
 
   :is(button, [type="submit"], [type="button"], [role="button"]).outline:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus), [type="reset"].outline:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
-    --pico-background-color: transparent;
+    --pico-background-color: color-mix(in oklab, var(--pico-color) 8%, transparent);
+    --pico-box-shadow: none;
     --pico-color: var(--pico-primary-hover);
     --pico-border-color: var(--pico-primary-hover);
   }
@@ -716,14 +759,30 @@
     --pico-border-color: var(--pico-contrast-hover);
   }
 
-  :where(button, [type="submit"], [type="reset"], [type="button"], [role="button"])[disabled], :where(fieldset[disabled]) :is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]) {
+  :where(button, [type="submit"], [type="reset"], [type="button"], [role="button"])[disabled], :where([role="button"][aria-disabled="true"]), :where(fieldset[disabled]) :is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]) {
     opacity: .5;
     pointer-events: none;
   }
 
+  :is(button, [type="submit"], [type="reset"], [type="button"], [role="button"]):not(.outline):is([disabled], [role="button"][aria-disabled="true"], :where(fieldset[disabled]) *) {
+    --pico-background-color: var(--pico-secondary-background);
+    --pico-border-color: var(--pico-secondary-background);
+    --pico-color: var(--pico-muted-color);
+    --pico-box-shadow: none;
+    opacity: .7;
+  }
+
+  :is(button, [type="submit"], [type="reset"], [type="button"], [role="button"]):not(.outline):is([disabled], [role="button"][aria-disabled="true"], :where(fieldset[disabled]) *):before {
+    filter: var(--_pico-secondary-icon-filter);
+  }
+
   :is(thead, tfoot) th, :is(thead, tfoot) td {
-    --pico-font-weight: 600;
-    --pico-border-width: .1875rem;
+    --pico-font-weight: 500;
+  }
+
+  thead :where(th, td) {
+    --pico-color: var(--pico-muted-color);
+    font-size: .875em;
   }
 
   :where(table) {
@@ -734,12 +793,20 @@
   }
 
   th, td {
-    padding: calc(var(--pico-spacing) / 2) var(--pico-spacing);
+    padding: calc(var(--pico-spacing) * .625) var(--pico-spacing);
     border-bottom: var(--pico-border-width) solid var(--pico-table-border-color);
     background-color: var(--pico-background-color);
     color: var(--pico-color);
     font-weight: var(--pico-font-weight);
     text-align: start;
+  }
+
+  td {
+    font-variant-numeric: tabular-nums;
+  }
+
+  article :where(th, td) {
+    background-color: #0000;
   }
 
   tfoot th, tfoot td {
@@ -757,6 +824,14 @@
 
   audio, video {
     display: inline-block;
+  }
+
+  :where(video, canvas, iframe) {
+    max-inline-size: 100%;
+  }
+
+  :where(video, canvas) {
+    block-size: auto;
   }
 
   audio:not([controls]) {
@@ -794,7 +869,7 @@
   }
 
   kbd {
-    --pico-font-weight: bolder;
+    --pico-font-weight: 500;
   }
 
   pre code, pre samp {
@@ -803,8 +878,12 @@
   }
 
   code, kbd, samp {
-    padding: .375rem;
-    display: inline-block;
+    border-radius: calc(var(--pico-border-radius) * .75);
+    line-height: inherit;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    padding: .125em .25em;
+    display: inline;
   }
 
   pre {
@@ -824,6 +903,7 @@
     background-color: var(--pico-code-kbd-background-color);
     color: var(--pico-code-kbd-color);
     vertical-align: baseline;
+    padding: .2em .45em;
   }
 
   figure {
@@ -854,11 +934,11 @@
   }
 
   :root, :host {
-    --pico-form-label-font-weight: var(--pico-font-weight);
+    --pico-form-label-font-weight: 500;
   }
 
   input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="file"]), :where(select, textarea) {
-    --pico-outline-width: .0625rem;
+    --pico-outline-width: .1875rem;
   }
 
   input:is([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="file"]) {
@@ -986,6 +1066,11 @@
     outline: none;
   }
 
+  input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="range"], [type="file"])[readonly], textarea[readonly] {
+    --pico-background-color: var(--pico-form-element-selected-background-color);
+    --pico-border-color: var(--pico-form-element-border-color);
+  }
+
   input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [readonly]):is(:active, :focus), :where(select, textarea):not([readonly]):is(:active, :focus) {
     --pico-background-color: var(--pico-form-element-active-background-color);
   }
@@ -994,8 +1079,15 @@
     --pico-border-color: var(--pico-form-element-active-border-color);
   }
 
-  input:not([type="submit"], [type="button"], [type="reset"], [type="range"], [type="file"], [readonly]):focus, :where(select, textarea):not([readonly]):focus {
-    --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color);
+  input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="range"], [type="file"], [readonly]):focus, :where(select, textarea):not([readonly]):focus {
+    --pico-box-shadow: 0 0 0 var(--pico-outline-width)
+    color-mix(in oklab, var(--pico-form-element-focus-color) 25%, transparent);
+  }
+
+  :where(input:not([type="submit"], [type="button"], [type="reset"], [type="checkbox"], [type="radio"], [type="range"], [type="file"]), select, textarea):hover:not(:focus, [readonly], :disabled, [aria-invalid]) {
+    --pico-border-color: color-mix(in oklab,
+    var(--pico-form-element-border-color),
+    var(--pico-color) 30%);
   }
 
   input:not([type="submit"], [type="button"], [type="reset"])[disabled], select[disabled], textarea[disabled], label[aria-disabled="true"], :where(fieldset[disabled]) :is(input:not([type="submit"], [type="button"], [type="reset"]), select, textarea) {
@@ -1033,7 +1125,7 @@
 
   :where(input, select, textarea)[aria-invalid="false"]:is(:active, :focus):not([type="checkbox"], [type="radio"]) {
     --pico-box-shadow: 0 0 0 var(--pico-outline-width)
-          var(--pico-form-element-valid-focus-color) !important;
+          color-mix(in oklab, var(--pico-form-element-valid-focus-color) 25%, transparent) !important;
   }
 
   :where(input, select, textarea)[aria-invalid="true"] {
@@ -1046,7 +1138,7 @@
 
   :where(input, select, textarea)[aria-invalid="true"]:is(:active, :focus):not([type="checkbox"], [type="radio"]) {
     --pico-box-shadow: 0 0 0 var(--pico-outline-width)
-          var(--pico-form-element-invalid-focus-color) !important;
+          color-mix(in oklab, var(--pico-form-element-invalid-focus-color) 25%, transparent) !important;
   }
 
   [dir="rtl"] :where(input, select, textarea):not([type="checkbox"], [type="radio"]):is([aria-invalid], [aria-invalid="true"], [aria-invalid="false"]) {
@@ -1072,8 +1164,8 @@
   }
 
   select[multiple] option:checked {
-    background: var(--pico-form-element-selected-background-color);
-    color: var(--pico-form-element-color);
+    background: color-mix(in oklab, var(--pico-primary-background) 14%, transparent);
+    color: var(--pico-color);
   }
 
   [dir="rtl"] select:not([multiple], [size]) {
@@ -1095,6 +1187,7 @@
   :where(input, select, textarea, fieldset, .grid) + small {
     inline-size: 100%;
     color: var(--pico-muted-color);
+    font-weight: var(--pico-font-weight);
     margin-block-start: calc(var(--pico-spacing) * -.75);
     margin-block-end: var(--pico-spacing);
     display: block;
@@ -1102,10 +1195,12 @@
 
   :where(input, select, textarea, fieldset, .grid)[aria-invalid="false"] + small {
     color: var(--pico-ins-color);
+    font-weight: 500;
   }
 
   :where(input, select, textarea, fieldset, .grid)[aria-invalid="true"] + small {
     color: var(--pico-del-color);
+    font-weight: 500;
   }
 
   label > :where(input, select, textarea) {
@@ -1121,17 +1216,26 @@
   }
 
   label:has([type="checkbox"], [type="radio"]) {
-    cursor: pointer;
     inline-size: fit-content;
+    font-weight: var(--pico-font-weight);
+    cursor: pointer;
   }
 
   [type="checkbox"], [type="radio"] {
     appearance: none;
     border-width: var(--pico-border-width);
+    border-radius: calc(var(--pico-border-radius) * .5);
     vertical-align: middle;
     cursor: pointer;
     block-size: 1.25em;
     inline-size: 1.25em;
+    transition: background-color var(--pico-transition),
+    border-color var(--pico-transition),
+    background-size var(--pico-transition),
+    box-shadow var(--pico-transition);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 0;
     margin-block-start: -.125em;
     margin-inline-end: .5em;
   }
@@ -1145,7 +1249,13 @@
     background-size: .75em;
   }
 
+  :is([type="checkbox"], [type="radio"]):focus-visible {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: var(--pico-outline-width);
+  }
+
   :is([type="checkbox"], [type="radio"]) ~ label {
+    font-weight: var(--pico-font-weight);
     cursor: pointer;
     margin-block-end: 0;
     display: inline-block;
@@ -1195,8 +1305,8 @@
     block-size: 100%;
     box-shadow: var(--pico-switch-thumb-box-shadow);
     content: "";
+    transition: margin var(--pico-transition);
     border-radius: 50%;
-    transition: margin .1s ease-in-out;
     display: block;
   }
 
@@ -1235,21 +1345,28 @@
     --pico-border-color: var(--pico-form-element-invalid-border-color);
   }
 
-  [type="color"]::-webkit-color-swatch-wrapper {
+  input[type="color"] {
+    cursor: pointer;
+    inline-size: 3rem;
+    padding: .25rem;
+    display: block;
+  }
+
+  input[type="color"]::-webkit-color-swatch-wrapper {
     padding: 0;
   }
 
-  [type="color"]::-moz-focus-inner {
+  input[type="color"]::-moz-focus-inner {
     padding: 0;
   }
 
-  [type="color"]::-webkit-color-swatch {
-    border-radius: calc(var(--pico-border-radius) * .5);
+  input[type="color"]::-webkit-color-swatch {
+    border-radius: calc(var(--pico-border-radius) * .75);
     border: 0;
   }
 
-  [type="color"]::-moz-color-swatch {
-    border-radius: calc(var(--pico-border-radius) * .5);
+  input[type="color"]::-moz-color-swatch {
+    border-radius: calc(var(--pico-border-radius) * .75);
     border: 0;
   }
 
@@ -1291,18 +1408,16 @@
 
   [type="file"] {
     --pico-color: var(--pico-muted-color);
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5) 0;
     background: none;
     border: 0;
     border-radius: 0;
-    margin-inline-start: calc(var(--pico-outline-width) * -1);
-    padding-inline-start: var(--pico-outline-width);
+    padding: 0;
   }
 
   [type="file"]::file-selector-button {
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
-      var(--pico-form-element-spacing-horizontal);
-    margin-inline-end: calc(var(--pico-spacing) / 2);
+    padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
+    margin-block: 0;
+    margin-inline: 0 .75rem;
   }
 
   [type="file"]:is(:hover, :active, :focus)::file-selector-button {
@@ -1310,9 +1425,9 @@
     --pico-border-color: var(--pico-secondary-hover-border);
   }
 
-  [type="file"]:focus::file-selector-button {
-    --pico-box-shadow: var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-      0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+  [type="file"]:focus-visible::file-selector-button {
+    outline: var(--pico-outline-width) solid var(--pico-secondary-focus);
+    outline-offset: var(--pico-outline-width);
   }
 
   [type="range"] {
@@ -1323,21 +1438,27 @@
   }
 
   [type="range"]::-webkit-slider-runnable-track {
-    border-radius: var(--pico-border-radius);
     background-color: var(--pico-range-border-color);
     block-size: .375rem;
     inline-size: 100%;
     transition: background-color var(--pico-transition),
       box-shadow var(--pico-transition);
+    border-radius: 1rem;
   }
 
   [type="range"]::-moz-range-track {
-    border-radius: var(--pico-border-radius);
     background-color: var(--pico-range-border-color);
     block-size: .375rem;
     inline-size: 100%;
     transition: background-color var(--pico-transition),
       box-shadow var(--pico-transition);
+    border-radius: 1rem;
+  }
+
+  [type="range"]::-moz-range-progress {
+    background-color: var(--pico-primary-background);
+    border-radius: 1rem;
+    block-size: .375rem;
   }
 
   [type="range"]::-webkit-slider-thumb {
@@ -1351,6 +1472,7 @@
       transform var(--pico-transition);
     border-radius: 50%;
     margin-block-start: -.4375rem;
+    box-shadow: 0 1px 2px oklch(0% 0 0 / .2);
   }
 
   [type="range"]::-moz-range-thumb {
@@ -1364,11 +1486,22 @@
       transform var(--pico-transition);
     border-radius: 50%;
     margin-block-start: -.4375rem;
+    box-shadow: 0 1px 2px oklch(0% 0 0 / .2);
   }
 
   [type="range"]:active, [type="range"]:focus-within {
     --pico-range-border-color: var(--pico-range-active-border-color);
     --pico-range-thumb-color: var(--pico-range-thumb-active-color);
+  }
+
+  [type="range"]:focus-visible::-webkit-slider-thumb {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: var(--pico-outline-width);
+  }
+
+  [type="range"]:focus-visible::-moz-range-thumb {
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: var(--pico-outline-width);
   }
 
   [type="range"]:active::-webkit-slider-thumb {
@@ -1420,6 +1553,7 @@
   details summary {
     cursor: pointer;
     transition: color var(--pico-transition);
+    font-weight: 500;
     line-height: 1rem;
     list-style-type: none;
   }
@@ -1448,21 +1582,17 @@
     background-size: 1rem;
     margin-inline-start: calc(var(--pico-spacing, 1rem) * .5);
     display: block;
-    transform: rotate(-90deg);
+    transform: rotate(0);
   }
 
   details summary:focus {
     outline: none;
   }
 
-  details summary:focus:not([role]) {
-    color: var(--pico-accordion-active-summary-color);
-  }
-
   details summary:focus-visible:not([role]) {
     outline: var(--pico-outline-width) solid var(--pico-primary-focus);
     outline-offset: calc(var(--pico-spacing, 1rem) * .5);
-    color: var(--pico-primary);
+    color: var(--pico-accordion-active-summary-color);
   }
 
   details summary[role="button"] {
@@ -1483,7 +1613,12 @@
   }
 
   details[open] > summary:after {
-    transform: rotate(0);
+    transform: rotate(180deg);
+  }
+
+  :where(details:not(.dropdown):has( > summary:not([role]))) {
+    border-block-end: var(--pico-border-width) solid var(--pico-accordion-border-color);
+    padding-block-end: var(--pico-spacing);
   }
 
   [dir="rtl"] details summary {
@@ -1530,7 +1665,7 @@
   article {
     margin-bottom: var(--pico-block-spacing-vertical);
     padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
-    border-radius: var(--pico-border-radius);
+    border-radius: var(--pico-card-border-radius);
     background: var(--pico-card-background-color);
     box-shadow: var(--pico-card-box-shadow);
   }
@@ -1545,20 +1680,20 @@
     margin-top: calc(var(--pico-block-spacing-vertical) * -1);
     margin-bottom: var(--pico-block-spacing-vertical);
     border-bottom: var(--pico-border-width) solid var(--pico-card-border-color);
-    border-top-left-radius: var(--pico-border-radius);
-    border-top-right-radius: var(--pico-border-radius);
+    border-start-start-radius: var(--pico-card-border-radius);
+    border-start-end-radius: var(--pico-card-border-radius);
   }
 
   article > footer {
     margin-top: var(--pico-block-spacing-vertical);
     margin-bottom: calc(var(--pico-block-spacing-vertical) * -1);
     border-top: var(--pico-border-width) solid var(--pico-card-border-color);
-    border-bottom-left-radius: var(--pico-border-radius);
-    border-bottom-right-radius: var(--pico-border-radius);
+    border-end-end-radius: var(--pico-card-border-radius);
+    border-end-start-radius: var(--pico-card-border-radius);
   }
 
   details.dropdown summary:not([role="button"]) {
-    --pico-outline-width: .0625rem;
+    --pico-outline-width: .1875rem;
   }
 
   nav details.dropdown summary:focus-visible {
@@ -1608,7 +1743,8 @@
   }
 
   details.dropdown > summary:not([role]):focus {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color);
+    box-shadow: 0 0 0 var(--pico-outline-width)
+        color-mix(in oklab, var(--pico-form-element-focus-color) 25%, transparent);
   }
 
   details.dropdown > summary:not([role]):focus-visible {
@@ -1632,37 +1768,44 @@
     display: inline;
   }
 
+  nav details.dropdown > summary {
+    white-space: nowrap;
+  }
+
   nav details.dropdown > summary:after {
     transform: rotate(0) translateX(0);
   }
 
   nav details.dropdown > summary:not([role]) {
-    height: calc(1rem * var(--pico-line-height) + var(--pico-nav-link-spacing-vertical) * 2);
-    padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2)
-      var(--pico-nav-link-spacing-horizontal);
+    height: calc(1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 +
+        var(--pico-border-width) * 2);
+    padding: var(--pico-form-element-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
   }
 
   nav details.dropdown > summary:not([role]):focus-visible {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    box-shadow: none;
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: 0;
   }
 
   details.dropdown > summary + ul {
     z-index: 99;
-    width: 100%;
-    min-width: fit-content;
-    margin: 0;
-    margin-top: var(--pico-outline-width);
     border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
-    border-radius: var(--pico-border-radius);
+    border-radius: var(--pico-card-border-radius);
     background-color: var(--pico-dropdown-background-color);
+    width: 100%;
+    min-width: max-content;
     box-shadow: var(--pico-dropdown-box-shadow);
     color: var(--pico-dropdown-color);
+    text-align: start;
     white-space: nowrap;
     opacity: 0;
     transition: opacity var(--pico-transition),
     transform 0s ease-in-out 1s;
+    margin: 0;
     flex-direction: column;
-    padding: 0;
+    margin-top: .25rem;
+    padding: .25rem;
     display: flex;
     position: absolute;
     left: 0;
@@ -1674,29 +1817,19 @@
   }
 
   details.dropdown > summary + ul li {
+    border-radius: calc(var(--pico-border-radius) * .75);
     width: 100%;
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
-      var(--pico-form-element-spacing-horizontal);
-    margin-bottom: 0;
+    margin: 0;
+    padding: .375rem .625rem;
     list-style: none;
   }
 
-  details.dropdown > summary + ul li:first-of-type {
-    margin-top: calc(var(--pico-form-element-spacing-vertical) * .5);
-  }
-
-  details.dropdown > summary + ul li:last-of-type {
-    margin-bottom: calc(var(--pico-form-element-spacing-vertical) * .5);
-  }
-
   details.dropdown > summary + ul li a {
-    margin: calc(var(--pico-form-element-spacing-vertical) * -.5)
-        calc(var(--pico-form-element-spacing-horizontal) * -1);
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
-        var(--pico-form-element-spacing-horizontal);
+    border-radius: inherit;
     color: var(--pico-dropdown-color);
     text-overflow: ellipsis;
-    border-radius: 0;
+    margin: -.375rem -.625rem;
+    padding: .375rem .625rem;
     text-decoration: none;
     display: block;
     overflow: hidden;
@@ -1721,8 +1854,8 @@
   details.dropdown[open] > summary + ul {
     opacity: 1;
     transition: opacity var(--pico-transition),
-      transform 0s ease-in-out 0s;
-    transform: scaleY(1);
+      transform var(--pico-transition);
+    transform: translateY(0);
   }
 
   details.dropdown[open] > summary:before {
@@ -1735,6 +1868,15 @@
     display: block;
     position: fixed;
     inset: 0;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    @starting-style {
+      details.dropdown[open] > summary + ul {
+        opacity: 0;
+        transform: translateY(-.25rem);
+      }
+    }
   }
 
   label > details.dropdown {
@@ -1789,21 +1931,25 @@
     --pico-form-element-spacing-horizontal: 2rem;
   }
 
-  :is([role="search"], [role="group"]):has(button.secondary:focus, [type="submit"].secondary:focus, [type="button"].secondary:focus, [role="button"].secondary:focus) {
-    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width)
-      var(--pico-secondary-focus);
+  :is([role="search"], [role="group"]) :where(button, [type="submit"], [type="reset"], [type="button"], [role="button"]) + :where(button, [type="submit"], [type="reset"], [type="button"], [role="button"]) {
+    border-inline-start-color: color-mix(in oklab, currentColor 20%, transparent);
   }
 
-  :is([role="search"], [role="group"]):has(button.contrast:focus, [type="submit"].contrast:focus, [type="button"].contrast:focus, [role="button"].contrast:focus) {
-    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width)
-      var(--pico-contrast-focus);
+  :is([role="search"], [role="group"]):has(button.secondary:focus-visible, [type="submit"].secondary:focus-visible, [type="button"].secondary:focus-visible, [role="button"].secondary:focus-visible) {
+    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-background-color),
+      0 0 0 calc(var(--pico-outline-width) * 2) var(--pico-secondary-focus);
   }
 
-  :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) {
+  :is([role="search"], [role="group"]):has(button.contrast:focus-visible, [type="submit"].contrast:focus-visible, [type="button"].contrast:focus-visible, [role="button"].contrast:focus-visible) {
+    --pico-group-box-shadow-focus-with-button: 0 0 0 var(--pico-outline-width) var(--pico-background-color),
+      0 0 0 calc(var(--pico-outline-width) * 2) var(--pico-contrast-focus);
+  }
+
+  :is([role="search"], [role="group"]):has(button:focus-visible, [type="submit"]:focus-visible, [type="button"]:focus-visible, [role="button"]:focus-visible) {
     --pico-group-box-shadow: var(--pico-group-box-shadow-focus-with-button);
   }
 
-  :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) input:not([type="checkbox"], [type="radio"]), :is([role="search"], [role="group"]):has(button:focus, [type="submit"]:focus, [type="button"]:focus, [role="button"]:focus) select {
+  :is([role="search"], [role="group"]):has(button:focus-visible, [type="submit"]:focus-visible, [type="button"]:focus-visible, [role="button"]:focus-visible) input:not([type="checkbox"], [type="radio"]), :is([role="search"], [role="group"]):has(button:focus-visible, [type="submit"]:focus-visible, [type="button"]:focus-visible, [role="button"]:focus-visible) select {
     border-color: #0000;
   }
 
@@ -1819,6 +1965,7 @@
 
   :is([role="search"], [role="group"]) button:focus, :is([role="search"], [role="group"]) [type="submit"]:focus, :is([role="search"], [role="group"]) [type="reset"]:focus, :is([role="search"], [role="group"]) [type="button"]:focus, :is([role="search"], [role="group"]) [role="button"]:focus {
     box-shadow: none;
+    outline: none;
   }
 
   [role="search"] > :first-child {
@@ -1878,9 +2025,15 @@
   }
 
   dialog > article {
+    --pico-block-spacing-vertical: 1.5rem;
+    --pico-block-spacing-horizontal: 1.5rem;
+    --pico-card-background-color: var(--pico-dropdown-background-color);
+    --pico-card-box-shadow: var(--pico-dropdown-box-shadow);
+    --pico-card-sectioning-background-color: transparent;
     width: 100%;
     max-height: calc(100vh - var(--pico-spacing) * 2);
     margin: var(--pico-spacing);
+    border-radius: calc(var(--pico-card-border-radius) * 4 / 3);
     overflow: auto;
   }
 
@@ -1903,7 +2056,7 @@
   dialog > article > header .close, dialog > article > header :is(a, button)[rel="prev"] {
     float: right;
     float: inline-end;
-    margin: 0;
+    margin: -.25rem 0;
     margin-inline-start: var(--pico-spacing);
     padding: 0;
   }
@@ -1913,6 +2066,7 @@
   }
 
   dialog > article > footer button, dialog > article > footer [role="button"] {
+    width: auto;
     margin-bottom: 0;
   }
 
@@ -1921,23 +2075,28 @@
   }
 
   dialog > article .close, dialog > article :is(a, button)[rel="prev"] {
-    width: 1rem;
-    height: 1rem;
-    margin-top: calc(var(--pico-spacing) * -1);
-    margin-bottom: var(--pico-spacing);
+    width: 2rem;
+    height: 2rem;
+    margin-top: calc(var(--pico-spacing) * -.5);
+    margin-bottom: calc(var(--pico-spacing) * .5);
+    border-radius: var(--pico-border-radius);
     background-image: var(--pico-icon-close);
-    opacity: .5;
-    transition: opacity var(--pico-transition);
+    box-shadow: none;
+    opacity: .6;
+    transition: opacity var(--pico-transition),
+        background-color var(--pico-transition);
     background-color: #0000;
     background-position: center;
     background-repeat: no-repeat;
     background-size: auto 1rem;
     border: none;
     margin-inline-start: auto;
+    padding: 0;
     display: block;
   }
 
   dialog > article .close:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus), dialog > article :is(a, button)[rel="prev"]:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
+    background-color: color-mix(in oklab, var(--pico-color) 8%, transparent);
     opacity: 1;
   }
 
@@ -1958,19 +2117,19 @@
   }
 
   :where(.modal-is-opening, .modal-is-closing) dialog, :where(.modal-is-opening, .modal-is-closing) dialog > article {
-    animation-duration: .2s;
-    animation-timing-function: ease-in-out;
+    animation-duration: .15s;
+    animation-timing-function: cubic-bezier(.2, 0, 0, 1);
     animation-fill-mode: both;
   }
 
   :where(.modal-is-opening, .modal-is-closing) dialog {
     animation-name: modal-overlay;
-    animation-duration: .8s;
+    animation-duration: .2s;
   }
 
   :where(.modal-is-opening, .modal-is-closing) dialog > article {
     animation-name: modal;
-    animation-delay: .2s;
+    animation-delay: 50ms;
   }
 
   .modal-is-closing dialog, .modal-is-closing dialog > article {
@@ -1989,17 +2148,17 @@
   @keyframes modal {
     from {
       opacity: 0;
-      transform: translateY(-100%);
+      transform: scale(.96);
     }
   }
 
   @supports (transition-behavior: allow-discrete) {
     @media (prefers-reduced-motion: no-preference) {
       html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) dialog {
-        transition: background-color .4s ease-in-out,
-          backdrop-filter .4s ease-in-out,
-          overlay .4s allow-discrete,
-          display .4s allow-discrete;
+        transition: background-color .2s ease-out,
+          backdrop-filter .2s ease-out,
+          overlay .2s allow-discrete,
+          display .2s allow-discrete;
       }
 
       html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) dialog:not([open]) {
@@ -2009,16 +2168,12 @@
       }
 
       html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) dialog > article {
-        transition: transform .2s ease-in-out, opacity .2s ease-in-out;
+        transition: transform .15s cubic-bezier(.2, 0, 0, 1), opacity .15s cubic-bezier(.2, 0, 0, 1);
       }
 
       html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) dialog:not([open]) > article {
         opacity: 0;
-        transform: translateY(-100%);
-      }
-
-      html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) dialog[open] > article {
-        transition-delay: .2s;
+        transform: scale(.96);
       }
 
       @starting-style {
@@ -2030,7 +2185,7 @@
 
         html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) dialog[open] > article {
           opacity: 0;
-          transform: translateY(-100%);
+          transform: scale(.96);
         }
       }
     }
@@ -2047,10 +2202,13 @@
 
   nav {
     justify-content: space-between;
+    row-gap: calc(var(--pico-spacing) / 2);
+    flex-wrap: wrap;
     overflow: visible;
   }
 
   nav ol, nav ul {
+    flex-wrap: wrap;
     align-items: center;
     margin-bottom: 0;
     padding: 0;
@@ -2066,6 +2224,7 @@
   }
 
   nav li {
+    --_nav-color: var(--pico-color);
     padding: var(--pico-nav-element-spacing-vertical) var(--pico-nav-element-spacing-horizontal);
     margin: 0;
     display: inline-block;
@@ -2086,10 +2245,19 @@
     border-radius: var(--pico-border-radius);
   }
 
+  nav li :where(a:not([role="button"]), [role="link"]):hover {
+    background-color: color-mix(in oklab, var(--pico-color) 6%, transparent);
+  }
+
+  nav li :where(a:not([role="button"]), [role="link"])[aria-current]:not([aria-current="false"]) {
+    color: var(--_nav-color);
+    font-weight: 500;
+  }
+
   nav li button, nav li [role="button"], nav li [type="button"], nav li input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), nav li select {
     height: auto;
     margin-inline: inherit;
-    padding-block: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2);
+    padding-block: var(--pico-form-element-spacing-vertical);
     margin-bottom: 0;
   }
 
@@ -2164,27 +2332,29 @@
     width: 100%;
     height: .5rem;
     margin-bottom: calc(var(--pico-spacing) * .5);
-    border-radius: var(--pico-border-radius);
     background-color: var(--pico-progress-background-color);
     color: var(--pico-progress-color);
     vertical-align: baseline;
     accent-color: var(--pico-primary);
     border: 0;
+    border-radius: 1rem;
     display: inline-block;
     overflow: hidden;
   }
 
   progress::-webkit-progress-bar {
-    border-radius: var(--pico-border-radius);
+    border-radius: inherit;
     background: none;
   }
 
   progress[value]::-webkit-progress-value {
+    border-radius: inherit;
     background-color: var(--pico-progress-color);
     transition: inline-size var(--pico-transition);
   }
 
   progress::-moz-progress-bar {
+    border-radius: inherit;
     background-color: var(--pico-progress-color);
   }
 
@@ -2192,10 +2362,10 @@
     progress:indeterminate {
       background: var(--pico-progress-background-color)
       linear-gradient(to right,
-        var(--pico-progress-color) 30%,
-        var(--pico-progress-background-color) 30%)
+        var(--pico-progress-color) 40%,
+        var(--pico-progress-background-color) 40%)
       top left / 150% 150% no-repeat;
-      animation: 1s linear infinite progress-indeterminate;
+      animation: 1.2s cubic-bezier(.65, 0, .35, 1) infinite progress-indeterminate;
     }
 
     progress:indeterminate[value]::-webkit-progress-value {
@@ -2226,25 +2396,28 @@
   }
 
   [data-tooltip]:not(a, button, input, [role="button"]) {
+    -webkit-text-decoration: underline dashed var(--pico-muted-color);
+    text-decoration: underline dashed var(--pico-muted-color);
+    text-underline-offset: var(--pico-text-underline-offset);
     cursor: help;
-    border-bottom: 1px dotted;
-    text-decoration: none;
   }
 
   [data-tooltip][data-placement="top"]:before, [data-tooltip][data-placement="top"]:after, [data-tooltip]:before, [data-tooltip]:after {
     z-index: 99;
-    border-radius: var(--pico-border-radius);
+    border-radius: calc(var(--pico-border-radius) * .75);
     background: var(--pico-tooltip-background-color);
+    box-shadow: var(--pico-dropdown-box-shadow);
     content: attr(data-tooltip);
     color: var(--pico-tooltip-color);
+    font-size: .8125rem;
     font-style: normal;
-    font-weight: var(--pico-font-weight);
+    font-weight: 500;
+    line-height: var(--pico-line-height);
     text-overflow: ellipsis;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    padding: .25rem .5rem;
-    font-size: .875rem;
+    padding: .375rem .625rem;
     text-decoration: none;
     display: block;
     position: absolute;
@@ -2255,6 +2428,7 @@
   }
 
   [data-tooltip][data-placement="top"]:after, [data-tooltip]:after {
+    box-shadow: none;
     content: "";
     color: var(--pico-tooltip-background-color);
     background-color: #0000;
@@ -2392,7 +2566,7 @@
   :where([popover]:not(:has( > article))) {
     padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
     border: var(--pico-border-width) solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
+    border-radius: var(--pico-card-border-radius);
     background-color: var(--pico-card-background-color);
     box-shadow: var(--pico-card-box-shadow);
     color: var(--pico-color);
@@ -2401,14 +2575,14 @@
 
   :is(ul, menu)[popover] {
     border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
-    border-radius: var(--pico-border-radius);
+    border-radius: var(--pico-card-border-radius);
     background-color: var(--pico-dropdown-background-color);
     box-shadow: var(--pico-dropdown-box-shadow);
     color: var(--pico-dropdown-color);
     white-space: nowrap;
     min-width: 10rem;
     margin: 0;
-    padding: 0;
+    padding: .25rem;
     list-style: none;
     overflow: auto;
   }
@@ -2419,29 +2593,19 @@
   }
 
   :is(ul, menu)[popover] li {
+    border-radius: calc(var(--pico-border-radius) * .75);
     width: 100%;
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
-      var(--pico-form-element-spacing-horizontal);
-    margin-bottom: 0;
+    margin: 0;
+    padding: .375rem .625rem;
     list-style: none;
   }
 
-  :is(ul, menu)[popover] li:first-of-type {
-    margin-top: calc(var(--pico-form-element-spacing-vertical) * .5);
-  }
-
-  :is(ul, menu)[popover] li:last-of-type {
-    margin-bottom: calc(var(--pico-form-element-spacing-vertical) * .5);
-  }
-
   :is(ul, menu)[popover] li a {
-    margin: calc(var(--pico-form-element-spacing-vertical) * -.5)
-        calc(var(--pico-form-element-spacing-horizontal) * -1);
-    padding: calc(var(--pico-form-element-spacing-vertical) * .5)
-        var(--pico-form-element-spacing-horizontal);
+    border-radius: inherit;
     color: var(--pico-dropdown-color);
     text-overflow: ellipsis;
-    border-radius: 0;
+    margin: -.375rem -.625rem;
+    padding: .375rem .625rem;
     text-decoration: none;
     display: block;
     overflow: hidden;
@@ -2462,29 +2626,29 @@
   :is([popover="hint"], [popover][role="tooltip"]) {
     width: max-content;
     max-width: min(20rem, calc(100vw - var(--pico-spacing) * 2));
-    border-radius: var(--pico-border-radius);
+    border-radius: calc(var(--pico-border-radius) * .75);
     background: var(--pico-tooltip-background-color);
-    box-shadow: none;
+    box-shadow: var(--pico-dropdown-box-shadow);
     color: var(--pico-tooltip-color);
+    font-size: .8125rem;
     font-style: normal;
-    font-weight: var(--pico-font-weight);
-    font-size: .875rem;
+    font-weight: 500;
     line-height: var(--pico-line-height);
     pointer-events: none;
     border: 0;
-    padding: .25rem .5rem;
+    padding: .375rem .625rem;
     overflow: visible;
   }
 
   @supports (anchor-name: --a) and (position-area: top) {
     :is(ul, menu)[popover] {
       position-anchor: auto;
-      margin-block: var(--pico-outline-width);
       min-inline-size: max(anchor-size(inline), 10rem);
       position-area: block-end span-inline-end;
       position-try-fallbacks: flip-block,
       flip-inline,
       flip-block flip-inline;
+      margin-block: .25rem;
       inset: auto;
     }
 
@@ -2500,10 +2664,10 @@
   @supports (transition-behavior: allow-discrete) {
     @media (prefers-reduced-motion: no-preference) {
       [popover] {
-        transition: opacity .2s ease-in-out,
-        transform .2s ease-in-out,
-        overlay .2s allow-discrete,
-        display .2s allow-discrete;
+        transition: opacity var(--pico-transition),
+        transform var(--pico-transition),
+        overlay var(--pico-transition) allow-discrete,
+        display var(--pico-transition) allow-discrete;
       }
 
       [popover]:not(:popover-open) {

@@ -114,7 +114,7 @@ document.querySelectorAll('[role="tablist"]').forEach((list) => {
 
 Sets on its own elements: `--pico-tabs-active-color`, `--pico-tabs-border-color`, `--pico-tabs-indicator-color`, `--pico-tabs-indicator-width`, `--pico-tabs-tab-color`, `--pico-tabs-tab-hover-color`.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-color`, `--pico-font-weight`, `--pico-form-element-disabled-opacity`, `--pico-line-height`, `--pico-muted-border-color`, `--pico-muted-color`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-color`, `--pico-form-element-disabled-opacity`, `--pico-line-height`, `--pico-muted-border-color`, `--pico-muted-color`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-subtle-background`, `--pico-spacing`, `--pico-transition`.
 
 ## alert
 
@@ -177,9 +177,9 @@ document.addEventListener("click", (event) => {
 });
 ```
 
-Sets on its own elements: `--pico-alert-accent`, `--pico-alert-background-color`, `--pico-alert-color`, `--pico-alert-warning-accent`.
+Sets on its own elements: `--pico-alert-accent`, `--pico-alert-background-color`, `--pico-alert-color`, `--pico-alert-danger-accent`, `--pico-alert-success-accent`, `--pico-alert-warning-accent`.
 
-Reads: `--pico-background-color`, `--pico-border-radius`, `--pico-color`, `--pico-form-element-invalid-border-color`, `--pico-form-element-valid-border-color`, `--pico-line-height`, `--pico-muted-border-color`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-spacing`, `--pico-transition`, `--pico-typography-spacing-vertical`.
+Reads: `--pico-background-color`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-border-radius`, `--pico-color`, `--pico-form-element-invalid-border-color`, `--pico-form-element-valid-border-color`, `--pico-line-height`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`, `--pico-typography-spacing-vertical`.
 
 ## toast
 
@@ -230,7 +230,7 @@ document.getElementById("toaster").showPopover?.();
 
 Sets on its own elements: `--pico-toast-accent`, `--pico-toast-gap`, `--pico-toast-inset`, `--pico-toast-width`.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-card-background-color`, `--pico-card-border-color`, `--pico-card-box-shadow`, `--pico-color`, `--pico-font-weight`, `--pico-form-element-invalid-border-color`, `--pico-line-height`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-underline`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-card-border-radius`, `--pico-color`, `--pico-dropdown-background-color`, `--pico-dropdown-border-color`, `--pico-dropdown-box-shadow`, `--pico-font-weight`, `--pico-form-element-invalid-border-color`, `--pico-line-height`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-spacing`, `--pico-transition`.
 
 ## badge
 
@@ -285,7 +285,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-badge-background-color`, `--pico-badge-color`, `--pico-badge-danger-background-color`, `--pico-badge-danger-color`, `--pico-badge-ring-color`, `--pico-badge-success-background-color`, `--pico-badge-success-color`, `--pico-badge-warning-background-color`, `--pico-badge-warning-color`.
 
-Reads: `--pico-contrast-background`, `--pico-contrast-inverse`, `--pico-primary-background`, `--pico-primary-inverse`, `--pico-secondary-background`, `--pico-secondary-inverse`.
+Reads: `--pico-contrast-background`, `--pico-contrast-inverse`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-inverse`, `--pico-secondary-background`, `--pico-secondary-inverse`.
 
 ## avatar
 
@@ -353,7 +353,7 @@ document.addEventListener(
 
 Sets on its own elements: `--pico-avatar-background-color`, `--pico-avatar-color`, `--pico-avatar-overlap`, `--pico-avatar-ring-color`, `--pico-avatar-size`, `--pico-avatar-status-away-color`, `--pico-avatar-status-busy-color`, `--pico-avatar-status-offline-color`, `--pico-avatar-status-online-color`.
 
-Reads: `--pico-background-color`, `--pico-card-background-color`, `--pico-card-sectioning-background-color`, `--pico-del-color`, `--pico-dropdown-background-color`, `--pico-ins-color`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary`, `--pico-secondary-background`, `--pico-secondary-inverse`.
+Reads: `--pico-background-color`, `--pico-card-background-color`, `--pico-card-sectioning-background-color`, `--pico-color`, `--pico-del-color`, `--pico-dropdown-background-color`, `--pico-ins-color`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-hover`.
 
 ## skeleton
 
@@ -368,18 +368,9 @@ Skeleton card:
 ```html
 <article aria-busy="true" aria-label="Loading invoice">
   <header>
-    <div>
-      <div data-skeleton="avatar"></div>
-      <div>
-        <p data-skeleton="line"></p>
-        <p data-skeleton="line"></p>
-      </div>
-    </div>
+    <p data-skeleton="line"></p>
   </header>
   <p data-skeleton="line"></p>
-  <p data-skeleton="line"></p>
-  <p data-skeleton="line"></p>
-  <div data-skeleton="block"></div>
   <footer>
     <p data-skeleton="line"></p>
   </footer>
@@ -415,7 +406,7 @@ for (const type of ["htmx:responseError", "htmx:sendError", "htmx:sendAbort"]) {
 
 Sets on its own elements: `--pico-skeleton-avatar-size`, `--pico-skeleton-block-size`, `--pico-skeleton-color`, `--pico-skeleton-duration`, `--pico-skeleton-highlight-color`, `--pico-skeleton-line-height`.
 
-Reads: `--pico-border-radius`, `--pico-form-element-background-color`, `--pico-form-element-selected-background-color`, `--pico-muted-border-color`, `--pico-typography-spacing-vertical`.
+Reads: `--pico-border-radius`, `--pico-card-border-radius`, `--pico-form-element-background-color`, `--pico-muted-border-color`, `--pico-typography-spacing-vertical`.
 
 ## app-shell
 
@@ -477,7 +468,7 @@ if (drawer && toggle) {
 
 Sets on its own elements: `--pico-app-shell-background-color`, `--pico-app-shell-border-color`, `--pico-app-shell-header-height`, `--pico-app-shell-nav-background-color`, `--pico-app-shell-nav-current-background-color`, `--pico-app-shell-nav-current-color`, `--pico-app-shell-nav-hover-background-color`, `--pico-app-shell-nav-muted-color`, `--pico-app-shell-nav-width`, `--pico-app-shell-scrim-color`.
 
-Reads: `--pico-background-color`, `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-sectioning-background-color`, `--pico-color`, `--pico-contrast`, `--pico-form-element-selected-background-color`, `--pico-grid-column-gap`, `--pico-grid-row-gap`, `--pico-line-height`, `--pico-modal-overlay-background-color`, `--pico-muted-border-color`, `--pico-muted-color`, `--pico-nav-element-spacing-vertical`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`, `--pico-outline-width`, `--pico-primary-focus`, `--pico-secondary-focus`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-background-color`, `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-sectioning-background-color`, `--pico-color`, `--pico-grid-column-gap`, `--pico-grid-row-gap`, `--pico-line-height`, `--pico-modal-overlay-background-color`, `--pico-muted-border-color`, `--pico-muted-color`, `--pico-nav-element-spacing-vertical`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`, `--pico-outline-width`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-subtle-background`, `--pico-secondary`, `--pico-spacing`, `--pico-transition`.
 
 ## data-table
 
@@ -556,7 +547,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-data-table-compact-padding-block`, `--pico-data-table-compact-padding-inline`, `--pico-data-table-head-background-color`, `--pico-data-table-row-hover-background-color`, `--pico-data-table-row-selected-background-color`, `--pico-data-table-scroll-max-block-size`, `--pico-data-table-scroll-padding-block-start`, `--pico-data-table-sort-idle-opacity`.
 
-Reads: `--pico-background-color`, `--pico-border-radius`, `--pico-card-sectioning-background-color`, `--pico-color`, `--pico-dropdown-hover-background-color`, `--pico-outline-width`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-spacing`, `--pico-typography-spacing-vertical`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-card-border-radius`, `--pico-card-sectioning-background-color`, `--pico-color`, `--pico-dropdown-hover-background-color`, `--pico-muted-border-color`, `--pico-outline-width`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-subtle-background`, `--pico-spacing`, `--pico-typography-spacing-vertical`.
 
 ## pagination
 
@@ -597,7 +588,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-pagination-gap`, `--pico-pagination-item-size`.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-dropdown-hover-background-color`, `--pico-form-element-disabled-opacity`, `--pico-muted-color`, `--pico-nav-link-spacing-horizontal`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-border`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-hover-background`, `--pico-primary-hover-border`, `--pico-primary-inverse`, `--pico-typography-spacing-vertical`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-form-element-disabled-opacity`, `--pico-muted-color`, `--pico-nav-link-spacing-horizontal`, `--pico-outline-width`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-hover-background`, `--pico-primary-inverse`, `--pico-typography-spacing-vertical`.
 
 ## stepper
 
@@ -653,9 +644,9 @@ Accessibility:
 
 - Put the status in a label or text for screen readers; the number span is aria-hidden. Wrap the list in a nav when the steps are links.
 
-Sets on its own elements: `--pico-stepper-complete-background`, `--pico-stepper-complete-color`, `--pico-stepper-complete-line-color`, `--pico-stepper-current-color`, `--pico-stepper-current-ring-color`, `--pico-stepper-gap`, `--pico-stepper-label-color`, `--pico-stepper-line-color`, `--pico-stepper-line-width`, `--pico-stepper-marker-size`, `--pico-stepper-ring-width`.
+Sets on its own elements: `--pico-stepper-complete-background`, `--pico-stepper-complete-color`, `--pico-stepper-complete-label-color`, `--pico-stepper-complete-line-color`, `--pico-stepper-current-color`, `--pico-stepper-current-ring-color`, `--pico-stepper-gap`, `--pico-stepper-label-color`, `--pico-stepper-line-color`, `--pico-stepper-line-width`, `--pico-stepper-marker-size`, `--pico-stepper-ring-width`.
 
-Reads: `--pico-background-color`, `--pico-border-radius`, `--pico-color`, `--pico-form-element-border-color`, `--pico-form-element-disabled-opacity`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-inverse`, `--pico-spacing`, `--pico-text-underline-offset`, `--pico-transition`.
+Reads: `--pico-background-color`, `--pico-border-radius`, `--pico-color`, `--pico-form-element-border-color`, `--pico-form-element-disabled-opacity`, `--pico-icon-checkbox`, `--pico-muted-border-color`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-primary-inverse`, `--pico-spacing`, `--pico-text-underline-offset`, `--pico-transition`.
 
 ## empty-state
 
@@ -708,4 +699,4 @@ Accessibility:
 
 Sets on its own elements: `--pico-empty-state-border-color`, `--pico-empty-state-icon-background`, `--pico-empty-state-icon-color`, `--pico-empty-state-icon-size`, `--pico-empty-state-max-inline-size`, `--pico-empty-state-padding-block`.
 
-Reads: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-sectioning-background-color`, `--pico-form-element-border-color`, `--pico-muted-color`, `--pico-spacing`.
+Reads: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-width`, `--pico-card-border-radius`, `--pico-muted-border-color`, `--pico-muted-color`, `--pico-primary`, `--pico-primary-background`, `--pico-spacing`.

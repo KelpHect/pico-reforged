@@ -25,6 +25,35 @@ article.compact {
 
 The tokens are in `src/tokens/` (`core.css` for fonts, spacing, radius and sizes, `scheme.css` for colors) and in the module that owns a component, for example `--pico-modal-overlay-background-color` in `src/components/modal.css`. The names are the same as in v2.1.1. The full OKLCH palette is in `css/pico.colors.css` (`--pico-color-azure-550` and so on) together with the `.pico-color-*` and `.pico-background-*` classes.
 
+### Root size, radius and fonts
+
+The root font size is 100% (16px) and steps up once, to 106.25%, from 1536px. `responsiveTypography: false` (`--no-responsive-typography`) keeps it at 100% everywhere. Controls are 42px tall at the default size.
+
+`--pico-border-radius` (0.5rem) rounds controls and code blocks. `--pico-card-border-radius` (1.5 times that) rounds cards, menus, dialogs, alerts and toasts. Set both to `0` for square corners.
+
+The sans-serif stack starts with Inter, but Pico Reforged ships no font. When the page loads Inter it is used, otherwise the stack falls through to Segoe UI Variable on Windows 11 and the system font elsewhere. To pair with Inter, install `@fontsource-variable/inter` and import it before Pico:
+
+```css
+@import "@fontsource-variable/inter";
+@import "@rusticstack/pico-reforged";
+```
+
+### Dark surfaces
+
+In the dark scheme each raised surface is a little lighter than the one under it, so edges show without heavy borders. The steps are OKLCH lightness on a near-neutral blue grey (hue 265):
+
+| Surface                | Token                                     | Lightness    |
+| ---------------------- | ----------------------------------------- | ------------ |
+| Page                   | `--pico-background-color`                 | 0.165        |
+| Field                  | `--pico-form-element-background-color`    | 0.195        |
+| Card                   | `--pico-card-background-color`            | 0.205        |
+| Code                   | `--pico-code-background-color`            | 0.215        |
+| Card header and footer | `--pico-card-sectioning-background-color` | 0.225        |
+| Menu, dialog, toast    | `--pico-dropdown-background-color`        | 0.235        |
+| Borders and hairlines  | `--pico-muted-border-color` and friends   | 0.29 to 0.32 |
+
+When you change one, keep the order, or a card can end up darker than the page.
+
 ## Layers and overriding
 
 Every Pico rule is inside the `pico` layer, in this order:
@@ -135,7 +164,7 @@ pico-reforged build \
 | `--exclude <list>`                   | leave modules out, see `pico-reforged modules`                 |
 | `--extras <list>`                    | add extras, or `all`, see `pico-reforged extras`               |
 | `--responsive-spacings`              | scale spacings with the viewport                               |
-| `--no-responsive-typography`         | keep the root font size fixed                                  |
+| `--no-responsive-typography`         | keep the root at 100%, without the step to 106.25% from 1536px |
 | `--no-transitions`, `--no-important` | remove motion, strip `!important`                              |
 | `--targets <query>`                  | browserslist query or `modern`, default is the browser floor   |
 

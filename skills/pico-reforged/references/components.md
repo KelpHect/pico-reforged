@@ -235,7 +235,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-background-color`, `--pico-color`, `--pico-text-decoration`, `--pico-underline`.
 
-Reads: `--pico-contrast`, `--pico-contrast-hover`, `--pico-contrast-hover-underline`, `--pico-contrast-underline`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-hover-underline`, `--pico-primary-underline`, `--pico-secondary`, `--pico-secondary-hover`, `--pico-secondary-hover-underline`, `--pico-secondary-underline`, `--pico-transition`.
+Reads: `--pico-contrast`, `--pico-contrast-hover`, `--pico-contrast-hover-underline`, `--pico-contrast-underline`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-hover-underline`, `--pico-primary-underline`, `--pico-secondary`, `--pico-secondary-hover`, `--pico-secondary-hover-underline`, `--pico-secondary-underline`, `--pico-text-underline-offset`, `--pico-transition`.
 
 ## button
 
@@ -295,9 +295,9 @@ Accessibility:
 
 - Use a real button for actions and a link with role="button" only for navigation that should look like a button.
 
-Sets on its own elements: `--pico-background-color`, `--pico-border-color`, `--pico-box-shadow`, `--pico-color`.
+Sets on its own elements: `--pico-background-color`, `--pico-border-color`, `--pico-box-shadow`, `--pico-color`, `--pico-font-weight`.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-button-box-shadow`, `--pico-button-hover-box-shadow`, `--pico-contrast`, `--pico-contrast-background`, `--pico-contrast-border`, `--pico-contrast-focus`, `--pico-contrast-hover`, `--pico-contrast-hover-background`, `--pico-contrast-hover-border`, `--pico-contrast-inverse`, `--pico-font-weight`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-line-height`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-border`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-hover-background`, `--pico-primary-hover-border`, `--pico-primary-inverse`, `--pico-secondary`, `--pico-secondary-background`, `--pico-secondary-border`, `--pico-secondary-focus`, `--pico-secondary-hover`, `--pico-secondary-hover-background`, `--pico-secondary-hover-border`, `--pico-secondary-inverse`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-button-box-shadow`, `--pico-button-hover-box-shadow`, `--pico-contrast`, `--pico-contrast-background`, `--pico-contrast-border`, `--pico-contrast-focus`, `--pico-contrast-hover`, `--pico-contrast-hover-background`, `--pico-contrast-hover-border`, `--pico-contrast-inverse`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-line-height`, `--pico-muted-color`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-background`, `--pico-primary-border`, `--pico-primary-focus`, `--pico-primary-hover`, `--pico-primary-hover-background`, `--pico-primary-hover-border`, `--pico-primary-inverse`, `--pico-secondary`, `--pico-secondary-background`, `--pico-secondary-border`, `--pico-secondary-focus`, `--pico-secondary-hover`, `--pico-secondary-hover-background`, `--pico-secondary-hover-border`, `--pico-secondary-inverse`, `--pico-spacing`, `--pico-transition`.
 
 ## table
 
@@ -341,9 +341,9 @@ Accessibility:
 
 - Use th with scope="col" or scope="row", and a caption when the table needs a title.
 
-Sets on its own elements: `--pico-border-width`, `--pico-font-weight`.
+Sets on its own elements: `--pico-color`, `--pico-font-weight`.
 
-Reads: `--pico-background-color`, `--pico-color`, `--pico-spacing`, `--pico-table-border-color`, `--pico-table-row-stripped-background-color`.
+Reads: `--pico-background-color`, `--pico-border-width`, `--pico-muted-color`, `--pico-spacing`, `--pico-table-border-color`, `--pico-table-row-stripped-background-color`.
 
 ## embedded
 
@@ -476,7 +476,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-background-color`, `--pico-border-color`, `--pico-box-shadow`, `--pico-color`, `--pico-form-element-focus-color`, `--pico-form-label-font-weight`, `--pico-icon-height`, `--pico-outline-width`.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-del-color`, `--pico-font-weight`, `--pico-form-element-active-background-color`, `--pico-form-element-active-border-color`, `--pico-form-element-background-color`, `--pico-form-element-border-color`, `--pico-form-element-color`, `--pico-form-element-disabled-opacity`, `--pico-form-element-invalid-active-border-color`, `--pico-form-element-invalid-border-color`, `--pico-form-element-invalid-focus-color`, `--pico-form-element-placeholder-color`, `--pico-form-element-selected-background-color`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-form-element-valid-active-border-color`, `--pico-form-element-valid-border-color`, `--pico-form-element-valid-focus-color`, `--pico-icon-chevron`, `--pico-icon-invalid`, `--pico-icon-valid`, `--pico-ins-color`, `--pico-line-height`, `--pico-muted-color`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-del-color`, `--pico-font-weight`, `--pico-form-element-active-background-color`, `--pico-form-element-active-border-color`, `--pico-form-element-background-color`, `--pico-form-element-border-color`, `--pico-form-element-color`, `--pico-form-element-disabled-opacity`, `--pico-form-element-invalid-active-border-color`, `--pico-form-element-invalid-border-color`, `--pico-form-element-invalid-focus-color`, `--pico-form-element-placeholder-color`, `--pico-form-element-selected-background-color`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-form-element-valid-active-border-color`, `--pico-form-element-valid-border-color`, `--pico-form-element-valid-focus-color`, `--pico-icon-chevron`, `--pico-icon-invalid`, `--pico-icon-valid`, `--pico-ins-color`, `--pico-line-height`, `--pico-muted-color`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
 
 ## checkbox-radio-switch
 
@@ -519,7 +519,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-background-color`, `--pico-border-color`, `--pico-border-width`, `--pico-color`.
 
-Reads: `--pico-form-element-invalid-border-color`, `--pico-form-element-valid-border-color`, `--pico-icon-checkbox`, `--pico-icon-minus`, `--pico-primary-background`, `--pico-primary-border`, `--pico-primary-inverse`, `--pico-switch-background-color`, `--pico-switch-checked-background-color`, `--pico-switch-color`, `--pico-switch-thumb-box-shadow`.
+Reads: `--pico-border-radius`, `--pico-font-weight`, `--pico-form-element-invalid-border-color`, `--pico-form-element-valid-border-color`, `--pico-icon-checkbox`, `--pico-icon-minus`, `--pico-outline-width`, `--pico-primary-background`, `--pico-primary-border`, `--pico-primary-focus`, `--pico-primary-inverse`, `--pico-switch-background-color`, `--pico-switch-checked-background-color`, `--pico-switch-color`, `--pico-switch-thumb-box-shadow`, `--pico-transition`.
 
 ## input-color
 
@@ -569,9 +569,9 @@ File input:
 <label>File <input type="file" name="file" /></label>
 ```
 
-Sets on its own elements: `--pico-background-color`, `--pico-border-color`, `--pico-box-shadow`, `--pico-color`.
+Sets on its own elements: `--pico-background-color`, `--pico-border-color`, `--pico-color`.
 
-Reads: `--pico-button-hover-box-shadow`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-muted-color`, `--pico-outline-width`, `--pico-secondary-focus`, `--pico-secondary-hover-background`, `--pico-secondary-hover-border`, `--pico-spacing`.
+Reads: `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-muted-color`, `--pico-outline-width`, `--pico-secondary-focus`, `--pico-secondary-hover-background`, `--pico-secondary-hover-border`.
 
 ## input-range
 
@@ -589,7 +589,7 @@ Range input:
 
 Sets on its own elements: `--pico-range-border-color`, `--pico-range-thumb-color`.
 
-Reads: `--pico-border-radius`, `--pico-range-active-border-color`, `--pico-range-thumb-active-color`, `--pico-range-thumb-border-color`, `--pico-transition`.
+Reads: `--pico-outline-width`, `--pico-primary-background`, `--pico-primary-focus`, `--pico-range-active-border-color`, `--pico-range-thumb-active-color`, `--pico-range-thumb-border-color`, `--pico-transition`.
 
 ## input-search
 
@@ -650,7 +650,7 @@ Accessibility:
 
 - details and summary are keyboard accessible and announce expanded state natively. Do not add roles.
 
-Reads: `--pico-accordion-active-summary-color`, `--pico-accordion-close-summary-color`, `--pico-accordion-open-summary-color`, `--pico-icon-chevron`, `--pico-line-height`, `--pico-outline-width`, `--pico-primary`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-accordion-active-summary-color`, `--pico-accordion-border-color`, `--pico-accordion-close-summary-color`, `--pico-accordion-open-summary-color`, `--pico-border-width`, `--pico-icon-chevron`, `--pico-line-height`, `--pico-outline-width`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
 
 ## card
 
@@ -674,7 +674,7 @@ Accessibility:
 
 - article is a landmark-free sectioning element, so repeat it freely in lists.
 
-Reads: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-background-color`, `--pico-card-border-color`, `--pico-card-box-shadow`, `--pico-card-sectioning-background-color`.
+Reads: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-width`, `--pico-card-background-color`, `--pico-card-border-color`, `--pico-card-border-radius`, `--pico-card-box-shadow`, `--pico-card-sectioning-background-color`.
 
 ## dropdown
 
@@ -734,7 +734,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-form-element-active-border-color`, `--pico-form-element-border-color`, `--pico-form-element-focus-color`, `--pico-outline-width`.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-dropdown-background-color`, `--pico-dropdown-border-color`, `--pico-dropdown-box-shadow`, `--pico-dropdown-color`, `--pico-dropdown-hover-background-color`, `--pico-form-element-active-background-color`, `--pico-form-element-background-color`, `--pico-form-element-invalid-border-color`, `--pico-form-element-invalid-focus-color`, `--pico-form-element-placeholder-color`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-form-element-valid-border-color`, `--pico-form-element-valid-focus-color`, `--pico-icon-chevron`, `--pico-line-height`, `--pico-nav-element-spacing-vertical`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-card-border-radius`, `--pico-dropdown-background-color`, `--pico-dropdown-border-color`, `--pico-dropdown-box-shadow`, `--pico-dropdown-color`, `--pico-dropdown-hover-background-color`, `--pico-form-element-active-background-color`, `--pico-form-element-background-color`, `--pico-form-element-invalid-border-color`, `--pico-form-element-invalid-focus-color`, `--pico-form-element-placeholder-color`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-form-element-valid-border-color`, `--pico-form-element-valid-focus-color`, `--pico-icon-chevron`, `--pico-line-height`, `--pico-nav-element-spacing-vertical`, `--pico-nav-link-spacing-horizontal`, `--pico-primary-focus`, `--pico-spacing`, `--pico-transition`.
 
 ## group
 
@@ -783,7 +783,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-border-radius`, `--pico-button-box-shadow`, `--pico-button-hover-box-shadow`, `--pico-form-element-spacing-horizontal`, `--pico-group-box-shadow`, `--pico-group-box-shadow-focus-with-button`.
 
-Reads: `--pico-border-width`, `--pico-contrast-focus`, `--pico-group-box-shadow-focus-with-input`, `--pico-outline-width`, `--pico-primary-border`, `--pico-primary-hover-border`, `--pico-secondary-focus`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-background-color`, `--pico-border-width`, `--pico-contrast-focus`, `--pico-group-box-shadow-focus-with-input`, `--pico-outline-width`, `--pico-primary-border`, `--pico-primary-hover-border`, `--pico-secondary-focus`, `--pico-spacing`, `--pico-transition`.
 
 ## loading
 
@@ -862,7 +862,9 @@ dialog.showModal();
 dialog.close();
 ```
 
-Reads: `--pico-color`, `--pico-icon-close`, `--pico-modal-overlay-backdrop-filter`, `--pico-modal-overlay-background-color`, `--pico-scrollbar-width`, `--pico-spacing`, `--pico-transition`.
+Sets on its own elements: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-card-background-color`, `--pico-card-box-shadow`, `--pico-card-sectioning-background-color`.
+
+Reads: `--pico-border-radius`, `--pico-card-border-radius`, `--pico-color`, `--pico-dropdown-background-color`, `--pico-dropdown-box-shadow`, `--pico-icon-close`, `--pico-modal-overlay-backdrop-filter`, `--pico-modal-overlay-background-color`, `--pico-scrollbar-width`, `--pico-spacing`, `--pico-transition`.
 
 ## nav
 
@@ -912,7 +914,7 @@ Accessibility:
 
 - Name each nav with aria-label when a page has more than one.
 
-Reads: `--pico-border-radius`, `--pico-border-width`, `--pico-muted-color`, `--pico-nav-breadcrumb-divider`, `--pico-nav-element-spacing-horizontal`, `--pico-nav-element-spacing-vertical`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`.
+Reads: `--pico-border-radius`, `--pico-color`, `--pico-form-element-spacing-vertical`, `--pico-muted-color`, `--pico-nav-breadcrumb-divider`, `--pico-nav-element-spacing-horizontal`, `--pico-nav-element-spacing-vertical`, `--pico-nav-link-spacing-horizontal`, `--pico-nav-link-spacing-vertical`, `--pico-spacing`.
 
 ## progress
 
@@ -936,7 +938,7 @@ Accessibility:
 
 - Label it with aria-label or a label element.
 
-Reads: `--pico-border-radius`, `--pico-primary`, `--pico-progress-background-color`, `--pico-progress-color`, `--pico-spacing`, `--pico-transition`.
+Reads: `--pico-primary`, `--pico-progress-background-color`, `--pico-progress-color`, `--pico-spacing`, `--pico-transition`.
 
 ## tooltip
 
@@ -962,7 +964,7 @@ Accessibility:
 
 Sets on its own elements: `--pico-tooltip-caret-slide-to`, `--pico-tooltip-slide-to`.
 
-Reads: `--pico-border-radius`, `--pico-font-weight`, `--pico-tooltip-background-color`, `--pico-tooltip-color`.
+Reads: `--pico-border-radius`, `--pico-dropdown-box-shadow`, `--pico-line-height`, `--pico-muted-color`, `--pico-text-underline-offset`, `--pico-tooltip-background-color`, `--pico-tooltip-color`.
 
 ## popover
 
@@ -1015,7 +1017,7 @@ Accessibility:
 - Needs no script: popovertarget wires the button. The browser handles light dismiss and Escape for auto popovers.
 - Where anchor positioning is missing, popovers are centered by the browser.
 
-Reads: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-background-color`, `--pico-card-border-color`, `--pico-card-box-shadow`, `--pico-color`, `--pico-dropdown-background-color`, `--pico-dropdown-border-color`, `--pico-dropdown-box-shadow`, `--pico-dropdown-color`, `--pico-dropdown-hover-background-color`, `--pico-font-weight`, `--pico-form-element-spacing-horizontal`, `--pico-form-element-spacing-vertical`, `--pico-line-height`, `--pico-outline-width`, `--pico-spacing`, `--pico-tooltip-background-color`, `--pico-tooltip-color`.
+Reads: `--pico-block-spacing-horizontal`, `--pico-block-spacing-vertical`, `--pico-border-radius`, `--pico-border-width`, `--pico-card-background-color`, `--pico-card-border-color`, `--pico-card-border-radius`, `--pico-card-box-shadow`, `--pico-color`, `--pico-dropdown-background-color`, `--pico-dropdown-border-color`, `--pico-dropdown-box-shadow`, `--pico-dropdown-color`, `--pico-dropdown-hover-background-color`, `--pico-line-height`, `--pico-spacing`, `--pico-tooltip-background-color`, `--pico-tooltip-color`, `--pico-transition`.
 
 ## accessibility
 

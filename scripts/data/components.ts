@@ -1279,7 +1279,7 @@ export const entries: Entry[] = [
     markup: [
       ex("Pagination", {
         fixture: "extras/pagination.html",
-        find: '<nav aria-label="Pagination"> <ol>',
+        find: '<nav aria-label="Pagination" style="margin: 0"> <ol>',
       }),
     ],
     variants: [

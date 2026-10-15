@@ -15,7 +15,7 @@ samp {
 }
 
 kbd {
-  --pico-font-weight: bolder;
+  --pico-font-weight: 500;
 }
 
 pre code,
@@ -27,8 +27,12 @@ pre samp {
 code,
 kbd,
 samp {
-  display: inline-block;
-  padding: 0.375rem;
+  display: inline;
+  padding: 0.125em 0.25em;
+  border-radius: calc(var(--pico-border-radius) * 0.75);
+  line-height: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 pre {
@@ -46,6 +50,7 @@ pre {
 }
 
 kbd {
+  padding: 0.2em 0.45em;
   background-color: var(--pico-code-kbd-background-color);
   color: var(--pico-code-kbd-color);
   vertical-align: baseline;

@@ -41,7 +41,7 @@ A dialog that is not open is `display: none`. A dialog with the `open` attribute
 
 ## Transitions
 
-With plain `showModal()` and `close()` the overlay fades and the article slides in from the top, then reverses on close. This is done with `@starting-style` and `transition-behavior: allow-discrete`, so there are no classes and no timers. The article waits 0.2s for the overlay on the way in, not on the way out.
+With plain `showModal()` and `close()` the overlay fades in and the article scales up from 96%, then both reverse on close. This is done with `@starting-style` and `transition-behavior: allow-discrete`, so there are no classes and no timers.
 
 The transition is skipped for people who prefer reduced motion, and in browsers without `transition-behavior`, where the modal still opens and closes, only without animation.
 
@@ -106,6 +106,6 @@ The `modal-is-*` classes are also part of the [class-less build](/docs/getting-s
     { name: "--pico-modal-overlay-backdrop-filter", value: "blur(0.375rem)", description: "Blur applied to the page behind the overlay." },
     { name: "--pico-scrollbar-width", value: "0px", description: "Padding added to the root while a modal is open. Set it from script, as above." },
     { name: "--pico-icon-close", description: "The close icon image, an SVG data URI." },
-    { name: "--pico-block-spacing-vertical", value: "var(--pico-spacing)", description: "Padding of the article, shared with the card." },
+    { name: "--pico-card-border-radius", value: "calc(var(--pico-border-radius) * 1.5)", description: "The modal box uses 4/3 of the card radius." },
   ]}
 />

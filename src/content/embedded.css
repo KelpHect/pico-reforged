@@ -9,6 +9,15 @@ video {
   display: inline-block;
 }
 
+/* Media never overflows its container. Iframes keep their height attribute. */
+:where(video, canvas, iframe) {
+  max-inline-size: 100%;
+}
+
+:where(video, canvas) {
+  block-size: auto;
+}
+
 audio:not([controls]) {
   display: none;
   height: 0;

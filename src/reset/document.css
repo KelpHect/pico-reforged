@@ -28,3 +28,8 @@
   overflow-wrap: break-word;
   tab-size: 4;
 }
+
+/* A nested theme also sets the text color, so plain text inside follows it */
+:where([data-theme]) {
+  color: var(--pico-color);
+}

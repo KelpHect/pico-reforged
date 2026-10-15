@@ -9,15 +9,22 @@
      that is resolved here, on the root, where the variable still holds the page background */
   --pico-app-shell-background-color: var(--pico-background-color);
   --pico-app-shell-border-color: var(--pico-muted-border-color);
-  --pico-app-shell-nav-background-color: var(--pico-card-sectioning-background-color);
+  --pico-app-shell-nav-background-color: light-dark(
+    var(--pico-card-sectioning-background-color),
+    oklch(0.185 0.006 265)
+  );
   --pico-app-shell-nav-muted-color: color-mix(
     in srgb,
     var(--pico-color) 72%,
     var(--pico-app-shell-nav-background-color)
   );
-  --pico-app-shell-nav-hover-background-color: var(--pico-secondary-focus);
-  --pico-app-shell-nav-current-background-color: var(--pico-form-element-selected-background-color);
-  --pico-app-shell-nav-current-color: var(--pico-contrast);
+  --pico-app-shell-nav-hover-background-color: color-mix(
+    in oklab,
+    var(--pico-secondary) 12%,
+    transparent
+  );
+  --pico-app-shell-nav-current-background-color: var(--pico-primary-subtle-background);
+  --pico-app-shell-nav-current-color: var(--pico-primary-hover);
   --pico-app-shell-scrim-color: var(--pico-modal-overlay-background-color);
 }
 
@@ -130,7 +137,8 @@ body[data-app-shell] {
       }
 
       &:focus-visible {
-        box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+        outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+        outline-offset: var(--pico-outline-width);
       }
 
       & svg {
@@ -183,7 +191,8 @@ body[data-app-shell] {
       }
     }
 
-    /* Cards in a section share a responsive grid, other content spans the row */
+    /* Cards in a section share a responsive grid, other content spans the row. A strong or
+       data right in a card is its figure. */
     > section:has(> article) {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
@@ -197,6 +206,24 @@ body[data-app-shell] {
 
       > article {
         margin: 0;
+
+        > :is(strong, data) {
+          display: block;
+          font-size: 1.75rem;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+          line-height: 1.2;
+          letter-spacing: -0.02em;
+        }
+
+        > p:first-child {
+          margin-bottom: 0.25rem;
+          color: var(--pico-muted-color);
+
+          > small {
+            font-size: 0.8125rem;
+          }
+        }
       }
     }
 
@@ -254,10 +281,12 @@ body[data-app-shell] {
         display: flex;
         align-items: center;
         gap: calc(var(--pico-spacing) * 0.75);
+        min-block-size: 2rem;
         margin: 0;
         padding: var(--pico-nav-link-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
         border-radius: var(--pico-border-radius);
         color: inherit;
+        font-size: 0.875rem;
         font-weight: 500;
         line-height: var(--pico-line-height);
         text-decoration: none;
@@ -270,7 +299,7 @@ body[data-app-shell] {
         /* One ring, the accordion module's offset outline on summary is replaced */
         &:focus-visible {
           outline: var(--pico-outline-width) solid var(--pico-primary-focus);
-          outline-offset: 0;
+          outline-offset: calc(var(--pico-outline-width) * -1);
           box-shadow: none;
         }
 
@@ -283,7 +312,7 @@ body[data-app-shell] {
           margin-inline-start: auto;
           padding: 0 calc(var(--pico-nav-link-spacing-horizontal) * 0.75);
           border-radius: var(--pico-border-radius);
-          background-color: var(--pico-secondary-focus);
+          background-color: color-mix(in oklab, var(--pico-secondary) 12%, transparent);
           color: inherit;
           font-weight: 600;
         }
@@ -298,6 +327,7 @@ body[data-app-shell] {
       /* Nested group: a plain details, the chevron comes from the accordion module */
       & details {
         margin: 0;
+        padding: 0;
         border: 0;
 
         & summary {
@@ -331,6 +361,7 @@ body[data-app-shell] {
       overflow: visible;
       border: 0;
       border-inline-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+      border-radius: 0;
       box-shadow: none;
       /* The popover module fades a closed popover out, here it is a permanent column */
       transform: none;
@@ -388,6 +419,7 @@ body[data-app-shell] {
           overflow-y: auto;
           border: 0;
           border-inline-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
+          border-radius: 0;
           transform: none;
 
           /* The scrim is a full-viewport layer on the aside. A ::backdrop is click-through in the
@@ -461,7 +493,7 @@ body[data-app-shell] {
     padding: var(--pico-nav-link-spacing-vertical) var(--pico-spacing);
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-app-shell-background-color);
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
 
     &:not(:focus) {
       width: 1px;

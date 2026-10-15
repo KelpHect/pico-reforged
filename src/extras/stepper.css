@@ -3,12 +3,13 @@
 :root,
 :host,
 [data-theme] {
-  --pico-stepper-marker-size: 1.75rem;
+  --pico-stepper-marker-size: 2rem;
   --pico-stepper-line-width: 0.125rem;
   --pico-stepper-gap: 0.5rem;
   --pico-stepper-ring-width: var(--pico-outline-width);
-  --pico-stepper-line-color: var(--pico-form-element-border-color);
-  --pico-stepper-label-color: color-mix(in oklab, var(--pico-muted-color) 75%, var(--pico-color));
+  --pico-stepper-line-color: var(--pico-muted-border-color);
+  --pico-stepper-label-color: var(--pico-muted-color);
+  --pico-stepper-complete-label-color: var(--pico-color);
   --pico-stepper-current-color: var(--pico-color);
   --pico-stepper-current-ring-color: var(--pico-primary-background);
   --pico-stepper-complete-background: var(--pico-primary-background);
@@ -32,7 +33,8 @@ ol[data-stepper] {
     /* State lives in these, so the marker, label and line rules are written once */
     --_marker-background: var(--pico-background-color);
     --_marker-color: var(--pico-stepper-label-color);
-    --_marker-ring: inset 0 0 0 var(--pico-stepper-line-width) var(--pico-stepper-line-color);
+    --_marker-ring: inset 0 0 0 var(--pico-stepper-line-width) var(--pico-form-element-border-color);
+    --_marker-icon: none;
     --_label-color: var(--pico-stepper-label-color);
     --_label-weight: inherit;
     --_line-color: var(--pico-stepper-line-color);
@@ -98,7 +100,7 @@ ol[data-stepper] {
       inline-size: var(--pico-stepper-marker-size);
       block-size: var(--pico-stepper-marker-size);
       border-radius: 50%;
-      background-color: var(--_marker-background);
+      background: var(--_marker-icon) center / 0.875rem no-repeat var(--_marker-background);
       box-shadow: var(--_marker-ring);
       color: var(--_marker-color);
       font-weight: 600;
@@ -125,21 +127,23 @@ ol[data-stepper] {
     }
 
     /* Completed: a step before the current one */
+    /* Completed: a check mark instead of the number */
     &:has(~ li[aria-current="step"], ~ li > [aria-current="step"]) {
       --_marker-background: var(--pico-stepper-complete-background);
-      --_marker-color: var(--pico-stepper-complete-color);
+      --_marker-color: transparent;
       --_marker-ring: 0 0 0 0 transparent;
+      --_marker-icon: var(--pico-icon-checkbox);
+      --_label-color: var(--pico-stepper-complete-label-color);
       --_line-color: var(--pico-stepper-complete-line-color);
     }
 
     /* Current */
     &[aria-current="step"],
     &:has(> [aria-current="step"]) {
-      --_marker-background: var(--pico-stepper-complete-background);
-      --_marker-color: var(--pico-stepper-complete-color);
+      --_marker-color: var(--pico-primary);
       --_marker-ring:
-        0 0 0 var(--pico-stepper-ring-width) var(--pico-background-color),
-        0 0 0 calc(var(--pico-stepper-ring-width) * 2) var(--pico-stepper-current-ring-color);
+        inset 0 0 0 var(--pico-stepper-ring-width) var(--pico-stepper-current-ring-color),
+        0 0 0 0.25rem color-mix(in oklab, var(--pico-stepper-current-ring-color) 20%, transparent);
       --_label-color: var(--pico-stepper-current-color);
       --_label-weight: 600;
     }
@@ -156,7 +160,7 @@ ol[data-stepper="vertical"] > li {
   flex: none;
   flex-direction: row;
   align-items: flex-start;
-  padding-block-end: calc(var(--pico-spacing) * 1.5);
+  padding-block-end: max(1.5rem, calc(var(--pico-spacing) * 1.75));
   line-height: var(--pico-stepper-marker-size);
   text-align: start;
 
@@ -171,8 +175,8 @@ ol[data-stepper="vertical"] > li {
   }
 
   &:not(:last-child)::after {
-    inset-block: calc(var(--pico-stepper-marker-size) + var(--pico-stepper-gap))
-      calc(var(--pico-stepper-gap));
+    inset-block: calc(var(--pico-stepper-marker-size) + var(--pico-stepper-gap) / 2)
+      calc(var(--pico-stepper-gap) / 2);
     inset-inline: calc((var(--pico-stepper-marker-size) - var(--pico-stepper-line-width)) / 2) auto;
     block-size: auto;
     inline-size: var(--pico-stepper-line-width);
@@ -187,7 +191,7 @@ ol[data-stepper="vertical"] > li {
       flex: none;
       flex-direction: row;
       align-items: flex-start;
-      padding-block-end: calc(var(--pico-spacing) * 1.5);
+      padding-block-end: max(1.5rem, calc(var(--pico-spacing) * 1.75));
       line-height: var(--pico-stepper-marker-size);
       text-align: start;
 
@@ -202,8 +206,8 @@ ol[data-stepper="vertical"] > li {
       }
 
       &:not(:last-child)::after {
-        inset-block: calc(var(--pico-stepper-marker-size) + var(--pico-stepper-gap))
-          calc(var(--pico-stepper-gap));
+        inset-block: calc(var(--pico-stepper-marker-size) + var(--pico-stepper-gap) / 2)
+          calc(var(--pico-stepper-gap) / 2);
         inset-inline: calc((var(--pico-stepper-marker-size) - var(--pico-stepper-line-width)) / 2)
           auto;
         block-size: auto;

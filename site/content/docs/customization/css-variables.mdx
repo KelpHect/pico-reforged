@@ -19,7 +19,9 @@ Declare the variable on `:root` to change it for the whole page.
 }
 ```
 
+<Callout title="Unlayered CSS wins">
 Your CSS is not inside a cascade layer, so it wins over Pico without `!important` or a heavier selector. See [Cascade layers and overriding](/docs/customization/cascade-layers).
+</Callout>
 
 ### Scope a change to one element
 
@@ -40,15 +42,23 @@ A variable set on an element applies to that element and everything inside it.
 ```
 </Example>
 
-Variables that are built from other variables are resolved where they are declared. `--pico-block-spacing-vertical` is declared on `:root` as `var(--pico-spacing)`, so setting `--pico-spacing` on a single `<article>` does not change it. Set `--pico-block-spacing-vertical` and its horizontal sibling on the element instead.
+<Callout variant="warning" title="Variables resolve where they are declared">
+`--pico-block-spacing-vertical` is declared on `:root` as `calc(var(--pico-spacing) * 1.25)`, so setting `--pico-spacing` on a single `<article>` does not change it. Set `--pico-block-spacing-vertical` and its horizontal sibling on the element instead.
+</Callout>
 
-Some elements set their own values. Headings set `--pico-font-size` and `--pico-line-height` per level (for example `h1 { --pico-font-size: 2rem }`), and buttons set `--pico-background-color` and `--pico-border-color` from the primary, secondary and contrast tokens. To change a heading size, write the rule on the heading, not on `:root`.
+Some elements set their own values. Headings set `--pico-font-size` and `--pico-line-height` per level (for example `h1 { --pico-font-size: 2.25rem }`), and buttons set `--pico-background-color` and `--pico-border-color` from the primary, secondary and contrast tokens. To change a heading size, write the rule on the heading, not on `:root`.
 
 ```css
 h1 {
   --pico-font-size: 2.5rem;
 }
 ```
+
+## Reference
+
+Type in the field to filter every list on this page by name or description. Defaults and swatches are read from the build, so they match the current release.
+
+<TokenFilter />
 
 ## Typography
 
@@ -58,7 +68,7 @@ h1 {
     { name: "--pico-font-family-sans-serif", value: "system-ui, \"Segoe UI\", Roboto, ...", description: "The system sans-serif stack, with the emoji stack at the end." },
     { name: "--pico-font-family-monospace", value: "ui-monospace, SFMono-Regular, ...", description: "Stack for code, kbd, samp and pre." },
     { name: "--pico-font-family-emoji", value: "\"Apple Color Emoji\", \"Segoe UI Emoji\", ...", description: "Emoji fonts, appended to the other stacks." },
-    { name: "--pico-font-size", value: "100%", description: "Root font size. It grows at each breakpoint: 106.25%, 112.5%, 118.75%, 125% and 131.25% from 576px up. Headings override it per level." },
+    { name: "--pico-font-size", value: "100%", description: "Root font size. It takes one step to 106.25% from 1536px. Headings override it per level." },
     { name: "--pico-font-weight", value: "400", description: "Body font weight." },
     { name: "--pico-line-height", value: "1.5", description: "Body line height." },
     { name: "--pico-text-underline-offset", value: "0.1rem", description: "Offset of link underlines." },
@@ -87,10 +97,11 @@ To change the font, set `--pico-font-family` and nothing else.
 
 <Tokens
   items={[
-    { name: "--pico-border-radius", value: "0.25rem", description: "Corner radius of buttons, inputs, cards and most surfaces." },
+    { name: "--pico-border-radius", value: "0.5rem", description: "Corner radius of buttons, inputs and code blocks. Small parts such as checkboxes and tooltips use a fraction of it." },
+    { name: "--pico-card-border-radius", value: "calc(var(--pico-border-radius) * 1.5)", description: "Corner radius of cards, modals, menus, popovers and the extras surfaces. 1.5 times `--pico-border-radius`; the modal box uses 4/3 of it." },
     { name: "--pico-border-width", value: "0.0625rem", description: "Width of borders." },
     { name: "--pico-outline-width", value: "0.125rem", description: "Width of focus rings." },
-    { name: "--pico-transition", value: "0.2s ease-in-out", description: "Timing of hover and focus transitions. A build with transitions turned off sets it to 0s." },
+    { name: "--pico-transition", value: "150ms cubic-bezier(0.2, 0, 0, 1)", description: "Timing of hover and focus transitions. A build with transitions turned off sets it to 0s." },
     { name: "--pico-spacing", value: "1rem", description: "Base spacing unit." },
     { name: "--pico-block-spacing-vertical", value: "var(--pico-spacing)", description: "Vertical padding of cards and modals. Larger from 576px up when the responsive spacings option is on." },
     { name: "--pico-block-spacing-horizontal", value: "var(--pico-spacing)", description: "Horizontal padding of the same blocks." },
@@ -252,10 +263,10 @@ The primary tokens belong to the theme. The values shown are for Azure, the defa
     {"name":"--pico-del-color","value":"#883835 / #ce7e7b","description":"ins and del elements."},
     {"name":"--pico-blockquote-border-color","value":"var(--pico-muted-border-color)","description":"blockquote element."},
     {"name":"--pico-blockquote-footer-color","value":"var(--pico-muted-color)","description":"blockquote element."},
-    {"name":"--pico-code-background-color","value":"#f3f4f7 / #1a1e28","description":"Code, kbd and samp."},
-    {"name":"--pico-code-color","value":"#646b79 / #8891a4","description":"Code, kbd and samp."},
-    {"name":"--pico-code-kbd-background-color","value":"var(--pico-color)","description":"Code, kbd and samp."},
-    {"name":"--pico-code-kbd-color","value":"var(--pico-background-color)","description":"Code, kbd and samp."},
+    {"name":"--pico-code-background-color","value":"#f3f4f7 / #1a1e28","description":"Background of inline code, kbd and samp, and of code blocks."},
+    {"name":"--pico-code-color","value":"#646b79 / #8891a4","description":"Text color of inline code and samp, and of code blocks."},
+    {"name":"--pico-code-kbd-background-color","value":"var(--pico-color)","description":"Background of `kbd`, a key or shortcut."},
+    {"name":"--pico-code-kbd-color","value":"var(--pico-background-color)","description":"Text color of `kbd`."},
     {"name":"--pico-table-border-color","value":"var(--pico-muted-border-color)","description":"Table."},
     {"name":"--pico-table-row-stripped-background-color","value":"#6f7887 (alpha 0.0375)","description":"Table."},
   ]}

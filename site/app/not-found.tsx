@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <main id="main" className="container not-found">
+    <main id="main" className="site-container not-found">
       <h1>Page not found</h1>
       <p>The page you asked for does not exist or has moved.</p>
       <p>

@@ -10,47 +10,51 @@ h3,
 h4,
 h5,
 h6 {
-  --pico-font-weight: 700;
+  --pico-font-weight: 600;
 }
 
 h1 {
-  --pico-font-size: 2rem;
-  --pico-line-height: 1.125;
+  --pico-font-size: 2.25rem;
+  --pico-line-height: 1.15;
+  letter-spacing: -0.025em;
   --pico-typography-spacing-top: 3rem;
   --pico-color: var(--pico-h1-color);
 }
 
 h2 {
   --pico-font-size: 1.75rem;
-  --pico-line-height: 1.15;
+  --pico-line-height: 1.2;
+  letter-spacing: -0.02em;
   --pico-typography-spacing-top: 2.625rem;
   --pico-color: var(--pico-h2-color);
 }
 
 h3 {
-  --pico-font-size: 1.5rem;
-  --pico-line-height: 1.175;
+  --pico-font-size: 1.375rem;
+  --pico-line-height: 1.3;
+  letter-spacing: -0.015em;
   --pico-typography-spacing-top: 2.25rem;
   --pico-color: var(--pico-h3-color);
 }
 
 h4 {
-  --pico-font-size: 1.25rem;
-  --pico-line-height: 1.2;
+  --pico-font-size: 1.125rem;
+  --pico-line-height: 1.4;
+  letter-spacing: -0.01em;
   --pico-typography-spacing-top: 1.874rem;
   --pico-color: var(--pico-h4-color);
 }
 
 h5 {
-  --pico-font-size: 1.125rem;
-  --pico-line-height: 1.225;
+  --pico-font-size: 1rem;
+  --pico-line-height: 1.5;
   --pico-typography-spacing-top: 1.6875rem;
   --pico-color: var(--pico-h5-color);
 }
 
 h6 {
-  --pico-font-size: 1rem;
-  --pico-line-height: 1.25;
+  --pico-font-size: 0.875rem;
+  --pico-line-height: 1.5;
   --pico-typography-spacing-top: 1.5rem;
   --pico-color: var(--pico-h6-color);
 }
@@ -104,6 +108,11 @@ h6 {
   font-size: var(--pico-font-size);
   line-height: var(--pico-line-height);
   font-family: var(--pico-font-family);
+  text-wrap: balance;
+}
+
+:where(p, li, figcaption, blockquote) {
+  text-wrap: pretty;
 }
 
 :where(article, address, blockquote, dl, figure, form, ol, p, pre, table, ul)
@@ -141,7 +150,11 @@ hgroup {
 }
 
 ul li {
-  list-style: square;
+  list-style: disc;
+}
+
+:where(ul, ol) li::marker {
+  color: var(--pico-muted-color);
 }
 
 mark {

@@ -418,10 +418,6 @@ two lines.</textarea>
               <input type="number" placeholder="Year" />
               <button type="button" class="contrast">Add</button>
             </fieldset>
-            <form role="search" onsubmit="return false">
-              <input name="q" type="search" placeholder="Search" />
-              <input type="submit" value="Search" />
-            </form>
             <div role="search">
               <input type="search" placeholder="Search the docs" />
               <button type="button">Find</button>
@@ -436,6 +432,12 @@ two lines.</textarea>
           <input type="text" id="separate" placeholder="Label linked by for" />
 
           <button type="submit">Submit</button>
+        </form>
+
+        <!-- Outside the form above: a form inside a form is dropped by the parser -->
+        <form role="search" onsubmit="return false">
+          <input name="q" type="search" placeholder="Search" />
+          <input type="submit" value="Search" />
         </form>
       </section>
 

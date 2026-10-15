@@ -17,11 +17,18 @@ dialog {
   background-color: var(--pico-modal-overlay-background-color);
   color: var(--pico-color);
 
+  /* The dialog card is a raised surface: menu color and shadow, no header and footer bands */
   > article {
+    --pico-block-spacing-vertical: 1.5rem;
+    --pico-block-spacing-horizontal: 1.5rem;
+    --pico-card-background-color: var(--pico-dropdown-background-color);
+    --pico-card-box-shadow: var(--pico-dropdown-box-shadow);
+    --pico-card-sectioning-background-color: transparent;
     width: 100%;
     max-height: calc(100vh - var(--pico-spacing) * 2);
     margin: var(--pico-spacing);
     overflow: auto;
+    border-radius: calc(var(--pico-card-border-radius) * 4 / 3);
 
     @media (width >= 576px) {
       max-width: 510px;
@@ -37,7 +44,7 @@ dialog {
 
     > header .close,
     > header :is(a, button)[rel="prev"] {
-      margin: 0;
+      margin: -0.25rem 0;
       margin-inline-start: var(--pico-spacing);
       padding: 0;
       /* Physical value first for browsers without float: inline-end */
@@ -50,6 +57,7 @@ dialog {
 
       button,
       [role="button"] {
+        width: auto;
         margin-bottom: 0;
       }
 
@@ -63,19 +71,24 @@ dialog {
     .close,
     :is(a, button)[rel="prev"] {
       display: block;
-      width: 1rem;
-      height: 1rem;
-      margin-top: calc(var(--pico-spacing) * -1);
-      margin-bottom: var(--pico-spacing);
+      width: 2rem;
+      height: 2rem;
+      margin-top: calc(var(--pico-spacing) * -0.5);
+      margin-bottom: calc(var(--pico-spacing) * 0.5);
       margin-inline-start: auto;
+      padding: 0;
       border: none;
+      border-radius: var(--pico-border-radius);
       background-image: var(--pico-icon-close);
       background-position: center;
       background-size: auto 1rem;
       background-repeat: no-repeat;
       background-color: transparent;
-      opacity: 0.5;
-      transition: opacity var(--pico-transition);
+      box-shadow: none;
+      opacity: 0.6;
+      transition:
+        opacity var(--pico-transition),
+        background-color var(--pico-transition);
     }
 
     .close:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
@@ -85,6 +98,7 @@ dialog {
         :active,
         :focus
       ) {
+      background-color: color-mix(in oklab, var(--pico-color) 8%, transparent);
       opacity: 1;
     }
   }
@@ -111,18 +125,18 @@ dialog {
 :where(.modal-is-opening, .modal-is-closing) {
   dialog,
   dialog > article {
-    animation-duration: 0.2s;
-    animation-timing-function: ease-in-out;
+    animation-duration: 0.15s;
+    animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
     animation-fill-mode: both;
   }
 
   dialog {
-    animation-duration: 0.8s;
+    animation-duration: 0.2s;
     animation-name: modal-overlay;
   }
 
   dialog > article {
-    animation-delay: 0.2s;
+    animation-delay: 0.05s;
     animation-name: modal;
   }
 }
@@ -144,7 +158,7 @@ dialog {
 
 @keyframes modal {
   from {
-    transform: translateY(-100%);
+    transform: scale(0.96);
     opacity: 0;
   }
 }
@@ -159,10 +173,10 @@ dialog {
     html:not(.modal-is-open, .modal-is-opening, .modal-is-closing) {
       dialog {
         transition:
-          background-color 0.4s ease-in-out,
-          backdrop-filter 0.4s ease-in-out,
-          overlay 0.4s allow-discrete,
-          display 0.4s allow-discrete;
+          background-color 0.2s ease-out,
+          backdrop-filter 0.2s ease-out,
+          overlay 0.2s allow-discrete,
+          display 0.2s allow-discrete;
 
         &:not([open]) {
           backdrop-filter: none;
@@ -171,18 +185,13 @@ dialog {
 
         > article {
           transition:
-            transform 0.2s ease-in-out,
-            opacity 0.2s ease-in-out;
+            transform 0.15s cubic-bezier(0.2, 0, 0, 1),
+            opacity 0.15s cubic-bezier(0.2, 0, 0, 1);
         }
 
         &:not([open]) > article {
-          transform: translateY(-100%);
+          transform: scale(0.96);
           opacity: 0;
-        }
-
-        /* The card waits for the overlay on the way in, not on the way out */
-        &[open] > article {
-          transition-delay: 0.2s;
         }
       }
     }
@@ -193,7 +202,7 @@ dialog {
         background-color: transparent;
 
         > article {
-          transform: translateY(-100%);
+          transform: scale(0.96);
           opacity: 0;
         }
       }

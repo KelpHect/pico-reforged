@@ -1,26 +1,36 @@
 /* Alert: [role=alert], [role=status] and output with a data-variant (info, success, warning, danger) */
 
-/* Amber for the accent bar only. Pico has no warning color, and the text stays on --pico-color. */
+/* Amber for the accent only. Pico has no warning color, and the text stays on --pico-color. */
 :root,
 :host,
 [data-theme] {
   --pico-alert-warning-accent: light-dark(oklch(0.7 0.15 70), oklch(0.8 0.14 80));
+  /* The dark form validation colors are too muted for an accent, so success and danger get
+     their own dark step at the lightness and chroma of info and warning */
+  --pico-alert-success-accent: light-dark(
+    var(--pico-form-element-valid-border-color),
+    oklch(0.79 0.13 168)
+  );
+  --pico-alert-danger-accent: light-dark(
+    var(--pico-form-element-invalid-border-color),
+    oklch(0.76 0.14 22)
+  );
 }
 
 /* data-variant is required, so status regions that are not alerts are left alone */
 :where([role="alert"], [role="status"], output)[data-variant] {
-  --pico-alert-accent: var(--pico-primary-background);
-  --pico-alert-background-color: color-mix(
-    in oklab,
-    var(--pico-alert-accent) 12%,
-    var(--pico-background-color)
+  --pico-alert-accent: var(--pico-primary);
+  --pico-alert-background-color: light-dark(
+    color-mix(in oklab, var(--pico-alert-accent) 8%, var(--pico-background-color)),
+    color-mix(in oklab, var(--pico-alert-accent) 14%, var(--pico-background-color))
   );
   position: relative;
   display: block;
   margin-block: 0 var(--pico-typography-spacing-vertical);
-  padding: calc(var(--pico-spacing) * 0.75) var(--pico-spacing);
-  border-inline-start: 0.25rem solid var(--pico-alert-accent);
-  border-radius: var(--pico-border-radius);
+  padding: 0.875rem 1rem;
+  border: var(--pico-border-width) solid
+    color-mix(in oklab, var(--pico-alert-accent) 35%, transparent);
+  border-radius: var(--pico-card-border-radius);
   background-color: var(--pico-alert-background-color);
   --pico-alert-color: var(--pico-color);
   color: var(--pico-alert-color);
@@ -29,7 +39,7 @@
   overflow-wrap: anywhere;
 
   &:where([data-variant="success"]) {
-    --pico-alert-accent: var(--pico-form-element-valid-border-color);
+    --pico-alert-accent: var(--pico-alert-success-accent);
   }
 
   &:where([data-variant="warning"]) {
@@ -37,7 +47,7 @@
   }
 
   &:where([data-variant="danger"]) {
-    --pico-alert-accent: var(--pico-form-element-invalid-border-color);
+    --pico-alert-accent: var(--pico-alert-danger-accent);
   }
 
   /* Room for the dismiss button */
@@ -54,7 +64,10 @@
     margin-block-start: 0;
   }
 
-  & > :where(:last-child) {
+  /* The dismiss button is absolutely positioned, so the last element in the flow may come
+     before it. Lists drop the spacing of their last item too. */
+  & > :where(:last-child, :has(+ button[data-dismiss]:last-child)),
+  & > :where(ul, ol):where(:last-child, :has(+ button[data-dismiss]:last-child)) > li:last-child {
     margin-block-end: 0;
   }
 
@@ -68,16 +81,39 @@
     text-decoration-line: underline;
   }
 
+  /* The lead-in takes a darker or lighter shade of the accent */
+  & > :where(strong:first-child) {
+    color: light-dark(
+      color-mix(in oklab, var(--pico-alert-accent) 55%, var(--pico-alert-color)),
+      color-mix(in oklab, var(--pico-alert-accent) 45%, var(--pico-alert-color))
+    );
+    font-weight: 600;
+  }
+
+  /* Action buttons are compact so the alert keeps the height of a text alert */
+  &
+    :where(
+      button:not([data-dismiss]),
+      [role="button"],
+      input:is([type="submit"], [type="button"])
+    ) {
+    margin-block: -0.25rem;
+    margin-inline-start: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.875em;
+    vertical-align: middle;
+  }
+
   /* Only button[data-dismiss] is the glyph box. Other buttons stay normal buttons.
      The glyph is text, not a background image, so forced colors keep it. */
   & > :where(button[data-dismiss]) {
     position: absolute;
-    inset-block-start: calc(var(--pico-spacing) * 0.375);
-    inset-inline-end: calc(var(--pico-spacing) * 0.5);
+    inset-block-start: 0.5rem;
+    inset-inline-end: 0.5rem;
     display: grid;
     place-items: center;
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
+    inline-size: 1.75rem;
+    block-size: 1.75rem;
     margin: 0;
     padding: 0;
     border: 0;
@@ -94,13 +130,13 @@
     }
 
     &:where(:hover, :active) {
-      background-color: var(--pico-muted-border-color);
+      background-color: color-mix(in oklab, var(--pico-alert-color) 8%, transparent);
       /* Core button:hover swaps --pico-color to the inverse, so read the alert's own copy */
       color: var(--pico-alert-color);
     }
 
     &:where(:focus-visible) {
-      outline: var(--pico-outline-width) solid var(--pico-primary);
+      outline: var(--pico-outline-width) solid var(--pico-primary-focus);
       outline-offset: 0;
     }
   }

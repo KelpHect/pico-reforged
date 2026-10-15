@@ -7,23 +7,25 @@ progress {
   margin-bottom: calc(var(--pico-spacing) * 0.5);
   overflow: hidden;
   border: 0;
-  border-radius: var(--pico-border-radius);
+  border-radius: 1rem;
   background-color: var(--pico-progress-background-color);
   color: var(--pico-progress-color);
   vertical-align: baseline;
   accent-color: var(--pico-primary);
 
   &::-webkit-progress-bar {
-    border-radius: var(--pico-border-radius);
+    border-radius: inherit;
     background: none;
   }
 
   &[value]::-webkit-progress-value {
+    border-radius: inherit;
     background-color: var(--pico-progress-color);
     transition: inline-size var(--pico-transition);
   }
 
   &::-moz-progress-bar {
+    border-radius: inherit;
     background-color: var(--pico-progress-color);
   }
 }
@@ -34,11 +36,11 @@ progress {
     background: var(--pico-progress-background-color)
       linear-gradient(
         to right,
-        var(--pico-progress-color) 30%,
-        var(--pico-progress-background-color) 30%
+        var(--pico-progress-color) 40%,
+        var(--pico-progress-background-color) 40%
       )
       top left / 150% 150% no-repeat;
-    animation: progress-indeterminate 1s linear infinite;
+    animation: progress-indeterminate 1.2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
 
     &[value]::-webkit-progress-value {
       background-color: transparent;

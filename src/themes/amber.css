@@ -9,9 +9,9 @@
   --pico-primary-underline: light-dark(oklch(0.5248 0.1076 84 / 0.5), oklch(0.697 0.143 84 / 0.5));
   --pico-primary-hover: light-dark(oklch(0.438 0.09 84), oklch(0.783 0.1606 84));
   --pico-primary-hover-background: light-dark(oklch(0.783 0.1606 84), oklch(0.87 0.1345 84));
-  --pico-primary-focus: light-dark(oklch(0.655 0.1344 84 / 0.5), oklch(0.697 0.143 84 / 0.375));
+  --pico-primary-focus: light-dark(oklch(0.57 0.117 84.3), oklch(0.697 0.143 84));
   --pico-primary-inverse: oklch(0 0 0);
-  --pico-switch-thumb-box-shadow: 0 0 0.5rem oklch(0 0 0 / 0.25);
+  --pico-switch-thumb-box-shadow: 0 0.0625rem 0.125rem 0 oklch(0 0 0 / 0.2);
 }
 
 [aria-busy="true"]:not(input, select, textarea):is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]):not(.outline)::before {

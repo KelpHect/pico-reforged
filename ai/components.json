@@ -376,6 +376,7 @@
           "--pico-secondary-hover",
           "--pico-secondary-hover-underline",
           "--pico-secondary-underline",
+          "--pico-text-underline-offset",
           "--pico-transition"
         ],
         "defines": [
@@ -470,10 +471,10 @@
           "--pico-contrast-hover-background",
           "--pico-contrast-hover-border",
           "--pico-contrast-inverse",
-          "--pico-font-weight",
           "--pico-form-element-spacing-horizontal",
           "--pico-form-element-spacing-vertical",
           "--pico-line-height",
+          "--pico-muted-color",
           "--pico-outline-width",
           "--pico-primary",
           "--pico-primary-background",
@@ -498,7 +499,8 @@
           "--pico-background-color",
           "--pico-border-color",
           "--pico-box-shadow",
-          "--pico-color"
+          "--pico-color",
+          "--pico-font-weight"
         ]
       },
       "js": null
@@ -536,12 +538,13 @@
       "tokens": {
         "reads": [
           "--pico-background-color",
-          "--pico-color",
+          "--pico-border-width",
+          "--pico-muted-color",
           "--pico-spacing",
           "--pico-table-border-color",
           "--pico-table-row-stripped-background-color"
         ],
-        "defines": ["--pico-border-width", "--pico-font-weight"]
+        "defines": ["--pico-color", "--pico-font-weight"]
       },
       "js": null
     },
@@ -752,6 +755,7 @@
           "--pico-ins-color",
           "--pico-line-height",
           "--pico-muted-color",
+          "--pico-primary-background",
           "--pico-primary-focus",
           "--pico-spacing",
           "--pico-transition"
@@ -822,17 +826,22 @@
       ],
       "tokens": {
         "reads": [
+          "--pico-border-radius",
+          "--pico-font-weight",
           "--pico-form-element-invalid-border-color",
           "--pico-form-element-valid-border-color",
           "--pico-icon-checkbox",
           "--pico-icon-minus",
+          "--pico-outline-width",
           "--pico-primary-background",
           "--pico-primary-border",
+          "--pico-primary-focus",
           "--pico-primary-inverse",
           "--pico-switch-background-color",
           "--pico-switch-checked-background-color",
           "--pico-switch-color",
-          "--pico-switch-thumb-box-shadow"
+          "--pico-switch-thumb-box-shadow",
+          "--pico-transition"
         ],
         "defines": [
           "--pico-background-color",
@@ -920,22 +929,15 @@
       "aria": [],
       "tokens": {
         "reads": [
-          "--pico-button-hover-box-shadow",
           "--pico-form-element-spacing-horizontal",
           "--pico-form-element-spacing-vertical",
           "--pico-muted-color",
           "--pico-outline-width",
           "--pico-secondary-focus",
           "--pico-secondary-hover-background",
-          "--pico-secondary-hover-border",
-          "--pico-spacing"
+          "--pico-secondary-hover-border"
         ],
-        "defines": [
-          "--pico-background-color",
-          "--pico-border-color",
-          "--pico-box-shadow",
-          "--pico-color"
-        ]
+        "defines": ["--pico-background-color", "--pico-border-color", "--pico-color"]
       },
       "js": null
     },
@@ -962,7 +964,9 @@
       "aria": [],
       "tokens": {
         "reads": [
-          "--pico-border-radius",
+          "--pico-outline-width",
+          "--pico-primary-background",
+          "--pico-primary-focus",
           "--pico-range-active-border-color",
           "--pico-range-thumb-active-color",
           "--pico-range-thumb-border-color",
@@ -1048,12 +1052,13 @@
       "tokens": {
         "reads": [
           "--pico-accordion-active-summary-color",
+          "--pico-accordion-border-color",
           "--pico-accordion-close-summary-color",
           "--pico-accordion-open-summary-color",
+          "--pico-border-width",
           "--pico-icon-chevron",
           "--pico-line-height",
           "--pico-outline-width",
-          "--pico-primary",
           "--pico-primary-focus",
           "--pico-spacing",
           "--pico-transition"
@@ -1087,10 +1092,10 @@
         "reads": [
           "--pico-block-spacing-horizontal",
           "--pico-block-spacing-vertical",
-          "--pico-border-radius",
           "--pico-border-width",
           "--pico-card-background-color",
           "--pico-card-border-color",
+          "--pico-card-border-radius",
           "--pico-card-box-shadow",
           "--pico-card-sectioning-background-color"
         ],
@@ -1152,6 +1157,7 @@
         "reads": [
           "--pico-border-radius",
           "--pico-border-width",
+          "--pico-card-border-radius",
           "--pico-dropdown-background-color",
           "--pico-dropdown-border-color",
           "--pico-dropdown-box-shadow",
@@ -1170,7 +1176,6 @@
           "--pico-line-height",
           "--pico-nav-element-spacing-vertical",
           "--pico-nav-link-spacing-horizontal",
-          "--pico-nav-link-spacing-vertical",
           "--pico-primary-focus",
           "--pico-spacing",
           "--pico-transition"
@@ -1228,6 +1233,7 @@
       "aria": ["Name a group with aria-label or a legend when the controls need shared context."],
       "tokens": {
         "reads": [
+          "--pico-background-color",
           "--pico-border-width",
           "--pico-contrast-focus",
           "--pico-group-box-shadow-focus-with-input",
@@ -1331,7 +1337,11 @@
       ],
       "tokens": {
         "reads": [
+          "--pico-border-radius",
+          "--pico-card-border-radius",
           "--pico-color",
+          "--pico-dropdown-background-color",
+          "--pico-dropdown-box-shadow",
           "--pico-icon-close",
           "--pico-modal-overlay-backdrop-filter",
           "--pico-modal-overlay-background-color",
@@ -1339,7 +1349,13 @@
           "--pico-spacing",
           "--pico-transition"
         ],
-        "defines": []
+        "defines": [
+          "--pico-block-spacing-horizontal",
+          "--pico-block-spacing-vertical",
+          "--pico-card-background-color",
+          "--pico-card-box-shadow",
+          "--pico-card-sectioning-background-color"
+        ]
       },
       "js": {
         "description": "Open and close with the dialog API. The page class is optional and only locks scrolling.",
@@ -1395,13 +1411,15 @@
       "tokens": {
         "reads": [
           "--pico-border-radius",
-          "--pico-border-width",
+          "--pico-color",
+          "--pico-form-element-spacing-vertical",
           "--pico-muted-color",
           "--pico-nav-breadcrumb-divider",
           "--pico-nav-element-spacing-horizontal",
           "--pico-nav-element-spacing-vertical",
           "--pico-nav-link-spacing-horizontal",
-          "--pico-nav-link-spacing-vertical"
+          "--pico-nav-link-spacing-vertical",
+          "--pico-spacing"
         ],
         "defines": []
       },
@@ -1437,7 +1455,6 @@
       "aria": ["Label it with aria-label or a label element."],
       "tokens": {
         "reads": [
-          "--pico-border-radius",
           "--pico-primary",
           "--pico-progress-background-color",
           "--pico-progress-color",
@@ -1481,7 +1498,10 @@
       "tokens": {
         "reads": [
           "--pico-border-radius",
-          "--pico-font-weight",
+          "--pico-dropdown-box-shadow",
+          "--pico-line-height",
+          "--pico-muted-color",
+          "--pico-text-underline-offset",
           "--pico-tooltip-background-color",
           "--pico-tooltip-color"
         ],
@@ -1554,6 +1574,7 @@
           "--pico-border-width",
           "--pico-card-background-color",
           "--pico-card-border-color",
+          "--pico-card-border-radius",
           "--pico-card-box-shadow",
           "--pico-color",
           "--pico-dropdown-background-color",
@@ -1561,14 +1582,11 @@
           "--pico-dropdown-box-shadow",
           "--pico-dropdown-color",
           "--pico-dropdown-hover-background-color",
-          "--pico-font-weight",
-          "--pico-form-element-spacing-horizontal",
-          "--pico-form-element-spacing-vertical",
           "--pico-line-height",
-          "--pico-outline-width",
           "--pico-spacing",
           "--pico-tooltip-background-color",
-          "--pico-tooltip-color"
+          "--pico-tooltip-color",
+          "--pico-transition"
         ],
         "defines": []
       },
@@ -1681,7 +1699,6 @@
           "--pico-border-radius",
           "--pico-border-width",
           "--pico-color",
-          "--pico-font-weight",
           "--pico-form-element-disabled-opacity",
           "--pico-line-height",
           "--pico-muted-border-color",
@@ -1692,6 +1709,8 @@
           "--pico-primary",
           "--pico-primary-background",
           "--pico-primary-focus",
+          "--pico-primary-hover",
+          "--pico-primary-subtle-background",
           "--pico-spacing",
           "--pico-transition"
         ],
@@ -1783,14 +1802,15 @@
         "reads": [
           "--pico-background-color",
           "--pico-border-radius",
+          "--pico-border-width",
+          "--pico-card-border-radius",
           "--pico-color",
           "--pico-form-element-invalid-border-color",
           "--pico-form-element-valid-border-color",
           "--pico-line-height",
-          "--pico-muted-border-color",
           "--pico-outline-width",
           "--pico-primary",
-          "--pico-primary-background",
+          "--pico-primary-focus",
           "--pico-spacing",
           "--pico-transition",
           "--pico-typography-spacing-vertical"
@@ -1799,6 +1819,8 @@
           "--pico-alert-accent",
           "--pico-alert-background-color",
           "--pico-alert-color",
+          "--pico-alert-danger-accent",
+          "--pico-alert-success-accent",
           "--pico-alert-warning-accent"
         ]
       },
@@ -1865,10 +1887,11 @@
         "reads": [
           "--pico-border-radius",
           "--pico-border-width",
-          "--pico-card-background-color",
-          "--pico-card-border-color",
-          "--pico-card-box-shadow",
+          "--pico-card-border-radius",
           "--pico-color",
+          "--pico-dropdown-background-color",
+          "--pico-dropdown-border-color",
+          "--pico-dropdown-box-shadow",
           "--pico-font-weight",
           "--pico-form-element-invalid-border-color",
           "--pico-line-height",
@@ -1878,7 +1901,6 @@
           "--pico-primary-background",
           "--pico-primary-focus",
           "--pico-primary-hover",
-          "--pico-primary-underline",
           "--pico-spacing",
           "--pico-transition"
         ],
@@ -1983,6 +2005,7 @@
         "reads": [
           "--pico-contrast-background",
           "--pico-contrast-inverse",
+          "--pico-primary",
           "--pico-primary-background",
           "--pico-primary-inverse",
           "--pico-secondary-background",
@@ -2068,14 +2091,14 @@
           "--pico-background-color",
           "--pico-card-background-color",
           "--pico-card-sectioning-background-color",
+          "--pico-color",
           "--pico-del-color",
           "--pico-dropdown-background-color",
           "--pico-ins-color",
           "--pico-muted-color",
           "--pico-outline-width",
           "--pico-primary",
-          "--pico-secondary-background",
-          "--pico-secondary-inverse"
+          "--pico-primary-hover"
         ],
         "defines": [
           "--pico-avatar-background-color",
@@ -2109,11 +2132,11 @@
       },
       "summary": "Skeleton: empty [data-skeleton] placeholders (line, avatar, block) inside an [aria-busy=\"true\"] container",
       "use": "Loading placeholders. Empty [data-skeleton] elements inside an aria-busy=\"true\" container.",
-      "markup": "<article aria-busy=\"true\" aria-label=\"Loading invoice\">\n  <header>\n    <div>\n      <div data-skeleton=\"avatar\"></div>\n      <div>\n        <p data-skeleton=\"line\"></p>\n        <p data-skeleton=\"line\"></p>\n      </div>\n    </div>\n  </header>\n  <p data-skeleton=\"line\"></p>\n  <p data-skeleton=\"line\"></p>\n  <p data-skeleton=\"line\"></p>\n  <div data-skeleton=\"block\"></div>\n  <footer>\n    <p data-skeleton=\"line\"></p>\n  </footer>\n</article>",
+      "markup": "<article aria-busy=\"true\" aria-label=\"Loading invoice\">\n  <header>\n    <p data-skeleton=\"line\"></p>\n  </header>\n  <p data-skeleton=\"line\"></p>\n  <footer>\n    <p data-skeleton=\"line\"></p>\n  </footer>\n</article>",
       "examples": [
         {
           "label": "Skeleton card",
-          "html": "<article aria-busy=\"true\" aria-label=\"Loading invoice\">\n  <header>\n    <div>\n      <div data-skeleton=\"avatar\"></div>\n      <div>\n        <p data-skeleton=\"line\"></p>\n        <p data-skeleton=\"line\"></p>\n      </div>\n    </div>\n  </header>\n  <p data-skeleton=\"line\"></p>\n  <p data-skeleton=\"line\"></p>\n  <p data-skeleton=\"line\"></p>\n  <div data-skeleton=\"block\"></div>\n  <footer>\n    <p data-skeleton=\"line\"></p>\n  </footer>\n</article>"
+          "html": "<article aria-busy=\"true\" aria-label=\"Loading invoice\">\n  <header>\n    <p data-skeleton=\"line\"></p>\n  </header>\n  <p data-skeleton=\"line\"></p>\n  <footer>\n    <p data-skeleton=\"line\"></p>\n  </footer>\n</article>"
         }
       ],
       "variants": [
@@ -2148,8 +2171,8 @@
       "tokens": {
         "reads": [
           "--pico-border-radius",
+          "--pico-card-border-radius",
           "--pico-form-element-background-color",
-          "--pico-form-element-selected-background-color",
           "--pico-muted-border-color",
           "--pico-typography-spacing-vertical"
         ],
@@ -2218,8 +2241,6 @@
           "--pico-border-width",
           "--pico-card-sectioning-background-color",
           "--pico-color",
-          "--pico-contrast",
-          "--pico-form-element-selected-background-color",
           "--pico-grid-column-gap",
           "--pico-grid-row-gap",
           "--pico-line-height",
@@ -2231,7 +2252,9 @@
           "--pico-nav-link-spacing-vertical",
           "--pico-outline-width",
           "--pico-primary-focus",
-          "--pico-secondary-focus",
+          "--pico-primary-hover",
+          "--pico-primary-subtle-background",
+          "--pico-secondary",
           "--pico-spacing",
           "--pico-transition"
         ],
@@ -2316,15 +2339,18 @@
       ],
       "tokens": {
         "reads": [
-          "--pico-background-color",
           "--pico-border-radius",
+          "--pico-border-width",
+          "--pico-card-border-radius",
           "--pico-card-sectioning-background-color",
           "--pico-color",
           "--pico-dropdown-hover-background-color",
+          "--pico-muted-border-color",
           "--pico-outline-width",
           "--pico-primary-background",
           "--pico-primary-focus",
           "--pico-primary-hover",
+          "--pico-primary-subtle-background",
           "--pico-spacing",
           "--pico-typography-spacing-vertical"
         ],
@@ -2391,18 +2417,13 @@
         "reads": [
           "--pico-border-radius",
           "--pico-border-width",
-          "--pico-dropdown-hover-background-color",
           "--pico-form-element-disabled-opacity",
           "--pico-muted-color",
           "--pico-nav-link-spacing-horizontal",
           "--pico-outline-width",
-          "--pico-primary",
           "--pico-primary-background",
-          "--pico-primary-border",
           "--pico-primary-focus",
-          "--pico-primary-hover",
           "--pico-primary-hover-background",
-          "--pico-primary-hover-border",
           "--pico-primary-inverse",
           "--pico-typography-spacing-vertical"
         ],
@@ -2473,8 +2494,11 @@
           "--pico-color",
           "--pico-form-element-border-color",
           "--pico-form-element-disabled-opacity",
+          "--pico-icon-checkbox",
+          "--pico-muted-border-color",
           "--pico-muted-color",
           "--pico-outline-width",
+          "--pico-primary",
           "--pico-primary-background",
           "--pico-primary-focus",
           "--pico-primary-inverse",
@@ -2485,6 +2509,7 @@
         "defines": [
           "--pico-stepper-complete-background",
           "--pico-stepper-complete-color",
+          "--pico-stepper-complete-label-color",
           "--pico-stepper-complete-line-color",
           "--pico-stepper-current-color",
           "--pico-stepper-current-ring-color",
@@ -2542,11 +2567,12 @@
         "reads": [
           "--pico-block-spacing-horizontal",
           "--pico-block-spacing-vertical",
-          "--pico-border-radius",
           "--pico-border-width",
-          "--pico-card-sectioning-background-color",
-          "--pico-form-element-border-color",
+          "--pico-card-border-radius",
+          "--pico-muted-border-color",
           "--pico-muted-color",
+          "--pico-primary",
+          "--pico-primary-background",
           "--pico-spacing"
         ],
         "defines": [

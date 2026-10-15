@@ -1,6 +1,9 @@
-// Usage: node test/visual/run.ts [--new dist-dev] [--ref test/reference/v2.1.1] [--only kitchen-sink] [--suffix name]
+// Usage: node test/visual/run.ts [--new dist-dev] [--ref test/reference/v2.1.1] [--only kitchen-sink] [--suffix name] [--gate]
 // Renders each fixture with the reference CSS and the new CSS, diffs the screenshots and
 // writes test/visual/report[-suffix]/index.html and report.json.
+// --gate exits 1 when a fixture differs from the reference by more than GATE_MISMATCH percent of
+// its pixels or GATE_HEIGHT pixels of page height. Use it against test/reference/current (the
+// frozen output of this project, see freeze.ts). Against v2.1.1 the report is informational.
 import { chromium } from "playwright";
 import type { Browser } from "playwright";
 import pixelmatch from "pixelmatch";
@@ -24,7 +27,11 @@ const refDir = resolve(root, opt("ref", "test/reference/v2.1.1") as string);
 const newDir = resolve(root, opt("new", "dist-dev") as string);
 const only = opt("only", null);
 const suffix = opt("suffix", null);
+const gate = args.includes("--gate");
 const reportDir = join(here, suffix ? `report-${suffix}` : "report");
+
+const GATE_MISMATCH = 0.05;
+const GATE_HEIGHT = 2;
 
 interface Mode {
   name: string;
@@ -175,6 +182,11 @@ figure{margin:0;flex:1 0 30%;min-width:240px}figcaption{font-weight:600;margin-b
 img{width:100%;height:auto;border:1px solid #ccc;background:#fff}.err{color:#b00020}
 </style></head><body>
 <h1>Visual report</h1>
+<p>${
+    refDir.includes("v2.1.1")
+      ? "Informational: differences from v2.1.1 are expected after the modern restyle."
+      : `Gated: more than ${GATE_MISMATCH}% of pixels or ${GATE_HEIGHT}px of height fails.`
+  }</p>
 <p>Reference: ${esc(refDir)}<br>New: ${esc(newDir)}</p>
 ${body}
 </body></html>
@@ -256,6 +268,23 @@ async function main() {
 
   writeReport(results);
   console.log(`Report: ${join(reportDir, "index.html")}`);
+
+  if (gate) {
+    const failed = results.filter(
+      (r) =>
+        !r.noReference &&
+        (r.error !== undefined ||
+          (r.mismatch ?? 0) > GATE_MISMATCH ||
+          Math.abs((r.newHeight ?? 0) - (r.refHeight ?? 0)) > GATE_HEIGHT),
+    );
+    for (const r of failed) {
+      console.error(
+        `FAIL ${r.id}: ${r.error ?? `${(r.mismatch ?? 0).toFixed(3)}%, heights ${r.refHeight}/${r.newHeight}`}`,
+      );
+    }
+    if (failed.length) process.exit(1);
+    console.log(`Gate passed: ${results.length} screenshots`);
+  }
 }
 
 main().catch((err) => {

@@ -69,7 +69,7 @@ Add `role="button"` to the summary for a button look. The usual `secondary`, `co
 
 The select-style summary reads `aria-invalid` like a form field: `false` gives the valid colors and `true` the invalid ones.
 
-<Example title="Dropdown validation" height={260}>
+<Example title="Dropdown validation" height={170}>
 ```html
 <details class="dropdown">
   <summary aria-invalid="true">Pick one</summary>
@@ -136,7 +136,8 @@ For `details.dropdown`, the summary is focusable and toggles with Enter or Space
   items={[
     { name: "--pico-dropdown-background-color", description: "Menu surface." },
     { name: "--pico-dropdown-border-color", description: "Menu border." },
-    { name: "--pico-dropdown-box-shadow", value: "var(--pico-box-shadow)", description: "Menu shadow." },
+    { name: "--pico-dropdown-box-shadow", description: "Menu shadow: a 1px ring and two drops, deeper than the card shadow." },
+    { name: "--pico-card-border-radius", value: "calc(var(--pico-border-radius) * 1.5)", description: "Corner radius of the menu. Items use three quarters of `--pico-border-radius`." },
     { name: "--pico-dropdown-color", value: "var(--pico-color)", description: "Item text color." },
     { name: "--pico-dropdown-hover-background-color", description: "Background of the hovered, focused or current item." },
     { name: "--pico-icon-chevron", description: "The arrow in the summary." },

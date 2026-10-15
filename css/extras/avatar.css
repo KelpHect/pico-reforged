@@ -10,8 +10,8 @@
   :root, :host, [data-theme] {
     --pico-avatar-size: 2.5rem;
     --pico-avatar-overlap: .375rem;
-    --pico-avatar-background-color: var(--pico-secondary-background);
-    --pico-avatar-color: var(--pico-secondary-inverse);
+    --pico-avatar-background-color: var(--lightningcss-light, color-mix(in oklab, var(--pico-primary) 14%, var(--pico-background-color))) var(--lightningcss-dark, color-mix(in oklab, var(--pico-primary) 24%, var(--pico-background-color)));
+    --pico-avatar-color: var(--pico-primary-hover);
     --pico-avatar-ring-color: var(--pico-background-color);
     --pico-avatar-status-online-color: var(--pico-ins-color);
     --pico-avatar-status-offline-color: var(--pico-muted-color);
@@ -35,6 +35,7 @@
     inline-size: var(--pico-avatar-size);
     block-size: var(--pico-avatar-size);
     background-color: var(--pico-avatar-background-color);
+    box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pico-color) 10%, transparent);
     color: var(--pico-avatar-color);
     font-size: calc(var(--pico-avatar-size) * .4);
     text-transform: uppercase;
@@ -63,8 +64,8 @@
   :where([data-avatar])[data-status]:after {
     content: "";
     box-sizing: border-box;
-    inline-size: max(.625rem, calc(var(--pico-avatar-size) * .26));
-    block-size: max(.625rem, calc(var(--pico-avatar-size) * .26));
+    inline-size: max(.625rem, calc(var(--pico-avatar-size) * .28));
+    block-size: max(.625rem, calc(var(--pico-avatar-size) * .28));
     border: max(.125rem, calc(var(--pico-avatar-size) * .04)) solid
       var(--_status, var(--pico-avatar-status-offline-color));
     background: var(--pico-avatar-ring-color);
@@ -99,6 +100,10 @@
     background: linear-gradient(var(--pico-avatar-ring-color), var(--pico-avatar-ring-color)) center / 60%
           20% no-repeat,
         var(--_status);
+  }
+
+  :where(p, li, td, th, dt, dd, label, small, h1, h2, h3, h4, h5, h6) > :where([data-avatar]) {
+    margin-inline-end: .5em;
   }
 
   :where([data-avatar="sm"]) {
@@ -174,7 +179,8 @@
   }
 
   :where([role="group"]):has( > [data-avatar],  > :is(a, button)[aria-label] > [data-avatar]:only-child) [data-avatar] {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color);
+    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color),
+      inset 0 0 0 1px color-mix(in oklab, var(--pico-color) 10%, transparent);
   }
 }
 

@@ -2,10 +2,10 @@
 
 :root,
 :host {
-  --pico-form-label-font-weight: var(--pico-font-weight);
+  --pico-form-label-font-weight: 500;
 }
 
-/* Thinner focus ring on text-like controls */
+/* Text-like controls get a wide, soft focus ring around the colored border */
 input:not(
   [type="submit"],
   [type="button"],
@@ -15,7 +15,7 @@ input:not(
   [type="file"]
 ),
 :where(select, textarea) {
-  --pico-outline-width: 0.0625rem;
+  --pico-outline-width: 0.1875rem;
 }
 
 /* Buttons, checkboxes, radios and file inputs use the primary focus color */
@@ -166,6 +166,21 @@ textarea {
     box-shadow var(--pico-transition);
 }
 
+/* Read-only fields look inert: a muted fill and the normal border */
+input:not(
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
+    [type="range"],
+    [type="file"]
+  )[readonly],
+textarea[readonly] {
+  --pico-background-color: var(--pico-form-element-selected-background-color);
+  --pico-border-color: var(--pico-form-element-border-color);
+}
+
 input:not(
     [type="submit"],
     [type="button"],
@@ -190,12 +205,36 @@ input:not(
     [type="submit"],
     [type="button"],
     [type="reset"],
+    [type="checkbox"],
+    [type="radio"],
     [type="range"],
     [type="file"],
     [readonly]
   ):focus,
 :where(select, textarea):not([readonly]):focus {
-  --pico-box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color);
+  --pico-box-shadow: 0 0 0 var(--pico-outline-width)
+    color-mix(in oklab, var(--pico-form-element-focus-color) 25%, transparent);
+}
+
+/* Hover darkens the border a little, the focus and validation colors win over it */
+:where(
+    input:not(
+      [type="submit"],
+      [type="button"],
+      [type="reset"],
+      [type="checkbox"],
+      [type="radio"],
+      [type="range"],
+      [type="file"]
+    ),
+    select,
+    textarea
+  ):hover:not(:focus, [readonly], :disabled, [aria-invalid]) {
+  --pico-border-color: color-mix(
+    in oklab,
+    var(--pico-form-element-border-color),
+    var(--pico-color) 30%
+  );
 }
 
 input:not([type="submit"], [type="button"], [type="reset"])[disabled],
@@ -265,7 +304,7 @@ label[aria-disabled="true"] input[disabled] {
 
       &:not([type="checkbox"], [type="radio"]) {
         --pico-box-shadow: 0 0 0 var(--pico-outline-width)
-          var(--pico-form-element-valid-focus-color) !important;
+          color-mix(in oklab, var(--pico-form-element-valid-focus-color) 25%, transparent) !important;
       }
     }
   }
@@ -278,7 +317,7 @@ label[aria-disabled="true"] input[disabled] {
 
       &:not([type="checkbox"], [type="radio"]) {
         --pico-box-shadow: 0 0 0 var(--pico-outline-width)
-          var(--pico-form-element-invalid-focus-color) !important;
+          color-mix(in oklab, var(--pico-form-element-invalid-focus-color) 25%, transparent) !important;
       }
     }
   }
@@ -318,8 +357,8 @@ select {
   }
 
   &[multiple] option:checked {
-    background: var(--pico-form-element-selected-background-color);
-    color: var(--pico-form-element-color);
+    background: color-mix(in oklab, var(--pico-primary-background) 14%, transparent);
+    color: var(--pico-color);
   }
 }
 
@@ -350,14 +389,17 @@ textarea {
     margin-block-start: calc(var(--pico-spacing) * -0.75);
     margin-block-end: var(--pico-spacing);
     color: var(--pico-muted-color);
+    font-weight: var(--pico-font-weight);
   }
 
   &[aria-invalid="false"] + small {
     color: var(--pico-ins-color);
+    font-weight: 500;
   }
 
   &[aria-invalid="true"] + small {
     color: var(--pico-del-color);
+    font-weight: 500;
   }
 }
 

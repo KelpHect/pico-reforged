@@ -65,6 +65,16 @@ const BEZIER: Record<string, [number, number, number, number]> = {
   linear: [0, 0, 1, 1],
 };
 
+// A timing keyword or cubic-bezier(a, b, c, d) as the four control point numbers.
+function bezier(text: string): [number, number, number, number] | null {
+  const fn = /^cubic-bezier\(([^)]*)\)$/.exec(text);
+  if (!fn) return BEZIER[text] ?? null;
+  const points = (fn[1] as string).split(",").map((n) => Number(n.trim()));
+  return points.length === 4 && points.every(Number.isFinite)
+    ? (points as [number, number, number, number])
+    : null;
+}
+
 function color(raw: string): Json | null {
   if (raw === "transparent") {
     return { colorSpace: "oklch", components: [0, 0, 0], alpha: 0, hex: "#000000" };
@@ -171,14 +181,15 @@ function single(
   }
   const d = dimension(raw);
   if (d !== null) return { type: "dimension", light: d };
-  const t = /^((?:\d+\.?\d*|\.\d+))(ms|s)\s+(\S+)$/.exec(raw);
-  if (t && BEZIER[t[3] as string]) {
+  const t = /^((?:\d+\.?\d*|\.\d+))(ms|s)\s+(.+)$/.exec(raw);
+  const curve = t ? bezier(t[3] as string) : null;
+  if (t && curve) {
     return {
       type: "transition",
       light: {
         duration: { value: num(t[1] as string), unit: t[2] as string },
         delay: { value: 0, unit: "s" },
-        timingFunction: BEZIER[t[3] as string] as Json,
+        timingFunction: curve as Json,
       },
     };
   }
@@ -257,6 +268,7 @@ function describe(name: string): string | undefined {
     [/^form-element-.*invalid/, "Form element color in the invalid state."],
     [/^form-element-.*valid/, "Form element color in the valid state."],
     [/^form-element-/, "Form element color."],
+    [/^card-border-radius$/, "Corner radius of cards, menus, dialogs and other surfaces."],
     [/^card-/, "Card surface."],
     [/^dropdown-/, "Dropdown menu surface."],
     [/^modal-/, "Modal overlay."],
@@ -281,7 +293,7 @@ function describe(name: string): string | undefined {
     [/^font-family$/, "Font stack of the page."],
     [/^line-height$/, "Line height of body text."],
     [/^font-weight$/, "Font weight of body text."],
-    [/^font-size$/, "Root font size. Grows with the viewport width, see responsive."],
+    [/^font-size$/, "Root font size. Steps up once on wide screens, see responsive."],
     [/^text-underline-offset$/, "Offset of link underlines."],
     [/^border-radius$/, "Corner radius of controls and cards."],
     [/^border-width$/, "Width of borders."],

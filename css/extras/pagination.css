@@ -42,6 +42,8 @@
     user-select: none;
     justify-content: center;
     align-items: center;
+    font-weight: 500;
+    line-height: 1;
     display: flex;
   }
 
@@ -54,36 +56,57 @@
     border: var(--pico-border-width) solid transparent;
     border-radius: var(--pico-border-radius);
     outline: var(--pico-outline-width) solid transparent;
-    color: var(--pico-primary);
+    color: var(--_nav-color);
     white-space: nowrap;
     justify-content: center;
     align-items: center;
     margin: 0;
+    font-weight: 500;
     line-height: 1;
     text-decoration: none;
     display: inline-flex;
   }
 
   nav:where([aria-label="pagination" i], [data-pagination]) a:hover {
-    background-color: var(--pico-dropdown-hover-background-color);
-    color: var(--pico-primary-hover);
+    background-color: color-mix(in oklab, var(--_nav-color) 6%, transparent);
+    color: var(--_nav-color);
   }
 
   nav:where([aria-label="pagination" i], [data-pagination]) a:focus-visible {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    outline-color: var(--pico-primary-focus);
+    outline-offset: .125rem;
   }
 
   nav:where([aria-label="pagination" i], [data-pagination]) a[aria-current="page"] {
-    border-color: var(--pico-primary-border);
+    border-color: var(--pico-primary-background);
     background-color: var(--pico-primary-background);
     color: var(--pico-primary-inverse);
     font-weight: 600;
   }
 
   nav:where([aria-label="pagination" i], [data-pagination]) a[aria-current="page"]:hover {
-    border-color: var(--pico-primary-hover-border);
+    border-color: var(--pico-primary-hover-background);
     background-color: var(--pico-primary-hover-background);
     color: var(--pico-primary-inverse);
+  }
+
+  nav:where([aria-label="pagination" i], [data-pagination]) :is(a[rel="prev"], li:first-child > [aria-disabled="true"]):not(:has( > [aria-hidden])):before, nav:where([aria-label="pagination" i], [data-pagination]) :is(a[rel="next"], li:last-child > [aria-disabled="true"]):not(:has( > [aria-hidden])):after {
+    font-size: 1.25em;
+    line-height: 1;
+    display: inline-block;
+    translate: 0 -.0625em;
+  }
+
+  nav:where([aria-label="pagination" i], [data-pagination]) :is(a[rel="prev"], li:first-child > [aria-disabled="true"]):not(:has( > [aria-hidden])):before {
+    content: "‹";
+    content: "‹" / "";
+    margin-inline-end: .375em;
+  }
+
+  nav:where([aria-label="pagination" i], [data-pagination]) :is(a[rel="next"], li:last-child > [aria-disabled="true"]):not(:has( > [aria-hidden])):after {
+    content: "›";
+    content: "›" / "";
+    margin-inline-start: .375em;
   }
 
   nav:where([aria-label="pagination" i], [data-pagination]) [aria-disabled="true"] {

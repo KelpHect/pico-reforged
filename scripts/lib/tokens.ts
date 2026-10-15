@@ -1,7 +1,6 @@
 import paletteJson from "../data/palette.json" with { type: "json" };
 import { formatOklch, rgbToTriple } from "./color.ts";
 import type { Triple } from "./color.ts";
-import { shadowLayers } from "../data/scheme.ts";
 import type { SchemeColor, SchemeValue } from "../data/scheme.ts";
 
 export type Palette = {
@@ -34,17 +33,6 @@ export function colorValue(value: SchemeColor): string {
   throw new Error(`Cannot resolve color: ${JSON.stringify(value)}`);
 }
 
-const rem = (n: number): string => (n === 0 ? "0" : `${n}rem`);
-
-function shadowValue(color: (alpha: number) => string): string {
-  return shadowLayers
-    .map(([x, y, blur, alpha, spread]) => {
-      const c = color(alpha);
-      return spread ? `0 0 0 ${rem(spread)} ${c}` : `${rem(x)} ${rem(y)} ${rem(blur)} ${c}`;
-    })
-    .join(", ");
-}
-
 // One semantic token to its declaration value. Equal light and dark values skip light-dark().
 export function schemeValue(light: SchemeValue, dark: SchemeValue): string {
   if (typeof light === "string" || typeof dark === "string") {
@@ -52,13 +40,6 @@ export function schemeValue(light: SchemeValue, dark: SchemeValue): string {
     const l = text(light);
     const d = text(dark);
     return l === d ? l : `light-dark(${l}, ${d})`;
-  }
-  if ("shadow" in light && "shadow" in dark) {
-    return shadowValue((alpha) => {
-      const l = colorValue({ ...light.shadow, alpha });
-      const d = colorValue({ ...dark.shadow, alpha });
-      return l === d ? l : `light-dark(${l}, ${d})`;
-    });
   }
   const l = colorValue(light);
   const d = colorValue(dark);

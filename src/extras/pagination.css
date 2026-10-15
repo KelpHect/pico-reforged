@@ -36,6 +36,8 @@ nav:where([aria-label="pagination" i], [data-pagination]) {
     min-inline-size: var(--pico-pagination-item-size);
     block-size: var(--pico-pagination-item-size);
     color: var(--pico-muted-color);
+    font-weight: 500;
+    line-height: 1;
     user-select: none;
   }
 
@@ -54,32 +56,58 @@ nav:where([aria-label="pagination" i], [data-pagination]) {
     border: var(--pico-border-width) solid transparent;
     border-radius: var(--pico-border-radius);
     outline: var(--pico-outline-width) solid transparent;
-    color: var(--pico-primary);
+    color: var(--_nav-color);
+    font-weight: 500;
     line-height: 1;
     text-decoration: none;
     white-space: nowrap;
   }
 
   & a:hover {
-    background-color: var(--pico-dropdown-hover-background-color);
-    color: var(--pico-primary-hover);
+    background-color: color-mix(in oklab, var(--_nav-color) 6%, transparent);
+    color: var(--_nav-color);
   }
 
   & a:focus-visible {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    outline-color: var(--pico-primary-focus);
+    outline-offset: 0.125rem;
   }
 
+  /* A solid fill, the border keeps it visible in forced colors */
   & a[aria-current="page"] {
-    border-color: var(--pico-primary-border);
+    border-color: var(--pico-primary-background);
     background-color: var(--pico-primary-background);
     color: var(--pico-primary-inverse);
     font-weight: 600;
 
     &:hover {
-      border-color: var(--pico-primary-hover-border);
+      border-color: var(--pico-primary-hover-background);
       background-color: var(--pico-primary-hover-background);
       color: var(--pico-primary-inverse);
     }
+  }
+
+  /* Chevrons on text prev and next links (and their disabled stand-ins). Arrow-only links
+     bring their own glyph. The single angle quotes are mirrored characters, so they already
+     point the other way in right to left text. */
+  & :is(a[rel="prev"], li:first-child > [aria-disabled="true"]):not(:has(> [aria-hidden]))::before,
+  & :is(a[rel="next"], li:last-child > [aria-disabled="true"]):not(:has(> [aria-hidden]))::after {
+    display: inline-block;
+    font-size: 1.25em;
+    line-height: 1;
+    translate: 0 -0.0625em;
+  }
+
+  & :is(a[rel="prev"], li:first-child > [aria-disabled="true"]):not(:has(> [aria-hidden]))::before {
+    content: "\2039";
+    content: "\2039" / "";
+    margin-inline-end: 0.375em;
+  }
+
+  & :is(a[rel="next"], li:last-child > [aria-disabled="true"]):not(:has(> [aria-hidden]))::after {
+    content: "\203A";
+    content: "\203A" / "";
+    margin-inline-start: 0.375em;
   }
 
   & [aria-disabled="true"] {

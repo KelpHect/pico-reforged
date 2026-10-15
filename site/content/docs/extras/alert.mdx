@@ -133,9 +133,10 @@ Each variant sets `--pico-alert-accent`, and the tinted background is 12% of it 
 
 <Tokens
   items={[
-    { name: "--pico-alert-warning-accent", value: "light-dark(oklch(0.7 0.15 70), oklch(0.8 0.14 80))", description: "Accent bar color of the warning variant." },
-    { name: "--pico-alert-accent", value: "var(--pico-primary-background)", description: "Accent bar color. Set per variant, success and danger reuse the form valid and invalid border colors." },
-    { name: "--pico-alert-background-color", value: "12% accent over the page background", description: "Background of the alert." },
+    { name: "--pico-alert-warning-accent", value: "light-dark(oklch(0.7 0.15 70), oklch(0.8 0.14 80))", description: "Accent color of the warning variant." },
+    { name: "--pico-alert-accent", value: "var(--pico-primary-background)", description: "Accent color, used for the border, the tint and the title. Set per variant, success and danger reuse the form valid and invalid border colors." },
+    { name: "--pico-alert-background-color", value: "8% accent over the page (14% in dark)", description: "Background of the alert." },
+    { name: "--pico-card-border-radius", value: "calc(var(--pico-border-radius) * 1.5)", description: "Corner radius of the alert." },,
     { name: "--pico-alert-color", value: "var(--pico-color)", description: "Text color." },
   ]}
 />

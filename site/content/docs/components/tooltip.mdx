@@ -24,7 +24,7 @@ On elements that are not links, buttons or inputs, such as plain text, the eleme
 
 `data-placement` takes `top` (the default), `right`, `bottom` or `left`.
 
-<Example title="Tooltip placement" height={240}>
+<Example title="Tooltip placement" height={150}>
 ```html
 <p style="text-align: center; margin-top: 3rem">
   <button data-tooltip="Top" data-placement="top" class="secondary">Top</button>
@@ -43,7 +43,7 @@ Use an element with `popover="hint"` (or `popover` with `role="tooltip"`) and li
 
 A hint is not opened by the browser on hover, so a small script shows it on `mouseenter` and `focus` and hides it on `mouseleave` and `blur`. Passing `source` ties the popover to the trigger as its anchor.
 
-<Example title="Popover tooltip" height={160}>
+<Example title="Popover tooltip" height={140}>
 ```html
 <button id="save" class="secondary" aria-describedby="save-tip">Save</button>
 <span popover="hint" id="save-tip" role="tooltip">Saved to your account</span>
@@ -73,6 +73,6 @@ A tooltip should add a short hint, never the only copy of important information.
   items={[
     { name: "--pico-tooltip-background-color", value: "var(--pico-contrast-background)", description: "Bubble and caret color." },
     { name: "--pico-tooltip-color", value: "var(--pico-contrast-inverse)", description: "Text color." },
-    { name: "--pico-border-radius", value: "0.25rem", description: "Bubble corner radius." },
+    { name: "--pico-border-radius", value: "0.5rem", description: "The bubble uses three quarters of this radius." },
   ]}
 />

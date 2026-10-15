@@ -57,60 +57,7 @@ That is 2 files for `pico.extras` and 22 under `extras/`, 24 in total. See [Extr
 
 Choose the options and copy the link. This uses the same naming rules as the table above.
 
-<Example title="File name builder" height={420}>
-```html
-<form id="picker">
-  <label>
-    Build
-    <select name="build">
-      <option value="pico">Class (default)</option>
-      <option value="pico.classless">Class-less</option>
-      <option value="pico.conditional">Conditional (.pico)</option>
-      <option value="pico.classless.conditional">Class-less, conditional</option>
-      <option value="pico.fluid.classless">Fluid class-less</option>
-      <option value="pico.fluid.classless.conditional">Fluid class-less, conditional</option>
-    </select>
-  </label>
-  <label>
-    Theme
-    <select name="theme">
-      <option value="">azure (default)</option>
-      <option>amber</option><option>blue</option><option>cyan</option>
-      <option>fuchsia</option><option>green</option><option>grey</option>
-      <option>indigo</option><option>jade</option><option>lime</option>
-      <option>orange</option><option>pink</option><option>pumpkin</option>
-      <option>purple</option><option>red</option><option>sand</option>
-      <option>slate</option><option>violet</option><option>yellow</option>
-      <option>zinc</option>
-    </select>
-  </label>
-  <label>
-    <input type="checkbox" name="min" checked />
-    Minified
-  </label>
-</form>
-<p id="note"></p>
-<pre><code id="out"></code></pre>
-<script>
-  const form = document.getElementById("picker");
-  const out = document.getElementById("out");
-  const note = document.getElementById("note");
-  const base = "https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/";
-  function update() {
-    const build = form.build.value;
-    const theme = form.theme.value;
-    const missing = !theme && build.endsWith(".conditional") && build.includes("classless");
-    const name = build + (theme ? "." + theme : "") + (form.min.checked ? ".min" : "") + ".css";
-    out.textContent = missing ? "" : '<link rel="stylesheet" href="' + base + name + '" />';
-    note.textContent = missing
-      ? "No azure file for this build. Pick a theme, or build it with the CLI."
-      : "";
-  }
-  form.addEventListener("input", update);
-  update();
-</script>
-```
-</Example>
+<VersionPicker />
 
 ## Related
 

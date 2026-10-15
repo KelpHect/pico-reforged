@@ -27,6 +27,7 @@ button,
   --pico-border-color: var(--pico-primary-border);
   --pico-color: var(--pico-primary-inverse);
   --pico-box-shadow: var(--pico-button-box-shadow, 0 0 0 transparent);
+  --pico-font-weight: 500;
   padding: var(--pico-form-element-spacing-vertical) var(--pico-form-element-spacing-horizontal);
   border: var(--pico-border-width) solid var(--pico-border-color);
   border-radius: var(--pico-border-radius);
@@ -45,7 +46,8 @@ button,
     background-color var(--pico-transition),
     border-color var(--pico-transition),
     color var(--pico-transition),
-    box-shadow var(--pico-transition);
+    box-shadow var(--pico-transition),
+    transform var(--pico-transition);
 }
 
 /* Hover, active, focus and aria-current. The two parts per selector keep the v2.1.1 specificity. */
@@ -66,20 +68,26 @@ button:is(:hover, :active, :focus),
   --pico-color: var(--pico-primary-inverse);
 }
 
-button:focus,
-button:is([aria-current]:not([aria-current="false"])):focus,
-[type="submit"]:focus,
-[type="submit"]:is([aria-current]:not([aria-current="false"])):focus,
-[type="reset"]:focus,
-[type="reset"]:is([aria-current]:not([aria-current="false"])):focus,
-[type="button"]:focus,
-[type="button"]:is([aria-current]:not([aria-current="false"])):focus,
-[type="file"]::file-selector-button:focus,
-[role="button"]:focus,
-[role="button"]:is([aria-current]:not([aria-current="false"])):focus {
-  --pico-box-shadow:
-    var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-    0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+/* Keyboard focus: a solid ring outside the button, in the focus color of the variant */
+button:focus-visible,
+[type="submit"]:focus-visible,
+[type="reset"]:focus-visible,
+[type="button"]:focus-visible,
+[role="button"]:focus-visible {
+  outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+  outline-offset: var(--pico-outline-width);
+}
+
+button:active,
+[type="submit"]:active,
+[type="reset"]:active,
+[type="button"]:active,
+[role="button"]:active {
+  box-shadow: none;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transform: scale(0.98);
+  }
 }
 
 [type="submit"],
@@ -111,16 +119,9 @@ button:is([aria-current]:not([aria-current="false"])):focus,
   --pico-color: var(--pico-secondary-inverse);
 }
 
-:is(button, [type="submit"], [type="button"], [role="button"]).secondary:focus,
-:is(button, [type="submit"], [type="button"], [role="button"]).secondary:is(
-    [aria-current]:not([aria-current="false"])
-  ):focus,
-[type="reset"]:focus,
-[type="reset"]:is([aria-current]:not([aria-current="false"])):focus,
-[type="file"]::file-selector-button:focus {
-  --pico-box-shadow:
-    var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-    0 0 0 var(--pico-outline-width) var(--pico-secondary-focus);
+:is(button, [type="submit"], [type="button"], [role="button"]).secondary:focus-visible,
+[type="reset"]:focus-visible {
+  outline-color: var(--pico-secondary-focus);
 }
 
 /* Contrast */
@@ -135,11 +136,8 @@ button:is([aria-current]:not([aria-current="false"])):focus,
     --pico-color: var(--pico-contrast-inverse);
   }
 
-  &:focus,
-  &:is([aria-current]:not([aria-current="false"])):focus {
-    --pico-box-shadow:
-      var(--pico-button-hover-box-shadow, 0 0 0 transparent),
-      0 0 0 var(--pico-outline-width) var(--pico-contrast-focus);
+  &:focus-visible {
+    outline-color: var(--pico-contrast-focus);
   }
 }
 
@@ -147,6 +145,7 @@ button:is([aria-current]:not([aria-current="false"])):focus,
 :is(button, [type="submit"], [type="button"], [role="button"]).outline,
 [type="reset"].outline {
   --pico-background-color: transparent;
+  --pico-box-shadow: none;
   --pico-color: var(--pico-primary);
   --pico-border-color: var(--pico-primary);
 }
@@ -158,7 +157,9 @@ button:is([aria-current]:not([aria-current="false"])):focus,
     :focus
   ),
 [type="reset"].outline:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
-  --pico-background-color: transparent;
+  /* A light wash of the text color instead of a fill */
+  --pico-background-color: color-mix(in oklab, var(--pico-color) 8%, transparent);
+  --pico-box-shadow: none;
   --pico-color: var(--pico-primary-hover);
   --pico-border-color: var(--pico-primary-hover);
 }
@@ -192,8 +193,28 @@ button:is([aria-current]:not([aria-current="false"])):focus,
 }
 
 :where(button, [type="submit"], [type="reset"], [type="button"], [role="button"])[disabled],
+:where([role="button"][aria-disabled="true"]),
 :where(fieldset[disabled])
   :is(button, [type="submit"], [type="button"], [type="reset"], [role="button"]) {
   opacity: 0.5;
   pointer-events: none;
+}
+
+/* Filled buttons turn neutral when disabled, the same in both schemes. A faded primary read as
+   another component in the dark scheme. */
+:is(button, [type="submit"], [type="reset"], [type="button"], [role="button"]):not(.outline):is(
+    [disabled],
+    [role="button"][aria-disabled="true"],
+    :where(fieldset[disabled]) *
+  ) {
+  --pico-background-color: var(--pico-secondary-background);
+  --pico-border-color: var(--pico-secondary-background);
+  --pico-color: var(--pico-muted-color);
+  --pico-box-shadow: none;
+  opacity: 0.7;
+
+  /* The busy spinner follows the neutral fill, not the variant */
+  &::before {
+    filter: var(--_pico-secondary-icon-filter);
+  }
 }

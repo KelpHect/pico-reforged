@@ -5,8 +5,17 @@ description: A minimal auto-layout grid that stacks on small screens.
 
 `.grid` puts its children in equal columns. Below 768px the children stack in one column. From 768px up it uses `repeat(auto-fit, minmax(0%, 1fr))`, so the columns share the row equally, however many children there are.
 
-<Example title="Grid" height={200}>
+<Example title="Grid" height={120} width="full">
 ```html
+<style>
+  .grid > div {
+    padding: 0.75rem;
+    border: 1px solid color-mix(in oklab, var(--pico-primary-background) 35%, transparent);
+    border-radius: var(--pico-border-radius);
+    background: color-mix(in oklab, var(--pico-primary-background) 10%, transparent);
+    text-align: center;
+  }
+</style>
 <div class="grid">
   <div>1</div>
   <div>2</div>
@@ -16,7 +25,9 @@ description: A minimal auto-layout grid that stacks on small screens.
 ```
 </Example>
 
-The example frame can be narrower than 768px, in which case the columns stack. Open the page in a wider window to see them side by side.
+<Callout>
+The example above is drawn at least 800px wide so the columns show side by side. On a narrow screen it scrolls sideways. In a frame narrower than 768px the columns stack.
+</Callout>
 
 ## Mixed content
 

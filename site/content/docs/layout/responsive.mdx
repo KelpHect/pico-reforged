@@ -8,13 +8,13 @@ Pico Reforged uses five breakpoints, written as plain media queries with range s
 | Breakpoint  | Root font size | Container width |
 | ----------- | -------------- | --------------- |
 | below 576px | 100%           | 100%            |
-| 576px       | 106.25%        | 510px           |
-| 768px       | 112.5%         | 700px           |
-| 1024px      | 118.75%        | 950px           |
-| 1280px      | 125%           | 1200px          |
-| 1536px      | 131.25%        | 1450px          |
+| 576px       | 100%           | 510px           |
+| 768px       | 100%           | 700px           |
+| 1024px      | 100%           | 950px           |
+| 1280px      | 100%           | 1200px          |
+| 1536px      | 106.25%        | 1450px          |
 
-Sizes are in `rem`, so the whole interface scales with `--pico-font-size`. For a fixed root size, build with `--no-responsive-typography`.
+Sizes are in `rem`, so the whole interface follows `--pico-font-size`. The root stays at 100% up to 1535px and takes one step to 106.25% on very wide screens. For a fixed root size at every width, build with `--no-responsive-typography`.
 
 ## Responsive spacings
 

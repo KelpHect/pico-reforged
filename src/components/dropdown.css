@@ -1,8 +1,8 @@
 /* Dropdown: details.dropdown */
 
-/* Smaller focus ring on the summary, nav keeps the full one */
+/* The summary is a field, so it gets the soft field ring. Nav keeps the solid one. */
 details.dropdown summary:not([role="button"]) {
-  --pico-outline-width: 0.0625rem;
+  --pico-outline-width: 0.1875rem;
 }
 
 nav details.dropdown summary:focus-visible {
@@ -56,7 +56,8 @@ details.dropdown {
     }
 
     &:focus {
-      box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color);
+      box-shadow: 0 0 0 var(--pico-outline-width)
+        color-mix(in oklab, var(--pico-form-element-focus-color) 25%, transparent);
     }
 
     &:focus-visible {
@@ -82,17 +83,26 @@ nav details.dropdown {
   display: inline;
   margin: calc(var(--pico-nav-element-spacing-vertical) * -1) 0;
 
+  /* The floated chevron would wrap under the label on a narrow screen */
+  > summary {
+    white-space: nowrap;
+  }
+
   > summary::after {
     transform: rotate(0deg) translateX(0rem);
   }
 
   > summary:not([role]) {
-    height: calc(1rem * var(--pico-line-height) + var(--pico-nav-link-spacing-vertical) * 2);
-    padding: calc(var(--pico-nav-link-spacing-vertical) - var(--pico-border-width) * 2)
-      var(--pico-nav-link-spacing-horizontal);
+    height: calc(
+      1rem * var(--pico-line-height) + var(--pico-form-element-spacing-vertical) * 2 +
+        var(--pico-border-width) * 2
+    );
+    padding: var(--pico-form-element-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
 
     &:focus-visible {
-      box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+      box-shadow: none;
+      outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+      outline-offset: 0;
     }
   }
 }
@@ -105,15 +115,16 @@ details.dropdown > summary + ul {
   left: 0;
   flex-direction: column;
   width: 100%;
-  min-width: fit-content;
+  min-width: max-content;
   margin: 0;
-  margin-top: var(--pico-outline-width);
-  padding: 0;
+  margin-top: 0.25rem;
+  padding: 0.25rem;
   border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
-  border-radius: var(--pico-border-radius);
+  border-radius: var(--pico-card-border-radius);
   background-color: var(--pico-dropdown-background-color);
   box-shadow: var(--pico-dropdown-box-shadow);
   color: var(--pico-dropdown-color);
+  text-align: start;
   white-space: nowrap;
   opacity: 0;
   transition:
@@ -128,28 +139,18 @@ details.dropdown > summary + ul {
 
   li {
     width: 100%;
-    margin-bottom: 0;
-    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
-      var(--pico-form-element-spacing-horizontal);
+    margin: 0;
+    padding: 0.375rem 0.625rem;
+    border-radius: calc(var(--pico-border-radius) * 0.75);
     list-style: none;
 
-    &:first-of-type {
-      margin-top: calc(var(--pico-form-element-spacing-vertical) * 0.5);
-    }
-
-    &:last-of-type {
-      margin-bottom: calc(var(--pico-form-element-spacing-vertical) * 0.5);
-    }
-
-    /* Negative margins stretch the hover background to the menu edges */
+    /* Negative margins stretch the hover background to the item edges */
     a {
       display: block;
-      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5)
-        calc(var(--pico-form-element-spacing-horizontal) * -1);
-      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
-        var(--pico-form-element-spacing-horizontal);
+      margin: -0.375rem -0.625rem;
+      padding: 0.375rem 0.625rem;
       overflow: hidden;
-      border-radius: 0;
+      border-radius: inherit;
       color: var(--pico-dropdown-color);
       text-decoration: none;
       text-overflow: ellipsis;
@@ -179,11 +180,11 @@ details.dropdown[open] {
   }
 
   > summary + ul {
-    transform: scaleY(1);
+    transform: translateY(0);
     opacity: 1;
     transition:
       opacity var(--pico-transition),
-      transform 0s ease-in-out 0s;
+      transform var(--pico-transition);
   }
 
   /* Invisible layer that closes the menu on an outside click */
@@ -197,6 +198,16 @@ details.dropdown[open] {
     background: none;
     content: "";
     cursor: default;
+  }
+}
+
+/* The open menu fades in and slides down a little */
+@media (prefers-reduced-motion: no-preference) {
+  @starting-style {
+    details.dropdown[open] > summary + ul {
+      transform: translateY(-0.25rem);
+      opacity: 0;
+    }
   }
 }
 

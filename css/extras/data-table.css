@@ -10,19 +10,19 @@
   :root, :host, [data-theme] {
     --pico-data-table-head-background-color: var(--pico-card-sectioning-background-color);
     --pico-data-table-row-hover-background-color: var(--pico-dropdown-hover-background-color);
-    --pico-data-table-row-selected-background-color: color-mix(in oklab,
-    var(--pico-primary-background) 20%,
-    var(--pico-background-color));
+    --pico-data-table-row-selected-background-color: var(--pico-primary-subtle-background);
     --pico-data-table-scroll-max-block-size: none;
     --pico-data-table-scroll-padding-block-start: 0;
     --pico-data-table-compact-padding-block: calc(var(--pico-spacing) / 4);
     --pico-data-table-compact-padding-inline: calc(var(--pico-spacing) / 2);
-    --pico-data-table-sort-idle-opacity: .6;
+    --pico-data-table-sort-idle-opacity: .75;
   }
 
   :where(div[role="region"]:has( > table)) {
     max-block-size: var(--pico-data-table-scroll-max-block-size);
     margin-bottom: var(--pico-typography-spacing-vertical);
+    border: var(--pico-border-width) solid var(--pico-muted-border-color);
+    border-radius: var(--pico-card-border-radius);
     scroll-padding-block-start: var(--pico-data-table-scroll-padding-block-start);
     overflow: auto;
   }
@@ -62,6 +62,13 @@
 
   table[data-table] > caption {
     padding: 0 var(--pico-spacing) calc(var(--pico-spacing) / 2);
+  }
+
+  :where(div[role="region"]) > :is(table[data-table] > caption) {
+    padding-block-start: calc(var(--pico-spacing) * .75);
+  }
+
+  table[data-table] > caption {
     color: var(--pico-color);
     text-align: start;
     font-weight: 600;
@@ -73,6 +80,19 @@
 
   table[data-table] > tbody > tr[aria-selected="true"] > * {
     background-color: var(--pico-data-table-row-selected-background-color);
+  }
+
+  table[data-table] > tbody > tr[aria-selected="true"] > :first-child {
+    position: relative;
+  }
+
+  table[data-table] > tbody > tr[aria-selected="true"] > :first-child:before {
+    background-color: var(--pico-primary-background);
+    content: "";
+    inline-size: .125rem;
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
   }
 
   th[aria-sort] > button {
@@ -99,7 +119,8 @@
     content: "↕" / "";
     opacity: var(--pico-data-table-sort-idle-opacity);
     flex: none;
-    font-size: .875em;
+    font-size: 1em;
+    font-weight: 400;
     line-height: 1;
   }
 
@@ -116,6 +137,10 @@
   th[aria-sort] > button:focus-visible {
     outline: var(--pico-outline-width) solid var(--pico-primary-focus);
     outline-offset: .25rem;
+  }
+
+  :where(div[role="region"]) > table > :last-child > tr:last-child > * {
+    border-bottom: 0;
   }
 
   th[data-type="numeric"][aria-sort] > button {

@@ -4,9 +4,14 @@ thead,
 tfoot {
   & th,
   & td {
-    --pico-font-weight: 600;
-    --pico-border-width: 0.1875rem;
+    --pico-font-weight: 500;
   }
+}
+
+/* Quiet column labels */
+thead :where(th, td) {
+  --pico-color: var(--pico-muted-color);
+  font-size: 0.875em;
 }
 
 :where(table) {
@@ -18,12 +23,21 @@ tfoot {
 
 th,
 td {
-  padding: calc(var(--pico-spacing) / 2) var(--pico-spacing);
+  padding: calc(var(--pico-spacing) * 0.625) var(--pico-spacing);
   border-bottom: var(--pico-border-width) solid var(--pico-table-border-color);
   background-color: var(--pico-background-color);
   color: var(--pico-color);
   font-weight: var(--pico-font-weight);
   text-align: start;
+}
+
+td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cells in a card take the card surface, not the page color */
+article :where(th, td) {
+  background-color: transparent;
 }
 
 tfoot th,

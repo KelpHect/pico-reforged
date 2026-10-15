@@ -20,7 +20,7 @@
   padding: var(--pico-block-spacing-vertical) var(--pico-block-spacing-horizontal);
   overflow: auto;
   border: var(--pico-border-width) solid var(--pico-card-border-color);
-  border-radius: var(--pico-border-radius);
+  border-radius: var(--pico-card-border-radius);
   background-color: var(--pico-card-background-color);
   box-shadow: var(--pico-card-box-shadow);
   color: var(--pico-color);
@@ -29,10 +29,10 @@
 /* Dropdown menu: <button popovertarget="m"> and <ul popover id="m"> */
 :is(ul, menu)[popover] {
   margin: 0;
-  padding: 0;
+  padding: 0.25rem;
   overflow: auto;
   border: var(--pico-border-width) solid var(--pico-dropdown-border-color);
-  border-radius: var(--pico-border-radius);
+  border-radius: var(--pico-card-border-radius);
   background-color: var(--pico-dropdown-background-color);
   box-shadow: var(--pico-dropdown-box-shadow);
   color: var(--pico-dropdown-color);
@@ -47,27 +47,17 @@
 
   li {
     width: 100%;
-    margin-bottom: 0;
-    padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
-      var(--pico-form-element-spacing-horizontal);
+    margin: 0;
+    padding: 0.375rem 0.625rem;
+    border-radius: calc(var(--pico-border-radius) * 0.75);
     list-style: none;
-
-    &:first-of-type {
-      margin-top: calc(var(--pico-form-element-spacing-vertical) * 0.5);
-    }
-
-    &:last-of-type {
-      margin-bottom: calc(var(--pico-form-element-spacing-vertical) * 0.5);
-    }
 
     a {
       display: block;
-      margin: calc(var(--pico-form-element-spacing-vertical) * -0.5)
-        calc(var(--pico-form-element-spacing-horizontal) * -1);
-      padding: calc(var(--pico-form-element-spacing-vertical) * 0.5)
-        var(--pico-form-element-spacing-horizontal);
+      margin: -0.375rem -0.625rem;
+      padding: 0.375rem 0.625rem;
       overflow: hidden;
-      border-radius: 0;
+      border-radius: inherit;
       color: var(--pico-dropdown-color);
       text-decoration: none;
       text-overflow: ellipsis;
@@ -95,16 +85,16 @@
 :is([popover="hint"], [popover][role="tooltip"]) {
   width: max-content;
   max-width: min(20rem, calc(100vw - var(--pico-spacing) * 2));
-  padding: 0.25rem 0.5rem;
+  padding: 0.375rem 0.625rem;
   overflow: visible;
   border: 0;
-  border-radius: var(--pico-border-radius);
+  border-radius: calc(var(--pico-border-radius) * 0.75);
   background: var(--pico-tooltip-background-color);
-  box-shadow: none;
+  box-shadow: var(--pico-dropdown-box-shadow);
   color: var(--pico-tooltip-color);
   font-style: normal;
-  font-weight: var(--pico-font-weight);
-  font-size: 0.875rem;
+  font-weight: 500;
+  font-size: 0.8125rem;
   line-height: var(--pico-line-height);
   pointer-events: none;
 }
@@ -114,7 +104,7 @@
   :is(ul, menu)[popover] {
     position-anchor: auto;
     inset: auto;
-    margin-block: var(--pico-outline-width);
+    margin-block: 0.25rem;
     min-inline-size: max(anchor-size(inline), 10rem);
     position-area: block-end span-inline-end;
     position-try-fallbacks:
@@ -137,10 +127,10 @@
   @media (prefers-reduced-motion: no-preference) {
     [popover] {
       transition:
-        opacity 0.2s ease-in-out,
-        transform 0.2s ease-in-out,
-        overlay 0.2s allow-discrete,
-        display 0.2s allow-discrete;
+        opacity var(--pico-transition),
+        transform var(--pico-transition),
+        overlay var(--pico-transition) allow-discrete,
+        display var(--pico-transition) allow-discrete;
     }
 
     /* :not(:popover-open) keeps the content visible where popover is unsupported */

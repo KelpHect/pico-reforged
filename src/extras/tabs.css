@@ -23,13 +23,6 @@
   scrollbar-width: thin;
   border-block-end: var(--pico-border-width) solid var(--pico-tabs-border-color);
   list-style: none;
-
-  &[aria-orientation="vertical"] {
-    flex-direction: column;
-    overflow: visible;
-    border-block-end: 0;
-    border-inline-end: var(--pico-border-width) solid var(--pico-tabs-border-color);
-  }
 }
 
 [role="tab"],
@@ -49,19 +42,12 @@
   box-shadow: none;
   color: var(--pico-tabs-tab-color);
   font-size: 1rem;
-  font-weight: var(--pico-font-weight);
+  font-weight: 500;
   line-height: var(--pico-line-height);
   text-align: start;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-
-  [role="tablist"][aria-orientation="vertical"] > & {
-    border-block-end: 0;
-    border-inline-end: var(--pico-tabs-indicator-width) solid transparent;
-    border-start-end-radius: 0;
-    border-end-start-radius: var(--pico-border-radius);
-  }
 
   &:focus-visible {
     outline: var(--pico-outline-width) solid var(--pico-primary-focus);
@@ -105,22 +91,47 @@
   }
 }
 
-/* Vertical list beside its panel. :has() is at the floor, without it the panel stacks below */
-:has(> [role="tablist"][aria-orientation="vertical"]) {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: var(--pico-spacing);
+/* Vertical: a column beside its panel from 576px. On phones the panel would be too narrow, so
+   the list stays a horizontal scrolling row. :has() is at the floor, without it the panel stacks. */
+@media (width >= 576px) {
+  [role="tablist"][aria-orientation="vertical"] {
+    flex-direction: column;
+    gap: 0.125rem;
+    overflow: visible;
+    border-block-end: 0;
 
-  & > [role="tablist"] {
-    grid-column: 1;
-    grid-row: 1;
-    align-self: start;
+    & > [role="tab"] {
+      border-block-end: 0;
+      border-inline-start: var(--pico-tabs-indicator-width) solid transparent;
+      border-radius: var(--pico-border-radius);
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+
+    /* The darker text step keeps 4.5:1 on the tint in every theme */
+    & > [role="tab"][aria-selected="true"] {
+      border-color: var(--pico-tabs-indicator-color);
+      background-color: var(--pico-primary-subtle-background);
+      color: var(--pico-primary-hover);
+    }
   }
 
-  & > [role="tabpanel"] {
-    grid-column: 2;
-    grid-row: 1;
-    padding-block-start: 0;
+  :has(> [role="tablist"][aria-orientation="vertical"]) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--pico-spacing);
+
+    & > [role="tablist"] {
+      grid-column: 1;
+      grid-row: 1;
+      align-self: start;
+    }
+
+    & > [role="tabpanel"] {
+      grid-column: 2;
+      grid-row: 1;
+      padding-block-start: 0;
+    }
   }
 }
 

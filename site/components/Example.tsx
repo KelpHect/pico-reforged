@@ -1,12 +1,12 @@
-import { highlight } from "fumadocs-core/highlight";
-import { ExampleFrame } from "./ExampleFrame";
+import { highlighted } from "./CodeBlock";
+import { ExampleView } from "./ExampleView";
 import type { ExampleVariant } from "../lib/example-doc";
 
 type Props = {
   title: string;
   /** The markup. The remark plugin fills it from a fenced block inside <Example>. */
   code?: string;
-  /** Fixed iframe height in px. Leave it out and the frame fits its content. */
+  /** Starting iframe height in px. The frame then fits its content. */
   height?: number;
   variant?: ExampleVariant;
   /** Extra stylesheets from public/css, without .min.css, for example ["pico.extras"]. */
@@ -14,28 +14,32 @@ type Props = {
   bare?: boolean;
   /** Language of the listing, html by default. */
   lang?: string;
+  /** Keep `height` as a minimum, for dialogs, popovers, menus and toasts. Set by the remark plugin. */
+  overlay?: boolean;
+  /** Load the frame at once. The remark plugin sets it on the first two examples of a page. */
+  eager?: boolean;
+  /** "full" keeps the frame at least 800px wide, so the 768px breakpoint shows on narrow pages. */
+  width?: "full";
+  /** Show only the preview, no listing. */
+  preview?: boolean;
 };
 
-export async function Example({ title, code = "", height, variant, css, bare, lang = "html" }: Props) {
+export async function Example({ title, code = "", height, variant, css, bare, lang = "html", overlay, eager, width, preview }: Props) {
   const source = code.replace(/^\n+|\s+$/g, "");
-  const listing = await highlight(source, {
-    lang,
-    themes: { light: "github-light", dark: "github-dark" },
-    defaultColor: false,
-  });
-
+  const listing = preview ? undefined : await highlighted(source, lang);
   return (
-    <figure className="example">
-      <figcaption>{title}</figcaption>
-      <ExampleFrame
-        title={title}
-        code={source}
-        height={height}
-        variant={variant}
-        css={css}
-        bare={bare}
-      />
-      <div className="example-code">{listing}</div>
-    </figure>
+    <ExampleView
+      title={title}
+      code={source}
+      variant={variant}
+      css={css}
+      bare={bare}
+      height={height}
+      overlay={overlay}
+      eager={eager}
+      width={width}
+      lines={source.split("\n").length}
+      listing={listing}
+    />
   );
 }

@@ -4,8 +4,12 @@
 [data-theme] {
   --pico-avatar-size: 2.5rem;
   --pico-avatar-overlap: 0.375rem;
-  --pico-avatar-background-color: var(--pico-secondary-background);
-  --pico-avatar-color: var(--pico-secondary-inverse);
+  /* Opaque, so overlapping avatars in a group do not show through each other */
+  --pico-avatar-background-color: light-dark(
+    color-mix(in oklab, var(--pico-primary) 14%, var(--pico-background-color)),
+    color-mix(in oklab, var(--pico-primary) 24%, var(--pico-background-color))
+  );
+  --pico-avatar-color: var(--pico-primary-hover);
   --pico-avatar-ring-color: var(--pico-background-color);
   --pico-avatar-status-online-color: var(--pico-ins-color);
   --pico-avatar-status-offline-color: var(--pico-muted-color);
@@ -36,6 +40,7 @@ article {
   block-size: var(--pico-avatar-size);
   border-radius: 50%;
   background-color: var(--pico-avatar-background-color);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pico-color) 10%, transparent);
   color: var(--pico-avatar-color);
   font-size: calc(var(--pico-avatar-size) * 0.4);
   font-weight: 600;
@@ -66,8 +71,8 @@ article {
     inset-block-end: calc(var(--pico-avatar-size) * -0.02);
     inset-inline-end: calc(var(--pico-avatar-size) * -0.02);
     box-sizing: border-box;
-    inline-size: max(0.625rem, calc(var(--pico-avatar-size) * 0.26));
-    block-size: max(0.625rem, calc(var(--pico-avatar-size) * 0.26));
+    inline-size: max(0.625rem, calc(var(--pico-avatar-size) * 0.28));
+    block-size: max(0.625rem, calc(var(--pico-avatar-size) * 0.28));
     border: max(0.125rem, calc(var(--pico-avatar-size) * 0.04)) solid
       var(--_status, var(--pico-avatar-status-offline-color));
     border-radius: 50%;
@@ -101,6 +106,11 @@ article {
         var(--_status);
     }
   }
+}
+
+/* Room before the name when the avatar sits in running text */
+:where(p, li, td, th, dt, dd, label, small, h1, h2, h3, h4, h5, h6) > :where([data-avatar]) {
+  margin-inline-end: 0.5em;
 }
 
 :where([data-avatar="sm"]) {
@@ -179,6 +189,8 @@ article {
   }
 
   & [data-avatar] {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color);
+    box-shadow:
+      0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color),
+      inset 0 0 0 1px color-mix(in oklab, var(--pico-color) 10%, transparent);
   }
 }

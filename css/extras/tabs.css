@@ -28,13 +28,6 @@
     overflow: auto hidden;
   }
 
-  [role="tablist"][aria-orientation="vertical"] {
-    border-block-end: 0;
-    border-inline-end: var(--pico-border-width) solid var(--pico-tabs-border-color);
-    flex-direction: column;
-    overflow: visible;
-  }
-
   [role="tab"], [data-tabs] > input[type="radio"] + label {
     inline-size: auto;
     padding: var(--pico-nav-link-spacing-vertical) calc(var(--pico-nav-link-spacing-horizontal) * 2);
@@ -43,7 +36,7 @@
     box-shadow: none;
     color: var(--pico-tabs-tab-color);
     font-size: 1rem;
-    font-weight: var(--pico-font-weight);
+    font-weight: 500;
     line-height: var(--pico-line-height);
     text-align: start;
     white-space: nowrap;
@@ -57,13 +50,6 @@
     margin: 0;
     text-decoration: none;
     display: block;
-  }
-
-  [role="tablist"][aria-orientation="vertical"] > :is([role="tab"], [data-tabs] > input[type="radio"] + label) {
-    border-block-end: 0;
-    border-inline-end: var(--pico-tabs-indicator-width) solid transparent;
-    border-start-end-radius: 0;
-    border-end-start-radius: var(--pico-border-radius);
   }
 
   :is([role="tab"], [data-tabs] > input[type="radio"] + label):focus-visible {
@@ -103,20 +89,43 @@
     outline-offset: calc(var(--pico-outline-width) * -1);
   }
 
-  :has( > [role="tablist"][aria-orientation="vertical"]) {
-    column-gap: var(--pico-spacing);
-    grid-template-columns: auto minmax(0, 1fr);
-    display: grid;
-  }
+  @media (width >= 576px) {
+    [role="tablist"][aria-orientation="vertical"] {
+      border-block-end: 0;
+      flex-direction: column;
+      gap: .125rem;
+      overflow: visible;
+    }
 
-  :has( > [role="tablist"][aria-orientation="vertical"]) > [role="tablist"] {
-    grid-area: 1 / 1;
-    align-self: start;
-  }
+    [role="tablist"][aria-orientation="vertical"] > [role="tab"] {
+      border-block-end: 0;
+      border-inline-start: var(--pico-tabs-indicator-width) solid transparent;
+      border-radius: var(--pico-border-radius);
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
 
-  :has( > [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"] {
-    grid-area: 1 / 2;
-    padding-block-start: 0;
+    [role="tablist"][aria-orientation="vertical"] > [role="tab"][aria-selected="true"] {
+      border-color: var(--pico-tabs-indicator-color);
+      background-color: var(--pico-primary-subtle-background);
+      color: var(--pico-primary-hover);
+    }
+
+    :has( > [role="tablist"][aria-orientation="vertical"]) {
+      column-gap: var(--pico-spacing);
+      grid-template-columns: auto minmax(0, 1fr);
+      display: grid;
+    }
+
+    :has( > [role="tablist"][aria-orientation="vertical"]) > [role="tablist"] {
+      grid-area: 1 / 1;
+      align-self: start;
+    }
+
+    :has( > [role="tablist"][aria-orientation="vertical"]) > [role="tabpanel"] {
+      grid-area: 1 / 2;
+      padding-block-start: 0;
+    }
   }
 
   [data-tabs] {

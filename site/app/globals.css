@@ -2,7 +2,8 @@
 
 @pico {
   theme: azure;
-  extras: badge alert;
+  extras: badge alert tabs;
+  responsive-typography: false;
   purge: safe;
   source: none;
 }

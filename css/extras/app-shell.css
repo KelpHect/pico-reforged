@@ -12,13 +12,15 @@
     --pico-app-shell-header-height: 3.5rem;
     --pico-app-shell-background-color: var(--pico-background-color);
     --pico-app-shell-border-color: var(--pico-muted-border-color);
-    --pico-app-shell-nav-background-color: var(--pico-card-sectioning-background-color);
+    --pico-app-shell-nav-background-color: var(--lightningcss-light, var(--pico-card-sectioning-background-color)) var(--lightningcss-dark, oklch(18.5% .006 265));
     --pico-app-shell-nav-muted-color: color-mix(in srgb,
     var(--pico-color) 72%,
     var(--pico-app-shell-nav-background-color));
-    --pico-app-shell-nav-hover-background-color: var(--pico-secondary-focus);
-    --pico-app-shell-nav-current-background-color: var(--pico-form-element-selected-background-color);
-    --pico-app-shell-nav-current-color: var(--pico-contrast);
+    --pico-app-shell-nav-hover-background-color: color-mix(in oklab,
+    var(--pico-secondary) 12%,
+    transparent);
+    --pico-app-shell-nav-current-background-color: var(--pico-primary-subtle-background);
+    --pico-app-shell-nav-current-color: var(--pico-primary-hover);
     --pico-app-shell-scrim-color: var(--pico-modal-overlay-background-color);
   }
 
@@ -123,7 +125,8 @@
   }
 
   body[data-app-shell] > header > button[popovertarget]:focus-visible {
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+    outline-offset: var(--pico-outline-width);
   }
 
   body[data-app-shell] > header > button[popovertarget] svg {
@@ -193,6 +196,24 @@
     margin: 0;
   }
 
+  body[data-app-shell] > main > section:has( > article) > article > :is(strong, data) {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    display: block;
+  }
+
+  body[data-app-shell] > main > section:has( > article) > article > p:first-child {
+    color: var(--pico-muted-color);
+    margin-bottom: .25rem;
+  }
+
+  body[data-app-shell] > main > section:has( > article) > article > p:first-child > small {
+    font-size: .8125rem;
+  }
+
   body[data-app-shell] > main figure:has( > table) {
     overflow-x: auto;
   }
@@ -243,9 +264,11 @@
   body[data-app-shell] > aside > nav li a:not([role="button"]), body[data-app-shell] > aside > nav li summary {
     align-items: center;
     gap: calc(var(--pico-spacing) * .75);
+    min-block-size: 2rem;
     padding: var(--pico-nav-link-spacing-vertical) var(--pico-nav-link-spacing-horizontal);
     border-radius: var(--pico-border-radius);
     color: inherit;
+    font-size: .875rem;
     font-weight: 500;
     line-height: var(--pico-line-height);
     transition: background-color var(--pico-transition);
@@ -260,7 +283,7 @@
 
   :is(body[data-app-shell] > aside > nav li a:not([role="button"]), body[data-app-shell] > aside > nav li summary):focus-visible {
     outline: var(--pico-outline-width) solid var(--pico-primary-focus);
-    outline-offset: 0;
+    outline-offset: calc(var(--pico-outline-width) * -1);
     box-shadow: none;
   }
 
@@ -271,7 +294,7 @@
   :is(body[data-app-shell] > aside > nav li a:not([role="button"]), body[data-app-shell] > aside > nav li summary) small {
     padding: 0 calc(var(--pico-nav-link-spacing-horizontal) * .75);
     border-radius: var(--pico-border-radius);
-    background-color: var(--pico-secondary-focus);
+    background-color: color-mix(in oklab, var(--pico-secondary) 12%, transparent);
     color: inherit;
     margin-inline-start: auto;
     font-weight: 600;
@@ -286,6 +309,7 @@
   body[data-app-shell] > aside > nav details {
     border: 0;
     margin: 0;
+    padding: 0;
   }
 
   body[data-app-shell] > aside > nav details summary {
@@ -314,6 +338,7 @@
       max-height: none;
       box-shadow: none;
       opacity: 1;
+      border-radius: 0;
       margin: 0;
       padding: 0;
       transition: none;
@@ -370,6 +395,7 @@
         border-inline-end: var(--pico-border-width) solid var(--pico-app-shell-border-color);
         background-color: #0000;
         border-inline-end: 0;
+        border-radius: 0;
         margin: 0;
         position: fixed;
         inset-block: 0;
@@ -437,7 +463,7 @@
     padding: var(--pico-nav-link-spacing-vertical) var(--pico-spacing);
     border-radius: var(--pico-border-radius);
     background-color: var(--pico-app-shell-background-color);
-    box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+    outline: var(--pico-outline-width) solid var(--pico-primary-focus);
     position: absolute;
     inset-block-start: var(--pico-nav-link-spacing-vertical);
     inset-inline-start: var(--pico-nav-link-spacing-horizontal);

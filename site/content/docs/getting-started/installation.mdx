@@ -5,6 +5,8 @@ description: Use Pico Reforged from a CDN, from npm, through the Vite or PostCSS
 
 Pick the route that fits the project. They all give you the same CSS.
 
+<InstallTabs />
+
 ## CDN
 
 No build step. Link the file in the `<head>`. The file names are the same as in Pico CSS v2.1.1.
@@ -25,7 +27,9 @@ unpkg serves the same files:
 />
 ```
 
-Pin an exact version in production, for example `@rusticstack/pico-reforged@1.0.0`, so a new release never changes your pages. `@1` follows the newest 1.x release.
+<Callout variant="tip" title="Pin a version in production">
+Use an exact version, for example `@rusticstack/pico-reforged@1.0.0`, so a new release never changes your pages. `@1` follows the newest 1.x release.
+</Callout>
 
 Other builds and themes are other file names, see the [version picker](/docs/getting-started/version-picker). The opt-in extras are separate files. Load them after the main file:
 

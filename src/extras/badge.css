@@ -8,38 +8,41 @@
 :root,
 :host,
 [data-theme] {
-  --pico-badge-background-color: var(--pico-primary-background);
-  --pico-badge-color: var(--pico-primary-inverse);
-  --pico-badge-success-background-color: light-dark(
-    oklch(0.4703 0.0817 170.23),
-    oklch(0.6981 0.0833 174.16)
+  /* Soft by default: a 14% tint of the color, text in a darker (light scheme) or lighter
+     (dark scheme) shade of it. data-badge="contrast" stays solid, for counters. */
+  --pico-badge-background-color: color-mix(in oklab, var(--pico-primary) 14%, transparent);
+  --pico-badge-color: light-dark(
+    color-mix(in oklab, var(--pico-primary), #000 35%),
+    color-mix(in oklab, var(--pico-primary), #fff 35%)
   );
-  --pico-badge-success-color: light-dark(oklch(1 0 0), oklch(0.2026 0.017 266.4));
-  --pico-badge-warning-background-color: oklch(0.7408 0.1521 83.91);
-  --pico-badge-warning-color: light-dark(oklch(0.2265 0.0186 266.15), oklch(0.2026 0.017 266.4));
-  --pico-badge-danger-background-color: light-dark(
-    oklch(0.4503 0.1099 25),
-    oklch(0.6766 0.0995 22.35)
-  );
-  --pico-badge-danger-color: light-dark(oklch(1 0 0), oklch(0.2026 0.017 266.4));
+  --pico-badge-success-background-color: oklch(0.6 0.12 165 / 0.14);
+  --pico-badge-success-color: light-dark(oklch(0.39 0.078 165), oklch(0.74 0.078 165));
+  --pico-badge-warning-background-color: oklch(0.72 0.15 75 / 0.16);
+  --pico-badge-warning-color: light-dark(oklch(0.45 0.097 75), oklch(0.82 0.097 75));
+  --pico-badge-danger-background-color: oklch(0.58 0.18 25 / 0.14);
+  --pico-badge-danger-color: light-dark(oklch(0.42 0.13 25), oklch(0.75 0.117 25));
 }
 
 [data-badge] {
-  display: inline-block;
+  display: inline-flex;
   box-sizing: border-box;
-  min-inline-size: 1.6em;
+  align-items: center;
+  justify-content: center;
+  min-inline-size: 1.75em;
+  block-size: 1.75em;
   margin-block: 0;
-  margin-inline-start: 0.35em;
-  padding-block: 0.3em;
-  padding-inline: 0.55em;
+  margin-inline-start: 0.4em;
+  padding-block: 0;
+  padding-inline: 0.6em;
   border: 0;
   border-radius: 100vmax;
   background-color: var(--pico-badge-background-color);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pico-badge-color) 25%, transparent);
   color: var(--pico-badge-color);
-  font-size: 0.75em;
+  font-size: 0.8em;
   font-style: normal;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   text-align: center;
   text-decoration: none;
@@ -50,12 +53,22 @@
     display: none;
   }
 
-  /* No text: a dot */
+  /* Trim the line box to the cap height so digits sit on the optical center */
+  @supports (text-box: trim-both cap alphabetic) {
+    text-box: trim-both cap alphabetic;
+  }
+
+  /* No text: a solid dot in the text shade */
   &:empty {
     min-inline-size: 0;
     inline-size: 0.65em;
     block-size: 0.65em;
+    margin-inline-end: 0.4em;
     padding: 0;
+  }
+
+  &:empty:not([data-badge="contrast"]) {
+    background-color: var(--pico-badge-color);
   }
 
   &[data-badge="secondary"] {
@@ -66,6 +79,7 @@
   &[data-badge="contrast"] {
     --pico-badge-background-color: var(--pico-contrast-background);
     --pico-badge-color: var(--pico-contrast-inverse);
+    box-shadow: none;
   }
 
   &[data-badge="success"] {
@@ -98,11 +112,16 @@
 }
 
 /*
-  On a solid button the default fill would disappear, so it inverts with the
-  tokens of that button variant. Status colors keep their fill and gain a ring
-  in the button text color so the pill still reads as a shape. An outline
-  button has no fill, so its badges apply normally.
+  On a solid button a tint would disappear, so the default badge inverts with
+  the tokens of that button variant. Status badges turn solid in their text
+  shade and gain a ring in the button text color so the pill still reads as a
+  shape. An outline button has no fill, so its badges apply normally.
 */
+:is(button, [role="button"], input[type="submit"], input[type="button"]) > [data-badge] {
+  /* vertical-align: middle centers on the x-height, a button label reads on its cap height */
+  vertical-align: 0.1em;
+}
+
 :is(button, [role="button"], input[type="submit"], input[type="button"]):not(.outline) {
   --pico-badge-ring-color: var(--pico-primary-inverse);
 
@@ -129,8 +148,34 @@
     --pico-badge-color: var(--pico-contrast-background);
   }
 
+  /* Status counters on a fill: one saturated step in both schemes, with a ring in the
+     button text color so they do not blend into the button */
   & > [data-badge]:is([data-badge="success"], [data-badge="warning"], [data-badge="danger"]) {
-    box-shadow: 0 0 0 1px var(--pico-badge-ring-color);
+    background-color: var(--_badge-solid);
+    box-shadow: 0 0 0 0.125rem var(--pico-badge-ring-color);
+    color: var(--_badge-solid-color, oklch(1 0 0));
+  }
+
+  & > [data-badge="success"] {
+    --_badge-solid: oklch(0.5 0.11 165);
+  }
+
+  & > [data-badge="warning"] {
+    --_badge-solid: oklch(0.8 0.15 75);
+    --_badge-solid-color: oklch(0.2 0.02 75);
+  }
+
+  & > [data-badge="danger"] {
+    --_badge-solid: oklch(0.54 0.19 25);
+  }
+}
+
+/* A status dot at the start of a list item replaces the bullet */
+li:has(> [data-badge]:empty:first-child) {
+  list-style: none;
+
+  & > [data-badge]:first-child {
+    margin-inline-start: 0;
   }
 }
 

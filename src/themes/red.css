@@ -9,7 +9,7 @@
   --pico-primary-underline: light-dark(oklch(0.542 0.189 29.8 / 0.5), oklch(0.71 0.153 32.7 / 0.5));
   --pico-primary-hover: light-dark(oklch(0.454 0.158 29.7), oklch(0.792 0.102 34));
   --pico-primary-hover-background: light-dark(oklch(0.496 0.172 29.7), oklch(0.583 0.203 29.7));
-  --pico-primary-focus: light-dark(oklch(0.67 0.182 31.7 / 0.5), oklch(0.71 0.153 32.7 / 0.375));
+  --pico-primary-focus: light-dark(oklch(0.583 0.203 29.7), oklch(0.71 0.153 32.7));
   --pico-primary-inverse: oklch(1 0 0);
-  --pico-switch-thumb-box-shadow: 0 0 0 oklch(0 0 0 / 0);
+  --pico-switch-thumb-box-shadow: 0 0.0625rem 0.125rem 0 oklch(0 0 0 / 0.2);
 }

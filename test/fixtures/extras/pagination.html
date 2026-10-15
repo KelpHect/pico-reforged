@@ -49,18 +49,28 @@
             </tr>
           </tbody>
         </table>
-        <p><small>Showing 11 to 20 of 96 invoices</small></p>
-        <nav aria-label="Pagination">
-          <ol>
-            <li><a href="?page=1" rel="prev">Previous</a></li>
-            <li><a href="?page=1" aria-label="Page 1">1</a></li>
-            <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
-            <li><a href="?page=3" aria-label="Page 3">3</a></li>
-            <li aria-hidden="true">&hellip;</li>
-            <li><a href="?page=10" aria-label="Page 10">10</a></li>
-            <li><a href="?page=3" rel="next">Next</a></li>
-          </ol>
-        </nav>
+        <div
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--pico-spacing);
+          "
+        >
+          <p style="margin: 0; color: var(--pico-muted-color)">Showing 11 to 20 of 96 invoices</p>
+          <nav aria-label="Pagination" style="margin: 0">
+            <ol>
+              <li><a href="?page=1" rel="prev">Previous</a></li>
+              <li><a href="?page=1" aria-label="Page 1">1</a></li>
+              <li><a href="?page=2" aria-label="Page 2" aria-current="page">2</a></li>
+              <li><a href="?page=3" aria-label="Page 3">3</a></li>
+              <li aria-hidden="true">&hellip;</li>
+              <li><a href="?page=10" aria-label="Page 10">10</a></li>
+              <li><a href="?page=3" rel="next">Next</a></li>
+            </ol>
+          </nav>
+        </div>
       </section>
 
       <h2>First page, disabled previous</h2>

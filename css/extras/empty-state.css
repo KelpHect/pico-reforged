@@ -11,9 +11,11 @@
     --pico-empty-state-max-inline-size: 28rem;
     --pico-empty-state-padding-block: calc(var(--pico-block-spacing-vertical) * 2);
     --pico-empty-state-icon-size: 1.5rem;
-    --pico-empty-state-icon-color: var(--pico-muted-color);
-    --pico-empty-state-icon-background: var(--pico-card-sectioning-background-color);
-    --pico-empty-state-border-color: var(--pico-form-element-border-color);
+    --pico-empty-state-icon-color: var(--pico-primary);
+    --pico-empty-state-icon-background: color-mix(in oklab,
+    var(--pico-primary-background) 10%,
+    transparent);
+    --pico-empty-state-border-color: var(--pico-muted-border-color);
   }
 
   :where([data-empty]) {
@@ -24,8 +26,8 @@
     margin-block: 0 var(--pico-block-spacing-vertical);
     padding-block: var(--pico-empty-state-padding-block);
     padding-inline: var(--pico-block-spacing-horizontal);
-    border: var(--pico-border-width) dashed var(--pico-empty-state-border-color);
-    border-radius: var(--pico-border-radius);
+    border: var(--pico-border-width) solid var(--pico-empty-state-border-color);
+    border-radius: var(--pico-card-border-radius);
     text-align: center;
     margin-inline: auto;
     display: grid;
@@ -37,11 +39,11 @@
 
   :where([data-empty]) > figure {
     margin: 0 0 calc(var(--pico-spacing) * .25);
-    padding: calc(var(--pico-spacing) * .75);
     background-color: var(--pico-empty-state-icon-background);
     color: var(--pico-empty-state-icon-color);
     border-radius: 50%;
     place-items: center;
+    padding: .75rem;
     display: grid;
   }
 

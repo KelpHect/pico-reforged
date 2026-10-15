@@ -15,6 +15,9 @@ const BLACK: Triple = [0, 0, 0];
 const WHITE: Triple = [1, 0, 0];
 
 type Lookup = (step: number) => Triple;
+
+// The page background of each scheme (background-color in scheme.ts). Focus rings need 3:1 on it.
+const PAGE: Record<"light" | "dark", Triple> = { light: WHITE, dark: [0.165, 0.006, 265] };
 type Row = [name: string, light: string, dark: string | null];
 
 // def: { hue?, inverse, light: { background, hoverBackground }, dark: {...} }
@@ -27,6 +30,13 @@ export function themeRows(def: ThemeDef, lookup: Lookup): { rows: Row[]; darkInv
     const inverse: Inverse = typeof def.inverse === "string" ? def.inverse : def.inverse[scheme];
     const stepOrRgb = (v: SchemeSteps["background"]): Triple =>
       typeof v === "object" ? rgbToTriple(v.rgb) : lookup(v);
+    // Light hues (amber, yellow) move to a darker step in light and a lighter one in dark
+    // until the focus color reaches 3:1 on the page.
+    let focus = s.focus;
+    const toward = scheme === "light" ? 50 : -50;
+    while (contrast(lookup(focus), PAGE[scheme]) < 3 && STEPS.includes(focus + toward)) {
+      focus += toward;
+    }
     return {
       inverse,
       "text-selection-color": formatOklch(lookup(s.selection), s.selectionAlpha),
@@ -35,7 +45,7 @@ export function themeRows(def: ThemeDef, lookup: Lookup): { rows: Row[]; darkInv
       "primary-underline": formatOklch(lookup(s.primary), s.underlineAlpha),
       "primary-hover": formatOklch(lookup(s.hover)),
       "primary-hover-background": formatOklch(stepOrRgb(d.hoverBackground)),
-      "primary-focus": formatOklch(lookup(s.focus), s.focusAlpha),
+      "primary-focus": formatOklch(lookup(focus), s.focusAlpha),
       "primary-inverse": formatOklch(inverse === "black" ? BLACK : WHITE),
     };
   };
@@ -46,15 +56,8 @@ export function themeRows(def: ThemeDef, lookup: Lookup): { rows: Row[]; darkInv
     if (key === "inverse") continue;
     rows.push([key, light[key], dark[key]]);
   }
-  // Soft shadow under the switch thumb when the thumb sits on a light filled background.
-  const shadowColor = (inverse: Inverse) => formatOklch(BLACK, inverse === "black" ? 0.25 : 0);
-  const l = shadowColor(light.inverse);
-  const d = shadowColor(dark.inverse);
-  rows.push([
-    "switch-thumb-box-shadow",
-    `0 0 ${light.inverse === "black" || dark.inverse === "black" ? "0.5rem" : "0"} ${l === d ? l : `light-dark(${l}, ${d})`}`,
-    null,
-  ]);
+  // Soft shadow under the switch thumb, so a white thumb still reads on a light track.
+  rows.push(["switch-thumb-box-shadow", `0 0.0625rem 0.125rem 0 ${formatOklch(BLACK, 0.2)}`, null]);
   return { rows, darkInverse: dark.inverse };
 }
 

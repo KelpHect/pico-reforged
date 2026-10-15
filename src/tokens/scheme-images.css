@@ -21,6 +21,28 @@
   }
 }
 
+/* Icon filters for filled buttons, set per scheme so a nested [data-theme] gets its own.
+   Primary is dark in both schemes. Secondary and contrast flip, so their icon flips too. */
+:root,
+:host,
+[data-theme="light"] {
+  --_pico-secondary-icon-filter: brightness(0);
+  --_pico-contrast-icon-filter: brightness(0) invert(1);
+}
+
+[data-theme="dark"] {
+  --_pico-secondary-icon-filter: brightness(0) invert(1);
+  --_pico-contrast-icon-filter: brightness(0);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]),
+  :host(:not([data-theme="light"])) {
+    --_pico-secondary-icon-filter: brightness(0) invert(1);
+    --_pico-contrast-icon-filter: brightness(0);
+  }
+}
+
 /* White icon on filled buttons (chevron on summary buttons, spinner on busy buttons) */
 details summary[role="button"]:not(.outline)::after,
 [aria-busy="true"]:not(input, select, textarea):is(
@@ -33,29 +55,24 @@ details summary[role="button"]:not(.outline)::after,
   filter: brightness(0) invert(1);
 }
 
-/* Contrast buttons are light in the dark scheme, so their icon turns black */
-[data-theme="dark"] details summary[role="button"].contrast:not(.outline)::after,
-[data-theme="dark"]
-  [aria-busy="true"]:not(input, select, textarea):is(
+details summary[role="button"].secondary:not(.outline)::after,
+[aria-busy="true"]:not(input, select, textarea):is(
+    button,
+    [type="submit"],
+    [type="button"],
+    [type="reset"],
+    [role="button"]
+  ).secondary:not(.outline)::before {
+  filter: var(--_pico-secondary-icon-filter);
+}
+
+details summary[role="button"].contrast:not(.outline)::after,
+[aria-busy="true"]:not(input, select, textarea):is(
     button,
     [type="submit"],
     [type="button"],
     [type="reset"],
     [role="button"]
   ).contrast:not(.outline)::before {
-  filter: brightness(0);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) details summary[role="button"].contrast:not(.outline)::after,
-  :root:not([data-theme="light"])
-    [aria-busy="true"]:not(input, select, textarea):is(
-      button,
-      [type="submit"],
-      [type="button"],
-      [type="reset"],
-      [role="button"]
-    ).contrast:not(.outline)::before {
-    filter: brightness(0);
-  }
+  filter: var(--_pico-contrast-icon-filter);
 }

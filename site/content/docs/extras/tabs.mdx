@@ -84,14 +84,23 @@ The script works for every tab list on the page. Arrow keys follow the layout di
 
 Use `aria-disabled="true"`, not `disabled`, so the tab stays focusable and screen readers can find it. The script above skips selection on a disabled tab.
 
+<Example title="Disabled tab" css={["pico.extras"]} height={110}>
 ```html
-<button type="button" role="tab" id="tab-audit" aria-selected="false"
-  aria-controls="panel-audit" aria-disabled="true" tabindex="-1">Audit log</button>
+<div role="tablist" aria-label="Project">
+  <button type="button" role="tab" id="tab-files" aria-selected="true" aria-controls="panel-files">Files</button>
+  <button type="button" role="tab" id="tab-audit" aria-selected="false"
+    aria-controls="panel-audit" aria-disabled="true" tabindex="-1">Audit log</button>
+</div>
+<section role="tabpanel" id="panel-files" aria-labelledby="tab-files">
+  <p>12 files, 3 shared with you.</p>
+</section>
+<section role="tabpanel" id="panel-audit" aria-labelledby="tab-audit" hidden></section>
 ```
+</Example>
 
 ## Vertical
 
-Add `aria-orientation="vertical"` to the tab list. Up and Down arrows move the selection, and the list sits beside the panel. The wrapper around the list and the panels becomes a two column grid (this uses `:has()`, which is inside the browser floor).
+Add `aria-orientation="vertical"` to the tab list. Up and Down arrows move the selection. From 576px the list sits beside the panel, on a phone it stays a horizontal row so the panel keeps its width. The wrapper around the list and the panels becomes a two column grid (this uses `:has()`, which is inside the browser floor).
 
 <Example title="Vertical tabs" css={["pico.extras"]} height={260}>
 ```html
@@ -145,10 +154,30 @@ Add `aria-orientation="vertical"` to the tab list. Up and Down arrows move the s
 
 When the list does not fit, it scrolls sideways. The script calls `scrollIntoView`, so the tab you move to stays visible.
 
+<Example title="Many tabs" css={["pico.extras"]} height={110}>
+```html
+<div role="tablist" aria-label="Reports">
+  <button type="button" role="tab" id="r1" aria-selected="true" aria-controls="rp">Overview</button>
+  <button type="button" role="tab" id="r2" aria-selected="false" aria-controls="rp" tabindex="-1">Revenue</button>
+  <button type="button" role="tab" id="r3" aria-selected="false" aria-controls="rp" tabindex="-1">Customers</button>
+  <button type="button" role="tab" id="r4" aria-selected="false" aria-controls="rp" tabindex="-1">Subscriptions</button>
+  <button type="button" role="tab" id="r5" aria-selected="false" aria-controls="rp" tabindex="-1">Churn</button>
+  <button type="button" role="tab" id="r6" aria-selected="false" aria-controls="rp" tabindex="-1">Invoices</button>
+  <button type="button" role="tab" id="r7" aria-selected="false" aria-controls="rp" tabindex="-1">Refunds</button>
+  <button type="button" role="tab" id="r8" aria-selected="false" aria-controls="rp" tabindex="-1">Payouts</button>
+  <button type="button" role="tab" id="r9" aria-selected="false" aria-controls="rp" tabindex="-1">Tax</button>
+</div>
+<section role="tabpanel" id="rp" aria-labelledby="r1">
+  <p>Revenue is up 12% on last month.</p>
+</section>
+```
+</Example>
+
 ## Inside a card
 
 A tab list works inside an `article`, between the header and the panels.
 
+<Example title="Tabs inside a card" css={["pico.extras"]} height={220}>
 ```html
 <article>
   <header>Invoice INV-2041</header>
@@ -164,6 +193,7 @@ A tab list works inside an `article`, between the header and the panels.
   </section>
 </article>
 ```
+</Example>
 
 ## Without JavaScript
 

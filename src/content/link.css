@@ -15,7 +15,8 @@ a {
   color: var(--pico-color);
   text-decoration: var(--pico-text-decoration);
   text-decoration-color: var(--pico-underline);
-  text-underline-offset: 0.125em;
+  text-decoration-thickness: 0.0625rem;
+  text-underline-offset: var(--pico-text-underline-offset);
   transition:
     background-color var(--pico-transition),
     color var(--pico-transition),
@@ -37,7 +38,8 @@ a {
 
 :where(a:not([role="button"])):focus-visible,
 [role="link"]:focus-visible {
-  box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-primary-focus);
+  outline: var(--pico-outline-width) solid var(--pico-primary-focus);
+  outline-offset: var(--pico-outline-width);
 }
 
 :where(a:not([role="button"])).secondary,

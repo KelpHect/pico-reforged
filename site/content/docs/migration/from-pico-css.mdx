@@ -1,5 +1,5 @@
 ---
-title: Coming from Pico CSS
+title: Migration guide
 description: Move a page or a project from Pico CSS v2.1.1 to Pico Reforged.
 ---
 
@@ -21,6 +21,25 @@ Pico Reforged keeps the public surface of Pico CSS v2.1.1: the CDN file names, t
 Every file of v2.1.1 exists under the same name in `css/`, in the themes: `pico`, `pico.classless`, `pico.conditional` and `pico.fluid.classless` in all 20, `pico.classless.conditional` and `pico.fluid.classless.conditional` in 19 (upstream never had an azure file for those two). There are 24 more files for the extras.
 
 In npm projects, replace `@picocss/pico` with `@rusticstack/pico-reforged` in your imports.
+
+## What looks different
+
+The markup, class names and variables stay the same, but the default look is newer on purpose. Pages keep working; they look current.
+
+| Area | v2.1.1 | Pico Reforged |
+| --- | --- | --- |
+| Root font size | grows at each breakpoint, to 131.25% (21px) | 100%, one step to 106.25% from 1536px |
+| Density | controls 62px tall at 1440px | controls 42px tall |
+| Radius | 0.25rem | 0.5rem on controls, 0.75rem on cards and menus |
+| Shadows | seven soft grey layers | a 1px ring plus two short drops |
+| Dark scheme | navy background | near-neutral background with lighter surfaces |
+| Secondary button | solid slate | tonal: light fill, dark text, a visible border |
+| Focus | translucent ring on `:focus` | solid outline on `:focus-visible` |
+| Headings | weight 700, h1 2rem | weight 600, h1 2.25rem, balanced wrapping |
+| Tables | bold header, thick rule | muted header, 1px rule, tabular numbers |
+| Badges, alerts | solid pills, striped alerts | soft tinted badges, bordered alerts |
+
+Field borders and focus colors now reach 3:1 against the page in every theme. To bring most of the v2.1.1 sizes back, load the override block from [docs/migration.md](https://github.com/rusticstack/pico-reforged/blob/main/docs/migration.md#getting-the-v211-look-back) after Pico Reforged.
 
 ## What changes
 
@@ -48,4 +67,6 @@ The full migration guide is in the repository: [docs/migration.md](https://githu
 
 ## Not the official Pico CSS
 
-Pico Reforged is a separate project. It is not made, endorsed or supported by the Pico CSS author. Pico CSS was created by Lucas Larroche and is released under the MIT license, which this project keeps.
+<Callout variant="warning" title="A separate project">
+Pico Reforged is not made, endorsed or supported by the Pico CSS author. Pico CSS was created by Lucas Larroche and is released under the MIT license, which this project keeps.
+</Callout>

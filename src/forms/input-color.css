@@ -1,6 +1,11 @@
 /* Color input swatch: [type=color] */
 
-[type="color"] {
+input[type="color"] {
+  display: block;
+  inline-size: 3rem;
+  padding: 0.25rem;
+  cursor: pointer;
+
   &::-webkit-color-swatch-wrapper {
     padding: 0;
   }
@@ -11,11 +16,11 @@
 
   &::-webkit-color-swatch {
     border: 0;
-    border-radius: calc(var(--pico-border-radius) * 0.5);
+    border-radius: calc(var(--pico-border-radius) * 0.75);
   }
 
   &::-moz-color-swatch {
     border: 0;
-    border-radius: calc(var(--pico-border-radius) * 0.5);
+    border-radius: calc(var(--pico-border-radius) * 0.75);
   }
 }

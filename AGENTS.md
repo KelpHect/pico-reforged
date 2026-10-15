@@ -17,8 +17,9 @@ pnpm is the package manager and Vite+ (`vp`) runs tests, lint and format from `v
 
 - `pnpm build`: generate tokens, themes and the AI files, then write the whole file matrix into `css/`. It is slow (several minutes).
 - `pnpm generate` and `pnpm generate:ai`: only the generated sources.
-- `pnpm test`: Vitest. `pnpm test:api`: coverage of the v2.1.1 public surface. `pnpm test:visual`: pixel diff against v2.1.1. `pnpm test:extras`: screenshots and axe-core for each extra.
-- The visual and extras harnesses build unminified CSS by default. Selector factoring only runs on minified output, so after compiler changes also run `node scripts/dev-build.ts --minify --out dist-dev-min` with `node test/visual/run.ts --new dist-dev-min`, and `node test/visual/extras.ts --minify`. Both also take `--targets modern`.
+- `pnpm test`: Vitest. `pnpm test:api`: coverage of the v2.1.1 public surface. `pnpm test:visual`: pixel diff against the frozen baseline in `test/reference/current`, fails above 0.05% or 2px of height (after a reviewed visual change, `node test/visual/freeze.ts` updates it). `pnpm test:visual:parity`: the same diff against v2.1.1, a report only. `pnpm test:extras`: screenshots and axe-core for each extra.
+- The visual and extras harnesses build unminified CSS by default. Selector factoring only runs on minified output, so after compiler changes also run `node scripts/dev-build.ts --minify --out dist-dev-min` with `node test/visual/run.ts --new dist-dev-min --ref test/reference/current --gate`, and `node test/visual/extras.ts --minify`. Both also take `--targets modern`.
+- After changing colors, run `node test/visual/contrast-probe.ts css/pico.css css/pico.<theme>.css ...` over the built theme files. Text needs 4.5:1, field borders and focus colors 3:1.
 - `pnpm check`: format, lint and types. `pnpm fmt`, `pnpm lint`, `pnpm typecheck` run one part. Oxfmt uses `printWidth: 100`.
 - `pnpm run pack`: build `dist/` with tsdown. Plain `pnpm pack` is pnpm's own command.
 
