@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@rusticstack/pico-reforged": "^1.0.0"
+    "@rusticstack/pico-reforged": "^2.0.0"
   },
   "devDependencies": {
     "vite": "^7.0.0"

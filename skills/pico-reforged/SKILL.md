@@ -22,7 +22,7 @@ Pick one. Details and every file name are in [references/setup.md](references/se
 CDN, no build step. Pin a version in real projects:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@2.0.0/css/pico.min.css" />
 ```
 
 The file names are those of Pico CSS v2.1.1:

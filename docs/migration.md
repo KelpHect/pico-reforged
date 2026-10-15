@@ -13,7 +13,7 @@ Change the package and the path:
 <!-- after -->
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@2.0.0/css/pico.min.css"
 />
 ```
 

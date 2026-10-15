@@ -168,7 +168,7 @@ Notes:
 No build step: link the CDN file or a copy of `css/pico.min.css`.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@2.0.0/css/pico.min.css" />
 ```
 
 Opt-in extras are separate files (`pico.extras.min.css`, `extras/tabs.min.css`). To trim the file before you deploy, use the [purge command](#static-generators-and-bun) on the folder you publish. It works on the CDN copy too, because that file keeps its `@layer pico.*` blocks.

@@ -52,7 +52,7 @@ const placeholders = {
       "A file name is the build stem, the theme part (none for azure) and `.min` for the minified file. For example:",
       "",
       "```html",
-      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/pico.classless.jade.min.css" />',
+      '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@2/css/pico.classless.jade.min.css" />',
       "```",
     ].join("\n"),
   Example: ({ attributes }: { attributes: Attributes }) => {

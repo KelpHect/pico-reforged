@@ -33,7 +33,7 @@ Link a built file from `node_modules/@rusticstack/pico-reforged/css/` or use the
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css"
+  href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@2.0.0/css/pico.min.css"
 />
 ```
 

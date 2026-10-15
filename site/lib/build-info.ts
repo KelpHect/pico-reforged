@@ -11,11 +11,11 @@ function pkg(): { version: string } {
   for (const file of [join(root, "package.json"), join(process.cwd(), "node_modules", "@rusticstack", "pico-reforged", "package.json")]) {
     if (existsSync(file)) return JSON.parse(readFileSync(file, "utf8"));
   }
-  return { version: "1.0.0" };
+  return { version: "2.0.0" };
 }
 
 export const VERSION = pkg().version;
-/** "v1.0" for the version pill. */
+/** "v2.0" for the version pill. */
 export const VERSION_LABEL = `v${VERSION.split(".").slice(0, 2).join(".")}`;
 
 /** Gzip size of a built file in public/css, in kB with one decimal. */

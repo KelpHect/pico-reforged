@@ -4,7 +4,7 @@ import { useId, useState } from "react";
 import { CopyButton } from "./CopyButton";
 import { DEFAULT_THEME, THEMES } from "../lib/themes";
 
-const BASE = "https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1/css/";
+const BASE = "https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@2/css/";
 
 const BUILDS = [
   { value: "pico", label: "Class (default)" },
