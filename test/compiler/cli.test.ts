@@ -78,6 +78,28 @@ test("build with --purge", () => {
   assert.doesNotMatch(res.stdout, /details\.dropdown/);
 });
 
+test("build --safelist reads /regex/ and adds to the config's purge block", () => {
+  const html = join(dir, "safelist-page.html");
+  writeFileSync(html, "<main><p>Hi</p></main>");
+  const plain = run("scripts/cli.ts", ["build", "--purge", html]);
+  assert.doesNotMatch(plain.stdout, /\.outline/);
+  const regex = run("scripts/cli.ts", ["build", "--purge", html, "--safelist", "/^outl/"]);
+  assert.equal(regex.status, 0, regex.stderr);
+  assert.match(regex.stdout, /\.outline/);
+
+  const config = join(dir, "purge.config.json");
+  writeFileSync(config, JSON.stringify({ purge: { content: [html] } }));
+  const fromConfig = run("scripts/cli.ts", ["build", "--config", config]);
+  assert.doesNotMatch(fromConfig.stdout, /\.outline/);
+  const merged = run("scripts/cli.ts", ["build", "--config", config, "--safelist", "/^outl/"]);
+  assert.equal(merged.status, 0, merged.stderr);
+  assert.match(merged.stdout, /\.outline/);
+  assert.doesNotMatch(merged.stderr, /no effect/);
+
+  const none = run("scripts/cli.ts", ["build", "--safelist", "outline"]);
+  assert.match(none.stderr, /--safelist has no effect/);
+});
+
 test("matrix writes the v2.1.1 file names", () => {
   const out = join(dir, "matrix");
   const res = run("scripts/cli.ts", ["matrix", out]);

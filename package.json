@@ -30,23 +30,23 @@
   ],
   "exports": {
     ".": {
-      "style": "./src/pico.css",
+      "style": "./css/pico.css",
       "default": "./css/pico.min.css"
     },
     "./classless": {
-      "style": "./src/pico.classless.css",
+      "style": "./css/pico.classless.css",
       "default": "./css/pico.classless.min.css"
     },
     "./colors": {
-      "style": "./src/pico.colors.css",
+      "style": "./css/pico.colors.css",
       "default": "./css/pico.colors.min.css"
     },
     "./extras": {
-      "style": "./src/pico.extras.css",
+      "style": "./css/pico.extras.css",
       "default": "./css/pico.extras.min.css"
     },
     "./extras/*": {
-      "style": "./src/extras/*.css",
+      "style": "./css/extras/*.css",
       "default": "./css/extras/*.min.css"
     },
     "./css/*": "./css/*",

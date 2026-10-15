@@ -333,6 +333,7 @@ States:
 Accessibility:
 
 - role="img" with an aria-label that names the person, and the status when there is one.
+- A link, button or summary that holds only an avatar needs its own aria-label. Without it the control keeps its normal style.
 
 Optional: remove an image that failed to load so the initials show without a broken icon.
 

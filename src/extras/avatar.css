@@ -115,8 +115,9 @@ article {
   --pico-avatar-size: 5rem;
 }
 
-/* An avatar that is a link or a menu trigger (a, button, summary) */
-:is(a, button, summary):has(> [data-avatar]:only-child) {
+/* An avatar that is a link or a menu trigger (a, button, summary). The control needs an aria-label: :only-child ignores text,
+   so the label is what tells an avatar-only control from a button with an avatar and a visible name. */
+:is(a, button, summary)[aria-label]:has(> [data-avatar]:only-child) {
   display: inline-flex;
   inline-size: auto;
   margin: 0;
@@ -159,7 +160,10 @@ article {
 }
 
 /* Group: a labelled role=group whose children are avatars, so form groups are left alone */
-:where([role="group"]):has(> [data-avatar], > :is(a, button) > [data-avatar]:only-child) {
+:where([role="group"]):has(
+  > [data-avatar],
+  > :is(a, button)[aria-label] > [data-avatar]:only-child
+) {
   inline-size: auto;
   margin-block-end: 0;
   box-shadow: none;

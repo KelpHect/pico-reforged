@@ -113,7 +113,7 @@
     --pico-avatar-size: 5rem;
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child) {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child) {
     inline-size: auto;
     box-shadow: none;
     color: inherit;
@@ -131,49 +131,49 @@
     position: relative;
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child):after {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child):after {
     display: none;
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child)::-webkit-details-marker {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child)::-webkit-details-marker {
     display: none;
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child)::marker {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child)::marker {
     content: "";
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child):is(:hover, :active, :focus, :focus-visible) {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child):is(:hover, :active, :focus, :focus-visible) {
     box-shadow: none;
     background: none;
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child):focus-visible {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child):focus-visible {
     z-index: 1;
   }
 
-  :is(a, button, summary):has( > [data-avatar]:only-child):focus-visible > [data-avatar] {
+  :is(a, button, summary)[aria-label]:has( > [data-avatar]:only-child):focus-visible > [data-avatar] {
     outline: var(--pico-outline-width) solid var(--pico-primary);
     outline-offset: .125rem;
   }
 
-  :where([role="group"]):has( > [data-avatar],  > :is(a, button) > [data-avatar]:only-child) {
+  :where([role="group"]):has( > [data-avatar],  > :is(a, button)[aria-label] > [data-avatar]:only-child) {
     inline-size: auto;
     box-shadow: none;
     align-items: center;
     margin-block-end: 0;
   }
 
-  :where([role="group"]):has( > [data-avatar],  > :is(a, button) > [data-avatar]:only-child) > * {
+  :where([role="group"]):has( > [data-avatar],  > :is(a, button)[aria-label] > [data-avatar]:only-child) > * {
     border-radius: 50%;
     flex: none;
   }
 
-  :where([role="group"]):has( > [data-avatar],  > :is(a, button) > [data-avatar]:only-child) > * + * {
+  :where([role="group"]):has( > [data-avatar],  > :is(a, button)[aria-label] > [data-avatar]:only-child) > * + * {
     margin-inline-start: calc(var(--pico-avatar-overlap) * -1);
   }
 
-  :where([role="group"]):has( > [data-avatar],  > :is(a, button) > [data-avatar]:only-child) [data-avatar] {
+  :where([role="group"]):has( > [data-avatar],  > :is(a, button)[aria-label] > [data-avatar]:only-child) [data-avatar] {
     box-shadow: 0 0 0 var(--pico-outline-width) var(--pico-avatar-ring-color);
   }
 }

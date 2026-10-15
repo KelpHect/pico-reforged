@@ -1223,19 +1223,19 @@
     --pico-background-color: var(--pico-border-color);
   }
 
-  .pico [type="checkbox"][aria-invalid="false"]:is(:checked, :checked:active, :checked:focus) {
+  .pico [type="checkbox"][aria-invalid="false"]:checked, .pico [type="checkbox"][aria-invalid="false"]:checked:active, .pico [type="checkbox"][aria-invalid="false"]:checked:focus, .pico [type="checkbox"][role="switch"][aria-invalid="false"]:checked, .pico [type="checkbox"][role="switch"][aria-invalid="false"]:checked:active, .pico [type="checkbox"][role="switch"][aria-invalid="false"]:checked:focus {
     --pico-background-color: var(--pico-form-element-valid-border-color);
   }
 
-  .pico [type="checkbox"]:is(:checked, :checked:active, :checked:focus)[aria-invalid="true"] {
+  .pico [type="checkbox"]:checked[aria-invalid="true"], .pico [type="checkbox"]:checked:active[aria-invalid="true"], .pico [type="checkbox"]:checked:focus[aria-invalid="true"], .pico [type="checkbox"][role="switch"]:checked[aria-invalid="true"], .pico [type="checkbox"][role="switch"]:checked:active[aria-invalid="true"], .pico [type="checkbox"][role="switch"]:checked:focus[aria-invalid="true"] {
     --pico-background-color: var(--pico-form-element-invalid-border-color);
   }
 
-  .pico :is([type="checkbox"], [type="radio"])[aria-invalid="false"]:is(:checked, :checked:active, :checked:focus) {
+  .pico [type="checkbox"][aria-invalid="false"]:checked, .pico [type="checkbox"][aria-invalid="false"]:checked:active, .pico [type="checkbox"][aria-invalid="false"]:checked:focus, .pico [type="radio"][aria-invalid="false"]:checked, .pico [type="radio"][aria-invalid="false"]:checked:active, .pico [type="radio"][aria-invalid="false"]:checked:focus, .pico [type="checkbox"][role="switch"][aria-invalid="false"]:checked, .pico [type="checkbox"][role="switch"][aria-invalid="false"]:checked:active, .pico [type="checkbox"][role="switch"][aria-invalid="false"]:checked:focus {
     --pico-border-color: var(--pico-form-element-valid-border-color);
   }
 
-  .pico :is([type="checkbox"], [type="radio"]):is(:checked, :checked:active, :checked:focus)[aria-invalid="true"] {
+  .pico [type="checkbox"]:checked[aria-invalid="true"], .pico [type="checkbox"]:checked:active[aria-invalid="true"], .pico [type="checkbox"]:checked:focus[aria-invalid="true"], .pico [type="radio"]:checked[aria-invalid="true"], .pico [type="radio"]:checked:active[aria-invalid="true"], .pico [type="radio"]:checked:focus[aria-invalid="true"], .pico [type="checkbox"][role="switch"]:checked[aria-invalid="true"], .pico [type="checkbox"][role="switch"]:checked:active[aria-invalid="true"], .pico [type="checkbox"][role="switch"]:checked:focus[aria-invalid="true"] {
     --pico-border-color: var(--pico-form-element-invalid-border-color);
   }
 
@@ -1423,12 +1423,9 @@
 
   .pico details summary {
     cursor: pointer;
-    list-style-type: none;
-  }
-
-  .pico details summary:not([role="button"]) {
     transition: color var(--pico-transition);
     line-height: 1rem;
+    list-style-type: none;
   }
 
   .pico details summary:not([role]) {
@@ -1517,11 +1514,19 @@
 
       .pico details:not(.dropdown)[open]::details-content {
         block-size: auto;
+        animation: accordion-clip var(--pico-transition);
+        overflow-y: visible;
       }
 
       .pico details:not(.dropdown) > summary:not([role]) {
         transition: color var(--pico-transition),
           margin-bottom var(--pico-transition);
+      }
+
+      @keyframes accordion-clip {
+        from, to {
+          overflow-y: clip;
+        }
       }
     }
   }
@@ -1915,7 +1920,7 @@
     margin-bottom: 0;
   }
 
-  .pico :is(dialog > article > footer button, dialog > article > footer [role="button"]):not(:first-of-type) {
+  .pico dialog > article > footer button:not(:first-of-type), .pico dialog > article > footer [role="button"]:not(:first-of-type) {
     margin-inline-start: calc(var(--pico-spacing) * .5);
   }
 
@@ -1936,7 +1941,7 @@
     display: block;
   }
 
-  .pico :is(dialog > article .close, dialog > article :is(a, button)[rel="prev"]):is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
+  .pico dialog > article .close:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus), .pico dialog > article :is(a, button)[rel="prev"]:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
     opacity: 1;
   }
 
@@ -2146,7 +2151,7 @@
     var(--pico-nav-element-spacing-horizontal);
   }
 
-  .pico aside li a:not([role="button"]) {
+  .pico aside li a {
     display: block;
   }
 

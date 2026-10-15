@@ -59,7 +59,7 @@ export default defineConfig({ plugins: [pico()] });
 
 Vite 6.3 or newer. Plugin options: `purge` (`"auto"` purges in `vite build` only, `true`, `false`), `root`, `ignore`, `minify` (leave it off, Vite minifies). The same plugin works for Astro, SvelteKit, Nuxt, React Router, TanStack Start, Solid Start and Qwik. Put `pico()` first.
 
-Without the plugin the same `@import` still resolves to `src/pico.css` through the `style` export condition. You get the full, unpurged file.
+Without the plugin the same `@import` still resolves to `css/pico.css` through the `style` export condition. You get the full, unpurged file in the default theme.
 
 Imports:
 
@@ -89,7 +89,7 @@ Commands: `build` (one stylesheet), `matrix [outDir]` (the whole file set), `pur
 
 Build options: `--config`, `--entry pico|classless|colors|extras`, `--theme <name|#color|file>`, `--extras <list|all>`, `--no-classes`, `--semantic-container`, `--fluid`, `--scope <selector>`, `--exclude <modules>`, `--purge <glob>`, `--safelist <name>`, `--responsive-spacings`, `--no-responsive-typography`, `--no-transitions`, `--no-important`, `--targets <query>`, `--minify`, `--source-map`, `--out <file>`.
 
-Purge options: `--css <glob>`, `--content <glob>`, `--safelist <name>`, `--mode safe|aggressive`, `--keep-types`, `--dry-run`. Only rules inside `@layer pico.*` change.
+Purge options: `--css <glob>`, `--content <glob>`, `--safelist <name>`, `--mode safe|aggressive`, `--keep-types`, `--targets <query>` (browserslist query for parsing the CSS again, default the build floor), `--dry-run`. Only rules inside `@layer pico.*` change.
 
 ## `@pico` properties
 

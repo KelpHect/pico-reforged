@@ -76,4 +76,4 @@ The imports can sit in one file or be combined. `layer(name)`, `supports(...)` a
 
 ## Without the plugin
 
-The same `@import` still works in a bundler that has no Pico Reforged plugin. The `style` export condition points it at `src/pico.css`, so you get the full, unpurged stylesheet. That file is plain source and still holds nesting and `light-dark()`, which are below the Chrome 111 and Safari 16.4 floor unless your bundler lowers them. The plugin compiles for the floor itself.
+The same `@import` still works in a bundler that has no Pico Reforged plugin. The `style` export condition points it at `css/pico.css`, the built file with the `pico` layers, lowered for the Chrome 111 and Safari 16.4 floor. You get the full, unpurged stylesheet in the default theme. The plugin adds the purge pass and your `@pico` options.

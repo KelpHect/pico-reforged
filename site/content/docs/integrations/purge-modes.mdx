@@ -52,18 +52,20 @@ Before you ship it:
 
 ## Measured numbers
 
-Sizes are for `css/pico.min.css`, which is 77,168 bytes (11,598 gzipped), run through `pico-reforged purge` against one page. The numbers depend on the page, because the root variables, the base reset and the color scheme tokens always stay.
+Sizes are for `css/pico.min.css`, which is 77,969 bytes (11,663 gzipped), run through `pico-reforged purge` against one page. The numbers depend on the page, because the root variables, the base reset and the color scheme tokens always stay.
 
 | Page                                              | Mode       | Rules removed | Size                     |
 | ------------------------------------------------- | ---------- | ------------- | ------------------------ |
-| Small page (heading, paragraph, code, two buttons) | safe       | 71 of 396     | 63,832 bytes (10,081 gz) |
-| Small page                                        | aggressive | 344 of 396    | 23,430 bytes (4,337 gz)  |
-| Dashboard example                                 | safe       | 77 of 396     | 62,651 bytes (9,952 gz)  |
-| Dashboard example                                 | aggressive | 257 of 396    | 35,217 bytes (6,440 gz)  |
-| Kitchen sink test page                            | safe       | 6 of 396      | 76,306 bytes (11,459 gz) |
-| Kitchen sink test page                            | aggressive | 32 of 396     | 71,977 bytes (10,886 gz) |
+| Small page (heading, paragraph, code, two buttons) | safe       | 71 of 395     | 64,544 bytes (10,150 gz) |
+| Small page                                        | aggressive | 343 of 395    | 23,546 bytes (4,389 gz)  |
+| Dashboard example                                 | safe       | 77 of 395     | 63,452 bytes (10,024 gz) |
+| Dashboard example                                 | aggressive | 257 of 395    | 35,271 bytes (6,458 gz)  |
+| Kitchen sink test page                            | safe       | 6 of 395      | 77,018 bytes (11,523 gz) |
+| Kitchen sink test page                            | aggressive | 32 of 395     | 72,716 bytes (10,948 gz) |
 
-The small page is `examples/vite/index.html`, the dashboard is `examples/dashboard.html` and the kitchen sink is `test/fixtures/kitchen-sink.html`, all in the repository. The kitchen sink uses nearly every component, so there is little to remove. On the kitchen sink `safe` saves under 1% and `aggressive` about 6%. On the small page `safe` saves about 17% and `aggressive` about 70%.
+The small page is `examples/vite/index.html`, the dashboard is `examples/dashboard.html` and the kitchen sink is `test/fixtures/kitchen-sink.html`, all in the repository. The kitchen sink uses nearly every component, so there is little to remove. On the kitchen sink `safe` saves about 1% and `aggressive` about 7%. On the small page `safe` saves about 17% and `aggressive` about 70%.
+
+The Vite plugin on `examples/vite` (the same small page, with the jade theme and the badge extra, minified, counting only the Pico part of the stylesheet) goes from 81,642 bytes (12,187 gzipped) to 65,564 (10,310) in `safe` mode, about 20% less, and to 33,311 (5,465) in `aggressive` mode, about 59% less. The `aggressive` saving is lower than the CLI figure above because the plugin always keeps `a`, `img` and the headings, and the extra and the theme are part of what it counts.
 
 The difference between the two modes is what safe mode refuses to guess. On the small page it keeps 273 rules that aggressive removes, because they target tags or attribute values that the page does not contain today.
 

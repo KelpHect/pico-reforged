@@ -36,6 +36,7 @@ Purge options (pico-reforged purge <outDir>)
   --mode <mode>          safe (default) never drops a rule for a missing tag or attribute value,
                          aggressive also drops those, so run-time markup needs --safelist
   --keep-types           keep rules that only lack tags in the content (CMS or Markdown output)
+  --targets <query>      browserslist query used when the CSS is parsed again (default: the build floor)
   --dry-run              report and write nothing
 
 Only rules inside @layer pico.* change. Other CSS in the files is left as it is.
@@ -51,7 +52,8 @@ Build options
   --scope <selector>     prefix every rule, for example .pico
   --exclude <list>       comma separated modules to leave out, for example components/modal
   --purge <glob>         remove rules that cannot match these files (repeatable)
-  --safelist <name>      keep this class, id, tag or attribute when purging (repeatable)
+  --safelist <name>      keep this class, id, tag or attribute when purging (repeatable). /regex/ is
+                         accepted. Adds to the purge block of the config file
   --responsive-spacings  scale spacings with the viewport
   --no-responsive-typography
   --no-transitions
@@ -73,6 +75,13 @@ function parseTheme(value: string): ThemeOption {
   return value;
 }
 
+/** A /regex/flags entry becomes a RegExp, anything else stays a name. */
+const parseSafelist = (entries: string[] | undefined): (string | RegExp)[] =>
+  (entries ?? []).map((entry) => {
+    const m = /^\/(.+)\/([a-z]*)$/.exec(entry);
+    return m ? new RegExp(m[1] as string, m[2]) : entry;
+  });
+
 const fromFlags = (values: Record<string, unknown>): CompileOptions => {
   const o: CompileOptions = {};
   if (values["entry"]) o.entry = values["entry"] as EntryName;
@@ -91,8 +100,7 @@ const fromFlags = (values: Record<string, unknown>): CompileOptions => {
     );
   }
   const purge = values["purge"] as string[] | undefined;
-  if (purge?.length)
-    o.purge = { content: purge, safelist: (values["safelist"] as string[] | undefined) ?? [] };
+  if (purge?.length) o.purge = { content: purge };
   if (values["responsive-spacings"]) o.responsiveSpacings = true;
   if (values["no-responsive-typography"]) o.responsiveTypography = false;
   if (values["no-transitions"]) o.transitions = false;
@@ -136,6 +144,18 @@ async function build(argv: string[]): Promise<void> {
     ...flagOptions,
     modules: { ...fileOptions.modules, ...flagOptions.modules },
   };
+  // --safelist adds to the purge block of the config file, with or without --purge
+  const safelist = parseSafelist(values.safelist);
+  const filePurge = fileOptions.purge || undefined;
+  if (options.purge || filePurge) {
+    const purge = { ...filePurge, ...options.purge };
+    purge.safelist = [...(filePurge?.safelist ?? []), ...safelist];
+    options.purge = purge;
+  } else if (safelist.length > 0) {
+    console.error(
+      "warning: --safelist has no effect without --purge or a purge block in the config",
+    );
+  }
   if (values["source-map"] && !values.out) {
     console.error("warning: --source-map needs --out; the map is discarded");
   }
@@ -180,11 +200,7 @@ async function purgeSite(argv: string[]): Promise<void> {
     process.exitCode = 2;
     return;
   }
-  const safelist = (values.safelist ?? []).map((entry) => {
-    const m = /^\/(.+)\/([a-z]*)$/.exec(entry);
-    return m ? new RegExp(m[1] as string, m[2]) : entry;
-  });
-  const options: PurgeOutputOptions = { dir, safelist };
+  const options: PurgeOutputOptions = { dir, safelist: parseSafelist(values.safelist) };
   if (mode) options.mode = mode;
   if (values.css) options.css = values.css;
   if (values.content) options.content = values.content;

@@ -55,6 +55,7 @@ npx @rusticstack/pico-reforged purge public
     { name: "--safelist", type: "name", description: "Keep a class, id, tag or attribute. /regex/ works. Repeatable." },
     { name: "--mode", type: "safe | aggressive", default: "safe", description: "How strict the purge is. auto is accepted as safe." },
     { name: "--keep-types", type: "flag", description: "With --mode aggressive, keep rules that only lack tags in the content (CMS or Markdown output)." },
+    { name: "--targets", type: "query", description: "Browserslist query used when the CSS is parsed again. Default is the build floor." },
     { name: "--dry-run", type: "flag", description: "Print what would change and write nothing." },
   ]}
 />

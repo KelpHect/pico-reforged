@@ -75,19 +75,19 @@ A `role="group"` with a label, whose children are avatars, overlaps them. A ring
 ```
 </Example>
 
-Form groups are left alone. The group rules apply only when the children are avatars, or links or buttons that hold only an avatar.
+Form groups are left alone. The group rules apply only when the children are avatars, or links or buttons with an `aria-label` that hold only an avatar.
 
 ## Links and menu triggers
 
-An `a`, `button` or `summary` that holds only an avatar loses its button or link chrome. Keyboard focus draws a 3:1 ring on the avatar itself. Visible initials inside a link or button start the accessible name ("AL, Ada Lovelace"), so speech input can say what it sees.
+An `a`, `button` or `summary` that holds only an avatar and has an `aria-label` loses its button or link chrome. The label is what marks the control as avatar-only, so a button with an avatar and a visible name ("Account") keeps its normal button style. Keyboard focus draws a 3:1 ring on the avatar itself. Visible initials inside a link or button start the accessible name ("AL, Ada Lovelace"), so speech input can say what it sees.
 
 <Example title="Avatar links and a menu" css={["pico.extras"]} height={260}>
 ```html
 <div role="group" aria-label="Team">
-  <a href="#ada"
+  <a href="#ada" aria-label="Ada Lovelace"
     ><span data-avatar data-status="online" role="img" aria-label="AL, Ada Lovelace, online">AL</span></a
   >
-  <a href="#grace"
+  <a href="#grace" aria-label="Grace Hopper"
     ><span data-avatar role="img" aria-label="GH, Grace Hopper">GH</span></a
   >
 </div>

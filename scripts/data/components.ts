@@ -1114,6 +1114,7 @@ export const entries: Entry[] = [
     ],
     aria: [
       'role="img" with an aria-label that names the person, and the status when there is one.',
+      "A link, button or summary that holds only an avatar needs its own aria-label. Without it the control keeps its normal style.",
     ],
     js: {
       description:

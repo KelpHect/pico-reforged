@@ -114,27 +114,45 @@ label:has([type="checkbox"], [type="radio"]) {
   }
 }
 
-/* Valid and invalid: filled background for checkbox and switch, border for all three */
-[type="checkbox"][aria-invalid="false"]:is(:checked, :checked:active, :checked:focus) {
+/* Valid and invalid: filled background for checkbox and switch, border for all three. Flat lists, because :is() would raise the specificity of the plain :checked branch. */
+[type="checkbox"][aria-invalid="false"]:checked,
+[type="checkbox"][aria-invalid="false"]:checked:active,
+[type="checkbox"][aria-invalid="false"]:checked:focus,
+[type="checkbox"][role="switch"][aria-invalid="false"]:checked,
+[type="checkbox"][role="switch"][aria-invalid="false"]:checked:active,
+[type="checkbox"][role="switch"][aria-invalid="false"]:checked:focus {
   --pico-background-color: var(--pico-form-element-valid-border-color);
 }
 
-[type="checkbox"]:is(:checked, :checked:active, :checked:focus)[aria-invalid="true"] {
+[type="checkbox"]:checked[aria-invalid="true"],
+[type="checkbox"]:checked:active[aria-invalid="true"],
+[type="checkbox"]:checked:focus[aria-invalid="true"],
+[type="checkbox"][role="switch"]:checked[aria-invalid="true"],
+[type="checkbox"][role="switch"]:checked:active[aria-invalid="true"],
+[type="checkbox"][role="switch"]:checked:focus[aria-invalid="true"] {
   --pico-background-color: var(--pico-form-element-invalid-border-color);
 }
 
-:is([type="checkbox"], [type="radio"])[aria-invalid="false"]:is(
-    :checked,
-    :checked:active,
-    :checked:focus
-  ) {
+[type="checkbox"][aria-invalid="false"]:checked,
+[type="checkbox"][aria-invalid="false"]:checked:active,
+[type="checkbox"][aria-invalid="false"]:checked:focus,
+[type="radio"][aria-invalid="false"]:checked,
+[type="radio"][aria-invalid="false"]:checked:active,
+[type="radio"][aria-invalid="false"]:checked:focus,
+[type="checkbox"][role="switch"][aria-invalid="false"]:checked,
+[type="checkbox"][role="switch"][aria-invalid="false"]:checked:active,
+[type="checkbox"][role="switch"][aria-invalid="false"]:checked:focus {
   --pico-border-color: var(--pico-form-element-valid-border-color);
 }
 
-:is([type="checkbox"], [type="radio"]):is(
-    :checked,
-    :checked:active,
-    :checked:focus
-  )[aria-invalid="true"] {
+[type="checkbox"]:checked[aria-invalid="true"],
+[type="checkbox"]:checked:active[aria-invalid="true"],
+[type="checkbox"]:checked:focus[aria-invalid="true"],
+[type="radio"]:checked[aria-invalid="true"],
+[type="radio"]:checked:active[aria-invalid="true"],
+[type="radio"]:checked:focus[aria-invalid="true"],
+[type="checkbox"][role="switch"]:checked[aria-invalid="true"],
+[type="checkbox"][role="switch"]:checked:active[aria-invalid="true"],
+[type="checkbox"][role="switch"]:checked:focus[aria-invalid="true"] {
   --pico-border-color: var(--pico-form-element-invalid-border-color);
 }

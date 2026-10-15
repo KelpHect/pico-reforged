@@ -17,7 +17,7 @@ Change the package and the path:
 />
 ```
 
-Every file of v2.1.1 exists under the same name in `css/`: `pico`, `pico.classless`, `pico.conditional`, `pico.classless.conditional`, `pico.fluid.classless` and `pico.fluid.classless.conditional`, each plain and in the themes: 20 for the first four builds (azure is the file without a theme part), 19 for the two scoped class-less ones, which have no azure file (`pico.jade.min.css`, `pico.classless.jade.min.css`), each minified and not, plus `pico.colors`. The 238 files of v2.1.1 are all there, with 24 more for the extras.
+Every file of v2.1.1 exists under the same name in `css/`: `pico`, `pico.classless`, `pico.conditional`, `pico.classless.conditional`, `pico.fluid.classless` and `pico.fluid.classless.conditional`, each plain and in the themes: 20 files for `pico`, `pico.classless`, `pico.conditional` and `pico.fluid.classless` (azure is the file without a theme part), and 19 for `pico.classless.conditional` and `pico.fluid.classless.conditional`, which have no azure file. Each is minified and not, plus `pico.colors`. The 238 files of v2.1.1 are all there, with 24 more for the extras.
 
 In npm projects, replace `@picocss/pico` with `@rusticstack/pico-reforged` in your imports. The default export is `css/pico.min.css`. `@rusticstack/pico-reforged/classless` and `@rusticstack/pico-reforged/colors` replace the old `css/pico.classless.min.css` and `css/pico.colors.min.css` paths. The old `@picocss/pico/css/...` file paths still work as `@rusticstack/pico-reforged/css/...`.
 

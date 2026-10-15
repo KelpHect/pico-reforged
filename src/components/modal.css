@@ -51,10 +51,12 @@ dialog {
       button,
       [role="button"] {
         margin-bottom: 0;
+      }
 
-        &:not(:first-of-type) {
-          margin-inline-start: calc(var(--pico-spacing) * 0.5);
-        }
+      /* Not nested under the list above, which would lower to :is() and raise the specificity */
+      button:not(:first-of-type),
+      [role="button"]:not(:first-of-type) {
+        margin-inline-start: calc(var(--pico-spacing) * 0.5);
       }
     }
 
@@ -74,10 +76,16 @@ dialog {
       background-color: transparent;
       opacity: 0.5;
       transition: opacity var(--pico-transition);
+    }
 
-      &:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
-        opacity: 1;
-      }
+    .close:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus),
+    :is(a, button)[rel="prev"]:is(
+        [aria-current]:not([aria-current="false"]),
+        :hover,
+        :active,
+        :focus
+      ) {
+      opacity: 1;
     }
   }
 

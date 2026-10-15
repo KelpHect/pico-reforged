@@ -75,13 +75,13 @@
 
       <h2>Links</h2>
       <div role="group" aria-label="Team">
-        <a href="#ada"
+        <a href="#ada" aria-label="Ada Lovelace"
           ><span data-avatar data-status="online" role="img" aria-label="AL, Ada Lovelace, online">AL</span></a
         >
-        <a href="#grace"
+        <a href="#grace" aria-label="Grace Hopper"
           ><span data-avatar role="img" aria-label="GH, Grace Hopper">GH</span></a
         >
-        <a href="#alan"
+        <a href="#alan" aria-label="Alan Turing"
           ><span data-avatar role="img" aria-label="AT, Alan Turing">AT</span></a
         >
       </div>
@@ -94,9 +94,12 @@
 
       <h2>Menu triggers</h2>
       <p>
-        <button type="button" aria-haspopup="menu" aria-expanded="false">
+        <button type="button" aria-haspopup="menu" aria-expanded="false" aria-label="Ada Lovelace, busy">
           <span data-avatar data-status="busy" role="img" aria-label="AL, Ada Lovelace, busy">AL</span>
         </button>
+      </p>
+      <p>
+        <button type="button"><span data-avatar aria-hidden="true">JD</span> Account</button>
       </p>
       <details class="dropdown">
         <summary aria-label="Account menu">

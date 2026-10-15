@@ -6,7 +6,7 @@ import { EXTRAS, ROOT } from "../compiler/config.ts";
 import { indexFingerprint } from "../compiler/purge.ts";
 import type { CompileOptions } from "../compiler/types.ts";
 import { parseRoot, wrapperFor } from "./detect.ts";
-import type { PicoImport, RootParse } from "./detect.ts";
+import type { ImportKind, RootParse } from "./detect.ts";
 import { PICO_PACKAGE } from "./pico-config.ts";
 import {
   DEFAULT_MAX_FILE_SIZE,
@@ -249,6 +249,12 @@ export class Engine {
       ? { index: scan.index, safelist, ...(conservative ? { conservative: true } : {}) }
       : (false as const);
     const parts: string[] = [];
+    // each part gets the layer(), supports() and media suffix of its own import
+    const wrapped = (css: string, wanted: (kind: ImportKind) => boolean): string => {
+      const found = parsed.imports.find((i) => wanted(i.kind));
+      const wrapper = found ? wrapperFor(found.suffix) : undefined;
+      return wrapper ? `${wrapper.open}${css}${wrapper.close}` : css;
+    };
     const run = async (extra: CompileOptions): Promise<string> => {
       const result = await compile({
         ...options,
@@ -260,18 +266,14 @@ export class Engine {
       removed += result.stats.removedByPurge;
       return result.css;
     };
-    if (options.entry !== "colors") parts.push(await run({}));
+    if (options.entry !== "colors") {
+      parts.push(wrapped(await run({}), (kind) => kind !== "colors"));
+    }
     if (parsed.imports.some((i) => i.kind === "colors")) {
       const colors: CompileOptions = { entry: "colors", extras: [] };
-      parts.push(await run(colors));
+      parts.push(wrapped(await run(colors), (kind) => kind === "colors"));
     }
-    const wrapper = wrapperFor(mainSuffix(parsed.imports));
-    const body = parts.join("\n");
-    return {
-      css: wrapper ? `${wrapper.open}${body}${wrapper.close}` : body,
-      warnings,
-      removed,
-    };
+    return { css: parts.join("\n"), warnings, removed };
   }
 }
 
@@ -363,11 +365,6 @@ function fileHash(file: string): string {
   } catch {
     return "missing";
   }
-}
-
-function mainSuffix(imports: PicoImport[]): string {
-  const first = imports[0];
-  return first ? first.suffix : "";
 }
 
 /** Cuts the Pico statements out of the source and puts the compiled CSS after the imports. */

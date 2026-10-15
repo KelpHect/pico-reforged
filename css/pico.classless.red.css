@@ -1117,19 +1117,19 @@
     --pico-background-color: var(--pico-border-color);
   }
 
-  [type="checkbox"][aria-invalid="false"]:is(:checked, :checked:active, :checked:focus) {
+  [type="checkbox"][aria-invalid="false"]:checked, [type="checkbox"][aria-invalid="false"]:checked:active, [type="checkbox"][aria-invalid="false"]:checked:focus, [type="checkbox"][role="switch"][aria-invalid="false"]:checked, [type="checkbox"][role="switch"][aria-invalid="false"]:checked:active, [type="checkbox"][role="switch"][aria-invalid="false"]:checked:focus {
     --pico-background-color: var(--pico-form-element-valid-border-color);
   }
 
-  [type="checkbox"]:is(:checked, :checked:active, :checked:focus)[aria-invalid="true"] {
+  [type="checkbox"]:checked[aria-invalid="true"], [type="checkbox"]:checked:active[aria-invalid="true"], [type="checkbox"]:checked:focus[aria-invalid="true"], [type="checkbox"][role="switch"]:checked[aria-invalid="true"], [type="checkbox"][role="switch"]:checked:active[aria-invalid="true"], [type="checkbox"][role="switch"]:checked:focus[aria-invalid="true"] {
     --pico-background-color: var(--pico-form-element-invalid-border-color);
   }
 
-  :is([type="checkbox"], [type="radio"])[aria-invalid="false"]:is(:checked, :checked:active, :checked:focus) {
+  [type="checkbox"][aria-invalid="false"]:checked, [type="checkbox"][aria-invalid="false"]:checked:active, [type="checkbox"][aria-invalid="false"]:checked:focus, [type="radio"][aria-invalid="false"]:checked, [type="radio"][aria-invalid="false"]:checked:active, [type="radio"][aria-invalid="false"]:checked:focus, [type="checkbox"][role="switch"][aria-invalid="false"]:checked, [type="checkbox"][role="switch"][aria-invalid="false"]:checked:active, [type="checkbox"][role="switch"][aria-invalid="false"]:checked:focus {
     --pico-border-color: var(--pico-form-element-valid-border-color);
   }
 
-  :is([type="checkbox"], [type="radio"]):is(:checked, :checked:active, :checked:focus)[aria-invalid="true"] {
+  [type="checkbox"]:checked[aria-invalid="true"], [type="checkbox"]:checked:active[aria-invalid="true"], [type="checkbox"]:checked:focus[aria-invalid="true"], [type="radio"]:checked[aria-invalid="true"], [type="radio"]:checked:active[aria-invalid="true"], [type="radio"]:checked:focus[aria-invalid="true"], [type="checkbox"][role="switch"]:checked[aria-invalid="true"], [type="checkbox"][role="switch"]:checked:active[aria-invalid="true"], [type="checkbox"][role="switch"]:checked:focus[aria-invalid="true"] {
     --pico-border-color: var(--pico-form-element-invalid-border-color);
   }
 
@@ -1317,12 +1317,9 @@
 
   details summary {
     cursor: pointer;
-    list-style-type: none;
-  }
-
-  details summary:not([role="button"]) {
     transition: color var(--pico-transition);
     line-height: 1rem;
+    list-style-type: none;
   }
 
   details summary:not([role]) {
@@ -1411,11 +1408,19 @@
 
       details:not(.dropdown)[open]::details-content {
         block-size: auto;
+        animation: accordion-clip var(--pico-transition);
+        overflow-y: visible;
       }
 
       details:not(.dropdown) > summary:not([role]) {
         transition: color var(--pico-transition),
           margin-bottom var(--pico-transition);
+      }
+
+      @keyframes accordion-clip {
+        from, to {
+          overflow-y: clip;
+        }
       }
     }
   }
@@ -1615,7 +1620,7 @@
     margin-bottom: 0;
   }
 
-  :is(dialog > article > footer button, dialog > article > footer [role="button"]):not(:first-of-type) {
+  dialog > article > footer button:not(:first-of-type), dialog > article > footer [role="button"]:not(:first-of-type) {
     margin-inline-start: calc(var(--pico-spacing) * .5);
   }
 
@@ -1636,7 +1641,7 @@
     display: block;
   }
 
-  :is(dialog > article :is(a, button)[rel="prev"]):is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
+  dialog > article :is(a, button)[rel="prev"]:is([aria-current]:not([aria-current="false"]), :hover, :active, :focus) {
     opacity: 1;
   }
 
@@ -1798,7 +1803,7 @@
     var(--pico-nav-element-spacing-horizontal);
   }
 
-  aside li a:not([role="button"]) {
+  aside li a {
     display: block;
   }
 

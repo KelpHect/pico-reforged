@@ -17,7 +17,7 @@ The classes, attributes and `--pico-*` variables of v2.1.1 are kept, and the CDN
 - Vite and PostCSS integrations that purge unused rules in production, safely by default.
 - An opt-in `modern` target (Chrome and Edge 123, Firefox 128, Safari 17.5) that ships native nesting and `light-dark()` for a smaller file.
 - Files for AI agents: `llms.txt` on the site, an agent skill, `AGENTS.md`, a component manifest and DTCG design tokens.
-- Size: the minified `pico.min.css` is 77 kB raw, 11.6 kB gzipped and 10.2 kB with brotli. v2.1.1 minified is 83 kB, 11.7 kB and 10.1 kB, so the raw file is 7% smaller and the compressed sizes are about the same, even though this one also carries the popover and anchor positioning patterns. The classless file is 66.7 kB raw against 71 kB, but 4% larger with brotli (9.3 kB against 9.0 kB). Details are in [docs/architecture.md](docs/architecture.md#file-size).
+- Size: the minified `pico.min.css` is 78 kB raw, 11.7 kB gzipped and 10.3 kB with brotli. v2.1.1 minified is 83 kB, 11.7 kB and 10.1 kB, so the raw file is 6% smaller and the compressed sizes are about the same, even though this one also carries the popover and anchor positioning patterns. The classless file is 67.5 kB raw against 71 kB, but 5% larger with brotli (9.4 kB against 9.0 kB). Details are in [docs/architecture.md](docs/architecture.md#file-size).
 
 ## Install
 
@@ -168,8 +168,8 @@ Setup for Vite, Astro, SvelteKit, Nuxt, Next.js and static generators is in [doc
 The ready-made files are already small, and a build can make yours smaller:
 
 - The minified files merge sibling selectors into `:is()` (only when specificity stays the same) and write each OKLCH color with the shortest digits that give the same 8-bit sRGB value.
-- With the Vite or PostCSS plugin, unused rules are dropped. On the example Vite app the default safe purge saves about 9% and `purge: aggressive` about 22%. A page that uses less drops more.
-- `--targets modern` (or `targets: "modern"` in the config) skips the lowering for older browsers: `pico.min.css` drops to 69 kB raw and 10 kB with brotli, classless to 60 kB and 9.1 kB.
+- With the Vite or PostCSS plugin, unused rules are dropped. On the example Vite app (`examples/vite`, jade theme and the badge extra, minified, counting only the Pico part of the stylesheet) the default safe purge takes it from 81,642 to 65,564 bytes, about 20% less, and `purge: aggressive` to 33,311 bytes, about 59% less. A page that uses more of Pico drops less: on the kitchen sink test page safe saves about 1%.
+- `--targets modern` (or `targets: "modern"` in the config) skips the lowering for older browsers: `pico.min.css` drops to 70 kB raw and 10 kB with brotli, classless to 60 kB and 9.1 kB.
 - When you host the files yourself, precompress them with brotli at quality 11. Most CDNs compress on the fly at a lower level, which costs about 1 kB more.
 
 ## Browser support

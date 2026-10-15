@@ -32,7 +32,7 @@ The unminified files in `src/` are the plain source. They still hold nesting and
 
 ## Modern preset
 
-`--targets modern` (or `targets: "modern"`) is an optional higher floor: Chrome and Edge 123, Firefox 128, Safari and iOS Safari 17.5. The compiler then keeps native nesting and `light-dark()` instead of lowering them. `pico.min.css` goes from 77,168 to 69,163 bytes raw and from 10,212 to 9,981 bytes with brotli. The ready-made files in `css/` use the default floor. `pico-reforged purge` flattens the nesting of a modern file before it judges selectors.
+`--targets modern` (or `targets: "modern"`) is an optional higher floor: Chrome and Edge 123, Firefox 128, Safari and iOS Safari 17.5. The compiler then keeps native nesting and `light-dark()` instead of lowering them. `pico.min.css` goes from 77,969 to 69,917 bytes raw and from 10,281 to 9,957 bytes with brotli. The ready-made files in `css/` use the default floor. `pico-reforged purge` flattens the nesting of a modern file before it judges selectors.
 
 ## Serving the files
 

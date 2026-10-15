@@ -14,7 +14,7 @@ How it picks the rules:
 - `aggressive` is the opt-in mode that also judges tags and attribute values. It saves more and can drop rules the sources only show at run time, see [Aggressive mode](#aggressive-mode).
 - Correctness comes first. A scan that finds no file never purges. Classes and attribute names that a script sets are read from the script text. The rest of this point is about `aggressive` mode: `a`, `img` and `h1` to `h6` are always kept, because link and image components (`next/link`, `next/image`, `RouterLink`, `NuxtLink`, Astro `Image`) and run-time heading levels write those tags without them appearing in the sources. When the project writes HTML at run time (Markdown, a rich text or CMS renderer, `marked`, `showdown`, `remark`, `innerHTML`, `v-html`, `dangerouslySetInnerHTML`, `{@html}`, `| safe`, `{{{x}}}`, `mark_safe`, `html_safe`, `Html.Raw`, `template.HTML`, `th:utext`), or fetches server-rendered fragments (`hx-get` and the other htmx attributes, Turbo, Unpoly, Livewire, LiveView, Datastar), the common content and form tags (`p`, `ul`, `table`, `blockquote`, `code`, `button`, `label`, `select`, `dialog`, `input` and so on) are kept. Fragment code also keeps the `type`, `role`, `disabled`, `aria-busy` and `aria-invalid` rules. A file over 1 MB counts as a source that writes HTML at run time. Class names that only appear in markup you cannot scan still need `@source` or a safelist.
 - Rules that live outside the Pico layers (your own CSS) are never touched.
-- How much you save depends on the page. The root variables, the base reset and the color scheme tokens always stay. A page that uses most of Pico gets about 10% less CSS; a small page (headings, paragraphs, links, a button) gets about 60% less.
+- How much you save depends on the page. The root variables, the base reset and the color scheme tokens always stay. On the example Vite app (`examples/vite`, jade theme and the badge extra, minified, counting only the Pico part of the stylesheet) `safe` goes from 81,642 to 65,564 bytes, about 20% less, and `aggressive` to 33,311 bytes, about 59% less. A page that uses most of Pico saves about 1% in `safe` mode.
 
 Contents: [Vite](#vite), [Astro](#astro), [SvelteKit](#sveltekit), [Nuxt](#nuxt), [React Router and other Vite apps](#react-router-and-other-vite-apps), [Next.js](#nextjs), [Plain HTML and CDN](#plain-html-and-cdn), [Static generators](#static-generators-and-bun), [Configuration](#configuration), [What the scan reads](#what-the-scan-reads), [Safelist and `@source` for scripts](#scripts-that-toggle-things), [Checking the result](#checking-the-result).
 
@@ -52,7 +52,7 @@ Options:
 
 A script can import the package too. `import "@rusticstack/pico-reforged";` is treated as a root with the default settings, so it is purged as well. Use a stylesheet when you need `@pico` or `@source`.
 
-Without the plugin the same `@import` still works: the `style` export condition points bundlers at `src/pico.css`. You get the full, unpurged stylesheet. That file is the plain source: it still holds nesting and `light-dark()`, which are below the Chrome 111 and Safari 16.4 floor unless your bundler lowers them. The plugin compiles for the floor itself.
+Without the plugin the same `@import` still works: the `style` export condition points bundlers at `css/pico.css`, the built file with the `pico` layers, lowered for the Chrome 111 and Safari 16.4 floor. You get the full, unpurged stylesheet in the default theme. The plugin adds the purge pass and your `@pico` options.
 
 ## Astro
 
@@ -168,7 +168,7 @@ Notes:
 No build step: link the CDN file or a copy of `css/pico.min.css`.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged/css/pico.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@rusticstack/pico-reforged@1.0.0/css/pico.min.css" />
 ```
 
 Opt-in extras are separate files (`pico.extras.min.css`, `extras/tabs.min.css`). To trim the file before you deploy, use the [purge command](#static-generators-and-bun) on the folder you publish. It works on the CDN copy too, because that file keeps its `@layer pico.*` blocks.
@@ -194,6 +194,7 @@ npx pico-reforged purge public
 | `--safelist <name>` | keep a class, id, tag or attribute. `/regex/` works. Repeatable                                         |
 | `--mode <mode>`     | `safe` (default) or `aggressive`. `auto` is accepted as `safe`. See [Aggressive mode](#aggressive-mode) |
 | `--keep-types`      | with `--mode aggressive`, keep rules that only lack tags in the content                                 |
+| `--targets <query>` | browserslist query used when the CSS is parsed again. Default is the build floor                        |
 | `--dry-run`         | print what would change, write nothing                                                                  |
 
 The command only touches rules inside `@layer pico.*` blocks, at the top level or inside a wrapper layer such as `@layer base { @layer pico.core { ... } }`. Everything else in the file, your own CSS above all, is written back exactly as it was. A file without a Pico layer is skipped. If a minifier or bundler removed the layers, the command changes nothing and says so.

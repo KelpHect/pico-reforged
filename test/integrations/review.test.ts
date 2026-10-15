@@ -90,3 +90,40 @@ test("purge of built CSS drops @keyframes that no kept rule uses", () => {
   const out = purgeStylesheet(css, index).css;
   assert.ok(!out.includes("@keyframes spin"), out);
 });
+
+/** The text inside the first `@layer <name> {` block, and the text after it. */
+function layerBlock(css: string, name: string): { inside: string; after: string } {
+  const open = css.indexOf(`@layer ${name} {`);
+  assert.ok(open >= 0, `no @layer ${name} block`);
+  let depth = 0;
+  for (let i = css.indexOf("{", open); i < css.length; i++) {
+    if (css[i] === "{") depth++;
+    else if (css[i] === "}" && --depth === 0)
+      return { inside: css.slice(open, i), after: css.slice(i) };
+  }
+  throw new Error(`@layer ${name} is not closed`);
+}
+
+test("each import keeps its own layer() wrapper: the colors do not land in the main layer", async () => {
+  const dir = makeProject({
+    "package.json": "{}",
+    "index.html": "<main><button>a</button></main>",
+  });
+  const file = `${dir}/app.css`;
+  const css = `@import "@rusticstack/pico-reforged" layer(vendor);\n@import "@rusticstack/pico-reforged/colors";\n`;
+  const result = await new Engine().process({ css, file, purge: false });
+  assert.ok(result);
+  const { inside, after } = layerBlock(result.css, "vendor");
+  assert.ok(inside.includes("button"), "the main stylesheet is in layer(vendor)");
+  assert.ok(!inside.includes(".pico-color-"), "the colors must not be in layer(vendor)");
+  assert.ok(after.includes(".pico-color-"), "the colors follow the vendor block");
+
+  const both = `@import "@rusticstack/pico-reforged" layer(vendor);\n@import "@rusticstack/pico-reforged/colors" layer(palette);\n`;
+  const split = await new Engine().process({ css: both, file, purge: false });
+  assert.ok(split);
+  const vendor = layerBlock(split.css, "vendor");
+  const palette = layerBlock(split.css, "palette");
+  assert.ok(!vendor.inside.includes(".pico-color-"));
+  assert.ok(palette.inside.includes(".pico-color-"));
+  assert.ok(!palette.inside.includes("button"));
+});

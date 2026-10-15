@@ -56,7 +56,7 @@ The plugin did not run on that file. Check that the plugin is listed in the conf
 
 ## Nesting or `light-dark()` in the output
 
-Without the plugin, the `style` export condition points your bundler at `src/pico.css`. That file is the plain source with nesting and `light-dark()`, which are below the Chrome 111 and Safari 16.4 floor unless your bundler lowers them. Use the Vite or PostCSS plugin, or import the built file `@rusticstack/pico-reforged/css/pico.min.css`.
+Without the plugin, the `style` export condition points your bundler at `css/pico.css`, the built and layered file for the Chrome 111 and Safari 16.4 floor. It is the full stylesheet in the default theme, with no purge and no `@pico` options. Use the Vite or PostCSS plugin for those, or import the minified file `@rusticstack/pico-reforged/css/pico.min.css`.
 
 ## Next.js loops or rebuilds forever
 

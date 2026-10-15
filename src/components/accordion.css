@@ -4,15 +4,10 @@ details {
   margin-bottom: var(--pico-spacing);
 
   & summary {
+    line-height: 1rem;
     list-style-type: none;
     cursor: pointer;
-
-    /* Button summaries keep the line height and transition of the button module,
-       which sits in an earlier layer and would otherwise lose to these rules */
-    &:not([role="button"]) {
-      line-height: 1rem;
-      transition: color var(--pico-transition);
-    }
+    transition: color var(--pico-transition);
 
     &:not([role]) {
       color: var(--pico-accordion-close-summary-color);
@@ -102,14 +97,24 @@ details {
           content-visibility var(--pico-transition) allow-discrete;
       }
 
+      /* Clip only while the height animates, so focus rings of controls inside stay whole at rest */
       &[open]::details-content {
         block-size: auto;
+        overflow-y: visible;
+        animation: accordion-clip var(--pico-transition);
       }
 
       & > summary:not([role]) {
         transition:
           color var(--pico-transition),
           margin-bottom var(--pico-transition);
+      }
+    }
+
+    @keyframes accordion-clip {
+      from,
+      to {
+        overflow-y: clip;
       }
     }
   }
